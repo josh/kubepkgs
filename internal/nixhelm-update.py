@@ -16,7 +16,6 @@ NIX_PATH = "@nix@"
 @click.command()
 @click.option("--url", required=True)
 @click.option("--chart", required=False)
-@click.option("--nix-name", envvar="UPDATE_NIX_NAME")
 @click.option("--nix-pname", envvar="UPDATE_NIX_PNAME")
 @click.option("--nix-old-version", envvar="UPDATE_NIX_OLD_VERSION")
 @click.option("--nix-attr-path", envvar="UPDATE_NIX_ATTR_PATH")
@@ -27,7 +26,6 @@ NIX_PATH = "@nix@"
 def main(
     url: str,
     chart: str,
-    nix_name: str | None,
     nix_pname: str | None,
     nix_old_version: str | None,
     nix_attr_path: str | None,
