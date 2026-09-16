@@ -1,17 +1,28 @@
 {
   lib,
   stdenvNoCC,
+  fetchFromGitHub,
   nur,
+  nix-update-script,
   runCommand,
 }:
 stdenvNoCC.mkDerivation (finalAttrs: {
   pname = "restic-rados-server-chart";
-  inherit (nur.repos.josh.restic-rados-server) version src;
+  version = "1.0.0";
+
+  src = fetchFromGitHub {
+    owner = "josh";
+    repo = "restic-rados-server";
+    tag = "v${finalAttrs.version}";
+    hash = "sha256-SZiFHnG+ZkA49Raz1OijaUFSjb9hjKtIFuvg5uqC2T0=";
+  };
 
   buildCommand = ''
     mkdir $out
     cp -R $src/charts/restic-rados-server/. $out/
   '';
+
+  passthru.updateScript = nix-update-script { extraArgs = [ "--version=stable" ]; };
 
   passthru.tests = {
     files =

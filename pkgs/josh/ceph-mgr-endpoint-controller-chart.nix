@@ -1,17 +1,28 @@
 {
   lib,
   stdenvNoCC,
+  fetchFromGitHub,
   nur,
+  nix-update-script,
   runCommand,
 }:
 stdenvNoCC.mkDerivation (finalAttrs: {
   pname = "ceph-mgr-endpoint-controller-chart";
-  inherit (nur.repos.josh.ceph-mgr-endpoint-controller) version src;
+  version = "0.7.4";
+
+  src = fetchFromGitHub {
+    owner = "josh";
+    repo = "ceph-mgr-endpoint-controller";
+    tag = "v${finalAttrs.version}";
+    hash = "sha256-yDppUBHU1THw6JvjBqN74Y1ub6IXLoMi8TvLhlCh4Fg=";
+  };
 
   buildCommand = ''
     mkdir $out
     cp -R $src/charts/ceph-mgr-endpoint-controller/. $out/
   '';
+
+  passthru.updateScript = nix-update-script { extraArgs = [ "--version=stable" ]; };
 
   passthru.tests = {
     files =

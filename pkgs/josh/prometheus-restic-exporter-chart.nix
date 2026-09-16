@@ -1,16 +1,27 @@
 {
   lib,
   stdenvNoCC,
+  fetchFromGitHub,
   nur,
+  nix-update-script,
 }:
 stdenvNoCC.mkDerivation (finalAttrs: {
   pname = "prometheus-restic-exporter-chart";
-  inherit (nur.repos.josh.prometheus-restic-exporter) version src;
+  version = "2.0.4";
+
+  src = fetchFromGitHub {
+    owner = "josh";
+    repo = "restic-exporter";
+    tag = "v${finalAttrs.version}";
+    hash = "sha256-GZxCawHupl/bbOCrMXZgVjH4fpwfAm5aOaKp0Vy/Q44=";
+  };
 
   buildCommand = ''
     mkdir $out
     cp -R $src/charts/restic-exporter/. $out/
   '';
+
+  passthru.updateScript = nix-update-script { extraArgs = [ "--version=stable" ]; };
 
   passthru.tests = {
     render = nur.repos.josh.renderHelmTemplate {

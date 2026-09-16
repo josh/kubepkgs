@@ -1,17 +1,28 @@
 {
   lib,
   stdenvNoCC,
+  fetchFromGitHub,
   nur,
+  nix-update-script,
   runCommand,
 }:
 stdenvNoCC.mkDerivation (finalAttrs: {
   pname = "nats-static-chart";
-  inherit (nur.repos.josh.nats-static) version src;
+  version = "0.0.6";
+
+  src = fetchFromGitHub {
+    owner = "josh";
+    repo = "nats-static";
+    tag = "v${finalAttrs.version}";
+    hash = "sha256-Zga7q6EHIksbqcjyWroxKNjJBdIdufxggNP8Rk1Myto=";
+  };
 
   buildCommand = ''
     mkdir $out
     cp -R $src/charts/nats-static/. $out/
   '';
+
+  passthru.updateScript = nix-update-script { extraArgs = [ "--version=stable" ]; };
 
   passthru.tests = {
     files =

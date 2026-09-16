@@ -58,7 +58,7 @@ Order the `callPackage` argument set by role, and alphabetize only within the de
 }:
 ```
 
-Keep the list flat below eight arguments; separate the groups with blank lines at eight or more. Add `#` comments only when the groups are not self-evident, as in `pkgs/ceph/librados.nix`.
+Keep the list flat below eight arguments; separate the groups with blank lines at eight or more. Add `#` comments only when the groups are not self-evident.
 
 ### Derivation attributes
 

@@ -1,17 +1,28 @@
 {
   lib,
   stdenvNoCC,
+  fetchFromGitHub,
   nur,
+  nix-update-script,
   runCommand,
 }:
 stdenvNoCC.mkDerivation (finalAttrs: {
   pname = "mqtt2nats-chart";
-  inherit (nur.repos.josh.mqtt2nats) version src;
+  version = "0.0.5";
+
+  src = fetchFromGitHub {
+    owner = "josh";
+    repo = "mqtt2nats";
+    tag = "v${finalAttrs.version}";
+    hash = "sha256-updnebDXrmgl3iy4il87EIZRgujySonLUv0ORWyr7Ro=";
+  };
 
   buildCommand = ''
     mkdir $out
     cp -R $src/charts/mqtt2nats/. $out/
   '';
+
+  passthru.updateScript = nix-update-script { extraArgs = [ "--version=stable" ]; };
 
   passthru.tests = {
     files =

@@ -1,17 +1,28 @@
 {
   lib,
   stdenvNoCC,
+  fetchFromGitHub,
   nur,
+  nix-update-script,
   runCommand,
 }:
 stdenvNoCC.mkDerivation (finalAttrs: {
   pname = "jmap2nats-chart";
-  inherit (nur.repos.josh.jmap2nats) version src;
+  version = "1.0.2";
+
+  src = fetchFromGitHub {
+    owner = "josh";
+    repo = "jmap2nats";
+    tag = "v${finalAttrs.version}";
+    hash = "sha256-IsLn1A+5vH+bcBJmX96ASuQ7kE4TukgypsnqR4n7eoU=";
+  };
 
   buildCommand = ''
     mkdir $out
     cp -R $src/charts/jmap2nats/. $out/
   '';
+
+  passthru.updateScript = nix-update-script { extraArgs = [ "--version=stable" ]; };
 
   passthru.tests = {
     files =
