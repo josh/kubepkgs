@@ -89,7 +89,13 @@
         kubepkgs = importPackages final;
       };
 
-      packages = eachSystem (system: mkPackages nixpkgsFor.${system});
+      packages = eachSystem (
+        system:
+        mkPackages nixpkgsFor.${system}
+        // {
+          update-helm-charts = nixpkgsFor.${system}.callPackage ./internal/update-helm-charts.nix { };
+        }
+      );
 
       formatter = eachSystem (system: treefmt-nix.${system}.wrapper);
       checks = eachSystem (
