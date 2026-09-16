@@ -1,5 +1,5 @@
 {
-  description = "@josh's Nix User Repository";
+  description = "@josh's Kubernetes Nix Repository";
 
   inputs = {
     nixpkgs.url = "github:NixOS/nixpkgs/nixpkgs-unstable";

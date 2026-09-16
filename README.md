@@ -1,6 +1,6 @@
-# nurpkgs
+# kubepkgs
 
-My Nix User Repository. Mainly re-packaging other people's code hoping to get upstreamed at some point, but also some of my own personal packages.
+My Kubernetes Nix Repository. Vendored upstream Helm charts (`*-chart`) and the manifests rendered from them (`*-manifests`), pinned and cached like any other Nix package.
 
 ## Outputs
 
@@ -16,7 +16,7 @@ $ nix repl .
 # NixOS or Home Manager module
 {
   nixpkgs.overlays = [
-    josh-nurpkgs.overlays.default
+    kubepkgs.overlays.default
   ];
 }
 ```
