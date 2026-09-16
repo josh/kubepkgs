@@ -1,15 +1,20 @@
 {
+  lib,
   stdenvNoCC,
   kubernetes-helm,
   yq,
+  runCommand,
+
   src,
   chartName,
-  helmReleaseName ? chartName,
+  pname ? lib.strings.getName src,
   helmValues ? { },
   helmArgs ? [ ],
+  meta ? { },
 }:
-stdenvNoCC.mkDerivation {
-  inherit (src) name;
+stdenvNoCC.mkDerivation (finalAttrs: {
+  inherit pname;
+  inherit (src) version;
 
   __structuredAttrs = true;
 
@@ -20,22 +25,42 @@ stdenvNoCC.mkDerivation {
     yq
   ];
 
-  inherit helmReleaseName helmValues helmArgs;
+  helmChartName = chartName;
+  inherit helmArgs helmValues;
 
   buildPhase = ''
     runHook preBuild
-    yq --yaml-output '.helmValues' "$NIX_ATTRS_JSON_FILE" >values.yaml
     export HELM_CACHE_HOME=$TMPDIR/cache
     export HELM_CONFIG_HOME=$TMPDIR/config
     export HELM_DATA_HOME=$TMPDIR/data
-    helm template "$helmReleaseName" "$src" --output-dir ./out --values values.yaml "''${helmArgs[@]}"
+    yq --yaml-output '.helmValues' "$NIX_ATTRS_JSON_FILE" >values.yaml
+    helm template "$helmChartName" "$src" --output-dir . --values values.yaml "''${helmArgs[@]}"
     runHook postBuild
   '';
 
   installPhase = ''
     runHook preInstall
     mkdir -p $out
-    cp -R ./out/"${chartName}"/. $out/
+    cp -R ./"$helmChartName"/. $out/
     runHook postInstall
   '';
-}
+
+  passthru.tests = {
+    parse =
+      runCommand "test-${finalAttrs.pname}-parse"
+        {
+          __structuredAttrs = true;
+          nativeBuildInputs = [ yq ];
+        }
+        ''
+          find ${finalAttrs.finalPackage} \( -name '*.yaml' -o -name '*.yml' \) -exec yq -r '.kind? // empty' {} + >kinds.txt
+          grep -q . kinds.txt
+          touch $out
+        '';
+  };
+
+  meta = {
+    platforms = lib.platforms.all;
+  }
+  // meta;
+})

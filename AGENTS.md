@@ -59,13 +59,17 @@ Every argument list here is flat — no package reaches eight arguments. If one 
 
 Order attributes by the build lifecycle:
 
-`pname` → `version` → `__structuredAttrs` → `src` → `nativeBuildInputs` → builder configuration (`helmChartName`, `helmArgs`, `helmValues`) → phases in lifecycle order (`buildCommand`, or `buildPhase` then `installPhase`) → `passthru` → `meta`
+`pname` → `version` → `__structuredAttrs` → `src` → `nativeBuildInputs` → phases in lifecycle order (`buildCommand`, or `buildPhase` then `installPhase`) → `passthru` → `meta`
 
 `pname` is always first and `meta` is always last, with `passthru` immediately before it.
 
-### Vendored charts
+### Wrapper call sites
 
-A `*-chart.nix` that wraps `kubepkgs.fetchhelm` passes an attribute set instead of building a derivation itself. Order it `pname` (only when it differs from the default `<chart>-chart`) → `url` → `chart` → `version` → `hash` → `helmTestValues`/`helmTestArgs` → `meta`.
+Most packages wrap an `internal/` builder and pass an attribute set instead of building a derivation themselves. Only the handful that fetch upstream YAML directly, or copy files out of a chart, call `mkDerivation` and follow the attribute order above.
+
+A `*-chart.nix` wrapping `kubepkgs.fetchhelm`: `pname` (only when it differs from the default `<chart>-chart`) → `url` → `chart` → `version` → `hash` → `helmTestValues`/`helmTestArgs` → `meta`.
+
+A `*-manifests.nix` wrapping `kubepkgs.renderHelmTemplate`: `pname` → `src` (the chart) → `chartName` → `helmArgs`/`helmValues` when the render needs them → `meta`. The helper supplies `version` from `src`, a `parse` test, and `meta.platforms`, so none of those are repeated at the call site.
 
 ### Exceptions
 
