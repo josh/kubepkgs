@@ -8,10 +8,6 @@
   outputs =
     { self, nixpkgs }:
     let
-      internal-inputs = builtins.mapAttrs (
-        _name: node: builtins.getFlake (builtins.flakeRefToString node.locked)
-      ) (builtins.fromJSON (builtins.readFile ./internal/flake.lock)).nodes;
-
       systems = [
         "aarch64-darwin"
         "aarch64-linux"
@@ -21,13 +17,14 @@
       eachSystem = lib.attrsets.genAttrs systems;
       addAttrsetPrefix = prefix: lib.attrsets.concatMapAttrs (n: v: { "${prefix}${n}" = v; });
 
-      importNixpkgs =
-        flake: system:
-        import flake.outPath {
+      nixpkgsFor = eachSystem (
+        system:
+        import nixpkgs {
           inherit system;
           config.allowUnfree = true;
           overlays = [ ];
-        };
+        }
+      );
 
       importPackages =
         pkgs:
@@ -67,32 +64,32 @@
       mkPackages = pkgs: lib.attrsets.filterAttrs (_: pkg: pkg.meta.available) (importPackages pkgs);
 
       mkChecks =
-        name: pkgs:
+        pkgs:
         let
           buildCheckPkg =
-            pkg: pkgs.runCommand "${pkg.name}-${name}-build" { nativeBuildInputs = [ pkg ]; } "touch $out";
+            pkg: pkgs.runCommand "${pkg.name}-build" { nativeBuildInputs = [ pkg ]; } "touch $out";
         in
         lib.attrsets.concatMapAttrs (
           pkgName: pkg:
           if (builtins.hasAttr "tests" pkg) then
             (
               {
-                "${pkgName}-${name}-build" = buildCheckPkg pkg;
+                "${pkgName}-build" = buildCheckPkg pkg;
               }
-              // (addAttrsetPrefix "${pkgName}-${name}-tests-" pkg.tests)
+              // (addAttrsetPrefix "${pkgName}-tests-" pkg.tests)
             )
           else
-            { "${pkgName}-${name}-build" = buildCheckPkg pkg; }
+            { "${pkgName}-build" = buildCheckPkg pkg; }
         ) (mkPackages pkgs);
 
-      treefmt-nix = eachSystem (import ./internal/treefmt.nix);
+      treefmt-nix = eachSystem (system: import ./internal/treefmt.nix nixpkgsFor.${system});
     in
     {
       overlays.default = final: _prev: {
         kubepkgs = importPackages final;
       };
 
-      packages = eachSystem (system: mkPackages (importNixpkgs nixpkgs system));
+      packages = eachSystem (system: mkPackages nixpkgsFor.${system});
 
       formatter = eachSystem (system: treefmt-nix.${system}.wrapper);
       checks = eachSystem (
@@ -100,8 +97,7 @@
         {
           formatting = treefmt-nix.${system}.check self;
         }
-        // (mkChecks "stable" (importNixpkgs internal-inputs.nixpkgs-stable system))
-        // (mkChecks "unstable" (importNixpkgs internal-inputs.nixpkgs-unstable system))
+        // (mkChecks nixpkgsFor.${system})
       );
     };
 }
