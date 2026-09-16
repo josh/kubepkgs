@@ -29,12 +29,44 @@
           overlays = [ ];
         };
 
-      mkPackages =
+      importPackages =
         pkgs:
         let
-          pkgs' = import ./default.nix { inherit pkgs; };
+          inherit (pkgs) lib;
+
+          callPackage = lib.customisation.callPackageWith (
+            pkgs // { nur.repos.josh = pkgs' // internalPkgs; }
+          );
+
+          internalPkgs = {
+            checkKubeImages = args: callPackage ./internal/check-kube-images.nix args;
+            fetchhelm = callPackage ./internal/fetchhelm.nix { };
+            renderHelmTemplate = args: callPackage ./internal/helm-render-template.nix args;
+          };
+
+          packagesFromDirectory =
+            directory:
+            lib.attrsets.concatMapAttrs (
+              name: type:
+              let
+                filename = lib.path.append directory name;
+                isNix = lib.strings.hasSuffix ".nix" name;
+                basename = lib.strings.removeSuffix ".nix" name;
+              in
+              if type == "regular" && isNix then { "${basename}" = callPackage filename { }; } else { }
+            ) (builtins.readDir directory);
+
+          pkgs' = lib.attrsets.concatMapAttrs (
+            name: type:
+            let
+              dirname = lib.path.append ./pkgs name;
+            in
+            if type == "directory" then packagesFromDirectory dirname else { }
+          ) (builtins.readDir ./pkgs);
         in
-        lib.attrsets.filterAttrs (_: pkg: pkg.meta.available) pkgs';
+        pkgs';
+
+      mkPackages = pkgs: lib.attrsets.filterAttrs (_: pkg: pkg.meta.available) (importPackages pkgs);
 
       mkChecks =
         name: pkgs:
@@ -61,7 +93,7 @@
       overlays.default = final: prev: {
         nur = (prev.nur or { }) // {
           repos = (prev.nur.repos or { }) // {
-            josh = import ./default.nix { pkgs = final; };
+            josh = importPackages final;
           };
         };
       };
