@@ -37,18 +37,18 @@ These flags will give you the most verbose output for debugging. When running in
 Order the `callPackage` argument set by role, and alphabetize only within the dependency group:
 
 1. `lib`
-2. Builder — `stdenvNoCC`
+2. Builder — `stdenvNoCC`, `buildGo127Module`
 3. Source — `fetchFromGitHub`, and `kubepkgs` (it supplies a chart as `src`, plus `fetchhelm`, `renderHelmTemplate`, and `checkKubeImages`)
-4. Dependencies, alphabetized — `kubernetes-helm`, `yq`. Packages a test consumes belong here, not in the group below
+4. Dependencies, alphabetized — `jq`, `yq`. Packages a test consumes belong here, not in the group below
 5. Passthru machinery — `nix-update-script`, `runCommand`
 
 ```nix
 {
   lib,
   stdenvNoCC,
-  kubepkgs,
-  kubernetes-helm,
-  yq,
+  fetchFromGitHub,
+  jq,
+  nix-update-script,
   runCommand,
 }:
 ```
@@ -59,7 +59,7 @@ Every argument list here is flat — no package reaches eight arguments. If one 
 
 Order attributes by the build lifecycle:
 
-`pname` → `version` → `__structuredAttrs` → `src` → `nativeBuildInputs` → phases in lifecycle order (`buildCommand`, or `buildPhase` then `installPhase`) → `passthru` → `meta`
+`pname` → `version` → format flags (`__structuredAttrs`, `outputs`) → `src` → `vendorHash` → `nativeBuildInputs` → phases in lifecycle order (`buildCommand`, or `buildPhase` then `installPhase`) → `passthru` → `meta`
 
 `pname` is always first and `meta` is always last, with `passthru` immediately before it.
 
