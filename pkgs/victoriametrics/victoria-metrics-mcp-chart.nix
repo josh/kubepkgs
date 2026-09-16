@@ -1,5 +1,5 @@
-{ lib, nur }:
-nur.repos.josh.fetchhelm {
+{ lib, kubepkgs }:
+kubepkgs.fetchhelm {
   url = "https://victoriametrics.github.io/helm-charts";
   chart = "victoria-metrics-mcp";
   version = "0.3.0";

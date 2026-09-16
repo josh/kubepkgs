@@ -1,18 +1,18 @@
 {
   lib,
   stdenvNoCC,
-  nur,
+  kubepkgs,
   kubernetes-helm,
   yq,
   runCommand,
 }:
 stdenvNoCC.mkDerivation (finalAttrs: {
   pname = "sops-secrets-operator-manifests";
-  inherit (nur.repos.josh.sops-secrets-operator-chart) version;
+  inherit (kubepkgs.sops-secrets-operator-chart) version;
 
   __structuredAttrs = true;
 
-  src = nur.repos.josh.sops-secrets-operator-chart;
+  src = kubepkgs.sops-secrets-operator-chart;
 
   nativeBuildInputs = [
     kubernetes-helm

@@ -1,18 +1,18 @@
 {
   lib,
   stdenvNoCC,
-  nur,
+  kubepkgs,
   kubernetes-helm,
   yq,
   runCommand,
 }:
 stdenvNoCC.mkDerivation (finalAttrs: {
   pname = "victoria-metrics-agent-manifests";
-  inherit (nur.repos.josh.victoria-metrics-agent-chart) version;
+  inherit (kubepkgs.victoria-metrics-agent-chart) version;
 
   __structuredAttrs = true;
 
-  src = nur.repos.josh.victoria-metrics-agent-chart;
+  src = kubepkgs.victoria-metrics-agent-chart;
 
   nativeBuildInputs = [
     kubernetes-helm

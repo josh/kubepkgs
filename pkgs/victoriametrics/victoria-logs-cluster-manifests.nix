@@ -1,18 +1,18 @@
 {
   lib,
   stdenvNoCC,
-  nur,
+  kubepkgs,
   kubernetes-helm,
   yq,
   runCommand,
 }:
 stdenvNoCC.mkDerivation (finalAttrs: {
   pname = "victoria-logs-cluster-manifests";
-  inherit (nur.repos.josh.victoria-logs-cluster-chart) version;
+  inherit (kubepkgs.victoria-logs-cluster-chart) version;
 
   __structuredAttrs = true;
 
-  src = nur.repos.josh.victoria-logs-cluster-chart;
+  src = kubepkgs.victoria-logs-cluster-chart;
 
   nativeBuildInputs = [
     kubernetes-helm

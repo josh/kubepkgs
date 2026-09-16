@@ -1,5 +1,5 @@
-{ lib, nur }:
-nur.repos.josh.fetchhelm {
+{ lib, kubepkgs }:
+kubepkgs.fetchhelm {
   url = "https://ceph.github.io/csi-charts";
   chart = "ceph-csi-rbd";
   version = "3.17.1";

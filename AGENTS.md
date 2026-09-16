@@ -38,7 +38,7 @@ Order the `callPackage` argument set by role, and alphabetize only within the de
 
 1. `lib`
 2. Builder — `stdenv`, `stdenvNoCC`, `buildGoModule`, `python3Packages`, `rustPlatform`, `swiftPackages`, `terraform-providers`
-3. Source — `fetchFromGitHub`, `fetchurl`, `fetchzip`, and `nur` (it supplies `src`)
+3. Source — `fetchFromGitHub`, `fetchurl`, `fetchzip`, and `kubepkgs` (it supplies `src`)
 4. Dependencies, alphabetized. Packages a test consumes belong here, not in the group below
 5. Passthru machinery — `nix-update-script`, `runCommand`, `testers`, `writeText`
 

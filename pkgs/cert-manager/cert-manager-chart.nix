@@ -1,5 +1,5 @@
-{ lib, nur }:
-nur.repos.josh.fetchhelm {
+{ lib, kubepkgs }:
+kubepkgs.fetchhelm {
   url = "oci://quay.io/jetstack/charts/cert-manager";
   chart = "cert-manager";
   version = "1.21.2";

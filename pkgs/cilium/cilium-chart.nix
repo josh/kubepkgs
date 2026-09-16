@@ -1,5 +1,5 @@
-{ lib, nur }:
-nur.repos.josh.fetchhelm {
+{ lib, kubepkgs }:
+kubepkgs.fetchhelm {
   url = "https://helm.cilium.io/";
   chart = "cilium";
   version = "1.20.2";

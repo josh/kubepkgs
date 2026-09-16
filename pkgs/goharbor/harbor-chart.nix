@@ -1,5 +1,5 @@
-{ lib, nur }:
-nur.repos.josh.fetchhelm {
+{ lib, kubepkgs }:
+kubepkgs.fetchhelm {
   url = "https://helm.goharbor.io/";
   chart = "harbor";
   version = "1.19.2";

@@ -1,5 +1,5 @@
-{ lib, nur }:
-nur.repos.josh.fetchhelm {
+{ lib, kubepkgs }:
+kubepkgs.fetchhelm {
   url = "https://jellyfin.github.io/jellyfin-helm";
   chart = "jellyfin";
   version = "3.2.0";

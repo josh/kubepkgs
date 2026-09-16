@@ -1,5 +1,5 @@
-{ lib, nur }:
-nur.repos.josh.fetchhelm {
+{ lib, kubepkgs }:
+kubepkgs.fetchhelm {
   url = "https://prometheus-community.github.io/helm-charts";
   chart = "prometheus-node-exporter";
   version = "4.57.0";

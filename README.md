@@ -9,7 +9,7 @@ My Kubernetes Nix Repository. Vendored upstream Helm charts (`*-chart`) and the 
 ```
 $ nix repl .
 > pkgs = import <nixpkgs> { overlays = [ overlays.default ]; }
-> pkgs.nur.repos.josh
+> pkgs.kubepkgs
 ```
 
 ```nix

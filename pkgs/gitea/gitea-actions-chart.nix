@@ -1,5 +1,5 @@
-{ lib, nur }:
-nur.repos.josh.fetchhelm {
+{ lib, kubepkgs }:
+kubepkgs.fetchhelm {
   pname = "gitea-actions-chart";
   url = "https://dl.gitea.com/charts/";
   chart = "actions";

@@ -1,13 +1,13 @@
 {
   lib,
   stdenvNoCC,
-  nur,
+  kubepkgs,
   yq,
   runCommand,
 }:
 stdenvNoCC.mkDerivation (finalAttrs: {
   pname = "local-path-provisioner-manifests";
-  inherit (nur.repos.josh.local-path-provisioner-chart) version src;
+  inherit (kubepkgs.local-path-provisioner-chart) version src;
 
   __structuredAttrs = true;
 

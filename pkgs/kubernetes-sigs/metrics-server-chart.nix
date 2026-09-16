@@ -1,5 +1,5 @@
-{ lib, nur }:
-nur.repos.josh.fetchhelm {
+{ lib, kubepkgs }:
+kubepkgs.fetchhelm {
   url = "https://kubernetes-sigs.github.io/metrics-server/";
   chart = "metrics-server";
   version = "3.14.0";

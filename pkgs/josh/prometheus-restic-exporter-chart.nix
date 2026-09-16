@@ -2,7 +2,7 @@
   lib,
   stdenvNoCC,
   fetchFromGitHub,
-  nur,
+  kubepkgs,
   nix-update-script,
 }:
 stdenvNoCC.mkDerivation (finalAttrs: {
@@ -24,14 +24,14 @@ stdenvNoCC.mkDerivation (finalAttrs: {
   passthru.updateScript = nix-update-script { extraArgs = [ "--version=stable" ]; };
 
   passthru.tests = {
-    render = nur.repos.josh.renderHelmTemplate {
+    render = kubepkgs.renderHelmTemplate {
       src = finalAttrs.finalPackage;
       chartName = "restic-exporter";
       helmValues = {
         restic.repository = "s3:https://s3.example.com/restic";
       };
     };
-    images = nur.repos.josh.checkKubeImages {
+    images = kubepkgs.checkKubeImages {
       src = finalAttrs.passthru.tests.render;
       inherit (finalAttrs) pname version;
     };

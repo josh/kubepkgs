@@ -1,5 +1,5 @@
-{ lib, nur }:
-nur.repos.josh.fetchhelm {
+{ lib, kubepkgs }:
+kubepkgs.fetchhelm {
   url = "https://isindir.github.io/sops-secrets-operator/";
   chart = "sops-secrets-operator";
   version = "0.28.1";

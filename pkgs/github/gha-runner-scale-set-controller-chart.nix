@@ -1,5 +1,5 @@
-{ lib, nur }:
-nur.repos.josh.fetchhelm {
+{ lib, kubepkgs }:
+kubepkgs.fetchhelm {
   url = "oci://ghcr.io/actions/actions-runner-controller-charts/gha-runner-scale-set-controller";
   chart = "gha-runner-scale-set-controller";
   version = "0.14.2";

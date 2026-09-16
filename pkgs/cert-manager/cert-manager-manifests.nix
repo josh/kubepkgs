@@ -1,18 +1,18 @@
 {
   lib,
   stdenvNoCC,
-  nur,
+  kubepkgs,
   kubernetes-helm,
   yq,
   runCommand,
 }:
 stdenvNoCC.mkDerivation (finalAttrs: {
   pname = "cert-manager-manifests";
-  inherit (nur.repos.josh.cert-manager-chart) version;
+  inherit (kubepkgs.cert-manager-chart) version;
 
   __structuredAttrs = true;
 
-  src = nur.repos.josh.cert-manager-chart;
+  src = kubepkgs.cert-manager-chart;
 
   nativeBuildInputs = [
     kubernetes-helm

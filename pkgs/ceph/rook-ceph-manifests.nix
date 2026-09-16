@@ -1,18 +1,18 @@
 {
   lib,
   stdenvNoCC,
-  nur,
+  kubepkgs,
   kubernetes-helm,
   yq,
   runCommand,
 }:
 stdenvNoCC.mkDerivation (finalAttrs: {
   pname = "rook-ceph-manifests";
-  inherit (nur.repos.josh.rook-ceph-chart) version;
+  inherit (kubepkgs.rook-ceph-chart) version;
 
   __structuredAttrs = true;
 
-  src = nur.repos.josh.rook-ceph-chart;
+  src = kubepkgs.rook-ceph-chart;
 
   nativeBuildInputs = [
     kubernetes-helm

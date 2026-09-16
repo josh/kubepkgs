@@ -1,5 +1,5 @@
-{ lib, nur }:
-nur.repos.josh.fetchhelm {
+{ lib, kubepkgs }:
+kubepkgs.fetchhelm {
   url = "oci://quay.io/jetstack/charts/trust-manager";
   chart = "trust-manager";
   version = "0.25.0";

@@ -1,18 +1,18 @@
 {
   lib,
   stdenvNoCC,
-  nur,
+  kubepkgs,
   kubernetes-helm,
   yq,
   runCommand,
 }:
 stdenvNoCC.mkDerivation (finalAttrs: {
   pname = "cilium-manifests";
-  inherit (nur.repos.josh.cilium-chart) version;
+  inherit (kubepkgs.cilium-chart) version;
 
   __structuredAttrs = true;
 
-  src = nur.repos.josh.cilium-chart;
+  src = kubepkgs.cilium-chart;
 
   nativeBuildInputs = [
     kubernetes-helm

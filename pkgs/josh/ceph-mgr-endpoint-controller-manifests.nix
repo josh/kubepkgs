@@ -1,18 +1,18 @@
 {
   lib,
   stdenvNoCC,
-  nur,
+  kubepkgs,
   kubernetes-helm,
   yq,
   runCommand,
 }:
 stdenvNoCC.mkDerivation (finalAttrs: {
   pname = "ceph-mgr-endpoint-controller-manifests";
-  inherit (nur.repos.josh.ceph-mgr-endpoint-controller-chart) version;
+  inherit (kubepkgs.ceph-mgr-endpoint-controller-chart) version;
 
   __structuredAttrs = true;
 
-  src = nur.repos.josh.ceph-mgr-endpoint-controller-chart;
+  src = kubepkgs.ceph-mgr-endpoint-controller-chart;
 
   nativeBuildInputs = [
     kubernetes-helm

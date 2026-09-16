@@ -1,18 +1,18 @@
 {
   lib,
   stdenvNoCC,
-  nur,
+  kubepkgs,
   kubernetes-helm,
   yq,
   runCommand,
 }:
 stdenvNoCC.mkDerivation (finalAttrs: {
   pname = "jmap2nats-manifests";
-  inherit (nur.repos.josh.jmap2nats-chart) version;
+  inherit (kubepkgs.jmap2nats-chart) version;
 
   __structuredAttrs = true;
 
-  src = nur.repos.josh.jmap2nats-chart;
+  src = kubepkgs.jmap2nats-chart;
 
   nativeBuildInputs = [
     kubernetes-helm

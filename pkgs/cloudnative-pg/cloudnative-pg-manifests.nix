@@ -1,18 +1,18 @@
 {
   lib,
   stdenvNoCC,
-  nur,
+  kubepkgs,
   kubernetes-helm,
   yq,
   runCommand,
 }:
 stdenvNoCC.mkDerivation (finalAttrs: {
   pname = "cloudnative-pg-manifests";
-  inherit (nur.repos.josh.cloudnative-pg-chart) version;
+  inherit (kubepkgs.cloudnative-pg-chart) version;
 
   __structuredAttrs = true;
 
-  src = nur.repos.josh.cloudnative-pg-chart;
+  src = kubepkgs.cloudnative-pg-chart;
 
   nativeBuildInputs = [
     kubernetes-helm

@@ -1,18 +1,18 @@
 {
   lib,
   stdenvNoCC,
-  nur,
+  kubepkgs,
   kubernetes-helm,
   yq,
   runCommand,
 }:
 stdenvNoCC.mkDerivation (finalAttrs: {
   pname = "gha-runner-scale-set-controller-manifests";
-  inherit (nur.repos.josh.gha-runner-scale-set-controller-chart) version;
+  inherit (kubepkgs.gha-runner-scale-set-controller-chart) version;
 
   __structuredAttrs = true;
 
-  src = nur.repos.josh.gha-runner-scale-set-controller-chart;
+  src = kubepkgs.gha-runner-scale-set-controller-chart;
 
   nativeBuildInputs = [
     kubernetes-helm

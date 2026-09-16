@@ -1,5 +1,5 @@
-{ lib, nur }:
-nur.repos.josh.fetchhelm {
+{ lib, kubepkgs }:
+kubepkgs.fetchhelm {
   url = "https://charts.rook.io/release/";
   chart = "rook-ceph";
   version = "1.20.7";

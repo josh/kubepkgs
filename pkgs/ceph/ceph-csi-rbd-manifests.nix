@@ -1,18 +1,18 @@
 {
   lib,
   stdenvNoCC,
-  nur,
+  kubepkgs,
   kubernetes-helm,
   yq,
   runCommand,
 }:
 stdenvNoCC.mkDerivation (finalAttrs: {
   pname = "ceph-csi-rbd-manifests";
-  inherit (nur.repos.josh.ceph-csi-rbd-chart) version;
+  inherit (kubepkgs.ceph-csi-rbd-chart) version;
 
   __structuredAttrs = true;
 
-  src = nur.repos.josh.ceph-csi-rbd-chart;
+  src = kubepkgs.ceph-csi-rbd-chart;
 
   nativeBuildInputs = [
     kubernetes-helm

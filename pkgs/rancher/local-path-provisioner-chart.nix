@@ -2,7 +2,7 @@
   lib,
   stdenvNoCC,
   fetchFromGitHub,
-  nur,
+  kubepkgs,
   nix-update-script,
   runCommand,
 }:
@@ -37,11 +37,11 @@ stdenvNoCC.mkDerivation (finalAttrs: {
           touch $out
         '';
 
-    render = nur.repos.josh.renderHelmTemplate {
+    render = kubepkgs.renderHelmTemplate {
       src = finalAttrs.finalPackage;
       chartName = "local-path-provisioner";
     };
-    images = nur.repos.josh.checkKubeImages {
+    images = kubepkgs.checkKubeImages {
       src = finalAttrs.passthru.tests.render;
       inherit (finalAttrs) pname version;
     };

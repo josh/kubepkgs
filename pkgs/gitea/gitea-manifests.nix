@@ -1,18 +1,18 @@
 {
   lib,
   stdenvNoCC,
-  nur,
+  kubepkgs,
   kubernetes-helm,
   yq,
   runCommand,
 }:
 stdenvNoCC.mkDerivation (finalAttrs: {
   pname = "gitea-manifests";
-  inherit (nur.repos.josh.gitea-chart) version;
+  inherit (kubepkgs.gitea-chart) version;
 
   __structuredAttrs = true;
 
-  src = nur.repos.josh.gitea-chart;
+  src = kubepkgs.gitea-chart;
 
   nativeBuildInputs = [
     kubernetes-helm

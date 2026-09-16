@@ -1,18 +1,18 @@
 {
   lib,
   stdenvNoCC,
-  nur,
+  kubepkgs,
   kubernetes-helm,
   yq,
   runCommand,
 }:
 stdenvNoCC.mkDerivation (finalAttrs: {
   pname = "nack-manifests";
-  inherit (nur.repos.josh.nack-chart) version;
+  inherit (kubepkgs.nack-chart) version;
 
   __structuredAttrs = true;
 
-  src = nur.repos.josh.nack-chart;
+  src = kubepkgs.nack-chart;
 
   nativeBuildInputs = [
     kubernetes-helm

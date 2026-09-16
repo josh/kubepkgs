@@ -1,18 +1,18 @@
 {
   lib,
   stdenvNoCC,
-  nur,
+  kubepkgs,
   kubernetes-helm,
   yq,
   runCommand,
 }:
 stdenvNoCC.mkDerivation (finalAttrs: {
   pname = "metrics-server-manifests";
-  inherit (nur.repos.josh.metrics-server-chart) version;
+  inherit (kubepkgs.metrics-server-chart) version;
 
   __structuredAttrs = true;
 
-  src = nur.repos.josh.metrics-server-chart;
+  src = kubepkgs.metrics-server-chart;
 
   nativeBuildInputs = [
     kubernetes-helm

@@ -1,5 +1,5 @@
-{ lib, nur }:
-nur.repos.josh.fetchhelm {
+{ lib, kubepkgs }:
+kubepkgs.fetchhelm {
   url = "oci://ghcr.io/grafana/helm-charts/grafana-operator";
   chart = "grafana-operator";
   version = "5.25.0";

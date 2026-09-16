@@ -34,9 +34,7 @@
         let
           inherit (pkgs) lib;
 
-          callPackage = lib.customisation.callPackageWith (
-            pkgs // { nur.repos.josh = pkgs' // internalPkgs; }
-          );
+          callPackage = lib.customisation.callPackageWith (pkgs // { kubepkgs = pkgs' // internalPkgs; });
 
           internalPkgs = {
             checkKubeImages = args: callPackage ./internal/check-kube-images.nix args;
@@ -90,12 +88,8 @@
       treefmt-nix = eachSystem (import ./internal/treefmt.nix);
     in
     {
-      overlays.default = final: prev: {
-        nur = (prev.nur or { }) // {
-          repos = (prev.nur.repos or { }) // {
-            josh = importPackages final;
-          };
-        };
+      overlays.default = final: _prev: {
+        kubepkgs = importPackages final;
       };
 
       packages = eachSystem (system: mkPackages (importNixpkgs nixpkgs system));

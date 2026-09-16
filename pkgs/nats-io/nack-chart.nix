@@ -1,5 +1,5 @@
-{ lib, nur }:
-nur.repos.josh.fetchhelm {
+{ lib, kubepkgs }:
+kubepkgs.fetchhelm {
   url = "https://nats-io.github.io/k8s/helm/charts";
   chart = "nack";
   version = "0.35.0";

@@ -1,5 +1,5 @@
-{ lib, nur }:
-nur.repos.josh.fetchhelm {
+{ lib, kubepkgs }:
+kubepkgs.fetchhelm {
   url = "https://piraeus.io/helm-charts/";
   chart = "snapshot-controller";
   version = "5.2.0";

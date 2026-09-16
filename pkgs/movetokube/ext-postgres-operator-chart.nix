@@ -1,5 +1,5 @@
-{ lib, nur }:
-nur.repos.josh.fetchhelm {
+{ lib, kubepkgs }:
+kubepkgs.fetchhelm {
   url = "https://movetokube.github.io/postgres-operator";
   chart = "ext-postgres-operator";
   version = "3.0.0";

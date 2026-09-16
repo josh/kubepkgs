@@ -1,5 +1,5 @@
-{ lib, nur }:
-nur.repos.josh.fetchhelm {
+{ lib, kubepkgs }:
+kubepkgs.fetchhelm {
   pname = "cloudnative-pg-cluster-chart";
   url = "https://cloudnative-pg.github.io/charts";
   chart = "cluster";

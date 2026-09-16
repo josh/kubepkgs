@@ -1,18 +1,18 @@
 {
   lib,
   stdenvNoCC,
-  nur,
+  kubepkgs,
   kubernetes-helm,
   yq,
   runCommand,
 }:
 stdenvNoCC.mkDerivation (finalAttrs: {
   pname = "tailscale-operator-manifests";
-  inherit (nur.repos.josh.tailscale-operator-chart) version;
+  inherit (kubepkgs.tailscale-operator-chart) version;
 
   __structuredAttrs = true;
 
-  src = nur.repos.josh.tailscale-operator-chart;
+  src = kubepkgs.tailscale-operator-chart;
 
   nativeBuildInputs = [
     kubernetes-helm
