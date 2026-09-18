@@ -2,8 +2,8 @@
 kubepkgs.fetchhelm {
   url = "https://pkgs.tailscale.com/helmcharts";
   chart = "tailscale-operator";
-  version = "1.102.3";
-  hash = "sha256-yPwHKq8qXGdZlbNi9Y7fFd4PKRt0tHUTuVuh+HsyBiY=";
+  version = "1.102.4";
+  hash = "sha256-dMU3iun/5Vl8TJwT5zqu1hwlUR3HolZ2KYPi7JtkTuI=";
 
   meta = {
     description = "Helm chart for the Tailscale Kubernetes operator";
