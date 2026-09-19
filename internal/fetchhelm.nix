@@ -16,7 +16,7 @@ args@{
   meta ? { },
 }:
 let
-  nixhelm-update = callPackage ./nixhelm-update.nix { };
+  update-helm-charts = callPackage ./update-helm-charts.nix { };
 in
 stdenvNoCC.mkDerivation (finalAttrs: {
   inherit pname version;
@@ -58,14 +58,24 @@ stdenvNoCC.mkDerivation (finalAttrs: {
     cp -R ./out/"$helmChart" $out
   '';
 
+  passthru.helmChart = {
+    inherit
+      pname
+      url
+      chart
+      version
+      hash
+      ;
+    inherit ((builtins.unsafeGetAttrPos "url" args)) file;
+    versionLine = (builtins.unsafeGetAttrPos "version" args).line;
+    hashLine = (builtins.unsafeGetAttrPos "hash" args).line;
+  };
+
   passthru.updateScript = [
-    "${lib.meta.getExe nixhelm-update}"
-    "--url"
-    url
-    "--chart"
-    chart
-    "--position-file"
-    (builtins.unsafeGetAttrPos "url" args).file
+    "${lib.meta.getExe update-helm-charts}"
+    "--only"
+    pname
+    "--write"
   ];
 
   passthru.tests = {
@@ -87,6 +97,6 @@ stdenvNoCC.mkDerivation (finalAttrs: {
   }
   // meta;
 
-  # nixhelm-update locates the calling file via meta.position
+  # update-helm-charts locates the calling file via meta.position
   pos = builtins.unsafeGetAttrPos "url" args;
 })
