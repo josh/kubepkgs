@@ -4,7 +4,10 @@ let
   flake = builtins.getFlake (builtins.getEnv "FLAKE_URI");
   packages = flake.packages.${system};
 
-  shouldUpdatePackage = name: builtins.hasAttr "updateScript" packages.${name};
+  shouldUpdatePackage =
+    name:
+    (builtins.hasAttr "updateScript" packages.${name})
+    && !(builtins.hasAttr "helmChart" packages.${name});
 
   attrs = builtins.filter shouldUpdatePackage (builtins.attrNames packages);
 in
