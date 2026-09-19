@@ -323,15 +323,16 @@ def report(results: list[Result]) -> None:
 
 def write_github_summary(results: list[Result]) -> None:
     path = os.environ.get("GITHUB_STEP_SUMMARY")
-    if not path:
+    changed = [r for r in results if r.status != "up-to-date"]
+    if not path or not changed:
         return
     rows = ["| chart | current | latest | status |", "| --- | --- | --- | --- |"]
-    for r in sorted(results, key=lambda r: (r.status, r.chart.attr)):
+    for r in sorted(changed, key=lambda r: (r.status, r.chart.attr)):
         rows.append(
             f"| {r.chart.attr} | {r.chart.version} | {r.latest or '-'} | {r.status} |"
         )
     with open(path, "a") as f:
-        f.write("## Helm charts\n\n" + "\n".join(rows) + "\n")
+        f.write("\n".join(rows) + "\n")
 
 
 @click.command()
