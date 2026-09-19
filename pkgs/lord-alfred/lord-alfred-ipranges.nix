@@ -7,13 +7,13 @@
 }:
 stdenvNoCC.mkDerivation (finalAttrs: {
   pname = "lord-alfred-ipranges";
-  version = "0-unstable-2026-09-18";
+  version = "0-unstable-2026-09-19";
 
   src = fetchFromGitHub {
     owner = "lord-alfred";
     repo = "ipranges";
-    rev = "fe996d819bb09da20c384672c42a672144152432";
-    hash = "sha256-VLkR3LYxsN/MtDbbbqnvBEYN2U8JtPj3gjkbysOTaTU=";
+    rev = "734e7d5620966741d68bfb57d86ffff5eb085039";
+    hash = "sha256-7TUHvQtV1+JKICVobqHQzpqYgDdu6Aw+2ZcKHH2+apk=";
   };
 
   installPhase = ''
