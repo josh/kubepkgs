@@ -6,6 +6,6 @@ kubepkgs.fetchOciImage {
   meta = {
     description = "OpenClaw container image mirror";
     homepage = "https://github.com/openclaw/openclaw";
-    license = lib.licenses.unfree;
+    license = lib.licenses.mit;
   };
 }

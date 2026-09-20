@@ -6,6 +6,6 @@ kubepkgs.fetchOciImage {
   meta = {
     description = "Hermes agent container image mirror";
     homepage = "https://hub.docker.com/r/nousresearch/hermes-agent";
-    license = lib.licenses.unfree;
+    license = lib.licenses.mit;
   };
 }
