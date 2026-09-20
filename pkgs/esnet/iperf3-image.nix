@@ -2,6 +2,7 @@
 kubepkgs.buildOciImage {
   name = "iperf3";
   contents = [ iperf3 ];
+  extraCommands = "mkdir -m 1777 tmp";
   config = {
     User = "65534:65534";
     Entrypoint = [ "${iperf3}/bin/iperf3" ];
