@@ -52,6 +52,13 @@ stdenvNoCC.mkDerivation {
   passthru = {
     inherit imageName;
     imageDigest = parsed.digest;
+    imageTag = builtins.substring 0 32 (
+      builtins.convertHash {
+        hash = lib.strings.removePrefix "sha256:" parsed.digest;
+        hashAlgo = "sha256";
+        toHashFormat = "nix32";
+      }
+    );
     ociLayout = true;
 
     ociImage = {
