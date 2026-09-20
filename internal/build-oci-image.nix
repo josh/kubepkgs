@@ -1,5 +1,6 @@
 {
   lib,
+  callPackage,
   dockerTools,
 }:
 {
@@ -9,22 +10,35 @@
   extraCommands ? "",
   fakeRootCommands ? "",
   fakeNss ? dockerTools.fakeNss,
+  testScript ? null,
   meta ? { },
 }:
-dockerTools.buildLayeredImage {
-  inherit
-    name
-    config
-    extraCommands
-    fakeRootCommands
-    ;
+let
+  testOciImage = callPackage ./test-oci-image.nix { };
 
-  contents = contents ++ [ fakeNss ];
+  image = dockerTools.buildLayeredImage {
+    inherit
+      name
+      config
+      extraCommands
+      fakeRootCommands
+      ;
 
-  compressor = "none";
+    contents = contents ++ [ fakeNss ];
 
-  meta = {
-    platforms = lib.platforms.linux;
-  }
-  // meta;
-}
+    compressor = "none";
+
+    meta = {
+      platforms = lib.platforms.linux;
+    }
+    // meta;
+  };
+in
+if testScript == null then
+  image
+else
+  image.overrideAttrs (old: {
+    passthru = old.passthru // {
+      tests.integration = testOciImage { inherit image testScript; };
+    };
+  })
