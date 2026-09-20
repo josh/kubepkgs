@@ -59,8 +59,6 @@ stdenvNoCC.mkDerivation {
         toHashFormat = "nix32";
       }
     );
-    ociLayout = true;
-
     ociImage = {
       inherit pname imageName;
       inherit (parsed) tag digest;

@@ -34,6 +34,7 @@
           callPackage = lib.customisation.callPackageWith (pkgs // { kubepkgs = pkgs' // internalPkgs; });
 
           internalPkgs = {
+            buildOciImage = callPackage ./internal/build-oci-image.nix { };
             checkKubeImages = args: callPackage ./internal/check-kube-images.nix args;
             fetchhelm = callPackage ./internal/fetchhelm.nix { };
             fetchOciImage = callPackage ./internal/fetch-oci-image.nix { };
@@ -67,8 +68,7 @@
       mkChecks =
         pkgs:
         let
-          buildCheckPkg =
-            pkg: pkgs.runCommand "${pkg.name}-build" { nativeBuildInputs = [ pkg ]; } "touch $out";
+          buildCheckPkg = pkg: pkgs.runCommand "${pkg.name}-build" { env.PKG = pkg; } "touch $out";
         in
         lib.attrsets.concatMapAttrs (
           pkgName: pkg:
