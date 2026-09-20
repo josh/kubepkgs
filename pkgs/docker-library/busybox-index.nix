@@ -1,7 +1,7 @@
 { lib, kubepkgs }:
 kubepkgs.fetchOciImage {
   imageName = "docker.io/library/busybox";
-  lock = ./busybox-image.json;
+  lock = ./busybox-index.json;
 
   meta = {
     description = "BusyBox container image mirror";

@@ -6,7 +6,7 @@
 {
   imageName,
   lock,
-  pname ? "${baseNameOf imageName}-image",
+  pname ? "${baseNameOf imageName}-index",
   meta ? { },
 }:
 let
