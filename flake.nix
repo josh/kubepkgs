@@ -36,6 +36,7 @@
           internalPkgs = {
             checkKubeImages = args: callPackage ./internal/check-kube-images.nix args;
             fetchhelm = callPackage ./internal/fetchhelm.nix { };
+            fetchOciImage = callPackage ./internal/fetch-oci-image.nix { };
             renderHelmTemplate = args: callPackage ./internal/helm-render-template.nix args;
           };
 
@@ -94,6 +95,7 @@
         mkPackages nixpkgsFor.${system}
         // {
           update-helm-charts = nixpkgsFor.${system}.callPackage ./internal/update-helm-charts.nix { };
+          update-oci-images = nixpkgsFor.${system}.callPackage ./internal/update-oci-images.nix { };
         }
       );
 

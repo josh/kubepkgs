@@ -7,7 +7,8 @@ let
   shouldUpdatePackage =
     name:
     (builtins.hasAttr "updateScript" packages.${name})
-    && !(builtins.hasAttr "helmChart" packages.${name});
+    && !(builtins.hasAttr "helmChart" packages.${name})
+    && !(builtins.hasAttr "ociImage" packages.${name});
 
   attrs = builtins.filter shouldUpdatePackage (builtins.attrNames packages);
 in
