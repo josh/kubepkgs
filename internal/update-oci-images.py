@@ -64,26 +64,37 @@ def run(cmd: list[str], **kwargs) -> subprocess.CompletedProcess:
     return result
 
 
-def parse_version(raw: str) -> tuple[tuple[int, int, int], bool] | None:
+def parse_version(raw: str) -> tuple[tuple[int, int, int], str | None] | None:
     m = SEMVER.match(raw)
     if not m:
         return None
-    major, minor, patch, pre = m.groups()
-    return (int(major), int(minor or 0), int(patch or 0)), pre is None
+    major, minor, patch, suffix = m.groups()
+    return (int(major), int(minor or 0), int(patch or 0)), suffix
 
 
 def select_version(candidates: list[str], current: str) -> str | None:
-    current_parsed = parse_version(current)
-    allow_prerelease = current_parsed is not None and not current_parsed[1]
+    """Follow the numbers, never the suffix.
 
-    parsed = [(raw, parse_version(raw)) for raw in candidates]
-    valid = [(raw, p) for raw, p in parsed if p is not None]
-    if not allow_prerelease:
-        valid = [(raw, p) for raw, p in valid if p[1]]
+    A tag's suffix identifies the image variant -- redis "8.10.1-alpine" and docker
+    "29.8.1-dind" are different images from "8.10.1" and "29.8.1", not newer ones. So a
+    candidate only qualifies when its suffix matches the pinned tag exactly. A pin on a
+    numbered prerelease such as "-beta1" therefore never advances to "-beta2"; failing to
+    update beats switching channels.
+    """
+    parsed_current = parse_version(current)
+    if parsed_current is None:
+        return None
+    _, suffix = parsed_current
+
+    valid = [
+        (raw, parsed)
+        for raw, parsed in ((raw, parse_version(raw)) for raw in candidates)
+        if parsed is not None and parsed[1] == suffix
+    ]
     if not valid:
         return None
     # "1.38" and "1.38.0" parse equal; prefer the more specific tag.
-    return max(valid, key=lambda item: (item[1], item[0].count(".")))[0]
+    return max(valid, key=lambda item: (item[1][0], item[0].count(".")))[0]
 
 
 def discover(repo_root: str) -> list[Image]:
@@ -145,7 +156,7 @@ def classify(image: Image, latest: str) -> Result:
         return Result(image, "skipped", latest, "unparseable pinned tag")
     if latest_parsed is None:
         return Result(image, "skipped", latest, "unparseable published tag")
-    if latest_parsed < old_parsed:
+    if latest_parsed[0] < old_parsed[0]:
         return Result(image, "skipped", latest, "refusing downgrade")
     if latest == image.tag:
         return Result(image, "up-to-date", latest)
@@ -264,13 +275,49 @@ def write_github_summary(results: list[Result]) -> None:
         f.write("\n".join(rows) + "\n")
 
 
+def init_lock(image_ref: str, lock_path: str) -> None:
+    """Accepts <imageName>:<tag> or <imageName>:<tag>@<digest>.
+
+    Pass the digest to pin exactly what is deployed; tags move, so resolving one here can
+    pick up content the cluster has never run.
+    """
+    ref, _, digest = image_ref.partition("@")
+    image_name, _, tag = ref.rpartition(":")
+    if not image_name or not tag:
+        raise ValueError(f"expected <imageName>:<tag>[@<digest>], got {image_ref}")
+    if not digest:
+        digest = crane_digest(image_name, tag)
+    lock = json.dumps(build_lock(image_name, tag, digest), indent=2) + "\n"
+    with open(lock_path, "w") as f:
+        f.write(lock)
+    log(f"wrote {lock_path} for {image_name}:{tag} at {digest}")
+
+
 @click.command()
+@click.option(
+    "--init",
+    "init_ref",
+    metavar="IMAGE:TAG",
+    help="Generate a lockfile for an image not yet packaged.",
+)
+@click.option(
+    "--lock",
+    "lock_path",
+    metavar="PATH",
+    help="Lockfile to write with --init.",
+)
 @click.option("--only", multiple=True, help="Limit to these attributes.")
 @click.option("--dry-run", is_flag=True, help="Print the diff instead of applying it.")
 @click.option("--push", is_flag=True, help="Commit, push, and open one PR per image.")
 @click.option("--write", is_flag=True, help="Edit files without committing.")
-def main(only, dry_run, push, write):
+def main(init_ref, lock_path, only, dry_run, push, write):
     os.environ.setdefault("SSL_CERT_FILE", CACERT_PATH)
+
+    if init_ref:
+        if not lock_path:
+            raise click.UsageError("--init requires --lock")
+        init_lock(init_ref, lock_path)
+        return
 
     images = discover(os.getcwd())
     if only:
