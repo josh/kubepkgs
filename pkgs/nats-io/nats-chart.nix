@@ -2,8 +2,8 @@
 kubepkgs.fetchhelm {
   url = "https://nats-io.github.io/k8s/helm/charts";
   chart = "nats";
-  version = "2.14.6";
-  hash = "sha256-ZXhn35xsG3FNTducioZnrWvW0LA/jS4ePeYSmCGfLxU=";
+  version = "2.15.0";
+  hash = "sha256-FVs3+upM8dhG+hN5AIaxql3KaSdkNScEsS4gJ7DWzC0=";
 
   meta = {
     description = "Helm chart for NATS, a cloud native messaging system";
