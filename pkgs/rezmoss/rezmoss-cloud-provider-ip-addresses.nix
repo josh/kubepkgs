@@ -8,7 +8,7 @@
 }:
 stdenvNoCC.mkDerivation (finalAttrs: {
   pname = "rezmoss-cloud-provider-ip-addresses";
-  version = "2026.09.21";
+  version = "2026.09.22";
 
   outputs = [
     "out"
@@ -21,7 +21,7 @@ stdenvNoCC.mkDerivation (finalAttrs: {
     owner = "rezmoss";
     repo = "cloud-provider-ip-addresses";
     tag = "v${finalAttrs.version}";
-    hash = "sha256-B2vCv6t42RoYsddevwJUSH5i9GTd5/zNM6nk/iEDwlo=";
+    hash = "sha256-s6zZ3PmU2Wm756iQU3KPQAPEeqLQyqvHgn3dKKmsiyo=";
   };
 
   installPhase = ''
