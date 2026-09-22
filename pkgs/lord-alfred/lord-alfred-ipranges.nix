@@ -12,8 +12,8 @@ stdenvNoCC.mkDerivation (finalAttrs: {
   src = fetchFromGitHub {
     owner = "lord-alfred";
     repo = "ipranges";
-    rev = "823581763eaa47bf1282a66771a5291bd9030b85";
-    hash = "sha256-uFNNQoLID8w26u7I+EO8bOaRTA8XkD57cM0CVwkk+5Y=";
+    rev = "34dec816c64df78f4479a383a85798b5687ecf2d";
+    hash = "sha256-5BYPqPJ06PUXHrUWQjhPwCD1C9wcnyNnwqs7BNTLRk0=";
   };
 
   installPhase = ''
