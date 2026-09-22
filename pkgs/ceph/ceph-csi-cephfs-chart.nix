@@ -2,8 +2,8 @@
 kubepkgs.fetchhelm {
   url = "https://ceph.github.io/csi-charts";
   chart = "ceph-csi-cephfs";
-  version = "3.17.1";
-  hash = "sha256-iCSXKGBN9bXkm/EfA1CChd/eYjgtYH+yIB1xCjnZHus=";
+  version = "3.18.0";
+  hash = "sha256-LaFo5j6Dk1oywjr/RJx9fdzVLnunDFjzgDu1SpsY7M4=";
 
   meta = {
     description = "Container Storage Interface (CSI) driver, provisioner, snapshotter, resizer and attacher for Ceph cephfs";
