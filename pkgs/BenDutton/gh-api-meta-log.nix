@@ -8,13 +8,13 @@
 }:
 stdenvNoCC.mkDerivation (finalAttrs: {
   pname = "gh-api-meta-log";
-  version = "0-unstable-2026-09-21";
+  version = "0-unstable-2026-09-23";
 
   src = fetchFromGitHub {
     owner = "BenDutton";
     repo = "gh-api-meta-log";
-    rev = "59b0aba45c844e33f9fd6a2664cfed8343903255";
-    hash = "sha256-+I/y+3mbKaO8fMvmJ/3oLRkDhVyry5bmCiGKxcgRAuM=";
+    rev = "c0c347a6cdb0960bbf31ea0f4e70fabba3d19baa";
+    hash = "sha256-TQmaRbL/3rkULEhy4fqINRF5VafPc1XrAot6C2EcWsI=";
   };
 
   installPhase = ''
