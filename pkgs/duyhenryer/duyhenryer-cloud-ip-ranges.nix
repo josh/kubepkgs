@@ -13,8 +13,8 @@ stdenvNoCC.mkDerivation (finalAttrs: {
   src = fetchFromGitHub {
     owner = "duyhenryer";
     repo = "cloud-ip-ranges";
-    rev = "6d84aa3fce899d8c0027b4e544718c0e32b63c2e";
-    hash = "sha256-XxQHP+eSMIPfwOHC1k2/jeZ6Tpom1AueOe517rzBLUs=";
+    rev = "54f65f717005000a4847a7062d1119bb1c19dc6c";
+    hash = "sha256-+wzy/KOoPt+BywuxnEYRkobWZIV7AaVJGj177oUFfp4=";
   };
 
   installPhase = ''
