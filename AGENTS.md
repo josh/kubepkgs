@@ -67,7 +67,9 @@ Order attributes by the build lifecycle:
 
 Most packages wrap an `internal/` builder and pass an attribute set instead of building a derivation themselves. Only the handful that fetch upstream YAML directly, or copy files out of a chart, call `mkDerivation` and follow the attribute order above.
 
-A `*-chart.nix` wrapping `kubepkgs.fetchhelm`: `pname` (only when it differs from the default `<chart>-chart`) → `url` → `chart` → `version` → `hash` → `helmTestValues`/`helmTestArgs` → `meta`.
+A `*-chart.nix` wrapping `kubepkgs.fetchhelm`: `pname` (only when it differs from the default `<chart>-chart`) → `url` → `chart` → `version` → `hash` → `ignoredVersions` → `helmTestValues`/`helmTestArgs` → `meta`.
+
+`ignoredVersions` holds exact upstream versions that `update-helm-charts` must never select, for releases that are published but broken. Always comment why, and delete the entry once upstream is fixed — it is a pin against a known-bad release, not a permanent ceiling.
 
 A `*-manifests.nix` wrapping `kubepkgs.renderHelmTemplate`: `pname` → `src` (the chart) → `chartName` → `helmArgs`/`helmValues` when the render needs them → `meta`. The helper supplies `version` from `src`, a `parse` test, and `meta.platforms`, so none of those are repeated at the call site.
 

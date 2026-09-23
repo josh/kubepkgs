@@ -11,6 +11,7 @@ args@{
   version,
   hash,
   pname ? "${chart}-chart",
+  ignoredVersions ? [ ],
   helmTestValues ? { },
   helmTestArgs ? [ ],
   meta ? { },
@@ -65,6 +66,7 @@ stdenvNoCC.mkDerivation (finalAttrs: {
       chart
       version
       hash
+      ignoredVersions
       ;
     inherit ((builtins.unsafeGetAttrPos "url" args)) file;
     versionLine = (builtins.unsafeGetAttrPos "version" args).line;

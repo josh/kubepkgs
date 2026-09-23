@@ -50,6 +50,7 @@ class Chart:
     file: str
     version_line: int
     hash_line: int
+    ignored_versions: list[str]
 
     @property
     def is_oci(self) -> bool:
@@ -85,11 +86,18 @@ def parse_version(raw: str) -> tuple[tuple[int, int, int], bool] | None:
     return (int(major), int(minor or 0), int(patch or 0)), pre is None
 
 
-def select_version(candidates: list[str], current: str) -> str | None:
+def select_version(
+    candidates: list[str], current: str, ignored: list[str] | None = None
+) -> str | None:
     current_parsed = parse_version(current)
     allow_prerelease = current_parsed is not None and not current_parsed[1]
 
-    parsed = [(raw, parse_version(raw)) for raw in candidates]
+    denied = {v.removeprefix("v") for v in ignored or []}
+    parsed = [
+        (raw, parse_version(raw))
+        for raw in candidates
+        if raw.removeprefix("v") not in denied
+    ]
     valid = [(raw, p) for raw, p in parsed if p is not None]
     if not allow_prerelease:
         valid = [(raw, p) for raw, p in valid if p[1]]
@@ -119,6 +127,7 @@ def discover(repo_root: str) -> list[Chart]:
             file=STORE_PREFIX.sub("", info["file"]),
             version_line=info["versionLine"],
             hash_line=info["hashLine"],
+            ignored_versions=info["ignoredVersions"],
         )
         for attr, info in sorted(data.items())
     ]
@@ -170,7 +179,7 @@ def resolve_latest(charts: list[Chart]) -> list[Result]:
                 Result(chart, "error", None, f"{chart.chart} not published in index")
             )
             continue
-        latest = select_version(candidates, chart.version)
+        latest = select_version(candidates, chart.version, chart.ignored_versions)
         if latest is None:
             results.append(Result(chart, "error", None, "no usable version published"))
             continue
