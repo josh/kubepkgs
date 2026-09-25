@@ -51,6 +51,7 @@ class Chart:
     version_line: int
     hash_line: int
     ignored_versions: list[str]
+    crd_file: str | None
 
     @property
     def is_oci(self) -> bool:
@@ -128,6 +129,9 @@ def discover(repo_root: str) -> list[Chart]:
             version_line=info["versionLine"],
             hash_line=info["hashLine"],
             ignored_versions=info["ignoredVersions"],
+            crd_file=(
+                STORE_PREFIX.sub("", info["crdFile"]) if info["crdFile"] else None
+            ),
         )
         for attr, info in sorted(data.items())
     ]
@@ -257,6 +261,20 @@ def gh(*args: str) -> str:
     return run([GH_PATH, *args]).stdout.strip()
 
 
+def regenerate_crds(chart: Chart) -> None:
+    generated = run(
+        [
+            NIX_PATH,
+            "build",
+            "--no-link",
+            "--print-out-paths",
+            f"{os.getcwd()}#{chart.attr}.crdModuleGenerated",
+        ]
+    ).stdout.strip()
+    with open(generated, "r") as src, open(chart.crd_file, "w") as dst:
+        dst.write(src.read())
+
+
 def apply_chart(chart: Chart, new_version: str, dry_run: bool, push: bool) -> Result:
     with tempfile.TemporaryDirectory() as tmpdir:
         chart_path = helm_pull(chart, new_version, tmpdir)
@@ -289,11 +307,16 @@ def apply_chart(chart: Chart, new_version: str, dry_run: bool, push: bool) -> Re
     with open(chart.file, "w") as f:
         f.write(content)
 
+    files = [chart.file]
+    if chart.crd_file:
+        regenerate_crds(chart)
+        files.append(chart.crd_file)
+
     if not push:
         return Result(chart, "updated", new_version, message)
 
-    git("add", "--", chart.file)
-    git("commit", "--message", message, "--", chart.file)
+    git("add", "--", *files)
+    git("commit", "--message", message, "--", *files)
 
     branch = f"update-{chart.attr}"
     git("push", "--force", "origin", f"HEAD:refs/heads/{branch}")

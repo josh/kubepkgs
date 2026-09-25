@@ -67,7 +67,11 @@ Order attributes by the build lifecycle:
 
 Most packages wrap an `internal/` builder and pass an attribute set instead of building a derivation themselves. Only the handful that fetch upstream YAML directly, or copy files out of a chart, call `mkDerivation` and follow the attribute order above.
 
-A `*-chart.nix` wrapping `kubepkgs.fetchhelm`: `pname` (only when it differs from the default `<chart>-chart`) → `url` → `chart` → `version` → `hash` → `ignoredVersions` → `helmTestValues`/`helmTestArgs` → `meta`.
+A `*-chart.nix` wrapping `kubepkgs.fetchhelm`: `pname` (only when it differs from the default `<chart>-chart`) → `url` → `chart` → `version` → `hash` → `ignoredVersions` → `crds` → `helmTestValues`/`helmTestArgs` → `meta`.
+
+`crds` opts the chart into a committed CRD module: `file` is the generated module under the top-level `crds/`, and `values` is whatever its render needs. Generated modules never live under `pkgs/`, because every `pkgs/*/*.nix` is `callPackage`d and a module is not a derivation. `crds/` is excluded from `treefmt` because the generator emits parens `statix` would strip.
+
+Setting `crds` adds a `tests.crds` drift check, so `nix flake check` fails when the committed module no longer matches the chart. `nix run .#update-crd-modules -- --write` regenerates it, and `update-helm-charts` does the same in the same commit as a version bump.
 
 `ignoredVersions` holds exact upstream versions that `update-helm-charts` must never select, for releases that are published but broken. Always comment why, and delete the entry once upstream is fixed — it is a pin against a known-bad release, not a permanent ceiling.
 
