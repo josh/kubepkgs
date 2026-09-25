@@ -5,6 +5,8 @@ kubepkgs.fetchhelm {
   version = "10.9.2";
   hash = "sha256-OA7qeOnu6I8q7p1WL5XA0jXdZ+RMb9xQgyvzpJAuDQ0=";
 
+  crds.file = ../../crds/argo-cd.nix;
+
   meta = {
     description = "Helm chart for Argo CD, a declarative GitOps continuous delivery tool for Kubernetes";
     homepage = "https://github.com/argoproj/argo-helm";
