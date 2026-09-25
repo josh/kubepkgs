@@ -13,8 +13,8 @@ stdenvNoCC.mkDerivation (finalAttrs: {
   src = fetchFromGitHub {
     owner = "joetek";
     repo = "aws-ip-ranges-json";
-    rev = "3bf397328def29e3e7764935f82275f8c0f00f47";
-    hash = "sha256-QksGH++oAbewbyest+hLAvUa//itDVjRzMng1p1GWRk=";
+    rev = "5bb8d6ae47ac3bb19c6e1b7c6e1220ef99bc0074";
+    hash = "sha256-jgxWxh9BLLxF6NlhsK7ugdaER7M9DWptZvuGPtU4yhI=";
   };
 
   installPhase = ''
