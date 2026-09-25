@@ -12,11 +12,13 @@ args@{
   hash,
   pname ? "${chart}-chart",
   ignoredVersions ? [ ],
+  crds ? null,
   helmTestValues ? { },
   helmTestArgs ? [ ],
   meta ? { },
 }:
 let
+  buildCrdModule = callPackage ./build-crd-module.nix { };
   update-helm-charts = callPackage ./update-helm-charts.nix { };
 in
 stdenvNoCC.mkDerivation (finalAttrs: {
@@ -68,6 +70,7 @@ stdenvNoCC.mkDerivation (finalAttrs: {
       hash
       ignoredVersions
       ;
+    crdFile = if crds == null then null else builtins.toString crds.file;
     inherit ((builtins.unsafeGetAttrPos "url" args)) file;
     versionLine = (builtins.unsafeGetAttrPos "version" args).line;
     hashLine = (builtins.unsafeGetAttrPos "hash" args).line;
@@ -80,6 +83,28 @@ stdenvNoCC.mkDerivation (finalAttrs: {
     "--write"
   ];
 
+  passthru.crds = if crds == null then null else crds.file;
+
+  passthru.crdModuleGenerated =
+    if crds == null then
+      null
+    else
+      buildCrdModule {
+        name = chart;
+        chart = finalAttrs.finalPackage;
+        values = crds.values or { };
+      };
+
+  passthru.crdModule =
+    if crds == null then
+      null
+    else
+      {
+        inherit pname version;
+        name = chart;
+        file = builtins.toString crds.file;
+      };
+
   passthru.tests = {
     render = callPackage ./helm-render-template.nix {
       src = finalAttrs.finalPackage;
@@ -90,6 +115,13 @@ stdenvNoCC.mkDerivation (finalAttrs: {
     images = callPackage ./check-kube-images.nix {
       src = finalAttrs.passthru.tests.render;
       inherit pname version;
+    };
+  }
+  // lib.attrsets.optionalAttrs (crds != null) {
+    crds = callPackage ./check-crd-module.nix {
+      inherit pname;
+      inherit (crds) file;
+      generated = finalAttrs.passthru.crdModuleGenerated;
     };
   };
 

@@ -5,6 +5,11 @@ kubepkgs.fetchhelm {
   version = "1.21.2";
   hash = "sha256-AsbUc4Q9aVfTmENGPPmjOwC6V6v3MpTN1cKIl8csi10=";
 
+  crds = {
+    file = ../../crds/cert-manager.nix;
+    values.crds.enabled = true;
+  };
+
   meta = {
     description = "Helm chart for cert-manager, automating TLS certificate management on Kubernetes";
     homepage = "https://cert-manager.io";

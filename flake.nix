@@ -94,6 +94,7 @@
         system:
         mkPackages nixpkgsFor.${system}
         // {
+          update-crd-modules = nixpkgsFor.${system}.callPackage ./internal/update-crd-modules.nix { };
           update-helm-charts = nixpkgsFor.${system}.callPackage ./internal/update-helm-charts.nix { };
           update-oci-images = nixpkgsFor.${system}.callPackage ./internal/update-oci-images.nix { };
         }

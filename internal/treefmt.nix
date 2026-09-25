@@ -8,6 +8,7 @@ let
 
   treefmtConfig = {
     projectRootFile = "flake.nix";
+    settings.global.excludes = [ "crds/*.nix" ];
     # keep-sorted start
     programs.actionlint.enable = true;
     programs.deadnix.enable = true;
