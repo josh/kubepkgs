@@ -5,6 +5,8 @@ kubepkgs.fetchhelm {
   version = "1.20.7";
   hash = "sha256-L/kouXAJXSHs9mSzERceumXpNVJIVRuj5NC1d5uCwR8=";
 
+  crds.file = ../../crds/rook-ceph.nix;
+
   meta = {
     description = "Helm chart for the Rook operator, orchestrating Ceph storage on Kubernetes";
     homepage = "https://github.com/rook/rook";
