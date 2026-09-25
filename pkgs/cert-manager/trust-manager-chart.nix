@@ -5,6 +5,8 @@ kubepkgs.fetchhelm {
   version = "0.25.0";
   hash = "sha256-M4XHIa8bvIF69pFYsYcR4IpRERg2BpxAfjAY00LFzbM=";
 
+  crds.file = ../../crds/trust-manager.nix;
+
   meta = {
     description = "Helm chart for trust-manager, an operator for managing TLS trust bundles in Kubernetes and OpenShift";
     homepage = "https://cert-manager.io/docs/trust/trust-manager";
