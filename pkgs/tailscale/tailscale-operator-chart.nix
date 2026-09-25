@@ -5,6 +5,8 @@ kubepkgs.fetchhelm {
   version = "1.102.4";
   hash = "sha256-dMU3iun/5Vl8TJwT5zqu1hwlUR3HolZ2KYPi7JtkTuI=";
 
+  crds.file = ../../crds/tailscale-operator.nix;
+
   meta = {
     description = "Helm chart for the Tailscale Kubernetes operator";
     homepage = "https://github.com/tailscale/tailscale";
