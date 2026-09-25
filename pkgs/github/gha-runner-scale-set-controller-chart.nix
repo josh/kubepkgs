@@ -5,6 +5,8 @@ kubepkgs.fetchhelm {
   version = "0.14.2";
   hash = "sha256-qUN0dZJTp/eBV9lO8g2p1RhymE4dVpMVSQcpGfOK6y4=";
 
+  crds.file = ../../crds/gha-runner-scale-set-controller.nix;
+
   meta = {
     description = "Helm chart for installing the actions-runner-controller CRDs";
     homepage = "https://github.com/actions/actions-runner-controller";
