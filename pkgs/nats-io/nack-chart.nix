@@ -5,6 +5,8 @@ kubepkgs.fetchhelm {
   version = "0.35.0";
   hash = "sha256-mtnWHL5GbThzLK1sUBnOkeiUwv3KFrVAeYmtq3sAWsE=";
 
+  crds.file = ../../crds/nack.nix;
+
   meta = {
     description = "Helm chart for NACK, the NATS controller for Kubernetes";
     homepage = "https://github.com/nats-io/k8s";

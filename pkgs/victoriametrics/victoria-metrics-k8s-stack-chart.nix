@@ -5,6 +5,8 @@ kubepkgs.fetchhelm {
   version = "0.93.0";
   hash = "sha256-C3joplBAk1Gb48wWLXHeghyoRwxdwK7VFHGWdbWdQJk=";
 
+  crds.file = ../../crds/victoria-metrics-k8s-stack.nix;
+
   meta = {
     description = "Helm chart for Kubernetes monitoring with the VictoriaMetrics operator, Grafana dashboards, ServiceScrapes and VMRules";
     homepage = "https://github.com/VictoriaMetrics/helm-charts";

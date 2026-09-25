@@ -5,6 +5,8 @@ kubepkgs.fetchhelm {
   version = "0.29.1";
   hash = "sha256-VWDikb5gw9s35yZYk3BqcojQtEE/b3gdDN6TCcJXzZ4=";
 
+  crds.file = ../../crds/cloudnative-pg.nix;
+
   meta = {
     description = "Helm chart for the CloudNativePG PostgreSQL operator";
     homepage = "https://cloudnative-pg.io";

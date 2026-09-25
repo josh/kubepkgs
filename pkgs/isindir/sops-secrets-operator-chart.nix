@@ -4,6 +4,8 @@ kubepkgs.fetchhelm {
   chart = "sops-secrets-operator";
   version = "0.28.1";
   hash = "sha256-CQtkd43Tmu9eT5aLzueiZYBihw9nG13ewLm9dtKTk2o=";
+
+  crds.file = ../../crds/sops-secrets-operator.nix;
   helmTestArgs = [
     "--kube-version"
     "1.36.0"

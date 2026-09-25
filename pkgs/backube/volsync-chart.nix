@@ -5,6 +5,8 @@ kubepkgs.fetchhelm {
   version = "0.16.0";
   hash = "sha256-AbYJiSSgTGWkDu32Lmc8vz/1SQnu1QSNaOC8PFCUXFw=";
 
+  crds.file = ../../crds/volsync.nix;
+
   meta = {
     description = "Helm chart for VolSync, asynchronous volume data replication for Kubernetes";
     homepage = "https://volsync.readthedocs.io";
