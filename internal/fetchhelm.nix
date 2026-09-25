@@ -3,6 +3,7 @@
   callPackage,
   stdenvNoCC,
   cacert,
+  kubernetes,
   kubernetes-helm,
 }:
 args@{
@@ -93,6 +94,7 @@ stdenvNoCC.mkDerivation (finalAttrs: {
         name = chart;
         chart = finalAttrs.finalPackage;
         values = crds.values or { };
+        kubeVersion = "v${kubernetes.version}";
       };
 
   passthru.crdModule =
