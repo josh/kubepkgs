@@ -79,6 +79,14 @@ Setting `crds` adds a `tests.crds` drift check, so `nix flake check` fails when 
 
 A `*-manifests.nix` wrapping `kubepkgs.renderHelmTemplate`: `pname` → `src` (the chart) → `chartName` → `helmArgs`/`helmValues` when the render needs them → `meta`. The helper supplies `version` from `src`, a `parse` test, and `meta.platforms`, so none of those are repeated at the call site.
 
+### JSON snapshots
+
+A `pkgs/*/*.nix` paired with a same-named `.json` vendors a JSON payload fetched from an upstream HTTP endpoint. The `.json` is that payload re-serialized as 2-space JSON rather than the bytes off the wire, which keeps it prettier-clean and stable — endpoints serve minified or pretty bytes unpredictably, so the wire bytes churn even when nothing changed. The derivation's single output is that file, so `nix build` then `cat result` reproduces the payload.
+
+`passthru.data` is the same payload parsed with `builtins.fromJSON`, so consumers read it at evaluation time instead of importing from derivation. `passthru.jsonSnapshot` is the refresh marker — `url`, plus the `file` and `snapshot` paths — and must stay small, because `update-json-snapshots` reads it with `nix eval --json`. Keep the payload out of it.
+
+`nix run .#update-json-snapshots -- --dry-run` previews a refresh and `--write` applies one without committing. These packages carry no `passthru.updateScript`: the `json-snapshots` workflow job refreshes them, not the `update-script` sweep. A `tests.data` check asserts `passthru.data` still equals the built file, so the evaluation and build paths cannot drift.
+
 ### Exceptions
 
 `internal/*.nix` mix nixpkgs dependencies with caller-supplied derivation parameters (`src`, `pname`, `chartName`, `helmValues`). Keep nixpkgs dependencies first, then the parameters, then the `?`-defaulted ones; do not interleave them.

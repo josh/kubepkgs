@@ -96,6 +96,7 @@
         // {
           update-crd-modules = nixpkgsFor.${system}.callPackage ./internal/update-crd-modules.nix { };
           update-helm-charts = nixpkgsFor.${system}.callPackage ./internal/update-helm-charts.nix { };
+          update-json-snapshots = nixpkgsFor.${system}.callPackage ./internal/update-json-snapshots.nix { };
           update-oci-images = nixpkgsFor.${system}.callPackage ./internal/update-oci-images.nix { };
         }
       );
