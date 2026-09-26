@@ -81,9 +81,11 @@ A `*-manifests.nix` wrapping `kubepkgs.renderHelmTemplate`: `pname` → `src` (t
 
 ### JSON snapshots
 
-A `pkgs/*/*.nix` paired with a same-named `.json` vendors a JSON payload fetched from an upstream HTTP endpoint. The `.json` is that payload re-serialized as 2-space JSON rather than the bytes off the wire, which keeps it prettier-clean and stable — endpoints serve minified or pretty bytes unpredictably, so the wire bytes churn even when nothing changed. The derivation's single output is that file, so `nix build` then `cat result` reproduces the payload.
+A `pkgs/*/*.nix` paired with a same-named `.json` vendors a JSON payload fetched from an upstream HTTP endpoint. The `.json` is that payload re-serialized as 2-space JSON rather than the bytes off the wire, which keeps it prettier-clean and stable — endpoints serve minified or pretty bytes unpredictably, so the wire bytes churn even when nothing changed. The derivation's single output is that file, so `nix build` then `cat result` reproduces it.
 
 `passthru.data` is the same payload parsed with `builtins.fromJSON`, so consumers read it at evaluation time instead of importing from derivation. `passthru.jsonSnapshot` is the refresh marker — `url`, plus the `file` and `snapshot` paths — and must stay small, because `update-json-snapshots` reads it with `nix eval --json`. Keep the payload out of it.
+
+An optional `filter` in the marker is a jq program applied at scrape time, so the snapshot is a projection of its endpoint rather than the whole of it. Reach for it when an endpoint is far larger than the slice this repo needs: `aws-ip-ranges-s3` keeps only `service == "S3"`, which is 6.8k lines instead of 105k, and a file that size would otherwise be rewritten most days and make its own update PRs unreadable. Filter by the dimension a consumer would never vary — service, not region — and add a test asserting the filter held, so an upstream rename fails here rather than silently emptying a downstream egress rule.
 
 `nix run .#update-json-snapshots -- --dry-run` previews a refresh and `--write` applies one without committing. These packages carry no `passthru.updateScript`: the `json-snapshots` workflow job refreshes them, not the `update-script` sweep. A `tests.data` check asserts `passthru.data` still equals the built file, so the evaluation and build paths cannot drift.
 

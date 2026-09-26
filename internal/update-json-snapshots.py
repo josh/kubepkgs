@@ -13,6 +13,7 @@ import click
 CACERT_PATH = "@cacert@"
 GH_PATH = "@gh@"
 GIT_PATH = "@git@"
+JQ_PATH = "@jq@"
 NIX_PATH = "@nix@"
 
 STORE_PREFIX = re.compile(r"^/nix/store/[^/]+/")
@@ -38,6 +39,7 @@ class JsonSnapshot:
     pname: str
     version: str
     url: str
+    filter: str | None
     file: str
     snapshot: str
 
@@ -80,6 +82,7 @@ def discover(repo_root: str) -> list[JsonSnapshot]:
             pname=info["pname"],
             version=info["version"],
             url=info["url"],
+            filter=info.get("filter"),
             file=STORE_PREFIX.sub("", info["file"]),
             snapshot=STORE_PREFIX.sub("", info["snapshot"]),
         )
@@ -87,12 +90,13 @@ def discover(repo_root: str) -> list[JsonSnapshot]:
     ]
 
 
-def fetch(url: str) -> str:
+def fetch(url: str, jq_filter: str | None) -> str:
     """Re-serialize instead of storing the response bytes.
 
     api.github.com/meta serves the same payload minified or pretty-printed depending on the
     day, so the wire bytes churn when nothing changed, and a minified body would fail
-    treefmt's prettier check.
+    treefmt's prettier check. Re-serializing a filtered payload through the same path keeps
+    both forms canonical.
     """
     headers = {
         "User-Agent": "update-json-snapshots",
@@ -102,6 +106,8 @@ def fetch(url: str) -> str:
     request = urllib.request.Request(url, headers=headers)
     with urllib.request.urlopen(request, timeout=60) as response:
         raw = response.read()
+    if jq_filter:
+        raw = run([JQ_PATH, jq_filter], input=raw.decode()).stdout
     return json.dumps(json.loads(raw), indent=2) + "\n"
 
 
@@ -126,10 +132,10 @@ def resolve(entries: list[JsonSnapshot]) -> list[Result]:
     results = []
     for entry in entries:
         try:
-            snapshot = fetch(entry.url)
+            snapshot = fetch(entry.url, entry.filter)
             with open(entry.snapshot, "r") as f:
                 current = f.read()
-        except (OSError, ValueError) as err:
+        except (OSError, ValueError, subprocess.CalledProcessError) as err:
             results.append(Result(entry, "error", None, str(err)))
             continue
         if current == snapshot:

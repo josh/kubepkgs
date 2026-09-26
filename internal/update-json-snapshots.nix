@@ -4,6 +4,7 @@
   cacert,
   gh,
   git,
+  jq,
   nix,
   python3,
 }:
@@ -23,6 +24,7 @@ stdenvNoCC.mkDerivation {
       --replace-fail '@cacert@' '${cacert}/etc/ssl/certs/ca-bundle.crt' \
       --replace-fail '@gh@' '${gh}/bin/gh' \
       --replace-fail '@git@' '${git}/bin/git' \
+      --replace-fail '@jq@' '${jq}/bin/jq' \
       --replace-fail '@nix@' '${nix}/bin/nix'
     chmod +x $out/bin/update-json-snapshots
   '';
