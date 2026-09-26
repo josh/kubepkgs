@@ -81,7 +81,9 @@ A `*-manifests.nix` wrapping `kubepkgs.renderHelmTemplate`: `pname` → `src` (t
 
 ### JSON snapshots
 
-A `pkgs/*/*.nix` paired with a same-named `.json` vendors a JSON payload fetched from an upstream HTTP endpoint. The `.json` is that payload re-serialized as 2-space JSON rather than the bytes off the wire, which keeps it prettier-clean and stable — endpoints serve minified or pretty bytes unpredictably, so the wire bytes churn even when nothing changed. The derivation's single output is that file, so `nix build` then `cat result` reproduces it.
+A `pkgs/*/*.nix` paired with a same-named `.json` vendors a JSON payload fetched from an upstream HTTP endpoint. The `.json` is that payload re-serialized as 2-space JSON rather than the bytes off the wire — endpoints serve minified or pretty bytes unpredictably, so the wire bytes churn even when nothing changed. The derivation's single output is that file, so `nix build` then `cat result` reproduces it.
+
+Every `pkgs/*/*.json` is generated, so `treefmt` excludes them all, the same way it excludes `crds/*.nix`. The updater's serializer owns their formatting and `prettier` disagrees with it on short arrays — it collapses a two-element list onto one line — so a formatted snapshot and a freshly fetched one would differ forever, each tool undoing the other. This applies equally to the OCI index lockfiles, which the same serializer writes.
 
 `passthru.data` is the same payload parsed with `builtins.fromJSON`, so consumers read it at evaluation time instead of importing from derivation. `passthru.jsonSnapshot` is the refresh marker — `url`, plus the `file` and `snapshot` paths — and must stay small, because `update-json-snapshots` reads it with `nix eval --json`. Keep the payload out of it.
 
