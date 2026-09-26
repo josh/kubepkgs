@@ -8,13 +8,13 @@
 }:
 stdenvNoCC.mkDerivation (finalAttrs: {
   pname = "aws-ip-ranges-json";
-  version = "0-unstable-2026-09-25";
+  version = "0-unstable-2026-09-26";
 
   src = fetchFromGitHub {
     owner = "joetek";
     repo = "aws-ip-ranges-json";
-    rev = "5bb8d6ae47ac3bb19c6e1b7c6e1220ef99bc0074";
-    hash = "sha256-jgxWxh9BLLxF6NlhsK7ugdaER7M9DWptZvuGPtU4yhI=";
+    rev = "2d8bc41e6907fa3d71ff54125081a8086041f781";
+    hash = "sha256-o1vjNPTOVQOuT2lzPkUzJfHqWkQ48FFmHSWtNFiwDkY=";
   };
 
   installPhase = ''
