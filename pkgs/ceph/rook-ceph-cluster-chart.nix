@@ -2,8 +2,8 @@
 kubepkgs.fetchhelm {
   url = "https://charts.rook.io/release/";
   chart = "rook-ceph-cluster";
-  version = "1.20.7";
-  hash = "sha256-Mhsi/yxaEfIHsVEZ5AzB+y4qDi7GnMNsg7gNey5VR+Q=";
+  version = "1.20.8";
+  hash = "sha256-55Qf/20zr/CtzkOK2fm/KupZKyw/vZNagWMz/n84/8w=";
 
   meta = {
     description = "Manages a single Ceph cluster namespace for Rook";
