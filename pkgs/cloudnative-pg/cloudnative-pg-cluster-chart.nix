@@ -3,8 +3,8 @@ kubepkgs.fetchhelm {
   pname = "cloudnative-pg-cluster-chart";
   url = "https://cloudnative-pg.github.io/charts";
   chart = "cluster";
-  version = "0.8.1";
-  hash = "sha256-4wo9gq9GHZ6QLgcdEuQek2TyQoWVki/0F4k+slAeXFc=";
+  version = "0.9.0";
+  hash = "sha256-AepQtPPli8wf67Y2xHfR4s9F5DwFS1/ymTgmOlXHoqk=";
 
   meta = {
     description = "Deploys and manages a CloudNativePG cluster and its associated resources";
