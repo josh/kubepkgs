@@ -2,8 +2,8 @@
 kubepkgs.fetchhelm {
   url = "oci://ghcr.io/actions/actions-runner-controller-charts/gha-runner-scale-set-controller";
   chart = "gha-runner-scale-set-controller";
-  version = "0.14.2";
-  hash = "sha256-qUN0dZJTp/eBV9lO8g2p1RhymE4dVpMVSQcpGfOK6y4=";
+  version = "0.15.0";
+  hash = "sha256-J4Q0YMOUOs4FZJHFdgBi0VPjDbrExoR1OnhSYDYsXCg=";
 
   crds.file = ../../crds/gha-runner-scale-set-controller.nix;
 

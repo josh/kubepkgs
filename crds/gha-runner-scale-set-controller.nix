@@ -264,11 +264,11 @@ let
 
       options = {
         "autoscalingRunnerSetName" = mkOption {
-          description = "Required";
+          description = "";
           type = (types.nullOr types.str);
         };
         "autoscalingRunnerSetNamespace" = mkOption {
-          description = "Required";
+          description = "";
           type = (types.nullOr types.str);
         };
         "configSecretMetadata" = mkOption {
@@ -278,15 +278,15 @@ let
           );
         };
         "ephemeralRunnerSetName" = mkOption {
-          description = "Required";
+          description = "";
           type = (types.nullOr types.str);
         };
         "githubConfigSecret" = mkOption {
-          description = "Required";
+          description = "";
           type = (types.nullOr types.str);
         };
         "githubConfigUrl" = mkOption {
-          description = "Required";
+          description = "";
           type = (types.nullOr types.str);
         };
         "githubServerTLS" = mkOption {
@@ -296,11 +296,11 @@ let
           );
         };
         "image" = mkOption {
-          description = "Required";
+          description = "";
           type = (types.nullOr types.str);
         };
         "imagePullSecrets" = mkOption {
-          description = "Required";
+          description = "";
           type = (
             types.nullOr (
               coerceAttrsOfSubmodulesToListByKey
@@ -311,8 +311,14 @@ let
           );
           apply = attrsToList;
         };
+        "listenerConfig" = mkOption {
+          description = "ListenerConfig holds configuration for the ghalistener pod.";
+          type = (
+            types.nullOr (submoduleOf "actions.github.com.v1alpha1.AutoscalingListenerSpecListenerConfig")
+          );
+        };
         "maxRunners" = mkOption {
-          description = "Required";
+          description = "";
           type = (types.nullOr (types.withMinimum 0 types.int));
         };
         "metrics" = mkOption {
@@ -320,8 +326,19 @@ let
           type = (types.nullOr (submoduleOf "actions.github.com.v1alpha1.AutoscalingListenerSpecMetrics"));
         };
         "minRunners" = mkOption {
-          description = "Required";
+          description = "";
           type = (types.nullOr (types.withMinimum 0 types.int));
+        };
+        "phase" = mkOption {
+          description = "Phase controls whether the listener runs. Empty means Running.";
+          type = (
+            types.nullOr (
+              types.enum [
+                "Running"
+                "Stopped"
+              ]
+            )
+          );
         };
         "proxy" = mkOption {
           description = "";
@@ -340,7 +357,7 @@ let
           );
         };
         "runnerScaleSetId" = mkOption {
-          description = "Required";
+          description = "";
           type = (types.nullOr types.int);
         };
         "serviceAccountMetadata" = mkOption {
@@ -373,9 +390,11 @@ let
         "githubServerTLS" = mkOverride 1002 null;
         "image" = mkOverride 1002 null;
         "imagePullSecrets" = mkOverride 1002 null;
+        "listenerConfig" = mkOverride 1002 null;
         "maxRunners" = mkOverride 1002 null;
         "metrics" = mkOverride 1002 null;
         "minRunners" = mkOverride 1002 null;
+        "phase" = mkOverride 1002 null;
         "proxy" = mkOverride 1002 null;
         "roleBindingMetadata" = mkOverride 1002 null;
         "roleMetadata" = mkOverride 1002 null;
@@ -446,7 +465,7 @@ let
 
         options = {
           "key" = mkOption {
-            description = "The key to select.";
+            description = "The key to select from the ConfigMap's Data field.\nKeys in the BinaryData field are not currently propagated to container env vars.";
             type = types.str;
           };
           "name" = mkOption {
@@ -476,6 +495,41 @@ let
 
       config = {
         "name" = mkOverride 1002 null;
+      };
+
+    };
+    "actions.github.com.v1alpha1.AutoscalingListenerSpecListenerConfig" = {
+
+      options = {
+        "scaler" = mkOption {
+          description = "ScalerConfig configures the Kubernetes client used by the ghalistener scaler.";
+          type = (
+            types.nullOr (submoduleOf "actions.github.com.v1alpha1.AutoscalingListenerSpecListenerConfigScaler")
+          );
+        };
+      };
+
+      config = {
+        "scaler" = mkOverride 1002 null;
+      };
+
+    };
+    "actions.github.com.v1alpha1.AutoscalingListenerSpecListenerConfigScaler" = {
+
+      options = {
+        "burst" = mkOption {
+          description = "";
+          type = (types.nullOr (types.withMinimum 1 types.int));
+        };
+        "qps" = mkOption {
+          description = "";
+          type = (types.nullOr (types.withMinimum 1 types.int));
+        };
+      };
+
+      config = {
+        "burst" = mkOverride 1002 null;
+        "qps" = mkOverride 1002 null;
       };
 
     };
@@ -734,6 +788,18 @@ let
           );
           apply = attrsToList;
         };
+        "evictionResponders" = mkOption {
+          description = "evictionResponders reference responders that react to Evictions based on EvictionRequests.\nResponders should observe and communicate through the Eviction Resource API to help with\nthe graceful termination of a pod. The responders are selected sequentially, according to\ntheir specified priority.\n\nResponders should periodically report on an eviction progress by updating the\n.status.responders[].heartbeatTime field of the Eviction object. If this field is not updated\nwithin the heartbeat deadline defined by the Eviction API (currently 20 minutes), the eviction\nis passed over to the next responder with a lower priority. If there is no other responder,\nthe last default imperative-eviction.k8s.io/evictor responder with a priority of 100 will\nevict the pod using the imperative Eviction API (pods/<name>/eviction subresource).\n\nThe maximum length of the responders list is 10.\nResponders are not supported when the pod is part of a PodGroup (.spec.schedulingGroup is set).\nThis field can only be set on creation and is immutable afterwards.";
+          type = (
+            types.nullOr (
+              coerceAttrsOfSubmodulesToListByKey
+                "actions.github.com.v1alpha1.AutoscalingListenerSpecTemplateSpecEvictionResponders"
+                "name"
+                [ "name" ]
+            )
+          );
+          apply = attrsToList;
+        };
         "hostAliases" = mkOption {
           description = "HostAliases is an optional list of hosts and IPs that will be injected into the pod's hosts\nfile if specified.";
           type = (
@@ -757,7 +823,7 @@ let
           type = (types.nullOr types.bool);
         };
         "hostUsers" = mkOption {
-          description = "Use the host's user namespace.\nOptional: Default to true.\nIf set to true or not present, the pod will be run in the host user namespace, useful\nfor when the pod needs a feature only available to the host user namespace, such as\nloading a kernel module with CAP_SYS_MODULE.\nWhen set to false, a new userns is created for the pod. Setting false is useful for\nmitigating container breakout vulnerabilities even allowing users to run their\ncontainers as root without actually having root privileges on the host.\nThis field is alpha-level and is only honored by servers that enable the UserNamespacesSupport feature.";
+          description = "Use the host's user namespace.\nOptional: Default to true.\nIf set to true or not present, the pod will be run in the host user namespace, useful\nfor when the pod needs a feature only available to the host user namespace, such as\nloading a kernel module with CAP_SYS_MODULE.\nWhen set to false, a new userns is created for the pod. Setting false is useful for\nmitigating container breakout vulnerabilities even allowing users to run their\ncontainers as root without actually having root privileges on the host.";
           type = (types.nullOr types.bool);
         };
         "hostname" = mkOption {
@@ -765,7 +831,7 @@ let
           type = (types.nullOr types.str);
         };
         "hostnameOverride" = mkOption {
-          description = "HostnameOverride specifies an explicit override for the pod's hostname as perceived by the pod.\nThis field only specifies the pod's hostname and does not affect its DNS records.\nWhen this field is set to a non-empty string:\n- It takes precedence over the values set in `hostname` and `subdomain`.\n- The Pod's hostname will be set to this value.\n- `setHostnameAsFQDN` must be nil or set to false.\n- `hostNetwork` must be set to false.\n\nThis field must be a valid DNS subdomain as defined in RFC 1123 and contain at most 64 characters.\nRequires the HostnameOverride feature gate to be enabled.";
+          description = "HostnameOverride specifies an explicit override for the pod's hostname as perceived by the pod.\nThis field only specifies the pod's hostname and does not affect its DNS records.\nWhen this field is set to a non-empty string:\n- It takes precedence over the values set in `hostname` and `subdomain`.\n- The Pod's hostname will be set to this value.\n- `setHostnameAsFQDN` must be nil or set to false.\n- `hostNetwork` must be set to false.\n\nThis field must be a valid DNS subdomain as defined in RFC 1123 and contain at most 64 characters.";
           type = (types.nullOr types.str);
         };
         "imagePullSecrets" = mkOption {
@@ -811,7 +877,7 @@ let
           type = (types.nullOr (types.attrsOf (types.either types.int types.str)));
         };
         "preemptionPolicy" = mkOption {
-          description = "PreemptionPolicy is the Policy for preempting pods with lower priority.\nOne of Never, PreemptLowerPriority.\nDefaults to PreemptLowerPriority if unset.";
+          description = "PreemptionPolicy is the Policy for preempting pods with lower priority.\nOne of Never, PreemptLowerPriority.\nWhen Priority Admission Controller is enabled, it prevents users from setting\nthis field. The admission controller populates this field from PriorityClassName.\nDefaults to PreemptLowerPriority if unset.";
           type = (types.nullOr types.str);
         };
         "priority" = mkOption {
@@ -875,6 +941,14 @@ let
             )
           );
           apply = attrsToList;
+        };
+        "schedulingGroup" = mkOption {
+          description = "SchedulingGroup provides a reference to the immediate scheduling runtime\ngrouping object that this Pod belongs to.\nThis field is used by the scheduler to identify the group and apply the\ncorrect group scheduling policies. The association with a group also\nimpacts other lifecycle aspects of a Pod that are relevant in a wider context\nof scheduling like preemption, resource attachment, etc. If not specified,\nthe Pod is treated as a single unit in all of these aspects.\nThe group object referenced by this field may not exist at the time the\nPod is created.\nThis field is immutable, but a group object with the same name may be\nrecreated with different policies. Doing this during pod scheduling\nmay result in the placement not conforming to the expected policies.";
+          type = (
+            types.nullOr (
+              submoduleOf "actions.github.com.v1alpha1.AutoscalingListenerSpecTemplateSpecSchedulingGroup"
+            )
+          );
         };
         "securityContext" = mkOption {
           description = "SecurityContext holds pod-level security attributes and common container settings.\nOptional: Defaults to empty.  See type description for default values of each field.";
@@ -940,14 +1014,6 @@ let
           );
           apply = attrsToList;
         };
-        "workloadRef" = mkOption {
-          description = "WorkloadRef provides a reference to the Workload object that this Pod belongs to.\nThis field is used by the scheduler to identify the PodGroup and apply the\ncorrect group scheduling policies. The Workload object referenced\nby this field may not exist at the time the Pod is created.\nThis field is immutable, but a Workload object with the same name\nmay be recreated with different policies. Doing this during pod scheduling\nmay result in the placement not conforming to the expected policies.";
-          type = (
-            types.nullOr (
-              submoduleOf "actions.github.com.v1alpha1.AutoscalingListenerSpecTemplateSpecWorkloadRef"
-            )
-          );
-        };
       };
 
       config = {
@@ -958,6 +1024,7 @@ let
         "dnsPolicy" = mkOverride 1002 null;
         "enableServiceLinks" = mkOverride 1002 null;
         "ephemeralContainers" = mkOverride 1002 null;
+        "evictionResponders" = mkOverride 1002 null;
         "hostAliases" = mkOverride 1002 null;
         "hostIPC" = mkOverride 1002 null;
         "hostNetwork" = mkOverride 1002 null;
@@ -981,6 +1048,7 @@ let
         "runtimeClassName" = mkOverride 1002 null;
         "schedulerName" = mkOverride 1002 null;
         "schedulingGates" = mkOverride 1002 null;
+        "schedulingGroup" = mkOverride 1002 null;
         "securityContext" = mkOverride 1002 null;
         "serviceAccount" = mkOverride 1002 null;
         "serviceAccountName" = mkOverride 1002 null;
@@ -991,7 +1059,6 @@ let
         "tolerations" = mkOverride 1002 null;
         "topologySpreadConstraints" = mkOverride 1002 null;
         "volumes" = mkOverride 1002 null;
-        "workloadRef" = mkOverride 1002 null;
       };
 
     };
@@ -2298,7 +2365,7 @@ let
 
         options = {
           "key" = mkOption {
-            description = "The key to select.";
+            description = "The key to select from the ConfigMap's Data field.\nKeys in the BinaryData field are not currently propagated to container env vars.";
             type = types.str;
           };
           "name" = mkOption {
@@ -2530,6 +2597,10 @@ let
             description = "Name or number of the port to access on the container.\nNumber must be in the range 1 to 65535.\nName must be an IANA_SVC_NAME.";
             type = (types.either types.int types.str);
           };
+          "protocol" = mkOption {
+            description = "Protocol selects the wire protocol for the probe connection.\nNil defaults to HTTP/1.1.";
+            type = (types.nullOr types.str);
+          };
           "scheme" = mkOption {
             description = "Scheme to use for connecting to the host.\nDefaults to HTTP.";
             type = (types.nullOr types.str);
@@ -2540,6 +2611,7 @@ let
           "host" = mkOverride 1002 null;
           "httpHeaders" = mkOverride 1002 null;
           "path" = mkOverride 1002 null;
+          "protocol" = mkOverride 1002 null;
           "scheme" = mkOverride 1002 null;
         };
 
@@ -2680,6 +2752,10 @@ let
             description = "Name or number of the port to access on the container.\nNumber must be in the range 1 to 65535.\nName must be an IANA_SVC_NAME.";
             type = (types.either types.int types.str);
           };
+          "protocol" = mkOption {
+            description = "Protocol selects the wire protocol for the probe connection.\nNil defaults to HTTP/1.1.";
+            type = (types.nullOr types.str);
+          };
           "scheme" = mkOption {
             description = "Scheme to use for connecting to the host.\nDefaults to HTTP.";
             type = (types.nullOr types.str);
@@ -2690,6 +2766,7 @@ let
           "host" = mkOverride 1002 null;
           "httpHeaders" = mkOverride 1002 null;
           "path" = mkOverride 1002 null;
+          "protocol" = mkOverride 1002 null;
           "scheme" = mkOverride 1002 null;
         };
 
@@ -2834,6 +2911,10 @@ let
     "actions.github.com.v1alpha1.AutoscalingListenerSpecTemplateSpecContainersLivenessProbeGrpc" = {
 
       options = {
+        "mode" = mkOption {
+          description = "mode specifies the connection mode for the gRPC health probe.\nSet to \"TLS\" to use TLS without certificate verification.\nSet to \"Plaintext\" to use a plaintext (insecure) connection explicitly.\nIf not specified, the probe uses a plaintext (insecure) connection.";
+          type = (types.nullOr types.str);
+        };
         "port" = mkOption {
           description = "Port number of the gRPC service. Number must be in the range 1 to 65535.";
           type = types.int;
@@ -2845,6 +2926,7 @@ let
       };
 
       config = {
+        "mode" = mkOverride 1002 null;
         "service" = mkOverride 1002 null;
       };
 
@@ -2876,6 +2958,10 @@ let
           description = "Name or number of the port to access on the container.\nNumber must be in the range 1 to 65535.\nName must be an IANA_SVC_NAME.";
           type = (types.either types.int types.str);
         };
+        "protocol" = mkOption {
+          description = "Protocol selects the wire protocol for the probe connection.\nNil defaults to HTTP/1.1.";
+          type = (types.nullOr types.str);
+        };
         "scheme" = mkOption {
           description = "Scheme to use for connecting to the host.\nDefaults to HTTP.";
           type = (types.nullOr types.str);
@@ -2886,6 +2972,7 @@ let
         "host" = mkOverride 1002 null;
         "httpHeaders" = mkOverride 1002 null;
         "path" = mkOverride 1002 null;
+        "protocol" = mkOverride 1002 null;
         "scheme" = mkOverride 1002 null;
       };
 
@@ -3051,6 +3138,10 @@ let
     "actions.github.com.v1alpha1.AutoscalingListenerSpecTemplateSpecContainersReadinessProbeGrpc" = {
 
       options = {
+        "mode" = mkOption {
+          description = "mode specifies the connection mode for the gRPC health probe.\nSet to \"TLS\" to use TLS without certificate verification.\nSet to \"Plaintext\" to use a plaintext (insecure) connection explicitly.\nIf not specified, the probe uses a plaintext (insecure) connection.";
+          type = (types.nullOr types.str);
+        };
         "port" = mkOption {
           description = "Port number of the gRPC service. Number must be in the range 1 to 65535.";
           type = types.int;
@@ -3062,6 +3153,7 @@ let
       };
 
       config = {
+        "mode" = mkOverride 1002 null;
         "service" = mkOverride 1002 null;
       };
 
@@ -3093,6 +3185,10 @@ let
           description = "Name or number of the port to access on the container.\nNumber must be in the range 1 to 65535.\nName must be an IANA_SVC_NAME.";
           type = (types.either types.int types.str);
         };
+        "protocol" = mkOption {
+          description = "Protocol selects the wire protocol for the probe connection.\nNil defaults to HTTP/1.1.";
+          type = (types.nullOr types.str);
+        };
         "scheme" = mkOption {
           description = "Scheme to use for connecting to the host.\nDefaults to HTTP.";
           type = (types.nullOr types.str);
@@ -3103,6 +3199,7 @@ let
         "host" = mkOverride 1002 null;
         "httpHeaders" = mkOverride 1002 null;
         "path" = mkOverride 1002 null;
+        "protocol" = mkOverride 1002 null;
         "scheme" = mkOverride 1002 null;
       };
 
@@ -3278,7 +3375,7 @@ let
           type = (types.nullOr types.bool);
         };
         "procMount" = mkOption {
-          description = "procMount denotes the type of proc mount to use for the containers.\nThe default value is Default which uses the container runtime defaults for\nreadonly paths and masked paths.\nThis requires the ProcMountType feature flag to be enabled.\nNote that this field cannot be set when spec.os.name is windows.";
+          description = "procMount denotes the type of proc mount to use for the containers.\nThe default value is Default which uses the container runtime defaults for\nreadonly paths and masked paths.\nNote that this field cannot be set when spec.os.name is windows.";
           type = (types.nullOr types.str);
         };
         "readOnlyRootFilesystem" = mkOption {
@@ -3549,6 +3646,10 @@ let
     "actions.github.com.v1alpha1.AutoscalingListenerSpecTemplateSpecContainersStartupProbeGrpc" = {
 
       options = {
+        "mode" = mkOption {
+          description = "mode specifies the connection mode for the gRPC health probe.\nSet to \"TLS\" to use TLS without certificate verification.\nSet to \"Plaintext\" to use a plaintext (insecure) connection explicitly.\nIf not specified, the probe uses a plaintext (insecure) connection.";
+          type = (types.nullOr types.str);
+        };
         "port" = mkOption {
           description = "Port number of the gRPC service. Number must be in the range 1 to 65535.";
           type = types.int;
@@ -3560,6 +3661,7 @@ let
       };
 
       config = {
+        "mode" = mkOverride 1002 null;
         "service" = mkOverride 1002 null;
       };
 
@@ -3591,6 +3693,10 @@ let
           description = "Name or number of the port to access on the container.\nNumber must be in the range 1 to 65535.\nName must be an IANA_SVC_NAME.";
           type = (types.either types.int types.str);
         };
+        "protocol" = mkOption {
+          description = "Protocol selects the wire protocol for the probe connection.\nNil defaults to HTTP/1.1.";
+          type = (types.nullOr types.str);
+        };
         "scheme" = mkOption {
           description = "Scheme to use for connecting to the host.\nDefaults to HTTP.";
           type = (types.nullOr types.str);
@@ -3601,6 +3707,7 @@ let
         "host" = mkOverride 1002 null;
         "httpHeaders" = mkOverride 1002 null;
         "path" = mkOverride 1002 null;
+        "protocol" = mkOverride 1002 null;
         "scheme" = mkOverride 1002 null;
       };
 
@@ -3659,8 +3766,12 @@ let
     "actions.github.com.v1alpha1.AutoscalingListenerSpecTemplateSpecContainersVolumeMounts" = {
 
       options = {
+        "bindMountOptions" = mkOption {
+          description = "bindMountOptions is the list of additional bind mount options to apply when\nmounting this volume into the container. Allowed values are noexec,\nnodev, and nosuid. These are Linux mount options and have no effect on\nWindows nodes.\nThis field is not supported with image volumes.\nThis is an alpha field and requires enabling the VolumeBindMountOptions feature gate.";
+          type = (types.nullOr (types.listOf types.str));
+        };
         "mountPath" = mkOption {
-          description = "Path within the container at which the volume should be mounted.  Must\nnot contain ':'.";
+          description = "Path within the container at which the volume should be mounted.";
           type = types.str;
         };
         "mountPropagation" = mkOption {
@@ -3690,6 +3801,7 @@ let
       };
 
       config = {
+        "bindMountOptions" = mkOverride 1002 null;
         "mountPropagation" = mkOverride 1002 null;
         "readOnly" = mkOverride 1002 null;
         "recursiveReadOnly" = mkOverride 1002 null;
@@ -4122,7 +4234,7 @@ let
 
         options = {
           "key" = mkOption {
-            description = "The key to select.";
+            description = "The key to select from the ConfigMap's Data field.\nKeys in the BinaryData field are not currently propagated to container env vars.";
             type = types.str;
           };
           "name" = mkOption {
@@ -4356,6 +4468,10 @@ let
             description = "Name or number of the port to access on the container.\nNumber must be in the range 1 to 65535.\nName must be an IANA_SVC_NAME.";
             type = (types.either types.int types.str);
           };
+          "protocol" = mkOption {
+            description = "Protocol selects the wire protocol for the probe connection.\nNil defaults to HTTP/1.1.";
+            type = (types.nullOr types.str);
+          };
           "scheme" = mkOption {
             description = "Scheme to use for connecting to the host.\nDefaults to HTTP.";
             type = (types.nullOr types.str);
@@ -4366,6 +4482,7 @@ let
           "host" = mkOverride 1002 null;
           "httpHeaders" = mkOverride 1002 null;
           "path" = mkOverride 1002 null;
+          "protocol" = mkOverride 1002 null;
           "scheme" = mkOverride 1002 null;
         };
 
@@ -4508,6 +4625,10 @@ let
             description = "Name or number of the port to access on the container.\nNumber must be in the range 1 to 65535.\nName must be an IANA_SVC_NAME.";
             type = (types.either types.int types.str);
           };
+          "protocol" = mkOption {
+            description = "Protocol selects the wire protocol for the probe connection.\nNil defaults to HTTP/1.1.";
+            type = (types.nullOr types.str);
+          };
           "scheme" = mkOption {
             description = "Scheme to use for connecting to the host.\nDefaults to HTTP.";
             type = (types.nullOr types.str);
@@ -4518,6 +4639,7 @@ let
           "host" = mkOverride 1002 null;
           "httpHeaders" = mkOverride 1002 null;
           "path" = mkOverride 1002 null;
+          "protocol" = mkOverride 1002 null;
           "scheme" = mkOverride 1002 null;
         };
 
@@ -4666,6 +4788,10 @@ let
       {
 
         options = {
+          "mode" = mkOption {
+            description = "mode specifies the connection mode for the gRPC health probe.\nSet to \"TLS\" to use TLS without certificate verification.\nSet to \"Plaintext\" to use a plaintext (insecure) connection explicitly.\nIf not specified, the probe uses a plaintext (insecure) connection.";
+            type = (types.nullOr types.str);
+          };
           "port" = mkOption {
             description = "Port number of the gRPC service. Number must be in the range 1 to 65535.";
             type = types.int;
@@ -4677,6 +4803,7 @@ let
         };
 
         config = {
+          "mode" = mkOverride 1002 null;
           "service" = mkOverride 1002 null;
         };
 
@@ -4709,6 +4836,10 @@ let
             description = "Name or number of the port to access on the container.\nNumber must be in the range 1 to 65535.\nName must be an IANA_SVC_NAME.";
             type = (types.either types.int types.str);
           };
+          "protocol" = mkOption {
+            description = "Protocol selects the wire protocol for the probe connection.\nNil defaults to HTTP/1.1.";
+            type = (types.nullOr types.str);
+          };
           "scheme" = mkOption {
             description = "Scheme to use for connecting to the host.\nDefaults to HTTP.";
             type = (types.nullOr types.str);
@@ -4719,6 +4850,7 @@ let
           "host" = mkOverride 1002 null;
           "httpHeaders" = mkOverride 1002 null;
           "path" = mkOverride 1002 null;
+          "protocol" = mkOverride 1002 null;
           "scheme" = mkOverride 1002 null;
         };
 
@@ -4887,6 +5019,10 @@ let
       {
 
         options = {
+          "mode" = mkOption {
+            description = "mode specifies the connection mode for the gRPC health probe.\nSet to \"TLS\" to use TLS without certificate verification.\nSet to \"Plaintext\" to use a plaintext (insecure) connection explicitly.\nIf not specified, the probe uses a plaintext (insecure) connection.";
+            type = (types.nullOr types.str);
+          };
           "port" = mkOption {
             description = "Port number of the gRPC service. Number must be in the range 1 to 65535.";
             type = types.int;
@@ -4898,6 +5034,7 @@ let
         };
 
         config = {
+          "mode" = mkOverride 1002 null;
           "service" = mkOverride 1002 null;
         };
 
@@ -4930,6 +5067,10 @@ let
             description = "Name or number of the port to access on the container.\nNumber must be in the range 1 to 65535.\nName must be an IANA_SVC_NAME.";
             type = (types.either types.int types.str);
           };
+          "protocol" = mkOption {
+            description = "Protocol selects the wire protocol for the probe connection.\nNil defaults to HTTP/1.1.";
+            type = (types.nullOr types.str);
+          };
           "scheme" = mkOption {
             description = "Scheme to use for connecting to the host.\nDefaults to HTTP.";
             type = (types.nullOr types.str);
@@ -4940,6 +5081,7 @@ let
           "host" = mkOverride 1002 null;
           "httpHeaders" = mkOverride 1002 null;
           "path" = mkOverride 1002 null;
+          "protocol" = mkOverride 1002 null;
           "scheme" = mkOverride 1002 null;
         };
 
@@ -5118,7 +5260,7 @@ let
             type = (types.nullOr types.bool);
           };
           "procMount" = mkOption {
-            description = "procMount denotes the type of proc mount to use for the containers.\nThe default value is Default which uses the container runtime defaults for\nreadonly paths and masked paths.\nThis requires the ProcMountType feature flag to be enabled.\nNote that this field cannot be set when spec.os.name is windows.";
+            description = "procMount denotes the type of proc mount to use for the containers.\nThe default value is Default which uses the container runtime defaults for\nreadonly paths and masked paths.\nNote that this field cannot be set when spec.os.name is windows.";
             type = (types.nullOr types.str);
           };
           "readOnlyRootFilesystem" = mkOption {
@@ -5391,6 +5533,10 @@ let
       {
 
         options = {
+          "mode" = mkOption {
+            description = "mode specifies the connection mode for the gRPC health probe.\nSet to \"TLS\" to use TLS without certificate verification.\nSet to \"Plaintext\" to use a plaintext (insecure) connection explicitly.\nIf not specified, the probe uses a plaintext (insecure) connection.";
+            type = (types.nullOr types.str);
+          };
           "port" = mkOption {
             description = "Port number of the gRPC service. Number must be in the range 1 to 65535.";
             type = types.int;
@@ -5402,6 +5548,7 @@ let
         };
 
         config = {
+          "mode" = mkOverride 1002 null;
           "service" = mkOverride 1002 null;
         };
 
@@ -5434,6 +5581,10 @@ let
             description = "Name or number of the port to access on the container.\nNumber must be in the range 1 to 65535.\nName must be an IANA_SVC_NAME.";
             type = (types.either types.int types.str);
           };
+          "protocol" = mkOption {
+            description = "Protocol selects the wire protocol for the probe connection.\nNil defaults to HTTP/1.1.";
+            type = (types.nullOr types.str);
+          };
           "scheme" = mkOption {
             description = "Scheme to use for connecting to the host.\nDefaults to HTTP.";
             type = (types.nullOr types.str);
@@ -5444,6 +5595,7 @@ let
           "host" = mkOverride 1002 null;
           "httpHeaders" = mkOverride 1002 null;
           "path" = mkOverride 1002 null;
+          "protocol" = mkOverride 1002 null;
           "scheme" = mkOverride 1002 null;
         };
 
@@ -5504,8 +5656,12 @@ let
     "actions.github.com.v1alpha1.AutoscalingListenerSpecTemplateSpecEphemeralContainersVolumeMounts" = {
 
       options = {
+        "bindMountOptions" = mkOption {
+          description = "bindMountOptions is the list of additional bind mount options to apply when\nmounting this volume into the container. Allowed values are noexec,\nnodev, and nosuid. These are Linux mount options and have no effect on\nWindows nodes.\nThis field is not supported with image volumes.\nThis is an alpha field and requires enabling the VolumeBindMountOptions feature gate.";
+          type = (types.nullOr (types.listOf types.str));
+        };
         "mountPath" = mkOption {
-          description = "Path within the container at which the volume should be mounted.  Must\nnot contain ':'.";
+          description = "Path within the container at which the volume should be mounted.";
           type = types.str;
         };
         "mountPropagation" = mkOption {
@@ -5535,12 +5691,29 @@ let
       };
 
       config = {
+        "bindMountOptions" = mkOverride 1002 null;
         "mountPropagation" = mkOverride 1002 null;
         "readOnly" = mkOverride 1002 null;
         "recursiveReadOnly" = mkOverride 1002 null;
         "subPath" = mkOverride 1002 null;
         "subPathExpr" = mkOverride 1002 null;
       };
+
+    };
+    "actions.github.com.v1alpha1.AutoscalingListenerSpecTemplateSpecEvictionResponders" = {
+
+      options = {
+        "name" = mkOption {
+          description = "name allows you to identify the responder responding to the Eviction.\n\nIt must be a valid domain-prefixed key (such as \"acme.io/foo\").\nDomain names *.k8s.io and *.kubernetes.io are reserved.\nThis field must be unique for each responder.\nThis field is required.";
+          type = types.str;
+        };
+        "priority" = mkOption {
+          description = "priority for this responder. Higher priorities are selected first by the evictionrequest-controller.\nIf there are responders with the same priority, the responder whose domain name comes first in the\nalphabetical higher domain order, will be picked. This means that the top domain labels are compared\nalphabetically first, followed by the lower domain labels. The key is compared last.\n\nThe responder that is the managing controller of the pod should set the value of\nthis field to 10000 to allow both for preemption or fallback registration by other\nresponders.\n\nThe minimum value is 0 and the maximum value is 100000.\nThe interval 0-999 is reserved for responders with *.k8s.io suffix.\nThis field is required.";
+          type = types.int;
+        };
+      };
+
+      config = { };
 
     };
     "actions.github.com.v1alpha1.AutoscalingListenerSpecTemplateSpecHostAliases" = {
@@ -5942,7 +6115,7 @@ let
 
         options = {
           "key" = mkOption {
-            description = "The key to select.";
+            description = "The key to select from the ConfigMap's Data field.\nKeys in the BinaryData field are not currently propagated to container env vars.";
             type = types.str;
           };
           "name" = mkOption {
@@ -6176,6 +6349,10 @@ let
             description = "Name or number of the port to access on the container.\nNumber must be in the range 1 to 65535.\nName must be an IANA_SVC_NAME.";
             type = (types.either types.int types.str);
           };
+          "protocol" = mkOption {
+            description = "Protocol selects the wire protocol for the probe connection.\nNil defaults to HTTP/1.1.";
+            type = (types.nullOr types.str);
+          };
           "scheme" = mkOption {
             description = "Scheme to use for connecting to the host.\nDefaults to HTTP.";
             type = (types.nullOr types.str);
@@ -6186,6 +6363,7 @@ let
           "host" = mkOverride 1002 null;
           "httpHeaders" = mkOverride 1002 null;
           "path" = mkOverride 1002 null;
+          "protocol" = mkOverride 1002 null;
           "scheme" = mkOverride 1002 null;
         };
 
@@ -6327,6 +6505,10 @@ let
             description = "Name or number of the port to access on the container.\nNumber must be in the range 1 to 65535.\nName must be an IANA_SVC_NAME.";
             type = (types.either types.int types.str);
           };
+          "protocol" = mkOption {
+            description = "Protocol selects the wire protocol for the probe connection.\nNil defaults to HTTP/1.1.";
+            type = (types.nullOr types.str);
+          };
           "scheme" = mkOption {
             description = "Scheme to use for connecting to the host.\nDefaults to HTTP.";
             type = (types.nullOr types.str);
@@ -6337,6 +6519,7 @@ let
           "host" = mkOverride 1002 null;
           "httpHeaders" = mkOverride 1002 null;
           "path" = mkOverride 1002 null;
+          "protocol" = mkOverride 1002 null;
           "scheme" = mkOverride 1002 null;
         };
 
@@ -6482,6 +6665,10 @@ let
     "actions.github.com.v1alpha1.AutoscalingListenerSpecTemplateSpecInitContainersLivenessProbeGrpc" = {
 
       options = {
+        "mode" = mkOption {
+          description = "mode specifies the connection mode for the gRPC health probe.\nSet to \"TLS\" to use TLS without certificate verification.\nSet to \"Plaintext\" to use a plaintext (insecure) connection explicitly.\nIf not specified, the probe uses a plaintext (insecure) connection.";
+          type = (types.nullOr types.str);
+        };
         "port" = mkOption {
           description = "Port number of the gRPC service. Number must be in the range 1 to 65535.";
           type = types.int;
@@ -6493,6 +6680,7 @@ let
       };
 
       config = {
+        "mode" = mkOverride 1002 null;
         "service" = mkOverride 1002 null;
       };
 
@@ -6525,6 +6713,10 @@ let
             description = "Name or number of the port to access on the container.\nNumber must be in the range 1 to 65535.\nName must be an IANA_SVC_NAME.";
             type = (types.either types.int types.str);
           };
+          "protocol" = mkOption {
+            description = "Protocol selects the wire protocol for the probe connection.\nNil defaults to HTTP/1.1.";
+            type = (types.nullOr types.str);
+          };
           "scheme" = mkOption {
             description = "Scheme to use for connecting to the host.\nDefaults to HTTP.";
             type = (types.nullOr types.str);
@@ -6535,6 +6727,7 @@ let
           "host" = mkOverride 1002 null;
           "httpHeaders" = mkOverride 1002 null;
           "path" = mkOverride 1002 null;
+          "protocol" = mkOverride 1002 null;
           "scheme" = mkOverride 1002 null;
         };
 
@@ -6702,6 +6895,10 @@ let
       {
 
         options = {
+          "mode" = mkOption {
+            description = "mode specifies the connection mode for the gRPC health probe.\nSet to \"TLS\" to use TLS without certificate verification.\nSet to \"Plaintext\" to use a plaintext (insecure) connection explicitly.\nIf not specified, the probe uses a plaintext (insecure) connection.";
+            type = (types.nullOr types.str);
+          };
           "port" = mkOption {
             description = "Port number of the gRPC service. Number must be in the range 1 to 65535.";
             type = types.int;
@@ -6713,6 +6910,7 @@ let
         };
 
         config = {
+          "mode" = mkOverride 1002 null;
           "service" = mkOverride 1002 null;
         };
 
@@ -6745,6 +6943,10 @@ let
             description = "Name or number of the port to access on the container.\nNumber must be in the range 1 to 65535.\nName must be an IANA_SVC_NAME.";
             type = (types.either types.int types.str);
           };
+          "protocol" = mkOption {
+            description = "Protocol selects the wire protocol for the probe connection.\nNil defaults to HTTP/1.1.";
+            type = (types.nullOr types.str);
+          };
           "scheme" = mkOption {
             description = "Scheme to use for connecting to the host.\nDefaults to HTTP.";
             type = (types.nullOr types.str);
@@ -6755,6 +6957,7 @@ let
           "host" = mkOverride 1002 null;
           "httpHeaders" = mkOverride 1002 null;
           "path" = mkOverride 1002 null;
+          "protocol" = mkOverride 1002 null;
           "scheme" = mkOverride 1002 null;
         };
 
@@ -6931,7 +7134,7 @@ let
           type = (types.nullOr types.bool);
         };
         "procMount" = mkOption {
-          description = "procMount denotes the type of proc mount to use for the containers.\nThe default value is Default which uses the container runtime defaults for\nreadonly paths and masked paths.\nThis requires the ProcMountType feature flag to be enabled.\nNote that this field cannot be set when spec.os.name is windows.";
+          description = "procMount denotes the type of proc mount to use for the containers.\nThe default value is Default which uses the container runtime defaults for\nreadonly paths and masked paths.\nNote that this field cannot be set when spec.os.name is windows.";
           type = (types.nullOr types.str);
         };
         "readOnlyRootFilesystem" = mkOption {
@@ -7202,6 +7405,10 @@ let
     "actions.github.com.v1alpha1.AutoscalingListenerSpecTemplateSpecInitContainersStartupProbeGrpc" = {
 
       options = {
+        "mode" = mkOption {
+          description = "mode specifies the connection mode for the gRPC health probe.\nSet to \"TLS\" to use TLS without certificate verification.\nSet to \"Plaintext\" to use a plaintext (insecure) connection explicitly.\nIf not specified, the probe uses a plaintext (insecure) connection.";
+          type = (types.nullOr types.str);
+        };
         "port" = mkOption {
           description = "Port number of the gRPC service. Number must be in the range 1 to 65535.";
           type = types.int;
@@ -7213,6 +7420,7 @@ let
       };
 
       config = {
+        "mode" = mkOverride 1002 null;
         "service" = mkOverride 1002 null;
       };
 
@@ -7245,6 +7453,10 @@ let
             description = "Name or number of the port to access on the container.\nNumber must be in the range 1 to 65535.\nName must be an IANA_SVC_NAME.";
             type = (types.either types.int types.str);
           };
+          "protocol" = mkOption {
+            description = "Protocol selects the wire protocol for the probe connection.\nNil defaults to HTTP/1.1.";
+            type = (types.nullOr types.str);
+          };
           "scheme" = mkOption {
             description = "Scheme to use for connecting to the host.\nDefaults to HTTP.";
             type = (types.nullOr types.str);
@@ -7255,6 +7467,7 @@ let
           "host" = mkOverride 1002 null;
           "httpHeaders" = mkOverride 1002 null;
           "path" = mkOverride 1002 null;
+          "protocol" = mkOverride 1002 null;
           "scheme" = mkOverride 1002 null;
         };
 
@@ -7314,8 +7527,12 @@ let
     "actions.github.com.v1alpha1.AutoscalingListenerSpecTemplateSpecInitContainersVolumeMounts" = {
 
       options = {
+        "bindMountOptions" = mkOption {
+          description = "bindMountOptions is the list of additional bind mount options to apply when\nmounting this volume into the container. Allowed values are noexec,\nnodev, and nosuid. These are Linux mount options and have no effect on\nWindows nodes.\nThis field is not supported with image volumes.\nThis is an alpha field and requires enabling the VolumeBindMountOptions feature gate.";
+          type = (types.nullOr (types.listOf types.str));
+        };
         "mountPath" = mkOption {
-          description = "Path within the container at which the volume should be mounted.  Must\nnot contain ':'.";
+          description = "Path within the container at which the volume should be mounted.";
           type = types.str;
         };
         "mountPropagation" = mkOption {
@@ -7345,6 +7562,7 @@ let
       };
 
       config = {
+        "bindMountOptions" = mkOverride 1002 null;
         "mountPropagation" = mkOverride 1002 null;
         "readOnly" = mkOverride 1002 null;
         "recursiveReadOnly" = mkOverride 1002 null;
@@ -7389,7 +7607,7 @@ let
           type = (types.nullOr types.str);
         };
         "resourceClaimTemplateName" = mkOption {
-          description = "ResourceClaimTemplateName is the name of a ResourceClaimTemplate\nobject in the same namespace as this pod.\n\nThe template will be used to create a new ResourceClaim, which will\nbe bound to this pod. When this pod is deleted, the ResourceClaim\nwill also be deleted. The pod name and resource name, along with a\ngenerated component, will be used to form a unique name for the\nResourceClaim, which will be recorded in pod.status.resourceClaimStatuses.\n\nThis field is immutable and no changes will be made to the\ncorresponding ResourceClaim by the control plane after creating the\nResourceClaim.\n\nExactly one of ResourceClaimName and ResourceClaimTemplateName must\nbe set.";
+          description = "ResourceClaimTemplateName is the name of a ResourceClaimTemplate\nobject in the same namespace as this pod.\n\nThe template will be used to create a new ResourceClaim, which will\nbe bound to this pod. When this pod is deleted, the ResourceClaim\nwill also be deleted. The pod name and resource name, along with a\ngenerated component, will be used to form a unique name for the\nResourceClaim, which will be recorded in pod.status.resourceClaimStatuses.\n\nWhen the DRAWorkloadResourceClaims feature gate is enabled and the pod\nbelongs to a PodGroup that defines a PodGroupResourceClaim with the same\nName and ResourceClaimTemplateName, this PodResourceClaim resolves to the\nResourceClaim generated for the PodGroup. All pods in the group that\ndefine an equivalent PodResourceClaim matching the\nPodGroupResourceClaim's Name and ResourceClaimTemplateName share the same\ngenerated ResourceClaim. ResourceClaims generated for a PodGroup are\nowned by the PodGroup and their lifecycles are tied to the PodGroup\ninstead of any individual pod.\n\nThis field is immutable and no changes will be made to the\ncorresponding ResourceClaim by the control plane after creating the\nResourceClaim.\n\nExactly one of ResourceClaimName and ResourceClaimTemplateName must\nbe set.";
           type = (types.nullOr types.str);
         };
       };
@@ -7462,6 +7680,20 @@ let
       config = { };
 
     };
+    "actions.github.com.v1alpha1.AutoscalingListenerSpecTemplateSpecSchedulingGroup" = {
+
+      options = {
+        "podGroupName" = mkOption {
+          description = "PodGroupName specifies the name of the standalone PodGroup object\nthat represents the runtime instance of this group.\nMust be a DNS subdomain.";
+          type = (types.nullOr types.str);
+        };
+      };
+
+      config = {
+        "podGroupName" = mkOverride 1002 null;
+      };
+
+    };
     "actions.github.com.v1alpha1.AutoscalingListenerSpecTemplateSpecSecurityContext" = {
 
       options = {
@@ -7494,7 +7726,7 @@ let
           type = (types.nullOr types.int);
         };
         "seLinuxChangePolicy" = mkOption {
-          description = "seLinuxChangePolicy defines how the container's SELinux label is applied to all volumes used by the Pod.\nIt has no effect on nodes that do not support SELinux or to volumes does not support SELinux.\nValid values are \"MountOption\" and \"Recursive\".\n\n\"Recursive\" means relabeling of all files on all Pod volumes by the container runtime.\nThis may be slow for large volumes, but allows mixing privileged and unprivileged Pods sharing the same volume on the same node.\n\n\"MountOption\" mounts all eligible Pod volumes with `-o context` mount option.\nThis requires all Pods that share the same volume to use the same SELinux label.\nIt is not possible to share the same volume among privileged and unprivileged Pods.\nEligible volumes are in-tree FibreChannel and iSCSI volumes, and all CSI volumes\nwhose CSI driver announces SELinux support by setting spec.seLinuxMount: true in their\nCSIDriver instance. Other volumes are always re-labelled recursively.\n\"MountOption\" value is allowed only when SELinuxMount feature gate is enabled.\n\nIf not specified and SELinuxMount feature gate is enabled, \"MountOption\" is used.\nIf not specified and SELinuxMount feature gate is disabled, \"MountOption\" is used for ReadWriteOncePod volumes\nand \"Recursive\" for all other volumes.\n\nThis field affects only Pods that have SELinux label set, either in PodSecurityContext or in SecurityContext of all containers.\n\nAll Pods that use the same volume should use the same seLinuxChangePolicy, otherwise some pods can get stuck in ContainerCreating state.\nNote that this field cannot be set when spec.os.name is windows.";
+          description = "seLinuxChangePolicy defines how the container's SELinux label is applied to all volumes used by the Pod.\nIt has no effect on nodes that do not support SELinux or to volumes does not support SELinux.\nValid values are \"MountOption\" and \"Recursive\".\n\n\"Recursive\" means relabeling of all files on all Pod volumes by the container runtime.\nThis may be slow for large volumes, but allows mixing privileged and unprivileged Pods sharing the same volume on the same node.\n\n\"MountOption\" mounts all eligible Pod volumes with `-o context` mount option.\nThis requires all Pods that share the same volume to use the same SELinux label.\nIt is not possible to share the same volume among privileged and unprivileged Pods.\nEligible volumes are in-tree FibreChannel and iSCSI volumes, and all CSI volumes\nwhose CSI driver announces SELinux support by setting spec.seLinuxMount: true in their\nCSIDriver instance. Other volumes are always re-labelled recursively.\n\nIf not specified, \"MountOption\" is used.\n\nThis field affects only Pods that have SELinux label set, either in PodSecurityContext or in SecurityContext of all containers.\n\nAll Pods that use the same volume should use the same seLinuxChangePolicy, otherwise some pods can get stuck in ContainerCreating state.\nNote that this field cannot be set when spec.os.name is windows.";
           type = (types.nullOr types.str);
         };
         "seLinuxOptions" = mkOption {
@@ -7943,7 +8175,7 @@ let
           );
         };
         "image" = mkOption {
-          description = "image represents an OCI object (a container image or artifact) pulled and mounted on the kubelet's host machine.\nThe volume is resolved at pod startup depending on which PullPolicy value is provided:\n\n- Always: the kubelet always attempts to pull the reference. Container creation will fail If the pull fails.\n- Never: the kubelet never pulls the reference and only uses a local image or artifact. Container creation will fail if the reference isn't present.\n- IfNotPresent: the kubelet pulls if the reference isn't already present on disk. Container creation will fail if the reference isn't present and the pull fails.\n\nThe volume gets re-resolved if the pod gets deleted and recreated, which means that new remote content will become available on pod recreation.\nA failure to resolve or pull the image during pod startup will block containers from starting and may add significant latency. Failures will be retried using normal volume backoff and will be reported on the pod reason and message.\nThe types of objects that may be mounted by this volume are defined by the container runtime implementation on a host machine and at minimum must include all valid types supported by the container image field.\nThe OCI object gets mounted in a single directory (spec.containers[*].volumeMounts.mountPath) by merging the manifest layers in the same way as for container images.\nThe volume will be mounted read-only (ro) and non-executable files (noexec).\nSub path mounts for containers are not supported (spec.containers[*].volumeMounts.subpath) before 1.33.\nThe field spec.securityContext.fsGroupChangePolicy has no effect on this volume type.";
+          description = "image represents an OCI object (a container image or artifact) pulled and mounted on the kubelet's host machine.\nThe volume is resolved at pod startup depending on which PullPolicy value is provided:\n\n- Always: the kubelet always attempts to pull the reference. Container creation will fail If the pull fails.\n- Never: the kubelet never pulls the reference and only uses a local image or artifact. Container creation will fail if the reference isn't present.\n- IfNotPresent: the kubelet pulls if the reference isn't already present on disk. Container creation will fail if the reference isn't present and the pull fails.\n\nThe volume gets re-resolved if the pod gets deleted and recreated, which means that new remote content will become available on pod recreation.\nA failure to resolve or pull the image during pod startup will block containers from starting and may add significant latency. Failures will be retried using normal volume backoff and will be reported on the pod reason and message.\nThe types of objects that may be mounted by this volume are defined by the container runtime implementation on a host machine and at minimum must include all valid types supported by the container image field.\nThe OCI object gets mounted in a single directory (spec.containers[*].volumeMounts.mountPath) by merging the manifest layers in the same way as for container images.\nThe volume will be mounted read-only (ro).\nSub path mounts for containers are not supported (spec.containers[*].volumeMounts.subpath) before 1.33.\nThe field spec.securityContext.fsGroupChangePolicy has no effect on this volume type.";
           type = (
             types.nullOr (
               submoduleOf "actions.github.com.v1alpha1.AutoscalingListenerSpecTemplateSpecVolumesImage"
@@ -7987,7 +8219,7 @@ let
           );
         };
         "portworxVolume" = mkOption {
-          description = "portworxVolume represents a portworx volume attached and mounted on kubelets host machine.\nDeprecated: PortworxVolume is deprecated. All operations for the in-tree portworxVolume type\nare redirected to the pxd.portworx.com CSI driver when the CSIMigrationPortworx feature-gate\nis on.";
+          description = "portworxVolume represents a portworx volume attached and mounted on kubelets host machine.\nDeprecated: PortworxVolume is deprecated. All operations for the in-tree portworxVolume type\nare redirected to the pxd.portworx.com CSI driver.";
           type = (
             types.nullOr (
               submoduleOf "actions.github.com.v1alpha1.AutoscalingListenerSpecTemplateSpecVolumesPortworxVolume"
@@ -8282,6 +8514,10 @@ let
           description = "defaultMode is optional: mode bits used to set permissions on created files by default.\nMust be an octal value between 0000 and 0777 or a decimal value between 0 and 511.\nYAML accepts both octal and decimal values, JSON requires decimal values for mode bits.\nDefaults to 0644.\nDirectories within the path are not affected by this setting.\nThis might be in conflict with other options that affect the file\nmode, like fsGroup, and the result can be other mode bits set.";
           type = (types.nullOr types.int);
         };
+        "defaultUser" = mkOption {
+          description = "defaultUser is Optional: The owner UID of the created files by default.\nThe defaultUser field is only used as a fallback when the item-level user field is unset.\n(Alpha) This field requires the AtomicWriteVolumeUserFields feature gate to be enabled.";
+          type = (types.nullOr types.int);
+        };
         "items" = mkOption {
           description = "items if unspecified, each key-value pair in the Data field of the referenced\nConfigMap will be projected into the volume as a file whose name is the\nkey and content is the value. If specified, the listed keys will be\nprojected into the specified paths, and unlisted keys will not be\npresent. If a key is specified which is not present in the ConfigMap,\nthe volume setup will error unless it is marked optional. Paths must be\nrelative and may not contain the '..' path or start with '..'.";
           type = (
@@ -8304,6 +8540,7 @@ let
 
       config = {
         "defaultMode" = mkOverride 1002 null;
+        "defaultUser" = mkOverride 1002 null;
         "items" = mkOverride 1002 null;
         "name" = mkOverride 1002 null;
         "optional" = mkOverride 1002 null;
@@ -8325,10 +8562,15 @@ let
           description = "path is the relative path of the file to map the key to.\nMay not be an absolute path.\nMay not contain the path element '..'.\nMay not start with the string '..'.";
           type = types.str;
         };
+        "user" = mkOption {
+          description = "user is Optional: The owner UID of the created file.\nIf specified, the item-level user field takes precedence over defaultUser.\n(Alpha) This field requires the AtomicWriteVolumeUserFields feature gate to be enabled.";
+          type = (types.nullOr types.int);
+        };
       };
 
       config = {
         "mode" = mkOverride 1002 null;
+        "user" = mkOverride 1002 null;
       };
 
     };
@@ -8390,6 +8632,10 @@ let
           description = "Optional: mode bits to use on created files by default. Must be a\nOptional: mode bits used to set permissions on created files by default.\nMust be an octal value between 0000 and 0777 or a decimal value between 0 and 511.\nYAML accepts both octal and decimal values, JSON requires decimal values for mode bits.\nDefaults to 0644.\nDirectories within the path are not affected by this setting.\nThis might be in conflict with other options that affect the file\nmode, like fsGroup, and the result can be other mode bits set.";
           type = (types.nullOr types.int);
         };
+        "defaultUser" = mkOption {
+          description = "defaultUser is Optional: The owner UID of the created files by default.\nThe defaultUser field is only used as a fallback when the item-level user field is unset.\n(Alpha) This field requires the AtomicWriteVolumeUserFields feature gate to be enabled.";
+          type = (types.nullOr types.int);
+        };
         "items" = mkOption {
           description = "Items is a list of downward API volume file";
           type = (
@@ -8404,6 +8650,7 @@ let
 
       config = {
         "defaultMode" = mkOverride 1002 null;
+        "defaultUser" = mkOverride 1002 null;
         "items" = mkOverride 1002 null;
       };
 
@@ -8435,12 +8682,17 @@ let
             )
           );
         };
+        "user" = mkOption {
+          description = "user is Optional: The owner UID of the created file.\nIf specified, the item-level user field takes precedence over defaultUser.\n(Alpha) This field requires the AtomicWriteVolumeUserFields feature gate to be enabled.";
+          type = (types.nullOr types.int);
+        };
       };
 
       config = {
         "fieldRef" = mkOverride 1002 null;
         "mode" = mkOverride 1002 null;
         "resourceFieldRef" = mkOverride 1002 null;
+        "user" = mkOverride 1002 null;
       };
 
     };
@@ -8493,6 +8745,10 @@ let
           description = "medium represents what type of storage medium should back this directory.\nThe default is \"\" which means to use the node's default medium.\nMust be an empty string (default) or Memory.\nMore info: https://kubernetes.io/docs/concepts/storage/volumes#emptydir";
           type = (types.nullOr types.str);
         };
+        "mode" = mkOption {
+          description = "mode specifies the permission bits for the emptyDir directory, in numeric\nnotation (e.g., 0755, 01777). Must be a value between 0000 and 01777.\nIf not specified, defaults to 0777.\nThis might be in conflict with other options that affect the file\nmode, like fsGroup. If fsGroup is specified, the fsGroup permissions\nwill override the mode specified here.\nThis field has no effect on Windows.\nThis field is alpha and requires EmptyDirVolumeMode featuregate to be enabled.";
+          type = (types.nullOr types.int);
+        };
         "sizeLimit" = mkOption {
           description = "sizeLimit is the total amount of local storage required for this EmptyDir volume.\nThe size limit is also applicable for memory medium.\nThe maximum usage on memory medium EmptyDir would be the minimum value between\nthe SizeLimit specified here and the sum of memory limits of all containers in a pod.\nThe default is nil which means that the limit is undefined.\nMore info: https://kubernetes.io/docs/concepts/storage/volumes#emptydir";
           type = (types.nullOr (types.either types.int types.str));
@@ -8501,6 +8757,7 @@ let
 
       config = {
         "medium" = mkOverride 1002 null;
+        "mode" = mkOverride 1002 null;
         "sizeLimit" = mkOverride 1002 null;
       };
 
@@ -8592,7 +8849,7 @@ let
             type = (types.nullOr (types.listOf types.str));
           };
           "dataSource" = mkOption {
-            description = "dataSource field can be used to specify either:\n* An existing VolumeSnapshot object (snapshot.storage.k8s.io/VolumeSnapshot)\n* An existing PVC (PersistentVolumeClaim)\nIf the provisioner or an external controller can support the specified data source,\nit will create a new volume based on the contents of the specified data source.\nWhen the AnyVolumeDataSource feature gate is enabled, dataSource contents will be copied to dataSourceRef,\nand dataSourceRef contents will be copied to dataSource when dataSourceRef.namespace is not specified.\nIf the namespace is specified, then dataSourceRef will not be copied to dataSource.";
+            description = "dataSource field can be used to specify either:\n* An existing VolumeSnapshot object (snapshot.storage.k8s.io/VolumeSnapshot)\n* An existing PVC (PersistentVolumeClaim)\nIf the provisioner or an external controller can support the specified data source,\nit will create a new volume based on the contents of the specified data source.\ndataSource contents will be copied to dataSourceRef, and dataSourceRef contents will be\ncopied to dataSource when dataSourceRef.namespace is not specified.\nIf the namespace is specified, then dataSourceRef will not be copied to dataSource.";
             type = (
               types.nullOr (
                 submoduleOf "actions.github.com.v1alpha1.AutoscalingListenerSpecTemplateSpecVolumesEphemeralVolumeClaimTemplateSpecDataSource"
@@ -8600,7 +8857,7 @@ let
             );
           };
           "dataSourceRef" = mkOption {
-            description = "dataSourceRef specifies the object from which to populate the volume with data, if a non-empty\nvolume is desired. This may be any object from a non-empty API group (non\ncore object) or a PersistentVolumeClaim object.\nWhen this field is specified, volume binding will only succeed if the type of\nthe specified object matches some installed volume populator or dynamic\nprovisioner.\nThis field will replace the functionality of the dataSource field and as such\nif both fields are non-empty, they must have the same value. For backwards\ncompatibility, when namespace isn't specified in dataSourceRef,\nboth fields (dataSource and dataSourceRef) will be set to the same\nvalue automatically if one of them is empty and the other is non-empty.\nWhen namespace is specified in dataSourceRef,\ndataSource isn't set to the same value and must be empty.\nThere are three important differences between dataSource and dataSourceRef:\n* While dataSource only allows two specific types of objects, dataSourceRef\n  allows any non-core object, as well as PersistentVolumeClaim objects.\n* While dataSource ignores disallowed values (dropping them), dataSourceRef\n  preserves all values, and generates an error if a disallowed value is\n  specified.\n* While dataSource only allows local objects, dataSourceRef allows objects\n  in any namespaces.\n(Beta) Using this field requires the AnyVolumeDataSource feature gate to be enabled.\n(Alpha) Using the namespace field of dataSourceRef requires the CrossNamespaceVolumeDataSource feature gate to be enabled.";
+            description = "dataSourceRef specifies the object from which to populate the volume with data, if a non-empty\nvolume is desired. This may be any object from a non-empty API group (non\ncore object) or a PersistentVolumeClaim object.\nWhen this field is specified, volume binding will only succeed if the type of\nthe specified object matches some installed volume populator or dynamic\nprovisioner.\nThis field will replace the functionality of the dataSource field and as such\nif both fields are non-empty, they must have the same value. For backwards\ncompatibility, when namespace isn't specified in dataSourceRef,\nboth fields (dataSource and dataSourceRef) will be set to the same\nvalue automatically if one of them is empty and the other is non-empty.\nWhen namespace is specified in dataSourceRef,\ndataSource isn't set to the same value and must be empty.\nThere are three important differences between dataSource and dataSourceRef:\n* While dataSource only allows two specific types of objects, dataSourceRef\n  allows any non-core object, as well as PersistentVolumeClaim objects.\n* While dataSource ignores disallowed values (dropping them), dataSourceRef\n  preserves all values, and generates an error if a disallowed value is\n  specified.\n* While dataSource only allows local objects, dataSourceRef allows objects\n  in any namespaces.\n(Alpha) Using the namespace field of dataSourceRef requires the CrossNamespaceVolumeDataSource feature gate to be enabled.";
             type = (
               types.nullOr (
                 submoduleOf "actions.github.com.v1alpha1.AutoscalingListenerSpecTemplateSpecVolumesEphemeralVolumeClaimTemplateSpecDataSourceRef"
@@ -9155,6 +9412,10 @@ let
           description = "defaultMode are the mode bits used to set permissions on created files by default.\nMust be an octal value between 0000 and 0777 or a decimal value between 0 and 511.\nYAML accepts both octal and decimal values, JSON requires decimal values for mode bits.\nDirectories within the path are not affected by this setting.\nThis might be in conflict with other options that affect the file\nmode, like fsGroup, and the result can be other mode bits set.";
           type = (types.nullOr types.int);
         };
+        "defaultUser" = mkOption {
+          description = "defaultUser is Optional: The owner UID of the created files by default.\nThe defaultUser field is only used as a fallback when the item-level user field is unset.\n(Alpha) This field requires the AtomicWriteVolumeUserFields feature gate to be enabled.";
+          type = (types.nullOr types.int);
+        };
         "sources" = mkOption {
           description = "sources is the list of volume projections. Each entry in this list\nhandles one source.";
           type = (
@@ -9169,6 +9430,7 @@ let
 
       config = {
         "defaultMode" = mkOverride 1002 null;
+        "defaultUser" = mkOverride 1002 null;
         "sources" = mkOverride 1002 null;
       };
 
@@ -9264,6 +9526,10 @@ let
             description = "Select all ClusterTrustBundles that match this signer name.\nMutually-exclusive with name.  The contents of all selected\nClusterTrustBundles will be unified and deduplicated.";
             type = (types.nullOr types.str);
           };
+          "user" = mkOption {
+            description = "user is Optional: The owner UID of the created file.\nIf specified, the item-level user field takes precedence over defaultUser.\n(Alpha) This field requires the AtomicWriteVolumeUserFields feature gate to be enabled.";
+            type = (types.nullOr types.int);
+          };
         };
 
         config = {
@@ -9271,6 +9537,7 @@ let
           "name" = mkOverride 1002 null;
           "optional" = mkOverride 1002 null;
           "signerName" = mkOverride 1002 null;
+          "user" = mkOverride 1002 null;
         };
 
       };
@@ -9370,10 +9637,15 @@ let
             description = "path is the relative path of the file to map the key to.\nMay not be an absolute path.\nMay not contain the path element '..'.\nMay not start with the string '..'.";
             type = types.str;
           };
+          "user" = mkOption {
+            description = "user is Optional: The owner UID of the created file.\nIf specified, the item-level user field takes precedence over defaultUser.\n(Alpha) This field requires the AtomicWriteVolumeUserFields feature gate to be enabled.";
+            type = (types.nullOr types.int);
+          };
         };
 
         config = {
           "mode" = mkOverride 1002 null;
+          "user" = mkOverride 1002 null;
         };
 
       };
@@ -9426,12 +9698,17 @@ let
               )
             );
           };
+          "user" = mkOption {
+            description = "user is Optional: The owner UID of the created file.\nIf specified, the item-level user field takes precedence over defaultUser.\n(Alpha) This field requires the AtomicWriteVolumeUserFields feature gate to be enabled.";
+            type = (types.nullOr types.int);
+          };
         };
 
         config = {
           "fieldRef" = mkOverride 1002 null;
           "mode" = mkOverride 1002 null;
           "resourceFieldRef" = mkOverride 1002 null;
+          "user" = mkOverride 1002 null;
         };
 
       };
@@ -9506,6 +9783,10 @@ let
             description = "Kubelet's generated CSRs will be addressed to this signer.";
             type = types.str;
           };
+          "user" = mkOption {
+            description = "user is Optional: The owner UID of the created file.\nIf specified, the item-level user field takes precedence over defaultUser.\n(Alpha) This field requires the AtomicWriteVolumeUserFields feature gate to be enabled.";
+            type = (types.nullOr types.int);
+          };
           "userAnnotations" = mkOption {
             description = "userAnnotations allow pod authors to pass additional information to\nthe signer implementation.  Kubernetes does not restrict or validate this\nmetadata in any way.\n\nThese values are copied verbatim into the `spec.unverifiedUserAnnotations` field of\nthe PodCertificateRequest objects that Kubelet creates.\n\nEntries are subject to the same validation as object metadata annotations,\nwith the addition that all keys must be domain-prefixed. No restrictions\nare placed on values, except an overall size limitation on the entire field.\n\nSigners should document the keys and values they support. Signers should\ndeny requests that contain keys they do not recognize.";
             type = (types.nullOr (types.attrsOf types.str));
@@ -9517,6 +9798,7 @@ let
           "credentialBundlePath" = mkOverride 1002 null;
           "keyPath" = mkOverride 1002 null;
           "maxExpirationSeconds" = mkOverride 1002 null;
+          "user" = mkOverride 1002 null;
           "userAnnotations" = mkOverride 1002 null;
         };
 
@@ -9567,10 +9849,15 @@ let
             description = "path is the relative path of the file to map the key to.\nMay not be an absolute path.\nMay not contain the path element '..'.\nMay not start with the string '..'.";
             type = types.str;
           };
+          "user" = mkOption {
+            description = "user is Optional: The owner UID of the created file.\nIf specified, the item-level user field takes precedence over defaultUser.\n(Alpha) This field requires the AtomicWriteVolumeUserFields feature gate to be enabled.";
+            type = (types.nullOr types.int);
+          };
         };
 
         config = {
           "mode" = mkOverride 1002 null;
+          "user" = mkOverride 1002 null;
         };
 
       };
@@ -9590,11 +9877,16 @@ let
             description = "path is the path relative to the mount point of the file to project the\ntoken into.";
             type = types.str;
           };
+          "user" = mkOption {
+            description = "user is Optional: The owner UID of the created file.\nIf specified, the item-level user field takes precedence over defaultUser.\n(Alpha) This field requires the AtomicWriteVolumeUserFields feature gate to be enabled.";
+            type = (types.nullOr types.int);
+          };
         };
 
         config = {
           "audience" = mkOverride 1002 null;
           "expirationSeconds" = mkOverride 1002 null;
+          "user" = mkOverride 1002 null;
         };
 
       };
@@ -9779,6 +10071,10 @@ let
           description = "defaultMode is Optional: mode bits used to set permissions on created files by default.\nMust be an octal value between 0000 and 0777 or a decimal value between 0 and 511.\nYAML accepts both octal and decimal values, JSON requires decimal values\nfor mode bits. Defaults to 0644.\nDirectories within the path are not affected by this setting.\nThis might be in conflict with other options that affect the file\nmode, like fsGroup, and the result can be other mode bits set.";
           type = (types.nullOr types.int);
         };
+        "defaultUser" = mkOption {
+          description = "defaultUser is Optional: The owner UID of the created files by default.\nThe defaultUser field is only used as a fallback when the item-level user field is unset.\n(Alpha) This field requires the AtomicWriteVolumeUserFields feature gate to be enabled.";
+          type = (types.nullOr types.int);
+        };
         "items" = mkOption {
           description = "items If unspecified, each key-value pair in the Data field of the referenced\nSecret will be projected into the volume as a file whose name is the\nkey and content is the value. If specified, the listed keys will be\nprojected into the specified paths, and unlisted keys will not be\npresent. If a key is specified which is not present in the Secret,\nthe volume setup will error unless it is marked optional. Paths must be\nrelative and may not contain the '..' path or start with '..'.";
           type = (
@@ -9801,6 +10097,7 @@ let
 
       config = {
         "defaultMode" = mkOverride 1002 null;
+        "defaultUser" = mkOverride 1002 null;
         "items" = mkOverride 1002 null;
         "optional" = mkOverride 1002 null;
         "secretName" = mkOverride 1002 null;
@@ -9822,10 +10119,15 @@ let
           description = "path is the relative path of the file to map the key to.\nMay not be an absolute path.\nMay not contain the path element '..'.\nMay not start with the string '..'.";
           type = types.str;
         };
+        "user" = mkOption {
+          description = "user is Optional: The owner UID of the created file.\nIf specified, the item-level user field takes precedence over defaultUser.\n(Alpha) This field requires the AtomicWriteVolumeUserFields feature gate to be enabled.";
+          type = (types.nullOr types.int);
+        };
       };
 
       config = {
         "mode" = mkOverride 1002 null;
+        "user" = mkOverride 1002 null;
       };
 
     };
@@ -9906,28 +10208,6 @@ let
         "fsType" = mkOverride 1002 null;
         "storagePolicyID" = mkOverride 1002 null;
         "storagePolicyName" = mkOverride 1002 null;
-      };
-
-    };
-    "actions.github.com.v1alpha1.AutoscalingListenerSpecTemplateSpecWorkloadRef" = {
-
-      options = {
-        "name" = mkOption {
-          description = "Name defines the name of the Workload object this Pod belongs to.\nWorkload must be in the same namespace as the Pod.\nIf it doesn't match any existing Workload, the Pod will remain unschedulable\nuntil a Workload object is created and observed by the kube-scheduler.\nIt must be a DNS subdomain.";
-          type = types.str;
-        };
-        "podGroup" = mkOption {
-          description = "PodGroup is the name of the PodGroup within the Workload that this Pod\nbelongs to. If it doesn't match any existing PodGroup within the Workload,\nthe Pod will remain unschedulable until the Workload object is recreated\nand observed by the kube-scheduler. It must be a DNS label.";
-          type = types.str;
-        };
-        "podGroupReplicaKey" = mkOption {
-          description = "PodGroupReplicaKey specifies the replica key of the PodGroup to which this\nPod belongs. It is used to distinguish pods belonging to different replicas\nof the same pod group. The pod group policy is applied separately to each replica.\nWhen set, it must be a DNS label.";
-          type = (types.nullOr types.str);
-        };
-      };
-
-      config = {
-        "podGroupReplicaKey" = mkOverride 1002 null;
       };
 
     };
@@ -10121,17 +10401,23 @@ let
           );
         };
         "githubConfigSecret" = mkOption {
-          description = "Required";
+          description = "";
           type = (types.nullOr types.str);
         };
         "githubConfigUrl" = mkOption {
-          description = "Required";
+          description = "";
           type = (types.nullOr types.str);
         };
         "githubServerTLS" = mkOption {
           description = "";
           type = (
             types.nullOr (submoduleOf "actions.github.com.v1alpha1.AutoscalingRunnerSetSpecGithubServerTLS")
+          );
+        };
+        "listenerConfig" = mkOption {
+          description = "ListenerConfig holds configuration for the ghalistener pod.";
+          type = (
+            types.nullOr (submoduleOf "actions.github.com.v1alpha1.AutoscalingRunnerSetSpecListenerConfig")
           );
         };
         "listenerConfigSecretMetadata" = mkOption {
@@ -10203,7 +10489,7 @@ let
           type = (types.nullOr types.str);
         };
         "template" = mkOption {
-          description = "Required";
+          description = "PodTemplateSpec describes the data a pod should have when created from a template";
           type = (types.nullOr (submoduleOf "actions.github.com.v1alpha1.AutoscalingRunnerSetSpecTemplate"));
         };
         "vaultConfig" = mkOption {
@@ -10222,6 +10508,7 @@ let
         "githubConfigSecret" = mkOverride 1002 null;
         "githubConfigUrl" = mkOverride 1002 null;
         "githubServerTLS" = mkOverride 1002 null;
+        "listenerConfig" = mkOverride 1002 null;
         "listenerConfigSecretMetadata" = mkOverride 1002 null;
         "listenerMetrics" = mkOverride 1002 null;
         "listenerRoleBindingMetadata" = mkOverride 1002 null;
@@ -10356,7 +10643,7 @@ let
 
         options = {
           "key" = mkOption {
-            description = "The key to select.";
+            description = "The key to select from the ConfigMap's Data field.\nKeys in the BinaryData field are not currently propagated to container env vars.";
             type = types.str;
           };
           "name" = mkOption {
@@ -10375,6 +10662,43 @@ let
         };
 
       };
+    "actions.github.com.v1alpha1.AutoscalingRunnerSetSpecListenerConfig" = {
+
+      options = {
+        "scaler" = mkOption {
+          description = "ScalerConfig configures the Kubernetes client used by the ghalistener scaler.";
+          type = (
+            types.nullOr (
+              submoduleOf "actions.github.com.v1alpha1.AutoscalingRunnerSetSpecListenerConfigScaler"
+            )
+          );
+        };
+      };
+
+      config = {
+        "scaler" = mkOverride 1002 null;
+      };
+
+    };
+    "actions.github.com.v1alpha1.AutoscalingRunnerSetSpecListenerConfigScaler" = {
+
+      options = {
+        "burst" = mkOption {
+          description = "";
+          type = (types.nullOr (types.withMinimum 1 types.int));
+        };
+        "qps" = mkOption {
+          description = "";
+          type = (types.nullOr (types.withMinimum 1 types.int));
+        };
+      };
+
+      config = {
+        "burst" = mkOverride 1002 null;
+        "qps" = mkOverride 1002 null;
+      };
+
+    };
     "actions.github.com.v1alpha1.AutoscalingRunnerSetSpecListenerConfigSecretMetadata" = {
 
       options = {
@@ -10593,6 +10917,18 @@ let
           );
           apply = attrsToList;
         };
+        "evictionResponders" = mkOption {
+          description = "evictionResponders reference responders that react to Evictions based on EvictionRequests.\nResponders should observe and communicate through the Eviction Resource API to help with\nthe graceful termination of a pod. The responders are selected sequentially, according to\ntheir specified priority.\n\nResponders should periodically report on an eviction progress by updating the\n.status.responders[].heartbeatTime field of the Eviction object. If this field is not updated\nwithin the heartbeat deadline defined by the Eviction API (currently 20 minutes), the eviction\nis passed over to the next responder with a lower priority. If there is no other responder,\nthe last default imperative-eviction.k8s.io/evictor responder with a priority of 100 will\nevict the pod using the imperative Eviction API (pods/<name>/eviction subresource).\n\nThe maximum length of the responders list is 10.\nResponders are not supported when the pod is part of a PodGroup (.spec.schedulingGroup is set).\nThis field can only be set on creation and is immutable afterwards.";
+          type = (
+            types.nullOr (
+              coerceAttrsOfSubmodulesToListByKey
+                "actions.github.com.v1alpha1.AutoscalingRunnerSetSpecListenerTemplateSpecEvictionResponders"
+                "name"
+                [ "name" ]
+            )
+          );
+          apply = attrsToList;
+        };
         "hostAliases" = mkOption {
           description = "HostAliases is an optional list of hosts and IPs that will be injected into the pod's hosts\nfile if specified.";
           type = (
@@ -10616,7 +10952,7 @@ let
           type = (types.nullOr types.bool);
         };
         "hostUsers" = mkOption {
-          description = "Use the host's user namespace.\nOptional: Default to true.\nIf set to true or not present, the pod will be run in the host user namespace, useful\nfor when the pod needs a feature only available to the host user namespace, such as\nloading a kernel module with CAP_SYS_MODULE.\nWhen set to false, a new userns is created for the pod. Setting false is useful for\nmitigating container breakout vulnerabilities even allowing users to run their\ncontainers as root without actually having root privileges on the host.\nThis field is alpha-level and is only honored by servers that enable the UserNamespacesSupport feature.";
+          description = "Use the host's user namespace.\nOptional: Default to true.\nIf set to true or not present, the pod will be run in the host user namespace, useful\nfor when the pod needs a feature only available to the host user namespace, such as\nloading a kernel module with CAP_SYS_MODULE.\nWhen set to false, a new userns is created for the pod. Setting false is useful for\nmitigating container breakout vulnerabilities even allowing users to run their\ncontainers as root without actually having root privileges on the host.";
           type = (types.nullOr types.bool);
         };
         "hostname" = mkOption {
@@ -10624,7 +10960,7 @@ let
           type = (types.nullOr types.str);
         };
         "hostnameOverride" = mkOption {
-          description = "HostnameOverride specifies an explicit override for the pod's hostname as perceived by the pod.\nThis field only specifies the pod's hostname and does not affect its DNS records.\nWhen this field is set to a non-empty string:\n- It takes precedence over the values set in `hostname` and `subdomain`.\n- The Pod's hostname will be set to this value.\n- `setHostnameAsFQDN` must be nil or set to false.\n- `hostNetwork` must be set to false.\n\nThis field must be a valid DNS subdomain as defined in RFC 1123 and contain at most 64 characters.\nRequires the HostnameOverride feature gate to be enabled.";
+          description = "HostnameOverride specifies an explicit override for the pod's hostname as perceived by the pod.\nThis field only specifies the pod's hostname and does not affect its DNS records.\nWhen this field is set to a non-empty string:\n- It takes precedence over the values set in `hostname` and `subdomain`.\n- The Pod's hostname will be set to this value.\n- `setHostnameAsFQDN` must be nil or set to false.\n- `hostNetwork` must be set to false.\n\nThis field must be a valid DNS subdomain as defined in RFC 1123 and contain at most 64 characters.";
           type = (types.nullOr types.str);
         };
         "imagePullSecrets" = mkOption {
@@ -10672,7 +11008,7 @@ let
           type = (types.nullOr (types.attrsOf (types.either types.int types.str)));
         };
         "preemptionPolicy" = mkOption {
-          description = "PreemptionPolicy is the Policy for preempting pods with lower priority.\nOne of Never, PreemptLowerPriority.\nDefaults to PreemptLowerPriority if unset.";
+          description = "PreemptionPolicy is the Policy for preempting pods with lower priority.\nOne of Never, PreemptLowerPriority.\nWhen Priority Admission Controller is enabled, it prevents users from setting\nthis field. The admission controller populates this field from PriorityClassName.\nDefaults to PreemptLowerPriority if unset.";
           type = (types.nullOr types.str);
         };
         "priority" = mkOption {
@@ -10736,6 +11072,14 @@ let
             )
           );
           apply = attrsToList;
+        };
+        "schedulingGroup" = mkOption {
+          description = "SchedulingGroup provides a reference to the immediate scheduling runtime\ngrouping object that this Pod belongs to.\nThis field is used by the scheduler to identify the group and apply the\ncorrect group scheduling policies. The association with a group also\nimpacts other lifecycle aspects of a Pod that are relevant in a wider context\nof scheduling like preemption, resource attachment, etc. If not specified,\nthe Pod is treated as a single unit in all of these aspects.\nThe group object referenced by this field may not exist at the time the\nPod is created.\nThis field is immutable, but a group object with the same name may be\nrecreated with different policies. Doing this during pod scheduling\nmay result in the placement not conforming to the expected policies.";
+          type = (
+            types.nullOr (
+              submoduleOf "actions.github.com.v1alpha1.AutoscalingRunnerSetSpecListenerTemplateSpecSchedulingGroup"
+            )
+          );
         };
         "securityContext" = mkOption {
           description = "SecurityContext holds pod-level security attributes and common container settings.\nOptional: Defaults to empty.  See type description for default values of each field.";
@@ -10801,14 +11145,6 @@ let
           );
           apply = attrsToList;
         };
-        "workloadRef" = mkOption {
-          description = "WorkloadRef provides a reference to the Workload object that this Pod belongs to.\nThis field is used by the scheduler to identify the PodGroup and apply the\ncorrect group scheduling policies. The Workload object referenced\nby this field may not exist at the time the Pod is created.\nThis field is immutable, but a Workload object with the same name\nmay be recreated with different policies. Doing this during pod scheduling\nmay result in the placement not conforming to the expected policies.";
-          type = (
-            types.nullOr (
-              submoduleOf "actions.github.com.v1alpha1.AutoscalingRunnerSetSpecListenerTemplateSpecWorkloadRef"
-            )
-          );
-        };
       };
 
       config = {
@@ -10819,6 +11155,7 @@ let
         "dnsPolicy" = mkOverride 1002 null;
         "enableServiceLinks" = mkOverride 1002 null;
         "ephemeralContainers" = mkOverride 1002 null;
+        "evictionResponders" = mkOverride 1002 null;
         "hostAliases" = mkOverride 1002 null;
         "hostIPC" = mkOverride 1002 null;
         "hostNetwork" = mkOverride 1002 null;
@@ -10842,6 +11179,7 @@ let
         "runtimeClassName" = mkOverride 1002 null;
         "schedulerName" = mkOverride 1002 null;
         "schedulingGates" = mkOverride 1002 null;
+        "schedulingGroup" = mkOverride 1002 null;
         "securityContext" = mkOverride 1002 null;
         "serviceAccount" = mkOverride 1002 null;
         "serviceAccountName" = mkOverride 1002 null;
@@ -10852,7 +11190,6 @@ let
         "tolerations" = mkOverride 1002 null;
         "topologySpreadConstraints" = mkOverride 1002 null;
         "volumes" = mkOverride 1002 null;
-        "workloadRef" = mkOverride 1002 null;
       };
 
     };
@@ -12162,7 +12499,7 @@ let
 
         options = {
           "key" = mkOption {
-            description = "The key to select.";
+            description = "The key to select from the ConfigMap's Data field.\nKeys in the BinaryData field are not currently propagated to container env vars.";
             type = types.str;
           };
           "name" = mkOption {
@@ -12396,6 +12733,10 @@ let
             description = "Name or number of the port to access on the container.\nNumber must be in the range 1 to 65535.\nName must be an IANA_SVC_NAME.";
             type = (types.either types.int types.str);
           };
+          "protocol" = mkOption {
+            description = "Protocol selects the wire protocol for the probe connection.\nNil defaults to HTTP/1.1.";
+            type = (types.nullOr types.str);
+          };
           "scheme" = mkOption {
             description = "Scheme to use for connecting to the host.\nDefaults to HTTP.";
             type = (types.nullOr types.str);
@@ -12406,6 +12747,7 @@ let
           "host" = mkOverride 1002 null;
           "httpHeaders" = mkOverride 1002 null;
           "path" = mkOverride 1002 null;
+          "protocol" = mkOverride 1002 null;
           "scheme" = mkOverride 1002 null;
         };
 
@@ -12548,6 +12890,10 @@ let
             description = "Name or number of the port to access on the container.\nNumber must be in the range 1 to 65535.\nName must be an IANA_SVC_NAME.";
             type = (types.either types.int types.str);
           };
+          "protocol" = mkOption {
+            description = "Protocol selects the wire protocol for the probe connection.\nNil defaults to HTTP/1.1.";
+            type = (types.nullOr types.str);
+          };
           "scheme" = mkOption {
             description = "Scheme to use for connecting to the host.\nDefaults to HTTP.";
             type = (types.nullOr types.str);
@@ -12558,6 +12904,7 @@ let
           "host" = mkOverride 1002 null;
           "httpHeaders" = mkOverride 1002 null;
           "path" = mkOverride 1002 null;
+          "protocol" = mkOverride 1002 null;
           "scheme" = mkOverride 1002 null;
         };
 
@@ -12706,6 +13053,10 @@ let
       {
 
         options = {
+          "mode" = mkOption {
+            description = "mode specifies the connection mode for the gRPC health probe.\nSet to \"TLS\" to use TLS without certificate verification.\nSet to \"Plaintext\" to use a plaintext (insecure) connection explicitly.\nIf not specified, the probe uses a plaintext (insecure) connection.";
+            type = (types.nullOr types.str);
+          };
           "port" = mkOption {
             description = "Port number of the gRPC service. Number must be in the range 1 to 65535.";
             type = types.int;
@@ -12717,6 +13068,7 @@ let
         };
 
         config = {
+          "mode" = mkOverride 1002 null;
           "service" = mkOverride 1002 null;
         };
 
@@ -12749,6 +13101,10 @@ let
             description = "Name or number of the port to access on the container.\nNumber must be in the range 1 to 65535.\nName must be an IANA_SVC_NAME.";
             type = (types.either types.int types.str);
           };
+          "protocol" = mkOption {
+            description = "Protocol selects the wire protocol for the probe connection.\nNil defaults to HTTP/1.1.";
+            type = (types.nullOr types.str);
+          };
           "scheme" = mkOption {
             description = "Scheme to use for connecting to the host.\nDefaults to HTTP.";
             type = (types.nullOr types.str);
@@ -12759,6 +13115,7 @@ let
           "host" = mkOverride 1002 null;
           "httpHeaders" = mkOverride 1002 null;
           "path" = mkOverride 1002 null;
+          "protocol" = mkOverride 1002 null;
           "scheme" = mkOverride 1002 null;
         };
 
@@ -12927,6 +13284,10 @@ let
       {
 
         options = {
+          "mode" = mkOption {
+            description = "mode specifies the connection mode for the gRPC health probe.\nSet to \"TLS\" to use TLS without certificate verification.\nSet to \"Plaintext\" to use a plaintext (insecure) connection explicitly.\nIf not specified, the probe uses a plaintext (insecure) connection.";
+            type = (types.nullOr types.str);
+          };
           "port" = mkOption {
             description = "Port number of the gRPC service. Number must be in the range 1 to 65535.";
             type = types.int;
@@ -12938,6 +13299,7 @@ let
         };
 
         config = {
+          "mode" = mkOverride 1002 null;
           "service" = mkOverride 1002 null;
         };
 
@@ -12970,6 +13332,10 @@ let
             description = "Name or number of the port to access on the container.\nNumber must be in the range 1 to 65535.\nName must be an IANA_SVC_NAME.";
             type = (types.either types.int types.str);
           };
+          "protocol" = mkOption {
+            description = "Protocol selects the wire protocol for the probe connection.\nNil defaults to HTTP/1.1.";
+            type = (types.nullOr types.str);
+          };
           "scheme" = mkOption {
             description = "Scheme to use for connecting to the host.\nDefaults to HTTP.";
             type = (types.nullOr types.str);
@@ -12980,6 +13346,7 @@ let
           "host" = mkOverride 1002 null;
           "httpHeaders" = mkOverride 1002 null;
           "path" = mkOverride 1002 null;
+          "protocol" = mkOverride 1002 null;
           "scheme" = mkOverride 1002 null;
         };
 
@@ -13158,7 +13525,7 @@ let
             type = (types.nullOr types.bool);
           };
           "procMount" = mkOption {
-            description = "procMount denotes the type of proc mount to use for the containers.\nThe default value is Default which uses the container runtime defaults for\nreadonly paths and masked paths.\nThis requires the ProcMountType feature flag to be enabled.\nNote that this field cannot be set when spec.os.name is windows.";
+            description = "procMount denotes the type of proc mount to use for the containers.\nThe default value is Default which uses the container runtime defaults for\nreadonly paths and masked paths.\nNote that this field cannot be set when spec.os.name is windows.";
             type = (types.nullOr types.str);
           };
           "readOnlyRootFilesystem" = mkOption {
@@ -13431,6 +13798,10 @@ let
       {
 
         options = {
+          "mode" = mkOption {
+            description = "mode specifies the connection mode for the gRPC health probe.\nSet to \"TLS\" to use TLS without certificate verification.\nSet to \"Plaintext\" to use a plaintext (insecure) connection explicitly.\nIf not specified, the probe uses a plaintext (insecure) connection.";
+            type = (types.nullOr types.str);
+          };
           "port" = mkOption {
             description = "Port number of the gRPC service. Number must be in the range 1 to 65535.";
             type = types.int;
@@ -13442,6 +13813,7 @@ let
         };
 
         config = {
+          "mode" = mkOverride 1002 null;
           "service" = mkOverride 1002 null;
         };
 
@@ -13474,6 +13846,10 @@ let
             description = "Name or number of the port to access on the container.\nNumber must be in the range 1 to 65535.\nName must be an IANA_SVC_NAME.";
             type = (types.either types.int types.str);
           };
+          "protocol" = mkOption {
+            description = "Protocol selects the wire protocol for the probe connection.\nNil defaults to HTTP/1.1.";
+            type = (types.nullOr types.str);
+          };
           "scheme" = mkOption {
             description = "Scheme to use for connecting to the host.\nDefaults to HTTP.";
             type = (types.nullOr types.str);
@@ -13484,6 +13860,7 @@ let
           "host" = mkOverride 1002 null;
           "httpHeaders" = mkOverride 1002 null;
           "path" = mkOverride 1002 null;
+          "protocol" = mkOverride 1002 null;
           "scheme" = mkOverride 1002 null;
         };
 
@@ -13544,8 +13921,12 @@ let
     "actions.github.com.v1alpha1.AutoscalingRunnerSetSpecListenerTemplateSpecContainersVolumeMounts" = {
 
       options = {
+        "bindMountOptions" = mkOption {
+          description = "bindMountOptions is the list of additional bind mount options to apply when\nmounting this volume into the container. Allowed values are noexec,\nnodev, and nosuid. These are Linux mount options and have no effect on\nWindows nodes.\nThis field is not supported with image volumes.\nThis is an alpha field and requires enabling the VolumeBindMountOptions feature gate.";
+          type = (types.nullOr (types.listOf types.str));
+        };
         "mountPath" = mkOption {
-          description = "Path within the container at which the volume should be mounted.  Must\nnot contain ':'.";
+          description = "Path within the container at which the volume should be mounted.";
           type = types.str;
         };
         "mountPropagation" = mkOption {
@@ -13575,6 +13956,7 @@ let
       };
 
       config = {
+        "bindMountOptions" = mkOverride 1002 null;
         "mountPropagation" = mkOverride 1002 null;
         "readOnly" = mkOverride 1002 null;
         "recursiveReadOnly" = mkOverride 1002 null;
@@ -14009,7 +14391,7 @@ let
 
         options = {
           "key" = mkOption {
-            description = "The key to select.";
+            description = "The key to select from the ConfigMap's Data field.\nKeys in the BinaryData field are not currently propagated to container env vars.";
             type = types.str;
           };
           "name" = mkOption {
@@ -14244,6 +14626,10 @@ let
             description = "Name or number of the port to access on the container.\nNumber must be in the range 1 to 65535.\nName must be an IANA_SVC_NAME.";
             type = (types.either types.int types.str);
           };
+          "protocol" = mkOption {
+            description = "Protocol selects the wire protocol for the probe connection.\nNil defaults to HTTP/1.1.";
+            type = (types.nullOr types.str);
+          };
           "scheme" = mkOption {
             description = "Scheme to use for connecting to the host.\nDefaults to HTTP.";
             type = (types.nullOr types.str);
@@ -14254,6 +14640,7 @@ let
           "host" = mkOverride 1002 null;
           "httpHeaders" = mkOverride 1002 null;
           "path" = mkOverride 1002 null;
+          "protocol" = mkOverride 1002 null;
           "scheme" = mkOverride 1002 null;
         };
 
@@ -14396,6 +14783,10 @@ let
             description = "Name or number of the port to access on the container.\nNumber must be in the range 1 to 65535.\nName must be an IANA_SVC_NAME.";
             type = (types.either types.int types.str);
           };
+          "protocol" = mkOption {
+            description = "Protocol selects the wire protocol for the probe connection.\nNil defaults to HTTP/1.1.";
+            type = (types.nullOr types.str);
+          };
           "scheme" = mkOption {
             description = "Scheme to use for connecting to the host.\nDefaults to HTTP.";
             type = (types.nullOr types.str);
@@ -14406,6 +14797,7 @@ let
           "host" = mkOverride 1002 null;
           "httpHeaders" = mkOverride 1002 null;
           "path" = mkOverride 1002 null;
+          "protocol" = mkOverride 1002 null;
           "scheme" = mkOverride 1002 null;
         };
 
@@ -14554,6 +14946,10 @@ let
       {
 
         options = {
+          "mode" = mkOption {
+            description = "mode specifies the connection mode for the gRPC health probe.\nSet to \"TLS\" to use TLS without certificate verification.\nSet to \"Plaintext\" to use a plaintext (insecure) connection explicitly.\nIf not specified, the probe uses a plaintext (insecure) connection.";
+            type = (types.nullOr types.str);
+          };
           "port" = mkOption {
             description = "Port number of the gRPC service. Number must be in the range 1 to 65535.";
             type = types.int;
@@ -14565,6 +14961,7 @@ let
         };
 
         config = {
+          "mode" = mkOverride 1002 null;
           "service" = mkOverride 1002 null;
         };
 
@@ -14597,6 +14994,10 @@ let
             description = "Name or number of the port to access on the container.\nNumber must be in the range 1 to 65535.\nName must be an IANA_SVC_NAME.";
             type = (types.either types.int types.str);
           };
+          "protocol" = mkOption {
+            description = "Protocol selects the wire protocol for the probe connection.\nNil defaults to HTTP/1.1.";
+            type = (types.nullOr types.str);
+          };
           "scheme" = mkOption {
             description = "Scheme to use for connecting to the host.\nDefaults to HTTP.";
             type = (types.nullOr types.str);
@@ -14607,6 +15008,7 @@ let
           "host" = mkOverride 1002 null;
           "httpHeaders" = mkOverride 1002 null;
           "path" = mkOverride 1002 null;
+          "protocol" = mkOverride 1002 null;
           "scheme" = mkOverride 1002 null;
         };
 
@@ -14776,6 +15178,10 @@ let
       {
 
         options = {
+          "mode" = mkOption {
+            description = "mode specifies the connection mode for the gRPC health probe.\nSet to \"TLS\" to use TLS without certificate verification.\nSet to \"Plaintext\" to use a plaintext (insecure) connection explicitly.\nIf not specified, the probe uses a plaintext (insecure) connection.";
+            type = (types.nullOr types.str);
+          };
           "port" = mkOption {
             description = "Port number of the gRPC service. Number must be in the range 1 to 65535.";
             type = types.int;
@@ -14787,6 +15193,7 @@ let
         };
 
         config = {
+          "mode" = mkOverride 1002 null;
           "service" = mkOverride 1002 null;
         };
 
@@ -14819,6 +15226,10 @@ let
             description = "Name or number of the port to access on the container.\nNumber must be in the range 1 to 65535.\nName must be an IANA_SVC_NAME.";
             type = (types.either types.int types.str);
           };
+          "protocol" = mkOption {
+            description = "Protocol selects the wire protocol for the probe connection.\nNil defaults to HTTP/1.1.";
+            type = (types.nullOr types.str);
+          };
           "scheme" = mkOption {
             description = "Scheme to use for connecting to the host.\nDefaults to HTTP.";
             type = (types.nullOr types.str);
@@ -14829,6 +15240,7 @@ let
           "host" = mkOverride 1002 null;
           "httpHeaders" = mkOverride 1002 null;
           "path" = mkOverride 1002 null;
+          "protocol" = mkOverride 1002 null;
           "scheme" = mkOverride 1002 null;
         };
 
@@ -15009,7 +15421,7 @@ let
             type = (types.nullOr types.bool);
           };
           "procMount" = mkOption {
-            description = "procMount denotes the type of proc mount to use for the containers.\nThe default value is Default which uses the container runtime defaults for\nreadonly paths and masked paths.\nThis requires the ProcMountType feature flag to be enabled.\nNote that this field cannot be set when spec.os.name is windows.";
+            description = "procMount denotes the type of proc mount to use for the containers.\nThe default value is Default which uses the container runtime defaults for\nreadonly paths and masked paths.\nNote that this field cannot be set when spec.os.name is windows.";
             type = (types.nullOr types.str);
           };
           "readOnlyRootFilesystem" = mkOption {
@@ -15283,6 +15695,10 @@ let
       {
 
         options = {
+          "mode" = mkOption {
+            description = "mode specifies the connection mode for the gRPC health probe.\nSet to \"TLS\" to use TLS without certificate verification.\nSet to \"Plaintext\" to use a plaintext (insecure) connection explicitly.\nIf not specified, the probe uses a plaintext (insecure) connection.";
+            type = (types.nullOr types.str);
+          };
           "port" = mkOption {
             description = "Port number of the gRPC service. Number must be in the range 1 to 65535.";
             type = types.int;
@@ -15294,6 +15710,7 @@ let
         };
 
         config = {
+          "mode" = mkOverride 1002 null;
           "service" = mkOverride 1002 null;
         };
 
@@ -15326,6 +15743,10 @@ let
             description = "Name or number of the port to access on the container.\nNumber must be in the range 1 to 65535.\nName must be an IANA_SVC_NAME.";
             type = (types.either types.int types.str);
           };
+          "protocol" = mkOption {
+            description = "Protocol selects the wire protocol for the probe connection.\nNil defaults to HTTP/1.1.";
+            type = (types.nullOr types.str);
+          };
           "scheme" = mkOption {
             description = "Scheme to use for connecting to the host.\nDefaults to HTTP.";
             type = (types.nullOr types.str);
@@ -15336,6 +15757,7 @@ let
           "host" = mkOverride 1002 null;
           "httpHeaders" = mkOverride 1002 null;
           "path" = mkOverride 1002 null;
+          "protocol" = mkOverride 1002 null;
           "scheme" = mkOverride 1002 null;
         };
 
@@ -15397,8 +15819,12 @@ let
       {
 
         options = {
+          "bindMountOptions" = mkOption {
+            description = "bindMountOptions is the list of additional bind mount options to apply when\nmounting this volume into the container. Allowed values are noexec,\nnodev, and nosuid. These are Linux mount options and have no effect on\nWindows nodes.\nThis field is not supported with image volumes.\nThis is an alpha field and requires enabling the VolumeBindMountOptions feature gate.";
+            type = (types.nullOr (types.listOf types.str));
+          };
           "mountPath" = mkOption {
-            description = "Path within the container at which the volume should be mounted.  Must\nnot contain ':'.";
+            description = "Path within the container at which the volume should be mounted.";
             type = types.str;
           };
           "mountPropagation" = mkOption {
@@ -15428,6 +15854,7 @@ let
         };
 
         config = {
+          "bindMountOptions" = mkOverride 1002 null;
           "mountPropagation" = mkOverride 1002 null;
           "readOnly" = mkOverride 1002 null;
           "recursiveReadOnly" = mkOverride 1002 null;
@@ -15436,6 +15863,22 @@ let
         };
 
       };
+    "actions.github.com.v1alpha1.AutoscalingRunnerSetSpecListenerTemplateSpecEvictionResponders" = {
+
+      options = {
+        "name" = mkOption {
+          description = "name allows you to identify the responder responding to the Eviction.\n\nIt must be a valid domain-prefixed key (such as \"acme.io/foo\").\nDomain names *.k8s.io and *.kubernetes.io are reserved.\nThis field must be unique for each responder.\nThis field is required.";
+          type = types.str;
+        };
+        "priority" = mkOption {
+          description = "priority for this responder. Higher priorities are selected first by the evictionrequest-controller.\nIf there are responders with the same priority, the responder whose domain name comes first in the\nalphabetical higher domain order, will be picked. This means that the top domain labels are compared\nalphabetically first, followed by the lower domain labels. The key is compared last.\n\nThe responder that is the managing controller of the pod should set the value of\nthis field to 10000 to allow both for preemption or fallback registration by other\nresponders.\n\nThe minimum value is 0 and the maximum value is 100000.\nThe interval 0-999 is reserved for responders with *.k8s.io suffix.\nThis field is required.";
+          type = types.int;
+        };
+      };
+
+      config = { };
+
+    };
     "actions.github.com.v1alpha1.AutoscalingRunnerSetSpecListenerTemplateSpecHostAliases" = {
 
       options = {
@@ -15837,7 +16280,7 @@ let
 
         options = {
           "key" = mkOption {
-            description = "The key to select.";
+            description = "The key to select from the ConfigMap's Data field.\nKeys in the BinaryData field are not currently propagated to container env vars.";
             type = types.str;
           };
           "name" = mkOption {
@@ -16072,6 +16515,10 @@ let
             description = "Name or number of the port to access on the container.\nNumber must be in the range 1 to 65535.\nName must be an IANA_SVC_NAME.";
             type = (types.either types.int types.str);
           };
+          "protocol" = mkOption {
+            description = "Protocol selects the wire protocol for the probe connection.\nNil defaults to HTTP/1.1.";
+            type = (types.nullOr types.str);
+          };
           "scheme" = mkOption {
             description = "Scheme to use for connecting to the host.\nDefaults to HTTP.";
             type = (types.nullOr types.str);
@@ -16082,6 +16529,7 @@ let
           "host" = mkOverride 1002 null;
           "httpHeaders" = mkOverride 1002 null;
           "path" = mkOverride 1002 null;
+          "protocol" = mkOverride 1002 null;
           "scheme" = mkOverride 1002 null;
         };
 
@@ -16224,6 +16672,10 @@ let
             description = "Name or number of the port to access on the container.\nNumber must be in the range 1 to 65535.\nName must be an IANA_SVC_NAME.";
             type = (types.either types.int types.str);
           };
+          "protocol" = mkOption {
+            description = "Protocol selects the wire protocol for the probe connection.\nNil defaults to HTTP/1.1.";
+            type = (types.nullOr types.str);
+          };
           "scheme" = mkOption {
             description = "Scheme to use for connecting to the host.\nDefaults to HTTP.";
             type = (types.nullOr types.str);
@@ -16234,6 +16686,7 @@ let
           "host" = mkOverride 1002 null;
           "httpHeaders" = mkOverride 1002 null;
           "path" = mkOverride 1002 null;
+          "protocol" = mkOverride 1002 null;
           "scheme" = mkOverride 1002 null;
         };
 
@@ -16382,6 +16835,10 @@ let
       {
 
         options = {
+          "mode" = mkOption {
+            description = "mode specifies the connection mode for the gRPC health probe.\nSet to \"TLS\" to use TLS without certificate verification.\nSet to \"Plaintext\" to use a plaintext (insecure) connection explicitly.\nIf not specified, the probe uses a plaintext (insecure) connection.";
+            type = (types.nullOr types.str);
+          };
           "port" = mkOption {
             description = "Port number of the gRPC service. Number must be in the range 1 to 65535.";
             type = types.int;
@@ -16393,6 +16850,7 @@ let
         };
 
         config = {
+          "mode" = mkOverride 1002 null;
           "service" = mkOverride 1002 null;
         };
 
@@ -16425,6 +16883,10 @@ let
             description = "Name or number of the port to access on the container.\nNumber must be in the range 1 to 65535.\nName must be an IANA_SVC_NAME.";
             type = (types.either types.int types.str);
           };
+          "protocol" = mkOption {
+            description = "Protocol selects the wire protocol for the probe connection.\nNil defaults to HTTP/1.1.";
+            type = (types.nullOr types.str);
+          };
           "scheme" = mkOption {
             description = "Scheme to use for connecting to the host.\nDefaults to HTTP.";
             type = (types.nullOr types.str);
@@ -16435,6 +16897,7 @@ let
           "host" = mkOverride 1002 null;
           "httpHeaders" = mkOverride 1002 null;
           "path" = mkOverride 1002 null;
+          "protocol" = mkOverride 1002 null;
           "scheme" = mkOverride 1002 null;
         };
 
@@ -16603,6 +17066,10 @@ let
       {
 
         options = {
+          "mode" = mkOption {
+            description = "mode specifies the connection mode for the gRPC health probe.\nSet to \"TLS\" to use TLS without certificate verification.\nSet to \"Plaintext\" to use a plaintext (insecure) connection explicitly.\nIf not specified, the probe uses a plaintext (insecure) connection.";
+            type = (types.nullOr types.str);
+          };
           "port" = mkOption {
             description = "Port number of the gRPC service. Number must be in the range 1 to 65535.";
             type = types.int;
@@ -16614,6 +17081,7 @@ let
         };
 
         config = {
+          "mode" = mkOverride 1002 null;
           "service" = mkOverride 1002 null;
         };
 
@@ -16646,6 +17114,10 @@ let
             description = "Name or number of the port to access on the container.\nNumber must be in the range 1 to 65535.\nName must be an IANA_SVC_NAME.";
             type = (types.either types.int types.str);
           };
+          "protocol" = mkOption {
+            description = "Protocol selects the wire protocol for the probe connection.\nNil defaults to HTTP/1.1.";
+            type = (types.nullOr types.str);
+          };
           "scheme" = mkOption {
             description = "Scheme to use for connecting to the host.\nDefaults to HTTP.";
             type = (types.nullOr types.str);
@@ -16656,6 +17128,7 @@ let
           "host" = mkOverride 1002 null;
           "httpHeaders" = mkOverride 1002 null;
           "path" = mkOverride 1002 null;
+          "protocol" = mkOverride 1002 null;
           "scheme" = mkOverride 1002 null;
         };
 
@@ -16836,7 +17309,7 @@ let
             type = (types.nullOr types.bool);
           };
           "procMount" = mkOption {
-            description = "procMount denotes the type of proc mount to use for the containers.\nThe default value is Default which uses the container runtime defaults for\nreadonly paths and masked paths.\nThis requires the ProcMountType feature flag to be enabled.\nNote that this field cannot be set when spec.os.name is windows.";
+            description = "procMount denotes the type of proc mount to use for the containers.\nThe default value is Default which uses the container runtime defaults for\nreadonly paths and masked paths.\nNote that this field cannot be set when spec.os.name is windows.";
             type = (types.nullOr types.str);
           };
           "readOnlyRootFilesystem" = mkOption {
@@ -17110,6 +17583,10 @@ let
       {
 
         options = {
+          "mode" = mkOption {
+            description = "mode specifies the connection mode for the gRPC health probe.\nSet to \"TLS\" to use TLS without certificate verification.\nSet to \"Plaintext\" to use a plaintext (insecure) connection explicitly.\nIf not specified, the probe uses a plaintext (insecure) connection.";
+            type = (types.nullOr types.str);
+          };
           "port" = mkOption {
             description = "Port number of the gRPC service. Number must be in the range 1 to 65535.";
             type = types.int;
@@ -17121,6 +17598,7 @@ let
         };
 
         config = {
+          "mode" = mkOverride 1002 null;
           "service" = mkOverride 1002 null;
         };
 
@@ -17153,6 +17631,10 @@ let
             description = "Name or number of the port to access on the container.\nNumber must be in the range 1 to 65535.\nName must be an IANA_SVC_NAME.";
             type = (types.either types.int types.str);
           };
+          "protocol" = mkOption {
+            description = "Protocol selects the wire protocol for the probe connection.\nNil defaults to HTTP/1.1.";
+            type = (types.nullOr types.str);
+          };
           "scheme" = mkOption {
             description = "Scheme to use for connecting to the host.\nDefaults to HTTP.";
             type = (types.nullOr types.str);
@@ -17163,6 +17645,7 @@ let
           "host" = mkOverride 1002 null;
           "httpHeaders" = mkOverride 1002 null;
           "path" = mkOverride 1002 null;
+          "protocol" = mkOverride 1002 null;
           "scheme" = mkOverride 1002 null;
         };
 
@@ -17224,8 +17707,12 @@ let
       {
 
         options = {
+          "bindMountOptions" = mkOption {
+            description = "bindMountOptions is the list of additional bind mount options to apply when\nmounting this volume into the container. Allowed values are noexec,\nnodev, and nosuid. These are Linux mount options and have no effect on\nWindows nodes.\nThis field is not supported with image volumes.\nThis is an alpha field and requires enabling the VolumeBindMountOptions feature gate.";
+            type = (types.nullOr (types.listOf types.str));
+          };
           "mountPath" = mkOption {
-            description = "Path within the container at which the volume should be mounted.  Must\nnot contain ':'.";
+            description = "Path within the container at which the volume should be mounted.";
             type = types.str;
           };
           "mountPropagation" = mkOption {
@@ -17255,6 +17742,7 @@ let
         };
 
         config = {
+          "bindMountOptions" = mkOverride 1002 null;
           "mountPropagation" = mkOverride 1002 null;
           "readOnly" = mkOverride 1002 null;
           "recursiveReadOnly" = mkOverride 1002 null;
@@ -17299,7 +17787,7 @@ let
           type = (types.nullOr types.str);
         };
         "resourceClaimTemplateName" = mkOption {
-          description = "ResourceClaimTemplateName is the name of a ResourceClaimTemplate\nobject in the same namespace as this pod.\n\nThe template will be used to create a new ResourceClaim, which will\nbe bound to this pod. When this pod is deleted, the ResourceClaim\nwill also be deleted. The pod name and resource name, along with a\ngenerated component, will be used to form a unique name for the\nResourceClaim, which will be recorded in pod.status.resourceClaimStatuses.\n\nThis field is immutable and no changes will be made to the\ncorresponding ResourceClaim by the control plane after creating the\nResourceClaim.\n\nExactly one of ResourceClaimName and ResourceClaimTemplateName must\nbe set.";
+          description = "ResourceClaimTemplateName is the name of a ResourceClaimTemplate\nobject in the same namespace as this pod.\n\nThe template will be used to create a new ResourceClaim, which will\nbe bound to this pod. When this pod is deleted, the ResourceClaim\nwill also be deleted. The pod name and resource name, along with a\ngenerated component, will be used to form a unique name for the\nResourceClaim, which will be recorded in pod.status.resourceClaimStatuses.\n\nWhen the DRAWorkloadResourceClaims feature gate is enabled and the pod\nbelongs to a PodGroup that defines a PodGroupResourceClaim with the same\nName and ResourceClaimTemplateName, this PodResourceClaim resolves to the\nResourceClaim generated for the PodGroup. All pods in the group that\ndefine an equivalent PodResourceClaim matching the\nPodGroupResourceClaim's Name and ResourceClaimTemplateName share the same\ngenerated ResourceClaim. ResourceClaims generated for a PodGroup are\nowned by the PodGroup and their lifecycles are tied to the PodGroup\ninstead of any individual pod.\n\nThis field is immutable and no changes will be made to the\ncorresponding ResourceClaim by the control plane after creating the\nResourceClaim.\n\nExactly one of ResourceClaimName and ResourceClaimTemplateName must\nbe set.";
           type = (types.nullOr types.str);
         };
       };
@@ -17372,6 +17860,20 @@ let
       config = { };
 
     };
+    "actions.github.com.v1alpha1.AutoscalingRunnerSetSpecListenerTemplateSpecSchedulingGroup" = {
+
+      options = {
+        "podGroupName" = mkOption {
+          description = "PodGroupName specifies the name of the standalone PodGroup object\nthat represents the runtime instance of this group.\nMust be a DNS subdomain.";
+          type = (types.nullOr types.str);
+        };
+      };
+
+      config = {
+        "podGroupName" = mkOverride 1002 null;
+      };
+
+    };
     "actions.github.com.v1alpha1.AutoscalingRunnerSetSpecListenerTemplateSpecSecurityContext" = {
 
       options = {
@@ -17404,7 +17906,7 @@ let
           type = (types.nullOr types.int);
         };
         "seLinuxChangePolicy" = mkOption {
-          description = "seLinuxChangePolicy defines how the container's SELinux label is applied to all volumes used by the Pod.\nIt has no effect on nodes that do not support SELinux or to volumes does not support SELinux.\nValid values are \"MountOption\" and \"Recursive\".\n\n\"Recursive\" means relabeling of all files on all Pod volumes by the container runtime.\nThis may be slow for large volumes, but allows mixing privileged and unprivileged Pods sharing the same volume on the same node.\n\n\"MountOption\" mounts all eligible Pod volumes with `-o context` mount option.\nThis requires all Pods that share the same volume to use the same SELinux label.\nIt is not possible to share the same volume among privileged and unprivileged Pods.\nEligible volumes are in-tree FibreChannel and iSCSI volumes, and all CSI volumes\nwhose CSI driver announces SELinux support by setting spec.seLinuxMount: true in their\nCSIDriver instance. Other volumes are always re-labelled recursively.\n\"MountOption\" value is allowed only when SELinuxMount feature gate is enabled.\n\nIf not specified and SELinuxMount feature gate is enabled, \"MountOption\" is used.\nIf not specified and SELinuxMount feature gate is disabled, \"MountOption\" is used for ReadWriteOncePod volumes\nand \"Recursive\" for all other volumes.\n\nThis field affects only Pods that have SELinux label set, either in PodSecurityContext or in SecurityContext of all containers.\n\nAll Pods that use the same volume should use the same seLinuxChangePolicy, otherwise some pods can get stuck in ContainerCreating state.\nNote that this field cannot be set when spec.os.name is windows.";
+          description = "seLinuxChangePolicy defines how the container's SELinux label is applied to all volumes used by the Pod.\nIt has no effect on nodes that do not support SELinux or to volumes does not support SELinux.\nValid values are \"MountOption\" and \"Recursive\".\n\n\"Recursive\" means relabeling of all files on all Pod volumes by the container runtime.\nThis may be slow for large volumes, but allows mixing privileged and unprivileged Pods sharing the same volume on the same node.\n\n\"MountOption\" mounts all eligible Pod volumes with `-o context` mount option.\nThis requires all Pods that share the same volume to use the same SELinux label.\nIt is not possible to share the same volume among privileged and unprivileged Pods.\nEligible volumes are in-tree FibreChannel and iSCSI volumes, and all CSI volumes\nwhose CSI driver announces SELinux support by setting spec.seLinuxMount: true in their\nCSIDriver instance. Other volumes are always re-labelled recursively.\n\nIf not specified, \"MountOption\" is used.\n\nThis field affects only Pods that have SELinux label set, either in PodSecurityContext or in SecurityContext of all containers.\n\nAll Pods that use the same volume should use the same seLinuxChangePolicy, otherwise some pods can get stuck in ContainerCreating state.\nNote that this field cannot be set when spec.os.name is windows.";
           type = (types.nullOr types.str);
         };
         "seLinuxOptions" = mkOption {
@@ -17858,7 +18360,7 @@ let
           );
         };
         "image" = mkOption {
-          description = "image represents an OCI object (a container image or artifact) pulled and mounted on the kubelet's host machine.\nThe volume is resolved at pod startup depending on which PullPolicy value is provided:\n\n- Always: the kubelet always attempts to pull the reference. Container creation will fail If the pull fails.\n- Never: the kubelet never pulls the reference and only uses a local image or artifact. Container creation will fail if the reference isn't present.\n- IfNotPresent: the kubelet pulls if the reference isn't already present on disk. Container creation will fail if the reference isn't present and the pull fails.\n\nThe volume gets re-resolved if the pod gets deleted and recreated, which means that new remote content will become available on pod recreation.\nA failure to resolve or pull the image during pod startup will block containers from starting and may add significant latency. Failures will be retried using normal volume backoff and will be reported on the pod reason and message.\nThe types of objects that may be mounted by this volume are defined by the container runtime implementation on a host machine and at minimum must include all valid types supported by the container image field.\nThe OCI object gets mounted in a single directory (spec.containers[*].volumeMounts.mountPath) by merging the manifest layers in the same way as for container images.\nThe volume will be mounted read-only (ro) and non-executable files (noexec).\nSub path mounts for containers are not supported (spec.containers[*].volumeMounts.subpath) before 1.33.\nThe field spec.securityContext.fsGroupChangePolicy has no effect on this volume type.";
+          description = "image represents an OCI object (a container image or artifact) pulled and mounted on the kubelet's host machine.\nThe volume is resolved at pod startup depending on which PullPolicy value is provided:\n\n- Always: the kubelet always attempts to pull the reference. Container creation will fail If the pull fails.\n- Never: the kubelet never pulls the reference and only uses a local image or artifact. Container creation will fail if the reference isn't present.\n- IfNotPresent: the kubelet pulls if the reference isn't already present on disk. Container creation will fail if the reference isn't present and the pull fails.\n\nThe volume gets re-resolved if the pod gets deleted and recreated, which means that new remote content will become available on pod recreation.\nA failure to resolve or pull the image during pod startup will block containers from starting and may add significant latency. Failures will be retried using normal volume backoff and will be reported on the pod reason and message.\nThe types of objects that may be mounted by this volume are defined by the container runtime implementation on a host machine and at minimum must include all valid types supported by the container image field.\nThe OCI object gets mounted in a single directory (spec.containers[*].volumeMounts.mountPath) by merging the manifest layers in the same way as for container images.\nThe volume will be mounted read-only (ro).\nSub path mounts for containers are not supported (spec.containers[*].volumeMounts.subpath) before 1.33.\nThe field spec.securityContext.fsGroupChangePolicy has no effect on this volume type.";
           type = (
             types.nullOr (
               submoduleOf "actions.github.com.v1alpha1.AutoscalingRunnerSetSpecListenerTemplateSpecVolumesImage"
@@ -17902,7 +18404,7 @@ let
           );
         };
         "portworxVolume" = mkOption {
-          description = "portworxVolume represents a portworx volume attached and mounted on kubelets host machine.\nDeprecated: PortworxVolume is deprecated. All operations for the in-tree portworxVolume type\nare redirected to the pxd.portworx.com CSI driver when the CSIMigrationPortworx feature-gate\nis on.";
+          description = "portworxVolume represents a portworx volume attached and mounted on kubelets host machine.\nDeprecated: PortworxVolume is deprecated. All operations for the in-tree portworxVolume type\nare redirected to the pxd.portworx.com CSI driver.";
           type = (
             types.nullOr (
               submoduleOf "actions.github.com.v1alpha1.AutoscalingRunnerSetSpecListenerTemplateSpecVolumesPortworxVolume"
@@ -18198,6 +18700,10 @@ let
           description = "defaultMode is optional: mode bits used to set permissions on created files by default.\nMust be an octal value between 0000 and 0777 or a decimal value between 0 and 511.\nYAML accepts both octal and decimal values, JSON requires decimal values for mode bits.\nDefaults to 0644.\nDirectories within the path are not affected by this setting.\nThis might be in conflict with other options that affect the file\nmode, like fsGroup, and the result can be other mode bits set.";
           type = (types.nullOr types.int);
         };
+        "defaultUser" = mkOption {
+          description = "defaultUser is Optional: The owner UID of the created files by default.\nThe defaultUser field is only used as a fallback when the item-level user field is unset.\n(Alpha) This field requires the AtomicWriteVolumeUserFields feature gate to be enabled.";
+          type = (types.nullOr types.int);
+        };
         "items" = mkOption {
           description = "items if unspecified, each key-value pair in the Data field of the referenced\nConfigMap will be projected into the volume as a file whose name is the\nkey and content is the value. If specified, the listed keys will be\nprojected into the specified paths, and unlisted keys will not be\npresent. If a key is specified which is not present in the ConfigMap,\nthe volume setup will error unless it is marked optional. Paths must be\nrelative and may not contain the '..' path or start with '..'.";
           type = (
@@ -18220,6 +18726,7 @@ let
 
       config = {
         "defaultMode" = mkOverride 1002 null;
+        "defaultUser" = mkOverride 1002 null;
         "items" = mkOverride 1002 null;
         "name" = mkOverride 1002 null;
         "optional" = mkOverride 1002 null;
@@ -18241,10 +18748,15 @@ let
           description = "path is the relative path of the file to map the key to.\nMay not be an absolute path.\nMay not contain the path element '..'.\nMay not start with the string '..'.";
           type = types.str;
         };
+        "user" = mkOption {
+          description = "user is Optional: The owner UID of the created file.\nIf specified, the item-level user field takes precedence over defaultUser.\n(Alpha) This field requires the AtomicWriteVolumeUserFields feature gate to be enabled.";
+          type = (types.nullOr types.int);
+        };
       };
 
       config = {
         "mode" = mkOverride 1002 null;
+        "user" = mkOverride 1002 null;
       };
 
     };
@@ -18307,6 +18819,10 @@ let
           description = "Optional: mode bits to use on created files by default. Must be a\nOptional: mode bits used to set permissions on created files by default.\nMust be an octal value between 0000 and 0777 or a decimal value between 0 and 511.\nYAML accepts both octal and decimal values, JSON requires decimal values for mode bits.\nDefaults to 0644.\nDirectories within the path are not affected by this setting.\nThis might be in conflict with other options that affect the file\nmode, like fsGroup, and the result can be other mode bits set.";
           type = (types.nullOr types.int);
         };
+        "defaultUser" = mkOption {
+          description = "defaultUser is Optional: The owner UID of the created files by default.\nThe defaultUser field is only used as a fallback when the item-level user field is unset.\n(Alpha) This field requires the AtomicWriteVolumeUserFields feature gate to be enabled.";
+          type = (types.nullOr types.int);
+        };
         "items" = mkOption {
           description = "Items is a list of downward API volume file";
           type = (
@@ -18321,6 +18837,7 @@ let
 
       config = {
         "defaultMode" = mkOverride 1002 null;
+        "defaultUser" = mkOverride 1002 null;
         "items" = mkOverride 1002 null;
       };
 
@@ -18353,12 +18870,17 @@ let
               )
             );
           };
+          "user" = mkOption {
+            description = "user is Optional: The owner UID of the created file.\nIf specified, the item-level user field takes precedence over defaultUser.\n(Alpha) This field requires the AtomicWriteVolumeUserFields feature gate to be enabled.";
+            type = (types.nullOr types.int);
+          };
         };
 
         config = {
           "fieldRef" = mkOverride 1002 null;
           "mode" = mkOverride 1002 null;
           "resourceFieldRef" = mkOverride 1002 null;
+          "user" = mkOverride 1002 null;
         };
 
       };
@@ -18412,6 +18934,10 @@ let
           description = "medium represents what type of storage medium should back this directory.\nThe default is \"\" which means to use the node's default medium.\nMust be an empty string (default) or Memory.\nMore info: https://kubernetes.io/docs/concepts/storage/volumes#emptydir";
           type = (types.nullOr types.str);
         };
+        "mode" = mkOption {
+          description = "mode specifies the permission bits for the emptyDir directory, in numeric\nnotation (e.g., 0755, 01777). Must be a value between 0000 and 01777.\nIf not specified, defaults to 0777.\nThis might be in conflict with other options that affect the file\nmode, like fsGroup. If fsGroup is specified, the fsGroup permissions\nwill override the mode specified here.\nThis field has no effect on Windows.\nThis field is alpha and requires EmptyDirVolumeMode featuregate to be enabled.";
+          type = (types.nullOr types.int);
+        };
         "sizeLimit" = mkOption {
           description = "sizeLimit is the total amount of local storage required for this EmptyDir volume.\nThe size limit is also applicable for memory medium.\nThe maximum usage on memory medium EmptyDir would be the minimum value between\nthe SizeLimit specified here and the sum of memory limits of all containers in a pod.\nThe default is nil which means that the limit is undefined.\nMore info: https://kubernetes.io/docs/concepts/storage/volumes#emptydir";
           type = (types.nullOr (types.either types.int types.str));
@@ -18420,6 +18946,7 @@ let
 
       config = {
         "medium" = mkOverride 1002 null;
+        "mode" = mkOverride 1002 null;
         "sizeLimit" = mkOverride 1002 null;
       };
 
@@ -18511,7 +19038,7 @@ let
             type = (types.nullOr (types.listOf types.str));
           };
           "dataSource" = mkOption {
-            description = "dataSource field can be used to specify either:\n* An existing VolumeSnapshot object (snapshot.storage.k8s.io/VolumeSnapshot)\n* An existing PVC (PersistentVolumeClaim)\nIf the provisioner or an external controller can support the specified data source,\nit will create a new volume based on the contents of the specified data source.\nWhen the AnyVolumeDataSource feature gate is enabled, dataSource contents will be copied to dataSourceRef,\nand dataSourceRef contents will be copied to dataSource when dataSourceRef.namespace is not specified.\nIf the namespace is specified, then dataSourceRef will not be copied to dataSource.";
+            description = "dataSource field can be used to specify either:\n* An existing VolumeSnapshot object (snapshot.storage.k8s.io/VolumeSnapshot)\n* An existing PVC (PersistentVolumeClaim)\nIf the provisioner or an external controller can support the specified data source,\nit will create a new volume based on the contents of the specified data source.\ndataSource contents will be copied to dataSourceRef, and dataSourceRef contents will be\ncopied to dataSource when dataSourceRef.namespace is not specified.\nIf the namespace is specified, then dataSourceRef will not be copied to dataSource.";
             type = (
               types.nullOr (
                 submoduleOf "actions.github.com.v1alpha1.AutoscalingRunnerSetSpecListenerTemplateSpecVolumesEphemeralVolumeClaimTemplateSpecDataSource"
@@ -18519,7 +19046,7 @@ let
             );
           };
           "dataSourceRef" = mkOption {
-            description = "dataSourceRef specifies the object from which to populate the volume with data, if a non-empty\nvolume is desired. This may be any object from a non-empty API group (non\ncore object) or a PersistentVolumeClaim object.\nWhen this field is specified, volume binding will only succeed if the type of\nthe specified object matches some installed volume populator or dynamic\nprovisioner.\nThis field will replace the functionality of the dataSource field and as such\nif both fields are non-empty, they must have the same value. For backwards\ncompatibility, when namespace isn't specified in dataSourceRef,\nboth fields (dataSource and dataSourceRef) will be set to the same\nvalue automatically if one of them is empty and the other is non-empty.\nWhen namespace is specified in dataSourceRef,\ndataSource isn't set to the same value and must be empty.\nThere are three important differences between dataSource and dataSourceRef:\n* While dataSource only allows two specific types of objects, dataSourceRef\n  allows any non-core object, as well as PersistentVolumeClaim objects.\n* While dataSource ignores disallowed values (dropping them), dataSourceRef\n  preserves all values, and generates an error if a disallowed value is\n  specified.\n* While dataSource only allows local objects, dataSourceRef allows objects\n  in any namespaces.\n(Beta) Using this field requires the AnyVolumeDataSource feature gate to be enabled.\n(Alpha) Using the namespace field of dataSourceRef requires the CrossNamespaceVolumeDataSource feature gate to be enabled.";
+            description = "dataSourceRef specifies the object from which to populate the volume with data, if a non-empty\nvolume is desired. This may be any object from a non-empty API group (non\ncore object) or a PersistentVolumeClaim object.\nWhen this field is specified, volume binding will only succeed if the type of\nthe specified object matches some installed volume populator or dynamic\nprovisioner.\nThis field will replace the functionality of the dataSource field and as such\nif both fields are non-empty, they must have the same value. For backwards\ncompatibility, when namespace isn't specified in dataSourceRef,\nboth fields (dataSource and dataSourceRef) will be set to the same\nvalue automatically if one of them is empty and the other is non-empty.\nWhen namespace is specified in dataSourceRef,\ndataSource isn't set to the same value and must be empty.\nThere are three important differences between dataSource and dataSourceRef:\n* While dataSource only allows two specific types of objects, dataSourceRef\n  allows any non-core object, as well as PersistentVolumeClaim objects.\n* While dataSource ignores disallowed values (dropping them), dataSourceRef\n  preserves all values, and generates an error if a disallowed value is\n  specified.\n* While dataSource only allows local objects, dataSourceRef allows objects\n  in any namespaces.\n(Alpha) Using the namespace field of dataSourceRef requires the CrossNamespaceVolumeDataSource feature gate to be enabled.";
             type = (
               types.nullOr (
                 submoduleOf "actions.github.com.v1alpha1.AutoscalingRunnerSetSpecListenerTemplateSpecVolumesEphemeralVolumeClaimTemplateSpecDataSourceRef"
@@ -19078,6 +19605,10 @@ let
           description = "defaultMode are the mode bits used to set permissions on created files by default.\nMust be an octal value between 0000 and 0777 or a decimal value between 0 and 511.\nYAML accepts both octal and decimal values, JSON requires decimal values for mode bits.\nDirectories within the path are not affected by this setting.\nThis might be in conflict with other options that affect the file\nmode, like fsGroup, and the result can be other mode bits set.";
           type = (types.nullOr types.int);
         };
+        "defaultUser" = mkOption {
+          description = "defaultUser is Optional: The owner UID of the created files by default.\nThe defaultUser field is only used as a fallback when the item-level user field is unset.\n(Alpha) This field requires the AtomicWriteVolumeUserFields feature gate to be enabled.";
+          type = (types.nullOr types.int);
+        };
         "sources" = mkOption {
           description = "sources is the list of volume projections. Each entry in this list\nhandles one source.";
           type = (
@@ -19092,6 +19623,7 @@ let
 
       config = {
         "defaultMode" = mkOverride 1002 null;
+        "defaultUser" = mkOverride 1002 null;
         "sources" = mkOverride 1002 null;
       };
 
@@ -19188,6 +19720,10 @@ let
             description = "Select all ClusterTrustBundles that match this signer name.\nMutually-exclusive with name.  The contents of all selected\nClusterTrustBundles will be unified and deduplicated.";
             type = (types.nullOr types.str);
           };
+          "user" = mkOption {
+            description = "user is Optional: The owner UID of the created file.\nIf specified, the item-level user field takes precedence over defaultUser.\n(Alpha) This field requires the AtomicWriteVolumeUserFields feature gate to be enabled.";
+            type = (types.nullOr types.int);
+          };
         };
 
         config = {
@@ -19195,6 +19731,7 @@ let
           "name" = mkOverride 1002 null;
           "optional" = mkOverride 1002 null;
           "signerName" = mkOverride 1002 null;
+          "user" = mkOverride 1002 null;
         };
 
       };
@@ -19294,10 +19831,15 @@ let
             description = "path is the relative path of the file to map the key to.\nMay not be an absolute path.\nMay not contain the path element '..'.\nMay not start with the string '..'.";
             type = types.str;
           };
+          "user" = mkOption {
+            description = "user is Optional: The owner UID of the created file.\nIf specified, the item-level user field takes precedence over defaultUser.\n(Alpha) This field requires the AtomicWriteVolumeUserFields feature gate to be enabled.";
+            type = (types.nullOr types.int);
+          };
         };
 
         config = {
           "mode" = mkOverride 1002 null;
+          "user" = mkOverride 1002 null;
         };
 
       };
@@ -19350,12 +19892,17 @@ let
               )
             );
           };
+          "user" = mkOption {
+            description = "user is Optional: The owner UID of the created file.\nIf specified, the item-level user field takes precedence over defaultUser.\n(Alpha) This field requires the AtomicWriteVolumeUserFields feature gate to be enabled.";
+            type = (types.nullOr types.int);
+          };
         };
 
         config = {
           "fieldRef" = mkOverride 1002 null;
           "mode" = mkOverride 1002 null;
           "resourceFieldRef" = mkOverride 1002 null;
+          "user" = mkOverride 1002 null;
         };
 
       };
@@ -19430,6 +19977,10 @@ let
             description = "Kubelet's generated CSRs will be addressed to this signer.";
             type = types.str;
           };
+          "user" = mkOption {
+            description = "user is Optional: The owner UID of the created file.\nIf specified, the item-level user field takes precedence over defaultUser.\n(Alpha) This field requires the AtomicWriteVolumeUserFields feature gate to be enabled.";
+            type = (types.nullOr types.int);
+          };
           "userAnnotations" = mkOption {
             description = "userAnnotations allow pod authors to pass additional information to\nthe signer implementation.  Kubernetes does not restrict or validate this\nmetadata in any way.\n\nThese values are copied verbatim into the `spec.unverifiedUserAnnotations` field of\nthe PodCertificateRequest objects that Kubelet creates.\n\nEntries are subject to the same validation as object metadata annotations,\nwith the addition that all keys must be domain-prefixed. No restrictions\nare placed on values, except an overall size limitation on the entire field.\n\nSigners should document the keys and values they support. Signers should\ndeny requests that contain keys they do not recognize.";
             type = (types.nullOr (types.attrsOf types.str));
@@ -19441,6 +19992,7 @@ let
           "credentialBundlePath" = mkOverride 1002 null;
           "keyPath" = mkOverride 1002 null;
           "maxExpirationSeconds" = mkOverride 1002 null;
+          "user" = mkOverride 1002 null;
           "userAnnotations" = mkOverride 1002 null;
         };
 
@@ -19492,10 +20044,15 @@ let
             description = "path is the relative path of the file to map the key to.\nMay not be an absolute path.\nMay not contain the path element '..'.\nMay not start with the string '..'.";
             type = types.str;
           };
+          "user" = mkOption {
+            description = "user is Optional: The owner UID of the created file.\nIf specified, the item-level user field takes precedence over defaultUser.\n(Alpha) This field requires the AtomicWriteVolumeUserFields feature gate to be enabled.";
+            type = (types.nullOr types.int);
+          };
         };
 
         config = {
           "mode" = mkOverride 1002 null;
+          "user" = mkOverride 1002 null;
         };
 
       };
@@ -19515,11 +20072,16 @@ let
             description = "path is the path relative to the mount point of the file to project the\ntoken into.";
             type = types.str;
           };
+          "user" = mkOption {
+            description = "user is Optional: The owner UID of the created file.\nIf specified, the item-level user field takes precedence over defaultUser.\n(Alpha) This field requires the AtomicWriteVolumeUserFields feature gate to be enabled.";
+            type = (types.nullOr types.int);
+          };
         };
 
         config = {
           "audience" = mkOverride 1002 null;
           "expirationSeconds" = mkOverride 1002 null;
+          "user" = mkOverride 1002 null;
         };
 
       };
@@ -19705,6 +20267,10 @@ let
           description = "defaultMode is Optional: mode bits used to set permissions on created files by default.\nMust be an octal value between 0000 and 0777 or a decimal value between 0 and 511.\nYAML accepts both octal and decimal values, JSON requires decimal values\nfor mode bits. Defaults to 0644.\nDirectories within the path are not affected by this setting.\nThis might be in conflict with other options that affect the file\nmode, like fsGroup, and the result can be other mode bits set.";
           type = (types.nullOr types.int);
         };
+        "defaultUser" = mkOption {
+          description = "defaultUser is Optional: The owner UID of the created files by default.\nThe defaultUser field is only used as a fallback when the item-level user field is unset.\n(Alpha) This field requires the AtomicWriteVolumeUserFields feature gate to be enabled.";
+          type = (types.nullOr types.int);
+        };
         "items" = mkOption {
           description = "items If unspecified, each key-value pair in the Data field of the referenced\nSecret will be projected into the volume as a file whose name is the\nkey and content is the value. If specified, the listed keys will be\nprojected into the specified paths, and unlisted keys will not be\npresent. If a key is specified which is not present in the Secret,\nthe volume setup will error unless it is marked optional. Paths must be\nrelative and may not contain the '..' path or start with '..'.";
           type = (
@@ -19727,6 +20293,7 @@ let
 
       config = {
         "defaultMode" = mkOverride 1002 null;
+        "defaultUser" = mkOverride 1002 null;
         "items" = mkOverride 1002 null;
         "optional" = mkOverride 1002 null;
         "secretName" = mkOverride 1002 null;
@@ -19748,10 +20315,15 @@ let
           description = "path is the relative path of the file to map the key to.\nMay not be an absolute path.\nMay not contain the path element '..'.\nMay not start with the string '..'.";
           type = types.str;
         };
+        "user" = mkOption {
+          description = "user is Optional: The owner UID of the created file.\nIf specified, the item-level user field takes precedence over defaultUser.\n(Alpha) This field requires the AtomicWriteVolumeUserFields feature gate to be enabled.";
+          type = (types.nullOr types.int);
+        };
       };
 
       config = {
         "mode" = mkOverride 1002 null;
+        "user" = mkOverride 1002 null;
       };
 
     };
@@ -19833,28 +20405,6 @@ let
         "fsType" = mkOverride 1002 null;
         "storagePolicyID" = mkOverride 1002 null;
         "storagePolicyName" = mkOverride 1002 null;
-      };
-
-    };
-    "actions.github.com.v1alpha1.AutoscalingRunnerSetSpecListenerTemplateSpecWorkloadRef" = {
-
-      options = {
-        "name" = mkOption {
-          description = "Name defines the name of the Workload object this Pod belongs to.\nWorkload must be in the same namespace as the Pod.\nIf it doesn't match any existing Workload, the Pod will remain unschedulable\nuntil a Workload object is created and observed by the kube-scheduler.\nIt must be a DNS subdomain.";
-          type = types.str;
-        };
-        "podGroup" = mkOption {
-          description = "PodGroup is the name of the PodGroup within the Workload that this Pod\nbelongs to. If it doesn't match any existing PodGroup within the Workload,\nthe Pod will remain unschedulable until the Workload object is recreated\nand observed by the kube-scheduler. It must be a DNS label.";
-          type = types.str;
-        };
-        "podGroupReplicaKey" = mkOption {
-          description = "PodGroupReplicaKey specifies the replica key of the PodGroup to which this\nPod belongs. It is used to distinguish pods belonging to different replicas\nof the same pod group. The pod group policy is applied separately to each replica.\nWhen set, it must be a DNS label.";
-          type = (types.nullOr types.str);
-        };
-      };
-
-      config = {
-        "podGroupReplicaKey" = mkOverride 1002 null;
       };
 
     };
@@ -20036,6 +20586,18 @@ let
           );
           apply = attrsToList;
         };
+        "evictionResponders" = mkOption {
+          description = "evictionResponders reference responders that react to Evictions based on EvictionRequests.\nResponders should observe and communicate through the Eviction Resource API to help with\nthe graceful termination of a pod. The responders are selected sequentially, according to\ntheir specified priority.\n\nResponders should periodically report on an eviction progress by updating the\n.status.responders[].heartbeatTime field of the Eviction object. If this field is not updated\nwithin the heartbeat deadline defined by the Eviction API (currently 20 minutes), the eviction\nis passed over to the next responder with a lower priority. If there is no other responder,\nthe last default imperative-eviction.k8s.io/evictor responder with a priority of 100 will\nevict the pod using the imperative Eviction API (pods/<name>/eviction subresource).\n\nThe maximum length of the responders list is 10.\nResponders are not supported when the pod is part of a PodGroup (.spec.schedulingGroup is set).\nThis field can only be set on creation and is immutable afterwards.";
+          type = (
+            types.nullOr (
+              coerceAttrsOfSubmodulesToListByKey
+                "actions.github.com.v1alpha1.AutoscalingRunnerSetSpecTemplateSpecEvictionResponders"
+                "name"
+                [ "name" ]
+            )
+          );
+          apply = attrsToList;
+        };
         "hostAliases" = mkOption {
           description = "HostAliases is an optional list of hosts and IPs that will be injected into the pod's hosts\nfile if specified.";
           type = (
@@ -20059,7 +20621,7 @@ let
           type = (types.nullOr types.bool);
         };
         "hostUsers" = mkOption {
-          description = "Use the host's user namespace.\nOptional: Default to true.\nIf set to true or not present, the pod will be run in the host user namespace, useful\nfor when the pod needs a feature only available to the host user namespace, such as\nloading a kernel module with CAP_SYS_MODULE.\nWhen set to false, a new userns is created for the pod. Setting false is useful for\nmitigating container breakout vulnerabilities even allowing users to run their\ncontainers as root without actually having root privileges on the host.\nThis field is alpha-level and is only honored by servers that enable the UserNamespacesSupport feature.";
+          description = "Use the host's user namespace.\nOptional: Default to true.\nIf set to true or not present, the pod will be run in the host user namespace, useful\nfor when the pod needs a feature only available to the host user namespace, such as\nloading a kernel module with CAP_SYS_MODULE.\nWhen set to false, a new userns is created for the pod. Setting false is useful for\nmitigating container breakout vulnerabilities even allowing users to run their\ncontainers as root without actually having root privileges on the host.";
           type = (types.nullOr types.bool);
         };
         "hostname" = mkOption {
@@ -20067,7 +20629,7 @@ let
           type = (types.nullOr types.str);
         };
         "hostnameOverride" = mkOption {
-          description = "HostnameOverride specifies an explicit override for the pod's hostname as perceived by the pod.\nThis field only specifies the pod's hostname and does not affect its DNS records.\nWhen this field is set to a non-empty string:\n- It takes precedence over the values set in `hostname` and `subdomain`.\n- The Pod's hostname will be set to this value.\n- `setHostnameAsFQDN` must be nil or set to false.\n- `hostNetwork` must be set to false.\n\nThis field must be a valid DNS subdomain as defined in RFC 1123 and contain at most 64 characters.\nRequires the HostnameOverride feature gate to be enabled.";
+          description = "HostnameOverride specifies an explicit override for the pod's hostname as perceived by the pod.\nThis field only specifies the pod's hostname and does not affect its DNS records.\nWhen this field is set to a non-empty string:\n- It takes precedence over the values set in `hostname` and `subdomain`.\n- The Pod's hostname will be set to this value.\n- `setHostnameAsFQDN` must be nil or set to false.\n- `hostNetwork` must be set to false.\n\nThis field must be a valid DNS subdomain as defined in RFC 1123 and contain at most 64 characters.";
           type = (types.nullOr types.str);
         };
         "imagePullSecrets" = mkOption {
@@ -20113,7 +20675,7 @@ let
           type = (types.nullOr (types.attrsOf (types.either types.int types.str)));
         };
         "preemptionPolicy" = mkOption {
-          description = "PreemptionPolicy is the Policy for preempting pods with lower priority.\nOne of Never, PreemptLowerPriority.\nDefaults to PreemptLowerPriority if unset.";
+          description = "PreemptionPolicy is the Policy for preempting pods with lower priority.\nOne of Never, PreemptLowerPriority.\nWhen Priority Admission Controller is enabled, it prevents users from setting\nthis field. The admission controller populates this field from PriorityClassName.\nDefaults to PreemptLowerPriority if unset.";
           type = (types.nullOr types.str);
         };
         "priority" = mkOption {
@@ -20177,6 +20739,14 @@ let
             )
           );
           apply = attrsToList;
+        };
+        "schedulingGroup" = mkOption {
+          description = "SchedulingGroup provides a reference to the immediate scheduling runtime\ngrouping object that this Pod belongs to.\nThis field is used by the scheduler to identify the group and apply the\ncorrect group scheduling policies. The association with a group also\nimpacts other lifecycle aspects of a Pod that are relevant in a wider context\nof scheduling like preemption, resource attachment, etc. If not specified,\nthe Pod is treated as a single unit in all of these aspects.\nThe group object referenced by this field may not exist at the time the\nPod is created.\nThis field is immutable, but a group object with the same name may be\nrecreated with different policies. Doing this during pod scheduling\nmay result in the placement not conforming to the expected policies.";
+          type = (
+            types.nullOr (
+              submoduleOf "actions.github.com.v1alpha1.AutoscalingRunnerSetSpecTemplateSpecSchedulingGroup"
+            )
+          );
         };
         "securityContext" = mkOption {
           description = "SecurityContext holds pod-level security attributes and common container settings.\nOptional: Defaults to empty.  See type description for default values of each field.";
@@ -20242,14 +20812,6 @@ let
           );
           apply = attrsToList;
         };
-        "workloadRef" = mkOption {
-          description = "WorkloadRef provides a reference to the Workload object that this Pod belongs to.\nThis field is used by the scheduler to identify the PodGroup and apply the\ncorrect group scheduling policies. The Workload object referenced\nby this field may not exist at the time the Pod is created.\nThis field is immutable, but a Workload object with the same name\nmay be recreated with different policies. Doing this during pod scheduling\nmay result in the placement not conforming to the expected policies.";
-          type = (
-            types.nullOr (
-              submoduleOf "actions.github.com.v1alpha1.AutoscalingRunnerSetSpecTemplateSpecWorkloadRef"
-            )
-          );
-        };
       };
 
       config = {
@@ -20260,6 +20822,7 @@ let
         "dnsPolicy" = mkOverride 1002 null;
         "enableServiceLinks" = mkOverride 1002 null;
         "ephemeralContainers" = mkOverride 1002 null;
+        "evictionResponders" = mkOverride 1002 null;
         "hostAliases" = mkOverride 1002 null;
         "hostIPC" = mkOverride 1002 null;
         "hostNetwork" = mkOverride 1002 null;
@@ -20283,6 +20846,7 @@ let
         "runtimeClassName" = mkOverride 1002 null;
         "schedulerName" = mkOverride 1002 null;
         "schedulingGates" = mkOverride 1002 null;
+        "schedulingGroup" = mkOverride 1002 null;
         "securityContext" = mkOverride 1002 null;
         "serviceAccount" = mkOverride 1002 null;
         "serviceAccountName" = mkOverride 1002 null;
@@ -20293,7 +20857,6 @@ let
         "tolerations" = mkOverride 1002 null;
         "topologySpreadConstraints" = mkOverride 1002 null;
         "volumes" = mkOverride 1002 null;
-        "workloadRef" = mkOverride 1002 null;
       };
 
     };
@@ -21600,7 +22163,7 @@ let
 
         options = {
           "key" = mkOption {
-            description = "The key to select.";
+            description = "The key to select from the ConfigMap's Data field.\nKeys in the BinaryData field are not currently propagated to container env vars.";
             type = types.str;
           };
           "name" = mkOption {
@@ -21832,6 +22395,10 @@ let
             description = "Name or number of the port to access on the container.\nNumber must be in the range 1 to 65535.\nName must be an IANA_SVC_NAME.";
             type = (types.either types.int types.str);
           };
+          "protocol" = mkOption {
+            description = "Protocol selects the wire protocol for the probe connection.\nNil defaults to HTTP/1.1.";
+            type = (types.nullOr types.str);
+          };
           "scheme" = mkOption {
             description = "Scheme to use for connecting to the host.\nDefaults to HTTP.";
             type = (types.nullOr types.str);
@@ -21842,6 +22409,7 @@ let
           "host" = mkOverride 1002 null;
           "httpHeaders" = mkOverride 1002 null;
           "path" = mkOverride 1002 null;
+          "protocol" = mkOverride 1002 null;
           "scheme" = mkOverride 1002 null;
         };
 
@@ -21982,6 +22550,10 @@ let
             description = "Name or number of the port to access on the container.\nNumber must be in the range 1 to 65535.\nName must be an IANA_SVC_NAME.";
             type = (types.either types.int types.str);
           };
+          "protocol" = mkOption {
+            description = "Protocol selects the wire protocol for the probe connection.\nNil defaults to HTTP/1.1.";
+            type = (types.nullOr types.str);
+          };
           "scheme" = mkOption {
             description = "Scheme to use for connecting to the host.\nDefaults to HTTP.";
             type = (types.nullOr types.str);
@@ -21992,6 +22564,7 @@ let
           "host" = mkOverride 1002 null;
           "httpHeaders" = mkOverride 1002 null;
           "path" = mkOverride 1002 null;
+          "protocol" = mkOverride 1002 null;
           "scheme" = mkOverride 1002 null;
         };
 
@@ -22137,6 +22710,10 @@ let
     "actions.github.com.v1alpha1.AutoscalingRunnerSetSpecTemplateSpecContainersLivenessProbeGrpc" = {
 
       options = {
+        "mode" = mkOption {
+          description = "mode specifies the connection mode for the gRPC health probe.\nSet to \"TLS\" to use TLS without certificate verification.\nSet to \"Plaintext\" to use a plaintext (insecure) connection explicitly.\nIf not specified, the probe uses a plaintext (insecure) connection.";
+          type = (types.nullOr types.str);
+        };
         "port" = mkOption {
           description = "Port number of the gRPC service. Number must be in the range 1 to 65535.";
           type = types.int;
@@ -22148,6 +22725,7 @@ let
       };
 
       config = {
+        "mode" = mkOverride 1002 null;
         "service" = mkOverride 1002 null;
       };
 
@@ -22179,6 +22757,10 @@ let
           description = "Name or number of the port to access on the container.\nNumber must be in the range 1 to 65535.\nName must be an IANA_SVC_NAME.";
           type = (types.either types.int types.str);
         };
+        "protocol" = mkOption {
+          description = "Protocol selects the wire protocol for the probe connection.\nNil defaults to HTTP/1.1.";
+          type = (types.nullOr types.str);
+        };
         "scheme" = mkOption {
           description = "Scheme to use for connecting to the host.\nDefaults to HTTP.";
           type = (types.nullOr types.str);
@@ -22189,6 +22771,7 @@ let
         "host" = mkOverride 1002 null;
         "httpHeaders" = mkOverride 1002 null;
         "path" = mkOverride 1002 null;
+        "protocol" = mkOverride 1002 null;
         "scheme" = mkOverride 1002 null;
       };
 
@@ -22354,6 +22937,10 @@ let
     "actions.github.com.v1alpha1.AutoscalingRunnerSetSpecTemplateSpecContainersReadinessProbeGrpc" = {
 
       options = {
+        "mode" = mkOption {
+          description = "mode specifies the connection mode for the gRPC health probe.\nSet to \"TLS\" to use TLS without certificate verification.\nSet to \"Plaintext\" to use a plaintext (insecure) connection explicitly.\nIf not specified, the probe uses a plaintext (insecure) connection.";
+          type = (types.nullOr types.str);
+        };
         "port" = mkOption {
           description = "Port number of the gRPC service. Number must be in the range 1 to 65535.";
           type = types.int;
@@ -22365,6 +22952,7 @@ let
       };
 
       config = {
+        "mode" = mkOverride 1002 null;
         "service" = mkOverride 1002 null;
       };
 
@@ -22397,6 +22985,10 @@ let
             description = "Name or number of the port to access on the container.\nNumber must be in the range 1 to 65535.\nName must be an IANA_SVC_NAME.";
             type = (types.either types.int types.str);
           };
+          "protocol" = mkOption {
+            description = "Protocol selects the wire protocol for the probe connection.\nNil defaults to HTTP/1.1.";
+            type = (types.nullOr types.str);
+          };
           "scheme" = mkOption {
             description = "Scheme to use for connecting to the host.\nDefaults to HTTP.";
             type = (types.nullOr types.str);
@@ -22407,6 +22999,7 @@ let
           "host" = mkOverride 1002 null;
           "httpHeaders" = mkOverride 1002 null;
           "path" = mkOverride 1002 null;
+          "protocol" = mkOverride 1002 null;
           "scheme" = mkOverride 1002 null;
         };
 
@@ -22582,7 +23175,7 @@ let
           type = (types.nullOr types.bool);
         };
         "procMount" = mkOption {
-          description = "procMount denotes the type of proc mount to use for the containers.\nThe default value is Default which uses the container runtime defaults for\nreadonly paths and masked paths.\nThis requires the ProcMountType feature flag to be enabled.\nNote that this field cannot be set when spec.os.name is windows.";
+          description = "procMount denotes the type of proc mount to use for the containers.\nThe default value is Default which uses the container runtime defaults for\nreadonly paths and masked paths.\nNote that this field cannot be set when spec.os.name is windows.";
           type = (types.nullOr types.str);
         };
         "readOnlyRootFilesystem" = mkOption {
@@ -22853,6 +23446,10 @@ let
     "actions.github.com.v1alpha1.AutoscalingRunnerSetSpecTemplateSpecContainersStartupProbeGrpc" = {
 
       options = {
+        "mode" = mkOption {
+          description = "mode specifies the connection mode for the gRPC health probe.\nSet to \"TLS\" to use TLS without certificate verification.\nSet to \"Plaintext\" to use a plaintext (insecure) connection explicitly.\nIf not specified, the probe uses a plaintext (insecure) connection.";
+          type = (types.nullOr types.str);
+        };
         "port" = mkOption {
           description = "Port number of the gRPC service. Number must be in the range 1 to 65535.";
           type = types.int;
@@ -22864,6 +23461,7 @@ let
       };
 
       config = {
+        "mode" = mkOverride 1002 null;
         "service" = mkOverride 1002 null;
       };
 
@@ -22895,6 +23493,10 @@ let
           description = "Name or number of the port to access on the container.\nNumber must be in the range 1 to 65535.\nName must be an IANA_SVC_NAME.";
           type = (types.either types.int types.str);
         };
+        "protocol" = mkOption {
+          description = "Protocol selects the wire protocol for the probe connection.\nNil defaults to HTTP/1.1.";
+          type = (types.nullOr types.str);
+        };
         "scheme" = mkOption {
           description = "Scheme to use for connecting to the host.\nDefaults to HTTP.";
           type = (types.nullOr types.str);
@@ -22905,6 +23507,7 @@ let
         "host" = mkOverride 1002 null;
         "httpHeaders" = mkOverride 1002 null;
         "path" = mkOverride 1002 null;
+        "protocol" = mkOverride 1002 null;
         "scheme" = mkOverride 1002 null;
       };
 
@@ -22964,8 +23567,12 @@ let
     "actions.github.com.v1alpha1.AutoscalingRunnerSetSpecTemplateSpecContainersVolumeMounts" = {
 
       options = {
+        "bindMountOptions" = mkOption {
+          description = "bindMountOptions is the list of additional bind mount options to apply when\nmounting this volume into the container. Allowed values are noexec,\nnodev, and nosuid. These are Linux mount options and have no effect on\nWindows nodes.\nThis field is not supported with image volumes.\nThis is an alpha field and requires enabling the VolumeBindMountOptions feature gate.";
+          type = (types.nullOr (types.listOf types.str));
+        };
         "mountPath" = mkOption {
-          description = "Path within the container at which the volume should be mounted.  Must\nnot contain ':'.";
+          description = "Path within the container at which the volume should be mounted.";
           type = types.str;
         };
         "mountPropagation" = mkOption {
@@ -22995,6 +23602,7 @@ let
       };
 
       config = {
+        "bindMountOptions" = mkOverride 1002 null;
         "mountPropagation" = mkOverride 1002 null;
         "readOnly" = mkOverride 1002 null;
         "recursiveReadOnly" = mkOverride 1002 null;
@@ -23428,7 +24036,7 @@ let
 
         options = {
           "key" = mkOption {
-            description = "The key to select.";
+            description = "The key to select from the ConfigMap's Data field.\nKeys in the BinaryData field are not currently propagated to container env vars.";
             type = types.str;
           };
           "name" = mkOption {
@@ -23662,6 +24270,10 @@ let
             description = "Name or number of the port to access on the container.\nNumber must be in the range 1 to 65535.\nName must be an IANA_SVC_NAME.";
             type = (types.either types.int types.str);
           };
+          "protocol" = mkOption {
+            description = "Protocol selects the wire protocol for the probe connection.\nNil defaults to HTTP/1.1.";
+            type = (types.nullOr types.str);
+          };
           "scheme" = mkOption {
             description = "Scheme to use for connecting to the host.\nDefaults to HTTP.";
             type = (types.nullOr types.str);
@@ -23672,6 +24284,7 @@ let
           "host" = mkOverride 1002 null;
           "httpHeaders" = mkOverride 1002 null;
           "path" = mkOverride 1002 null;
+          "protocol" = mkOverride 1002 null;
           "scheme" = mkOverride 1002 null;
         };
 
@@ -23814,6 +24427,10 @@ let
             description = "Name or number of the port to access on the container.\nNumber must be in the range 1 to 65535.\nName must be an IANA_SVC_NAME.";
             type = (types.either types.int types.str);
           };
+          "protocol" = mkOption {
+            description = "Protocol selects the wire protocol for the probe connection.\nNil defaults to HTTP/1.1.";
+            type = (types.nullOr types.str);
+          };
           "scheme" = mkOption {
             description = "Scheme to use for connecting to the host.\nDefaults to HTTP.";
             type = (types.nullOr types.str);
@@ -23824,6 +24441,7 @@ let
           "host" = mkOverride 1002 null;
           "httpHeaders" = mkOverride 1002 null;
           "path" = mkOverride 1002 null;
+          "protocol" = mkOverride 1002 null;
           "scheme" = mkOverride 1002 null;
         };
 
@@ -23972,6 +24590,10 @@ let
       {
 
         options = {
+          "mode" = mkOption {
+            description = "mode specifies the connection mode for the gRPC health probe.\nSet to \"TLS\" to use TLS without certificate verification.\nSet to \"Plaintext\" to use a plaintext (insecure) connection explicitly.\nIf not specified, the probe uses a plaintext (insecure) connection.";
+            type = (types.nullOr types.str);
+          };
           "port" = mkOption {
             description = "Port number of the gRPC service. Number must be in the range 1 to 65535.";
             type = types.int;
@@ -23983,6 +24605,7 @@ let
         };
 
         config = {
+          "mode" = mkOverride 1002 null;
           "service" = mkOverride 1002 null;
         };
 
@@ -24015,6 +24638,10 @@ let
             description = "Name or number of the port to access on the container.\nNumber must be in the range 1 to 65535.\nName must be an IANA_SVC_NAME.";
             type = (types.either types.int types.str);
           };
+          "protocol" = mkOption {
+            description = "Protocol selects the wire protocol for the probe connection.\nNil defaults to HTTP/1.1.";
+            type = (types.nullOr types.str);
+          };
           "scheme" = mkOption {
             description = "Scheme to use for connecting to the host.\nDefaults to HTTP.";
             type = (types.nullOr types.str);
@@ -24025,6 +24652,7 @@ let
           "host" = mkOverride 1002 null;
           "httpHeaders" = mkOverride 1002 null;
           "path" = mkOverride 1002 null;
+          "protocol" = mkOverride 1002 null;
           "scheme" = mkOverride 1002 null;
         };
 
@@ -24193,6 +24821,10 @@ let
       {
 
         options = {
+          "mode" = mkOption {
+            description = "mode specifies the connection mode for the gRPC health probe.\nSet to \"TLS\" to use TLS without certificate verification.\nSet to \"Plaintext\" to use a plaintext (insecure) connection explicitly.\nIf not specified, the probe uses a plaintext (insecure) connection.";
+            type = (types.nullOr types.str);
+          };
           "port" = mkOption {
             description = "Port number of the gRPC service. Number must be in the range 1 to 65535.";
             type = types.int;
@@ -24204,6 +24836,7 @@ let
         };
 
         config = {
+          "mode" = mkOverride 1002 null;
           "service" = mkOverride 1002 null;
         };
 
@@ -24236,6 +24869,10 @@ let
             description = "Name or number of the port to access on the container.\nNumber must be in the range 1 to 65535.\nName must be an IANA_SVC_NAME.";
             type = (types.either types.int types.str);
           };
+          "protocol" = mkOption {
+            description = "Protocol selects the wire protocol for the probe connection.\nNil defaults to HTTP/1.1.";
+            type = (types.nullOr types.str);
+          };
           "scheme" = mkOption {
             description = "Scheme to use for connecting to the host.\nDefaults to HTTP.";
             type = (types.nullOr types.str);
@@ -24246,6 +24883,7 @@ let
           "host" = mkOverride 1002 null;
           "httpHeaders" = mkOverride 1002 null;
           "path" = mkOverride 1002 null;
+          "protocol" = mkOverride 1002 null;
           "scheme" = mkOverride 1002 null;
         };
 
@@ -24425,7 +25063,7 @@ let
             type = (types.nullOr types.bool);
           };
           "procMount" = mkOption {
-            description = "procMount denotes the type of proc mount to use for the containers.\nThe default value is Default which uses the container runtime defaults for\nreadonly paths and masked paths.\nThis requires the ProcMountType feature flag to be enabled.\nNote that this field cannot be set when spec.os.name is windows.";
+            description = "procMount denotes the type of proc mount to use for the containers.\nThe default value is Default which uses the container runtime defaults for\nreadonly paths and masked paths.\nNote that this field cannot be set when spec.os.name is windows.";
             type = (types.nullOr types.str);
           };
           "readOnlyRootFilesystem" = mkOption {
@@ -24699,6 +25337,10 @@ let
       {
 
         options = {
+          "mode" = mkOption {
+            description = "mode specifies the connection mode for the gRPC health probe.\nSet to \"TLS\" to use TLS without certificate verification.\nSet to \"Plaintext\" to use a plaintext (insecure) connection explicitly.\nIf not specified, the probe uses a plaintext (insecure) connection.";
+            type = (types.nullOr types.str);
+          };
           "port" = mkOption {
             description = "Port number of the gRPC service. Number must be in the range 1 to 65535.";
             type = types.int;
@@ -24710,6 +25352,7 @@ let
         };
 
         config = {
+          "mode" = mkOverride 1002 null;
           "service" = mkOverride 1002 null;
         };
 
@@ -24742,6 +25385,10 @@ let
             description = "Name or number of the port to access on the container.\nNumber must be in the range 1 to 65535.\nName must be an IANA_SVC_NAME.";
             type = (types.either types.int types.str);
           };
+          "protocol" = mkOption {
+            description = "Protocol selects the wire protocol for the probe connection.\nNil defaults to HTTP/1.1.";
+            type = (types.nullOr types.str);
+          };
           "scheme" = mkOption {
             description = "Scheme to use for connecting to the host.\nDefaults to HTTP.";
             type = (types.nullOr types.str);
@@ -24752,6 +25399,7 @@ let
           "host" = mkOverride 1002 null;
           "httpHeaders" = mkOverride 1002 null;
           "path" = mkOverride 1002 null;
+          "protocol" = mkOverride 1002 null;
           "scheme" = mkOverride 1002 null;
         };
 
@@ -24813,8 +25461,12 @@ let
       {
 
         options = {
+          "bindMountOptions" = mkOption {
+            description = "bindMountOptions is the list of additional bind mount options to apply when\nmounting this volume into the container. Allowed values are noexec,\nnodev, and nosuid. These are Linux mount options and have no effect on\nWindows nodes.\nThis field is not supported with image volumes.\nThis is an alpha field and requires enabling the VolumeBindMountOptions feature gate.";
+            type = (types.nullOr (types.listOf types.str));
+          };
           "mountPath" = mkOption {
-            description = "Path within the container at which the volume should be mounted.  Must\nnot contain ':'.";
+            description = "Path within the container at which the volume should be mounted.";
             type = types.str;
           };
           "mountPropagation" = mkOption {
@@ -24844,6 +25496,7 @@ let
         };
 
         config = {
+          "bindMountOptions" = mkOverride 1002 null;
           "mountPropagation" = mkOverride 1002 null;
           "readOnly" = mkOverride 1002 null;
           "recursiveReadOnly" = mkOverride 1002 null;
@@ -24852,6 +25505,22 @@ let
         };
 
       };
+    "actions.github.com.v1alpha1.AutoscalingRunnerSetSpecTemplateSpecEvictionResponders" = {
+
+      options = {
+        "name" = mkOption {
+          description = "name allows you to identify the responder responding to the Eviction.\n\nIt must be a valid domain-prefixed key (such as \"acme.io/foo\").\nDomain names *.k8s.io and *.kubernetes.io are reserved.\nThis field must be unique for each responder.\nThis field is required.";
+          type = types.str;
+        };
+        "priority" = mkOption {
+          description = "priority for this responder. Higher priorities are selected first by the evictionrequest-controller.\nIf there are responders with the same priority, the responder whose domain name comes first in the\nalphabetical higher domain order, will be picked. This means that the top domain labels are compared\nalphabetically first, followed by the lower domain labels. The key is compared last.\n\nThe responder that is the managing controller of the pod should set the value of\nthis field to 10000 to allow both for preemption or fallback registration by other\nresponders.\n\nThe minimum value is 0 and the maximum value is 100000.\nThe interval 0-999 is reserved for responders with *.k8s.io suffix.\nThis field is required.";
+          type = types.int;
+        };
+      };
+
+      config = { };
+
+    };
     "actions.github.com.v1alpha1.AutoscalingRunnerSetSpecTemplateSpecHostAliases" = {
 
       options = {
@@ -25251,7 +25920,7 @@ let
 
         options = {
           "key" = mkOption {
-            description = "The key to select.";
+            description = "The key to select from the ConfigMap's Data field.\nKeys in the BinaryData field are not currently propagated to container env vars.";
             type = types.str;
           };
           "name" = mkOption {
@@ -25485,6 +26154,10 @@ let
             description = "Name or number of the port to access on the container.\nNumber must be in the range 1 to 65535.\nName must be an IANA_SVC_NAME.";
             type = (types.either types.int types.str);
           };
+          "protocol" = mkOption {
+            description = "Protocol selects the wire protocol for the probe connection.\nNil defaults to HTTP/1.1.";
+            type = (types.nullOr types.str);
+          };
           "scheme" = mkOption {
             description = "Scheme to use for connecting to the host.\nDefaults to HTTP.";
             type = (types.nullOr types.str);
@@ -25495,6 +26168,7 @@ let
           "host" = mkOverride 1002 null;
           "httpHeaders" = mkOverride 1002 null;
           "path" = mkOverride 1002 null;
+          "protocol" = mkOverride 1002 null;
           "scheme" = mkOverride 1002 null;
         };
 
@@ -25636,6 +26310,10 @@ let
             description = "Name or number of the port to access on the container.\nNumber must be in the range 1 to 65535.\nName must be an IANA_SVC_NAME.";
             type = (types.either types.int types.str);
           };
+          "protocol" = mkOption {
+            description = "Protocol selects the wire protocol for the probe connection.\nNil defaults to HTTP/1.1.";
+            type = (types.nullOr types.str);
+          };
           "scheme" = mkOption {
             description = "Scheme to use for connecting to the host.\nDefaults to HTTP.";
             type = (types.nullOr types.str);
@@ -25646,6 +26324,7 @@ let
           "host" = mkOverride 1002 null;
           "httpHeaders" = mkOverride 1002 null;
           "path" = mkOverride 1002 null;
+          "protocol" = mkOverride 1002 null;
           "scheme" = mkOverride 1002 null;
         };
 
@@ -25793,6 +26472,10 @@ let
       {
 
         options = {
+          "mode" = mkOption {
+            description = "mode specifies the connection mode for the gRPC health probe.\nSet to \"TLS\" to use TLS without certificate verification.\nSet to \"Plaintext\" to use a plaintext (insecure) connection explicitly.\nIf not specified, the probe uses a plaintext (insecure) connection.";
+            type = (types.nullOr types.str);
+          };
           "port" = mkOption {
             description = "Port number of the gRPC service. Number must be in the range 1 to 65535.";
             type = types.int;
@@ -25804,6 +26487,7 @@ let
         };
 
         config = {
+          "mode" = mkOverride 1002 null;
           "service" = mkOverride 1002 null;
         };
 
@@ -25836,6 +26520,10 @@ let
             description = "Name or number of the port to access on the container.\nNumber must be in the range 1 to 65535.\nName must be an IANA_SVC_NAME.";
             type = (types.either types.int types.str);
           };
+          "protocol" = mkOption {
+            description = "Protocol selects the wire protocol for the probe connection.\nNil defaults to HTTP/1.1.";
+            type = (types.nullOr types.str);
+          };
           "scheme" = mkOption {
             description = "Scheme to use for connecting to the host.\nDefaults to HTTP.";
             type = (types.nullOr types.str);
@@ -25846,6 +26534,7 @@ let
           "host" = mkOverride 1002 null;
           "httpHeaders" = mkOverride 1002 null;
           "path" = mkOverride 1002 null;
+          "protocol" = mkOverride 1002 null;
           "scheme" = mkOverride 1002 null;
         };
 
@@ -26013,6 +26702,10 @@ let
       {
 
         options = {
+          "mode" = mkOption {
+            description = "mode specifies the connection mode for the gRPC health probe.\nSet to \"TLS\" to use TLS without certificate verification.\nSet to \"Plaintext\" to use a plaintext (insecure) connection explicitly.\nIf not specified, the probe uses a plaintext (insecure) connection.";
+            type = (types.nullOr types.str);
+          };
           "port" = mkOption {
             description = "Port number of the gRPC service. Number must be in the range 1 to 65535.";
             type = types.int;
@@ -26024,6 +26717,7 @@ let
         };
 
         config = {
+          "mode" = mkOverride 1002 null;
           "service" = mkOverride 1002 null;
         };
 
@@ -26056,6 +26750,10 @@ let
             description = "Name or number of the port to access on the container.\nNumber must be in the range 1 to 65535.\nName must be an IANA_SVC_NAME.";
             type = (types.either types.int types.str);
           };
+          "protocol" = mkOption {
+            description = "Protocol selects the wire protocol for the probe connection.\nNil defaults to HTTP/1.1.";
+            type = (types.nullOr types.str);
+          };
           "scheme" = mkOption {
             description = "Scheme to use for connecting to the host.\nDefaults to HTTP.";
             type = (types.nullOr types.str);
@@ -26066,6 +26764,7 @@ let
           "host" = mkOverride 1002 null;
           "httpHeaders" = mkOverride 1002 null;
           "path" = mkOverride 1002 null;
+          "protocol" = mkOverride 1002 null;
           "scheme" = mkOverride 1002 null;
         };
 
@@ -26242,7 +26941,7 @@ let
           type = (types.nullOr types.bool);
         };
         "procMount" = mkOption {
-          description = "procMount denotes the type of proc mount to use for the containers.\nThe default value is Default which uses the container runtime defaults for\nreadonly paths and masked paths.\nThis requires the ProcMountType feature flag to be enabled.\nNote that this field cannot be set when spec.os.name is windows.";
+          description = "procMount denotes the type of proc mount to use for the containers.\nThe default value is Default which uses the container runtime defaults for\nreadonly paths and masked paths.\nNote that this field cannot be set when spec.os.name is windows.";
           type = (types.nullOr types.str);
         };
         "readOnlyRootFilesystem" = mkOption {
@@ -26513,6 +27212,10 @@ let
     "actions.github.com.v1alpha1.AutoscalingRunnerSetSpecTemplateSpecInitContainersStartupProbeGrpc" = {
 
       options = {
+        "mode" = mkOption {
+          description = "mode specifies the connection mode for the gRPC health probe.\nSet to \"TLS\" to use TLS without certificate verification.\nSet to \"Plaintext\" to use a plaintext (insecure) connection explicitly.\nIf not specified, the probe uses a plaintext (insecure) connection.";
+          type = (types.nullOr types.str);
+        };
         "port" = mkOption {
           description = "Port number of the gRPC service. Number must be in the range 1 to 65535.";
           type = types.int;
@@ -26524,6 +27227,7 @@ let
       };
 
       config = {
+        "mode" = mkOverride 1002 null;
         "service" = mkOverride 1002 null;
       };
 
@@ -26556,6 +27260,10 @@ let
             description = "Name or number of the port to access on the container.\nNumber must be in the range 1 to 65535.\nName must be an IANA_SVC_NAME.";
             type = (types.either types.int types.str);
           };
+          "protocol" = mkOption {
+            description = "Protocol selects the wire protocol for the probe connection.\nNil defaults to HTTP/1.1.";
+            type = (types.nullOr types.str);
+          };
           "scheme" = mkOption {
             description = "Scheme to use for connecting to the host.\nDefaults to HTTP.";
             type = (types.nullOr types.str);
@@ -26566,6 +27274,7 @@ let
           "host" = mkOverride 1002 null;
           "httpHeaders" = mkOverride 1002 null;
           "path" = mkOverride 1002 null;
+          "protocol" = mkOverride 1002 null;
           "scheme" = mkOverride 1002 null;
         };
 
@@ -26625,8 +27334,12 @@ let
     "actions.github.com.v1alpha1.AutoscalingRunnerSetSpecTemplateSpecInitContainersVolumeMounts" = {
 
       options = {
+        "bindMountOptions" = mkOption {
+          description = "bindMountOptions is the list of additional bind mount options to apply when\nmounting this volume into the container. Allowed values are noexec,\nnodev, and nosuid. These are Linux mount options and have no effect on\nWindows nodes.\nThis field is not supported with image volumes.\nThis is an alpha field and requires enabling the VolumeBindMountOptions feature gate.";
+          type = (types.nullOr (types.listOf types.str));
+        };
         "mountPath" = mkOption {
-          description = "Path within the container at which the volume should be mounted.  Must\nnot contain ':'.";
+          description = "Path within the container at which the volume should be mounted.";
           type = types.str;
         };
         "mountPropagation" = mkOption {
@@ -26656,6 +27369,7 @@ let
       };
 
       config = {
+        "bindMountOptions" = mkOverride 1002 null;
         "mountPropagation" = mkOverride 1002 null;
         "readOnly" = mkOverride 1002 null;
         "recursiveReadOnly" = mkOverride 1002 null;
@@ -26700,7 +27414,7 @@ let
           type = (types.nullOr types.str);
         };
         "resourceClaimTemplateName" = mkOption {
-          description = "ResourceClaimTemplateName is the name of a ResourceClaimTemplate\nobject in the same namespace as this pod.\n\nThe template will be used to create a new ResourceClaim, which will\nbe bound to this pod. When this pod is deleted, the ResourceClaim\nwill also be deleted. The pod name and resource name, along with a\ngenerated component, will be used to form a unique name for the\nResourceClaim, which will be recorded in pod.status.resourceClaimStatuses.\n\nThis field is immutable and no changes will be made to the\ncorresponding ResourceClaim by the control plane after creating the\nResourceClaim.\n\nExactly one of ResourceClaimName and ResourceClaimTemplateName must\nbe set.";
+          description = "ResourceClaimTemplateName is the name of a ResourceClaimTemplate\nobject in the same namespace as this pod.\n\nThe template will be used to create a new ResourceClaim, which will\nbe bound to this pod. When this pod is deleted, the ResourceClaim\nwill also be deleted. The pod name and resource name, along with a\ngenerated component, will be used to form a unique name for the\nResourceClaim, which will be recorded in pod.status.resourceClaimStatuses.\n\nWhen the DRAWorkloadResourceClaims feature gate is enabled and the pod\nbelongs to a PodGroup that defines a PodGroupResourceClaim with the same\nName and ResourceClaimTemplateName, this PodResourceClaim resolves to the\nResourceClaim generated for the PodGroup. All pods in the group that\ndefine an equivalent PodResourceClaim matching the\nPodGroupResourceClaim's Name and ResourceClaimTemplateName share the same\ngenerated ResourceClaim. ResourceClaims generated for a PodGroup are\nowned by the PodGroup and their lifecycles are tied to the PodGroup\ninstead of any individual pod.\n\nThis field is immutable and no changes will be made to the\ncorresponding ResourceClaim by the control plane after creating the\nResourceClaim.\n\nExactly one of ResourceClaimName and ResourceClaimTemplateName must\nbe set.";
           type = (types.nullOr types.str);
         };
       };
@@ -26773,6 +27487,20 @@ let
       config = { };
 
     };
+    "actions.github.com.v1alpha1.AutoscalingRunnerSetSpecTemplateSpecSchedulingGroup" = {
+
+      options = {
+        "podGroupName" = mkOption {
+          description = "PodGroupName specifies the name of the standalone PodGroup object\nthat represents the runtime instance of this group.\nMust be a DNS subdomain.";
+          type = (types.nullOr types.str);
+        };
+      };
+
+      config = {
+        "podGroupName" = mkOverride 1002 null;
+      };
+
+    };
     "actions.github.com.v1alpha1.AutoscalingRunnerSetSpecTemplateSpecSecurityContext" = {
 
       options = {
@@ -26805,7 +27533,7 @@ let
           type = (types.nullOr types.int);
         };
         "seLinuxChangePolicy" = mkOption {
-          description = "seLinuxChangePolicy defines how the container's SELinux label is applied to all volumes used by the Pod.\nIt has no effect on nodes that do not support SELinux or to volumes does not support SELinux.\nValid values are \"MountOption\" and \"Recursive\".\n\n\"Recursive\" means relabeling of all files on all Pod volumes by the container runtime.\nThis may be slow for large volumes, but allows mixing privileged and unprivileged Pods sharing the same volume on the same node.\n\n\"MountOption\" mounts all eligible Pod volumes with `-o context` mount option.\nThis requires all Pods that share the same volume to use the same SELinux label.\nIt is not possible to share the same volume among privileged and unprivileged Pods.\nEligible volumes are in-tree FibreChannel and iSCSI volumes, and all CSI volumes\nwhose CSI driver announces SELinux support by setting spec.seLinuxMount: true in their\nCSIDriver instance. Other volumes are always re-labelled recursively.\n\"MountOption\" value is allowed only when SELinuxMount feature gate is enabled.\n\nIf not specified and SELinuxMount feature gate is enabled, \"MountOption\" is used.\nIf not specified and SELinuxMount feature gate is disabled, \"MountOption\" is used for ReadWriteOncePod volumes\nand \"Recursive\" for all other volumes.\n\nThis field affects only Pods that have SELinux label set, either in PodSecurityContext or in SecurityContext of all containers.\n\nAll Pods that use the same volume should use the same seLinuxChangePolicy, otherwise some pods can get stuck in ContainerCreating state.\nNote that this field cannot be set when spec.os.name is windows.";
+          description = "seLinuxChangePolicy defines how the container's SELinux label is applied to all volumes used by the Pod.\nIt has no effect on nodes that do not support SELinux or to volumes does not support SELinux.\nValid values are \"MountOption\" and \"Recursive\".\n\n\"Recursive\" means relabeling of all files on all Pod volumes by the container runtime.\nThis may be slow for large volumes, but allows mixing privileged and unprivileged Pods sharing the same volume on the same node.\n\n\"MountOption\" mounts all eligible Pod volumes with `-o context` mount option.\nThis requires all Pods that share the same volume to use the same SELinux label.\nIt is not possible to share the same volume among privileged and unprivileged Pods.\nEligible volumes are in-tree FibreChannel and iSCSI volumes, and all CSI volumes\nwhose CSI driver announces SELinux support by setting spec.seLinuxMount: true in their\nCSIDriver instance. Other volumes are always re-labelled recursively.\n\nIf not specified, \"MountOption\" is used.\n\nThis field affects only Pods that have SELinux label set, either in PodSecurityContext or in SecurityContext of all containers.\n\nAll Pods that use the same volume should use the same seLinuxChangePolicy, otherwise some pods can get stuck in ContainerCreating state.\nNote that this field cannot be set when spec.os.name is windows.";
           type = (types.nullOr types.str);
         };
         "seLinuxOptions" = mkOption {
@@ -27254,7 +27982,7 @@ let
           );
         };
         "image" = mkOption {
-          description = "image represents an OCI object (a container image or artifact) pulled and mounted on the kubelet's host machine.\nThe volume is resolved at pod startup depending on which PullPolicy value is provided:\n\n- Always: the kubelet always attempts to pull the reference. Container creation will fail If the pull fails.\n- Never: the kubelet never pulls the reference and only uses a local image or artifact. Container creation will fail if the reference isn't present.\n- IfNotPresent: the kubelet pulls if the reference isn't already present on disk. Container creation will fail if the reference isn't present and the pull fails.\n\nThe volume gets re-resolved if the pod gets deleted and recreated, which means that new remote content will become available on pod recreation.\nA failure to resolve or pull the image during pod startup will block containers from starting and may add significant latency. Failures will be retried using normal volume backoff and will be reported on the pod reason and message.\nThe types of objects that may be mounted by this volume are defined by the container runtime implementation on a host machine and at minimum must include all valid types supported by the container image field.\nThe OCI object gets mounted in a single directory (spec.containers[*].volumeMounts.mountPath) by merging the manifest layers in the same way as for container images.\nThe volume will be mounted read-only (ro) and non-executable files (noexec).\nSub path mounts for containers are not supported (spec.containers[*].volumeMounts.subpath) before 1.33.\nThe field spec.securityContext.fsGroupChangePolicy has no effect on this volume type.";
+          description = "image represents an OCI object (a container image or artifact) pulled and mounted on the kubelet's host machine.\nThe volume is resolved at pod startup depending on which PullPolicy value is provided:\n\n- Always: the kubelet always attempts to pull the reference. Container creation will fail If the pull fails.\n- Never: the kubelet never pulls the reference and only uses a local image or artifact. Container creation will fail if the reference isn't present.\n- IfNotPresent: the kubelet pulls if the reference isn't already present on disk. Container creation will fail if the reference isn't present and the pull fails.\n\nThe volume gets re-resolved if the pod gets deleted and recreated, which means that new remote content will become available on pod recreation.\nA failure to resolve or pull the image during pod startup will block containers from starting and may add significant latency. Failures will be retried using normal volume backoff and will be reported on the pod reason and message.\nThe types of objects that may be mounted by this volume are defined by the container runtime implementation on a host machine and at minimum must include all valid types supported by the container image field.\nThe OCI object gets mounted in a single directory (spec.containers[*].volumeMounts.mountPath) by merging the manifest layers in the same way as for container images.\nThe volume will be mounted read-only (ro).\nSub path mounts for containers are not supported (spec.containers[*].volumeMounts.subpath) before 1.33.\nThe field spec.securityContext.fsGroupChangePolicy has no effect on this volume type.";
           type = (
             types.nullOr (
               submoduleOf "actions.github.com.v1alpha1.AutoscalingRunnerSetSpecTemplateSpecVolumesImage"
@@ -27298,7 +28026,7 @@ let
           );
         };
         "portworxVolume" = mkOption {
-          description = "portworxVolume represents a portworx volume attached and mounted on kubelets host machine.\nDeprecated: PortworxVolume is deprecated. All operations for the in-tree portworxVolume type\nare redirected to the pxd.portworx.com CSI driver when the CSIMigrationPortworx feature-gate\nis on.";
+          description = "portworxVolume represents a portworx volume attached and mounted on kubelets host machine.\nDeprecated: PortworxVolume is deprecated. All operations for the in-tree portworxVolume type\nare redirected to the pxd.portworx.com CSI driver.";
           type = (
             types.nullOr (
               submoduleOf "actions.github.com.v1alpha1.AutoscalingRunnerSetSpecTemplateSpecVolumesPortworxVolume"
@@ -27593,6 +28321,10 @@ let
           description = "defaultMode is optional: mode bits used to set permissions on created files by default.\nMust be an octal value between 0000 and 0777 or a decimal value between 0 and 511.\nYAML accepts both octal and decimal values, JSON requires decimal values for mode bits.\nDefaults to 0644.\nDirectories within the path are not affected by this setting.\nThis might be in conflict with other options that affect the file\nmode, like fsGroup, and the result can be other mode bits set.";
           type = (types.nullOr types.int);
         };
+        "defaultUser" = mkOption {
+          description = "defaultUser is Optional: The owner UID of the created files by default.\nThe defaultUser field is only used as a fallback when the item-level user field is unset.\n(Alpha) This field requires the AtomicWriteVolumeUserFields feature gate to be enabled.";
+          type = (types.nullOr types.int);
+        };
         "items" = mkOption {
           description = "items if unspecified, each key-value pair in the Data field of the referenced\nConfigMap will be projected into the volume as a file whose name is the\nkey and content is the value. If specified, the listed keys will be\nprojected into the specified paths, and unlisted keys will not be\npresent. If a key is specified which is not present in the ConfigMap,\nthe volume setup will error unless it is marked optional. Paths must be\nrelative and may not contain the '..' path or start with '..'.";
           type = (
@@ -27615,6 +28347,7 @@ let
 
       config = {
         "defaultMode" = mkOverride 1002 null;
+        "defaultUser" = mkOverride 1002 null;
         "items" = mkOverride 1002 null;
         "name" = mkOverride 1002 null;
         "optional" = mkOverride 1002 null;
@@ -27636,10 +28369,15 @@ let
           description = "path is the relative path of the file to map the key to.\nMay not be an absolute path.\nMay not contain the path element '..'.\nMay not start with the string '..'.";
           type = types.str;
         };
+        "user" = mkOption {
+          description = "user is Optional: The owner UID of the created file.\nIf specified, the item-level user field takes precedence over defaultUser.\n(Alpha) This field requires the AtomicWriteVolumeUserFields feature gate to be enabled.";
+          type = (types.nullOr types.int);
+        };
       };
 
       config = {
         "mode" = mkOverride 1002 null;
+        "user" = mkOverride 1002 null;
       };
 
     };
@@ -27701,6 +28439,10 @@ let
           description = "Optional: mode bits to use on created files by default. Must be a\nOptional: mode bits used to set permissions on created files by default.\nMust be an octal value between 0000 and 0777 or a decimal value between 0 and 511.\nYAML accepts both octal and decimal values, JSON requires decimal values for mode bits.\nDefaults to 0644.\nDirectories within the path are not affected by this setting.\nThis might be in conflict with other options that affect the file\nmode, like fsGroup, and the result can be other mode bits set.";
           type = (types.nullOr types.int);
         };
+        "defaultUser" = mkOption {
+          description = "defaultUser is Optional: The owner UID of the created files by default.\nThe defaultUser field is only used as a fallback when the item-level user field is unset.\n(Alpha) This field requires the AtomicWriteVolumeUserFields feature gate to be enabled.";
+          type = (types.nullOr types.int);
+        };
         "items" = mkOption {
           description = "Items is a list of downward API volume file";
           type = (
@@ -27715,6 +28457,7 @@ let
 
       config = {
         "defaultMode" = mkOverride 1002 null;
+        "defaultUser" = mkOverride 1002 null;
         "items" = mkOverride 1002 null;
       };
 
@@ -27746,12 +28489,17 @@ let
             )
           );
         };
+        "user" = mkOption {
+          description = "user is Optional: The owner UID of the created file.\nIf specified, the item-level user field takes precedence over defaultUser.\n(Alpha) This field requires the AtomicWriteVolumeUserFields feature gate to be enabled.";
+          type = (types.nullOr types.int);
+        };
       };
 
       config = {
         "fieldRef" = mkOverride 1002 null;
         "mode" = mkOverride 1002 null;
         "resourceFieldRef" = mkOverride 1002 null;
+        "user" = mkOverride 1002 null;
       };
 
     };
@@ -27805,6 +28553,10 @@ let
           description = "medium represents what type of storage medium should back this directory.\nThe default is \"\" which means to use the node's default medium.\nMust be an empty string (default) or Memory.\nMore info: https://kubernetes.io/docs/concepts/storage/volumes#emptydir";
           type = (types.nullOr types.str);
         };
+        "mode" = mkOption {
+          description = "mode specifies the permission bits for the emptyDir directory, in numeric\nnotation (e.g., 0755, 01777). Must be a value between 0000 and 01777.\nIf not specified, defaults to 0777.\nThis might be in conflict with other options that affect the file\nmode, like fsGroup. If fsGroup is specified, the fsGroup permissions\nwill override the mode specified here.\nThis field has no effect on Windows.\nThis field is alpha and requires EmptyDirVolumeMode featuregate to be enabled.";
+          type = (types.nullOr types.int);
+        };
         "sizeLimit" = mkOption {
           description = "sizeLimit is the total amount of local storage required for this EmptyDir volume.\nThe size limit is also applicable for memory medium.\nThe maximum usage on memory medium EmptyDir would be the minimum value between\nthe SizeLimit specified here and the sum of memory limits of all containers in a pod.\nThe default is nil which means that the limit is undefined.\nMore info: https://kubernetes.io/docs/concepts/storage/volumes#emptydir";
           type = (types.nullOr (types.either types.int types.str));
@@ -27813,6 +28565,7 @@ let
 
       config = {
         "medium" = mkOverride 1002 null;
+        "mode" = mkOverride 1002 null;
         "sizeLimit" = mkOverride 1002 null;
       };
 
@@ -27904,7 +28657,7 @@ let
             type = (types.nullOr (types.listOf types.str));
           };
           "dataSource" = mkOption {
-            description = "dataSource field can be used to specify either:\n* An existing VolumeSnapshot object (snapshot.storage.k8s.io/VolumeSnapshot)\n* An existing PVC (PersistentVolumeClaim)\nIf the provisioner or an external controller can support the specified data source,\nit will create a new volume based on the contents of the specified data source.\nWhen the AnyVolumeDataSource feature gate is enabled, dataSource contents will be copied to dataSourceRef,\nand dataSourceRef contents will be copied to dataSource when dataSourceRef.namespace is not specified.\nIf the namespace is specified, then dataSourceRef will not be copied to dataSource.";
+            description = "dataSource field can be used to specify either:\n* An existing VolumeSnapshot object (snapshot.storage.k8s.io/VolumeSnapshot)\n* An existing PVC (PersistentVolumeClaim)\nIf the provisioner or an external controller can support the specified data source,\nit will create a new volume based on the contents of the specified data source.\ndataSource contents will be copied to dataSourceRef, and dataSourceRef contents will be\ncopied to dataSource when dataSourceRef.namespace is not specified.\nIf the namespace is specified, then dataSourceRef will not be copied to dataSource.";
             type = (
               types.nullOr (
                 submoduleOf "actions.github.com.v1alpha1.AutoscalingRunnerSetSpecTemplateSpecVolumesEphemeralVolumeClaimTemplateSpecDataSource"
@@ -27912,7 +28665,7 @@ let
             );
           };
           "dataSourceRef" = mkOption {
-            description = "dataSourceRef specifies the object from which to populate the volume with data, if a non-empty\nvolume is desired. This may be any object from a non-empty API group (non\ncore object) or a PersistentVolumeClaim object.\nWhen this field is specified, volume binding will only succeed if the type of\nthe specified object matches some installed volume populator or dynamic\nprovisioner.\nThis field will replace the functionality of the dataSource field and as such\nif both fields are non-empty, they must have the same value. For backwards\ncompatibility, when namespace isn't specified in dataSourceRef,\nboth fields (dataSource and dataSourceRef) will be set to the same\nvalue automatically if one of them is empty and the other is non-empty.\nWhen namespace is specified in dataSourceRef,\ndataSource isn't set to the same value and must be empty.\nThere are three important differences between dataSource and dataSourceRef:\n* While dataSource only allows two specific types of objects, dataSourceRef\n  allows any non-core object, as well as PersistentVolumeClaim objects.\n* While dataSource ignores disallowed values (dropping them), dataSourceRef\n  preserves all values, and generates an error if a disallowed value is\n  specified.\n* While dataSource only allows local objects, dataSourceRef allows objects\n  in any namespaces.\n(Beta) Using this field requires the AnyVolumeDataSource feature gate to be enabled.\n(Alpha) Using the namespace field of dataSourceRef requires the CrossNamespaceVolumeDataSource feature gate to be enabled.";
+            description = "dataSourceRef specifies the object from which to populate the volume with data, if a non-empty\nvolume is desired. This may be any object from a non-empty API group (non\ncore object) or a PersistentVolumeClaim object.\nWhen this field is specified, volume binding will only succeed if the type of\nthe specified object matches some installed volume populator or dynamic\nprovisioner.\nThis field will replace the functionality of the dataSource field and as such\nif both fields are non-empty, they must have the same value. For backwards\ncompatibility, when namespace isn't specified in dataSourceRef,\nboth fields (dataSource and dataSourceRef) will be set to the same\nvalue automatically if one of them is empty and the other is non-empty.\nWhen namespace is specified in dataSourceRef,\ndataSource isn't set to the same value and must be empty.\nThere are three important differences between dataSource and dataSourceRef:\n* While dataSource only allows two specific types of objects, dataSourceRef\n  allows any non-core object, as well as PersistentVolumeClaim objects.\n* While dataSource ignores disallowed values (dropping them), dataSourceRef\n  preserves all values, and generates an error if a disallowed value is\n  specified.\n* While dataSource only allows local objects, dataSourceRef allows objects\n  in any namespaces.\n(Alpha) Using the namespace field of dataSourceRef requires the CrossNamespaceVolumeDataSource feature gate to be enabled.";
             type = (
               types.nullOr (
                 submoduleOf "actions.github.com.v1alpha1.AutoscalingRunnerSetSpecTemplateSpecVolumesEphemeralVolumeClaimTemplateSpecDataSourceRef"
@@ -28467,6 +29220,10 @@ let
           description = "defaultMode are the mode bits used to set permissions on created files by default.\nMust be an octal value between 0000 and 0777 or a decimal value between 0 and 511.\nYAML accepts both octal and decimal values, JSON requires decimal values for mode bits.\nDirectories within the path are not affected by this setting.\nThis might be in conflict with other options that affect the file\nmode, like fsGroup, and the result can be other mode bits set.";
           type = (types.nullOr types.int);
         };
+        "defaultUser" = mkOption {
+          description = "defaultUser is Optional: The owner UID of the created files by default.\nThe defaultUser field is only used as a fallback when the item-level user field is unset.\n(Alpha) This field requires the AtomicWriteVolumeUserFields feature gate to be enabled.";
+          type = (types.nullOr types.int);
+        };
         "sources" = mkOption {
           description = "sources is the list of volume projections. Each entry in this list\nhandles one source.";
           type = (
@@ -28481,6 +29238,7 @@ let
 
       config = {
         "defaultMode" = mkOverride 1002 null;
+        "defaultUser" = mkOverride 1002 null;
         "sources" = mkOverride 1002 null;
       };
 
@@ -28576,6 +29334,10 @@ let
             description = "Select all ClusterTrustBundles that match this signer name.\nMutually-exclusive with name.  The contents of all selected\nClusterTrustBundles will be unified and deduplicated.";
             type = (types.nullOr types.str);
           };
+          "user" = mkOption {
+            description = "user is Optional: The owner UID of the created file.\nIf specified, the item-level user field takes precedence over defaultUser.\n(Alpha) This field requires the AtomicWriteVolumeUserFields feature gate to be enabled.";
+            type = (types.nullOr types.int);
+          };
         };
 
         config = {
@@ -28583,6 +29345,7 @@ let
           "name" = mkOverride 1002 null;
           "optional" = mkOverride 1002 null;
           "signerName" = mkOverride 1002 null;
+          "user" = mkOverride 1002 null;
         };
 
       };
@@ -28682,10 +29445,15 @@ let
             description = "path is the relative path of the file to map the key to.\nMay not be an absolute path.\nMay not contain the path element '..'.\nMay not start with the string '..'.";
             type = types.str;
           };
+          "user" = mkOption {
+            description = "user is Optional: The owner UID of the created file.\nIf specified, the item-level user field takes precedence over defaultUser.\n(Alpha) This field requires the AtomicWriteVolumeUserFields feature gate to be enabled.";
+            type = (types.nullOr types.int);
+          };
         };
 
         config = {
           "mode" = mkOverride 1002 null;
+          "user" = mkOverride 1002 null;
         };
 
       };
@@ -28738,12 +29506,17 @@ let
               )
             );
           };
+          "user" = mkOption {
+            description = "user is Optional: The owner UID of the created file.\nIf specified, the item-level user field takes precedence over defaultUser.\n(Alpha) This field requires the AtomicWriteVolumeUserFields feature gate to be enabled.";
+            type = (types.nullOr types.int);
+          };
         };
 
         config = {
           "fieldRef" = mkOverride 1002 null;
           "mode" = mkOverride 1002 null;
           "resourceFieldRef" = mkOverride 1002 null;
+          "user" = mkOverride 1002 null;
         };
 
       };
@@ -28818,6 +29591,10 @@ let
             description = "Kubelet's generated CSRs will be addressed to this signer.";
             type = types.str;
           };
+          "user" = mkOption {
+            description = "user is Optional: The owner UID of the created file.\nIf specified, the item-level user field takes precedence over defaultUser.\n(Alpha) This field requires the AtomicWriteVolumeUserFields feature gate to be enabled.";
+            type = (types.nullOr types.int);
+          };
           "userAnnotations" = mkOption {
             description = "userAnnotations allow pod authors to pass additional information to\nthe signer implementation.  Kubernetes does not restrict or validate this\nmetadata in any way.\n\nThese values are copied verbatim into the `spec.unverifiedUserAnnotations` field of\nthe PodCertificateRequest objects that Kubelet creates.\n\nEntries are subject to the same validation as object metadata annotations,\nwith the addition that all keys must be domain-prefixed. No restrictions\nare placed on values, except an overall size limitation on the entire field.\n\nSigners should document the keys and values they support. Signers should\ndeny requests that contain keys they do not recognize.";
             type = (types.nullOr (types.attrsOf types.str));
@@ -28829,6 +29606,7 @@ let
           "credentialBundlePath" = mkOverride 1002 null;
           "keyPath" = mkOverride 1002 null;
           "maxExpirationSeconds" = mkOverride 1002 null;
+          "user" = mkOverride 1002 null;
           "userAnnotations" = mkOverride 1002 null;
         };
 
@@ -28879,10 +29657,15 @@ let
             description = "path is the relative path of the file to map the key to.\nMay not be an absolute path.\nMay not contain the path element '..'.\nMay not start with the string '..'.";
             type = types.str;
           };
+          "user" = mkOption {
+            description = "user is Optional: The owner UID of the created file.\nIf specified, the item-level user field takes precedence over defaultUser.\n(Alpha) This field requires the AtomicWriteVolumeUserFields feature gate to be enabled.";
+            type = (types.nullOr types.int);
+          };
         };
 
         config = {
           "mode" = mkOverride 1002 null;
+          "user" = mkOverride 1002 null;
         };
 
       };
@@ -28902,11 +29685,16 @@ let
             description = "path is the path relative to the mount point of the file to project the\ntoken into.";
             type = types.str;
           };
+          "user" = mkOption {
+            description = "user is Optional: The owner UID of the created file.\nIf specified, the item-level user field takes precedence over defaultUser.\n(Alpha) This field requires the AtomicWriteVolumeUserFields feature gate to be enabled.";
+            type = (types.nullOr types.int);
+          };
         };
 
         config = {
           "audience" = mkOverride 1002 null;
           "expirationSeconds" = mkOverride 1002 null;
+          "user" = mkOverride 1002 null;
         };
 
       };
@@ -29091,6 +29879,10 @@ let
           description = "defaultMode is Optional: mode bits used to set permissions on created files by default.\nMust be an octal value between 0000 and 0777 or a decimal value between 0 and 511.\nYAML accepts both octal and decimal values, JSON requires decimal values\nfor mode bits. Defaults to 0644.\nDirectories within the path are not affected by this setting.\nThis might be in conflict with other options that affect the file\nmode, like fsGroup, and the result can be other mode bits set.";
           type = (types.nullOr types.int);
         };
+        "defaultUser" = mkOption {
+          description = "defaultUser is Optional: The owner UID of the created files by default.\nThe defaultUser field is only used as a fallback when the item-level user field is unset.\n(Alpha) This field requires the AtomicWriteVolumeUserFields feature gate to be enabled.";
+          type = (types.nullOr types.int);
+        };
         "items" = mkOption {
           description = "items If unspecified, each key-value pair in the Data field of the referenced\nSecret will be projected into the volume as a file whose name is the\nkey and content is the value. If specified, the listed keys will be\nprojected into the specified paths, and unlisted keys will not be\npresent. If a key is specified which is not present in the Secret,\nthe volume setup will error unless it is marked optional. Paths must be\nrelative and may not contain the '..' path or start with '..'.";
           type = (
@@ -29113,6 +29905,7 @@ let
 
       config = {
         "defaultMode" = mkOverride 1002 null;
+        "defaultUser" = mkOverride 1002 null;
         "items" = mkOverride 1002 null;
         "optional" = mkOverride 1002 null;
         "secretName" = mkOverride 1002 null;
@@ -29134,10 +29927,15 @@ let
           description = "path is the relative path of the file to map the key to.\nMay not be an absolute path.\nMay not contain the path element '..'.\nMay not start with the string '..'.";
           type = types.str;
         };
+        "user" = mkOption {
+          description = "user is Optional: The owner UID of the created file.\nIf specified, the item-level user field takes precedence over defaultUser.\n(Alpha) This field requires the AtomicWriteVolumeUserFields feature gate to be enabled.";
+          type = (types.nullOr types.int);
+        };
       };
 
       config = {
         "mode" = mkOverride 1002 null;
+        "user" = mkOverride 1002 null;
       };
 
     };
@@ -29218,28 +30016,6 @@ let
         "fsType" = mkOverride 1002 null;
         "storagePolicyID" = mkOverride 1002 null;
         "storagePolicyName" = mkOverride 1002 null;
-      };
-
-    };
-    "actions.github.com.v1alpha1.AutoscalingRunnerSetSpecTemplateSpecWorkloadRef" = {
-
-      options = {
-        "name" = mkOption {
-          description = "Name defines the name of the Workload object this Pod belongs to.\nWorkload must be in the same namespace as the Pod.\nIf it doesn't match any existing Workload, the Pod will remain unschedulable\nuntil a Workload object is created and observed by the kube-scheduler.\nIt must be a DNS subdomain.";
-          type = types.str;
-        };
-        "podGroup" = mkOption {
-          description = "PodGroup is the name of the PodGroup within the Workload that this Pod\nbelongs to. If it doesn't match any existing PodGroup within the Workload,\nthe Pod will remain unschedulable until the Workload object is recreated\nand observed by the kube-scheduler. It must be a DNS label.";
-          type = types.str;
-        };
-        "podGroupReplicaKey" = mkOption {
-          description = "PodGroupReplicaKey specifies the replica key of the PodGroup to which this\nPod belongs. It is used to distinguish pods belonging to different replicas\nof the same pod group. The pod group policy is applied separately to each replica.\nWhen set, it must be a DNS label.";
-          type = (types.nullOr types.str);
-        };
-      };
-
-      config = {
-        "podGroupReplicaKey" = mkOverride 1002 null;
       };
 
     };
@@ -29370,34 +30146,19 @@ let
     "actions.github.com.v1alpha1.AutoscalingRunnerSetStatus" = {
 
       options = {
-        "currentRunners" = mkOption {
-          description = "";
-          type = (types.nullOr types.int);
-        };
-        "failedEphemeralRunners" = mkOption {
-          description = "";
-          type = (types.nullOr types.int);
-        };
-        "pendingEphemeralRunners" = mkOption {
-          description = "";
+        "observedGeneration" = mkOption {
+          description = "ObservedGeneration tracks the metadata.generation of this ARS at observation time,\nenabling detection of Pending phase when generation differs. Unset defaults to 0.";
           type = (types.nullOr types.int);
         };
         "phase" = mkOption {
           description = "";
           type = (types.nullOr types.str);
         };
-        "runningEphemeralRunners" = mkOption {
-          description = "";
-          type = (types.nullOr types.int);
-        };
       };
 
       config = {
-        "currentRunners" = mkOverride 1002 null;
-        "failedEphemeralRunners" = mkOverride 1002 null;
-        "pendingEphemeralRunners" = mkOverride 1002 null;
+        "observedGeneration" = mkOverride 1002 null;
         "phase" = mkOverride 1002 null;
-        "runningEphemeralRunners" = mkOverride 1002 null;
       };
 
     };
@@ -29472,8 +30233,12 @@ let
     "actions.github.com.v1alpha1.EphemeralRunnerSetSpec" = {
 
       options = {
+        "actionableRevision" = mkOption {
+          description = "ActionableRevision is the desired runner-spec revision. It increments whenever\nSpec.EphemeralRunnerSpec changes, enabling the EphemeralRunnerSet controller\nto detect spec updates.\nUnset defaults to 0.";
+          type = (types.nullOr types.int);
+        };
         "ephemeralRunnerMetadata" = mkOption {
-          description = "ResourceMeta carries metadata common to all internal resources";
+          description = "EphemeralRunnerMetadata is the metadata to be applied to all ephemeral runners created by this set.\nIf the EphemeralRunnerMetadata is updated, the update applies to new ephemeral runners created after the update,\nbut does not apply to existing ephemeral runners.";
           type = (
             types.nullOr (
               submoduleOf "actions.github.com.v1alpha1.EphemeralRunnerSetSpecEphemeralRunnerMetadata"
@@ -29488,7 +30253,7 @@ let
         };
         "patchID" = mkOption {
           description = "PatchID is the unique identifier for the patch issued by the listener app";
-          type = types.int;
+          type = (types.nullOr types.int);
         };
         "replicas" = mkOption {
           description = "Replicas is the number of desired EphemeralRunner resources in the k8s namespace.";
@@ -29497,8 +30262,10 @@ let
       };
 
       config = {
+        "actionableRevision" = mkOverride 1002 null;
         "ephemeralRunnerMetadata" = mkOverride 1002 null;
         "ephemeralRunnerSpec" = mkOverride 1002 null;
+        "patchID" = mkOverride 1002 null;
         "replicas" = mkOverride 1002 null;
       };
 
@@ -29535,11 +30302,11 @@ let
         };
         "githubConfigSecret" = mkOption {
           description = "";
-          type = types.str;
+          type = (types.nullOr types.str);
         };
         "githubConfigUrl" = mkOption {
           description = "";
-          type = types.str;
+          type = (types.nullOr types.str);
         };
         "githubServerTLS" = mkOption {
           description = "";
@@ -29571,7 +30338,7 @@ let
         };
         "runnerScaleSetId" = mkOption {
           description = "";
-          type = types.int;
+          type = (types.nullOr types.int);
         };
         "spec" = mkOption {
           description = "Specification of the desired behavior of the pod.\nMore info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#spec-and-status";
@@ -29593,10 +30360,13 @@ let
 
       config = {
         "ephemeralRunnerConfigSecretMetadata" = mkOverride 1002 null;
+        "githubConfigSecret" = mkOverride 1002 null;
+        "githubConfigUrl" = mkOverride 1002 null;
         "githubServerTLS" = mkOverride 1002 null;
         "metadata" = mkOverride 1002 null;
         "proxy" = mkOverride 1002 null;
         "proxySecretRef" = mkOverride 1002 null;
+        "runnerScaleSetId" = mkOverride 1002 null;
         "spec" = mkOverride 1002 null;
         "vaultConfig" = mkOverride 1002 null;
       };
@@ -29664,7 +30434,7 @@ let
 
         options = {
           "key" = mkOption {
-            description = "The key to select.";
+            description = "The key to select from the ConfigMap's Data field.\nKeys in the BinaryData field are not currently propagated to container env vars.";
             type = types.str;
           };
           "name" = mkOption {
@@ -29844,6 +30614,18 @@ let
           );
           apply = attrsToList;
         };
+        "evictionResponders" = mkOption {
+          description = "evictionResponders reference responders that react to Evictions based on EvictionRequests.\nResponders should observe and communicate through the Eviction Resource API to help with\nthe graceful termination of a pod. The responders are selected sequentially, according to\ntheir specified priority.\n\nResponders should periodically report on an eviction progress by updating the\n.status.responders[].heartbeatTime field of the Eviction object. If this field is not updated\nwithin the heartbeat deadline defined by the Eviction API (currently 20 minutes), the eviction\nis passed over to the next responder with a lower priority. If there is no other responder,\nthe last default imperative-eviction.k8s.io/evictor responder with a priority of 100 will\nevict the pod using the imperative Eviction API (pods/<name>/eviction subresource).\n\nThe maximum length of the responders list is 10.\nResponders are not supported when the pod is part of a PodGroup (.spec.schedulingGroup is set).\nThis field can only be set on creation and is immutable afterwards.";
+          type = (
+            types.nullOr (
+              coerceAttrsOfSubmodulesToListByKey
+                "actions.github.com.v1alpha1.EphemeralRunnerSetSpecEphemeralRunnerSpecSpecEvictionResponders"
+                "name"
+                [ "name" ]
+            )
+          );
+          apply = attrsToList;
+        };
         "hostAliases" = mkOption {
           description = "HostAliases is an optional list of hosts and IPs that will be injected into the pod's hosts\nfile if specified.";
           type = (
@@ -29867,7 +30649,7 @@ let
           type = (types.nullOr types.bool);
         };
         "hostUsers" = mkOption {
-          description = "Use the host's user namespace.\nOptional: Default to true.\nIf set to true or not present, the pod will be run in the host user namespace, useful\nfor when the pod needs a feature only available to the host user namespace, such as\nloading a kernel module with CAP_SYS_MODULE.\nWhen set to false, a new userns is created for the pod. Setting false is useful for\nmitigating container breakout vulnerabilities even allowing users to run their\ncontainers as root without actually having root privileges on the host.\nThis field is alpha-level and is only honored by servers that enable the UserNamespacesSupport feature.";
+          description = "Use the host's user namespace.\nOptional: Default to true.\nIf set to true or not present, the pod will be run in the host user namespace, useful\nfor when the pod needs a feature only available to the host user namespace, such as\nloading a kernel module with CAP_SYS_MODULE.\nWhen set to false, a new userns is created for the pod. Setting false is useful for\nmitigating container breakout vulnerabilities even allowing users to run their\ncontainers as root without actually having root privileges on the host.";
           type = (types.nullOr types.bool);
         };
         "hostname" = mkOption {
@@ -29875,7 +30657,7 @@ let
           type = (types.nullOr types.str);
         };
         "hostnameOverride" = mkOption {
-          description = "HostnameOverride specifies an explicit override for the pod's hostname as perceived by the pod.\nThis field only specifies the pod's hostname and does not affect its DNS records.\nWhen this field is set to a non-empty string:\n- It takes precedence over the values set in `hostname` and `subdomain`.\n- The Pod's hostname will be set to this value.\n- `setHostnameAsFQDN` must be nil or set to false.\n- `hostNetwork` must be set to false.\n\nThis field must be a valid DNS subdomain as defined in RFC 1123 and contain at most 64 characters.\nRequires the HostnameOverride feature gate to be enabled.";
+          description = "HostnameOverride specifies an explicit override for the pod's hostname as perceived by the pod.\nThis field only specifies the pod's hostname and does not affect its DNS records.\nWhen this field is set to a non-empty string:\n- It takes precedence over the values set in `hostname` and `subdomain`.\n- The Pod's hostname will be set to this value.\n- `setHostnameAsFQDN` must be nil or set to false.\n- `hostNetwork` must be set to false.\n\nThis field must be a valid DNS subdomain as defined in RFC 1123 and contain at most 64 characters.";
           type = (types.nullOr types.str);
         };
         "imagePullSecrets" = mkOption {
@@ -29923,7 +30705,7 @@ let
           type = (types.nullOr (types.attrsOf (types.either types.int types.str)));
         };
         "preemptionPolicy" = mkOption {
-          description = "PreemptionPolicy is the Policy for preempting pods with lower priority.\nOne of Never, PreemptLowerPriority.\nDefaults to PreemptLowerPriority if unset.";
+          description = "PreemptionPolicy is the Policy for preempting pods with lower priority.\nOne of Never, PreemptLowerPriority.\nWhen Priority Admission Controller is enabled, it prevents users from setting\nthis field. The admission controller populates this field from PriorityClassName.\nDefaults to PreemptLowerPriority if unset.";
           type = (types.nullOr types.str);
         };
         "priority" = mkOption {
@@ -29987,6 +30769,14 @@ let
             )
           );
           apply = attrsToList;
+        };
+        "schedulingGroup" = mkOption {
+          description = "SchedulingGroup provides a reference to the immediate scheduling runtime\ngrouping object that this Pod belongs to.\nThis field is used by the scheduler to identify the group and apply the\ncorrect group scheduling policies. The association with a group also\nimpacts other lifecycle aspects of a Pod that are relevant in a wider context\nof scheduling like preemption, resource attachment, etc. If not specified,\nthe Pod is treated as a single unit in all of these aspects.\nThe group object referenced by this field may not exist at the time the\nPod is created.\nThis field is immutable, but a group object with the same name may be\nrecreated with different policies. Doing this during pod scheduling\nmay result in the placement not conforming to the expected policies.";
+          type = (
+            types.nullOr (
+              submoduleOf "actions.github.com.v1alpha1.EphemeralRunnerSetSpecEphemeralRunnerSpecSpecSchedulingGroup"
+            )
+          );
         };
         "securityContext" = mkOption {
           description = "SecurityContext holds pod-level security attributes and common container settings.\nOptional: Defaults to empty.  See type description for default values of each field.";
@@ -30052,14 +30842,6 @@ let
           );
           apply = attrsToList;
         };
-        "workloadRef" = mkOption {
-          description = "WorkloadRef provides a reference to the Workload object that this Pod belongs to.\nThis field is used by the scheduler to identify the PodGroup and apply the\ncorrect group scheduling policies. The Workload object referenced\nby this field may not exist at the time the Pod is created.\nThis field is immutable, but a Workload object with the same name\nmay be recreated with different policies. Doing this during pod scheduling\nmay result in the placement not conforming to the expected policies.";
-          type = (
-            types.nullOr (
-              submoduleOf "actions.github.com.v1alpha1.EphemeralRunnerSetSpecEphemeralRunnerSpecSpecWorkloadRef"
-            )
-          );
-        };
       };
 
       config = {
@@ -30070,6 +30852,7 @@ let
         "dnsPolicy" = mkOverride 1002 null;
         "enableServiceLinks" = mkOverride 1002 null;
         "ephemeralContainers" = mkOverride 1002 null;
+        "evictionResponders" = mkOverride 1002 null;
         "hostAliases" = mkOverride 1002 null;
         "hostIPC" = mkOverride 1002 null;
         "hostNetwork" = mkOverride 1002 null;
@@ -30093,6 +30876,7 @@ let
         "runtimeClassName" = mkOverride 1002 null;
         "schedulerName" = mkOverride 1002 null;
         "schedulingGates" = mkOverride 1002 null;
+        "schedulingGroup" = mkOverride 1002 null;
         "securityContext" = mkOverride 1002 null;
         "serviceAccount" = mkOverride 1002 null;
         "serviceAccountName" = mkOverride 1002 null;
@@ -30103,7 +30887,6 @@ let
         "tolerations" = mkOverride 1002 null;
         "topologySpreadConstraints" = mkOverride 1002 null;
         "volumes" = mkOverride 1002 null;
-        "workloadRef" = mkOverride 1002 null;
       };
 
     };
@@ -31414,7 +32197,7 @@ let
 
         options = {
           "key" = mkOption {
-            description = "The key to select.";
+            description = "The key to select from the ConfigMap's Data field.\nKeys in the BinaryData field are not currently propagated to container env vars.";
             type = types.str;
           };
           "name" = mkOption {
@@ -31648,6 +32431,10 @@ let
             description = "Name or number of the port to access on the container.\nNumber must be in the range 1 to 65535.\nName must be an IANA_SVC_NAME.";
             type = (types.either types.int types.str);
           };
+          "protocol" = mkOption {
+            description = "Protocol selects the wire protocol for the probe connection.\nNil defaults to HTTP/1.1.";
+            type = (types.nullOr types.str);
+          };
           "scheme" = mkOption {
             description = "Scheme to use for connecting to the host.\nDefaults to HTTP.";
             type = (types.nullOr types.str);
@@ -31658,6 +32445,7 @@ let
           "host" = mkOverride 1002 null;
           "httpHeaders" = mkOverride 1002 null;
           "path" = mkOverride 1002 null;
+          "protocol" = mkOverride 1002 null;
           "scheme" = mkOverride 1002 null;
         };
 
@@ -31800,6 +32588,10 @@ let
             description = "Name or number of the port to access on the container.\nNumber must be in the range 1 to 65535.\nName must be an IANA_SVC_NAME.";
             type = (types.either types.int types.str);
           };
+          "protocol" = mkOption {
+            description = "Protocol selects the wire protocol for the probe connection.\nNil defaults to HTTP/1.1.";
+            type = (types.nullOr types.str);
+          };
           "scheme" = mkOption {
             description = "Scheme to use for connecting to the host.\nDefaults to HTTP.";
             type = (types.nullOr types.str);
@@ -31810,6 +32602,7 @@ let
           "host" = mkOverride 1002 null;
           "httpHeaders" = mkOverride 1002 null;
           "path" = mkOverride 1002 null;
+          "protocol" = mkOverride 1002 null;
           "scheme" = mkOverride 1002 null;
         };
 
@@ -31958,6 +32751,10 @@ let
       {
 
         options = {
+          "mode" = mkOption {
+            description = "mode specifies the connection mode for the gRPC health probe.\nSet to \"TLS\" to use TLS without certificate verification.\nSet to \"Plaintext\" to use a plaintext (insecure) connection explicitly.\nIf not specified, the probe uses a plaintext (insecure) connection.";
+            type = (types.nullOr types.str);
+          };
           "port" = mkOption {
             description = "Port number of the gRPC service. Number must be in the range 1 to 65535.";
             type = types.int;
@@ -31969,6 +32766,7 @@ let
         };
 
         config = {
+          "mode" = mkOverride 1002 null;
           "service" = mkOverride 1002 null;
         };
 
@@ -32001,6 +32799,10 @@ let
             description = "Name or number of the port to access on the container.\nNumber must be in the range 1 to 65535.\nName must be an IANA_SVC_NAME.";
             type = (types.either types.int types.str);
           };
+          "protocol" = mkOption {
+            description = "Protocol selects the wire protocol for the probe connection.\nNil defaults to HTTP/1.1.";
+            type = (types.nullOr types.str);
+          };
           "scheme" = mkOption {
             description = "Scheme to use for connecting to the host.\nDefaults to HTTP.";
             type = (types.nullOr types.str);
@@ -32011,6 +32813,7 @@ let
           "host" = mkOverride 1002 null;
           "httpHeaders" = mkOverride 1002 null;
           "path" = mkOverride 1002 null;
+          "protocol" = mkOverride 1002 null;
           "scheme" = mkOverride 1002 null;
         };
 
@@ -32179,6 +32982,10 @@ let
       {
 
         options = {
+          "mode" = mkOption {
+            description = "mode specifies the connection mode for the gRPC health probe.\nSet to \"TLS\" to use TLS without certificate verification.\nSet to \"Plaintext\" to use a plaintext (insecure) connection explicitly.\nIf not specified, the probe uses a plaintext (insecure) connection.";
+            type = (types.nullOr types.str);
+          };
           "port" = mkOption {
             description = "Port number of the gRPC service. Number must be in the range 1 to 65535.";
             type = types.int;
@@ -32190,6 +32997,7 @@ let
         };
 
         config = {
+          "mode" = mkOverride 1002 null;
           "service" = mkOverride 1002 null;
         };
 
@@ -32222,6 +33030,10 @@ let
             description = "Name or number of the port to access on the container.\nNumber must be in the range 1 to 65535.\nName must be an IANA_SVC_NAME.";
             type = (types.either types.int types.str);
           };
+          "protocol" = mkOption {
+            description = "Protocol selects the wire protocol for the probe connection.\nNil defaults to HTTP/1.1.";
+            type = (types.nullOr types.str);
+          };
           "scheme" = mkOption {
             description = "Scheme to use for connecting to the host.\nDefaults to HTTP.";
             type = (types.nullOr types.str);
@@ -32232,6 +33044,7 @@ let
           "host" = mkOverride 1002 null;
           "httpHeaders" = mkOverride 1002 null;
           "path" = mkOverride 1002 null;
+          "protocol" = mkOverride 1002 null;
           "scheme" = mkOverride 1002 null;
         };
 
@@ -32411,7 +33224,7 @@ let
             type = (types.nullOr types.bool);
           };
           "procMount" = mkOption {
-            description = "procMount denotes the type of proc mount to use for the containers.\nThe default value is Default which uses the container runtime defaults for\nreadonly paths and masked paths.\nThis requires the ProcMountType feature flag to be enabled.\nNote that this field cannot be set when spec.os.name is windows.";
+            description = "procMount denotes the type of proc mount to use for the containers.\nThe default value is Default which uses the container runtime defaults for\nreadonly paths and masked paths.\nNote that this field cannot be set when spec.os.name is windows.";
             type = (types.nullOr types.str);
           };
           "readOnlyRootFilesystem" = mkOption {
@@ -32685,6 +33498,10 @@ let
       {
 
         options = {
+          "mode" = mkOption {
+            description = "mode specifies the connection mode for the gRPC health probe.\nSet to \"TLS\" to use TLS without certificate verification.\nSet to \"Plaintext\" to use a plaintext (insecure) connection explicitly.\nIf not specified, the probe uses a plaintext (insecure) connection.";
+            type = (types.nullOr types.str);
+          };
           "port" = mkOption {
             description = "Port number of the gRPC service. Number must be in the range 1 to 65535.";
             type = types.int;
@@ -32696,6 +33513,7 @@ let
         };
 
         config = {
+          "mode" = mkOverride 1002 null;
           "service" = mkOverride 1002 null;
         };
 
@@ -32728,6 +33546,10 @@ let
             description = "Name or number of the port to access on the container.\nNumber must be in the range 1 to 65535.\nName must be an IANA_SVC_NAME.";
             type = (types.either types.int types.str);
           };
+          "protocol" = mkOption {
+            description = "Protocol selects the wire protocol for the probe connection.\nNil defaults to HTTP/1.1.";
+            type = (types.nullOr types.str);
+          };
           "scheme" = mkOption {
             description = "Scheme to use for connecting to the host.\nDefaults to HTTP.";
             type = (types.nullOr types.str);
@@ -32738,6 +33560,7 @@ let
           "host" = mkOverride 1002 null;
           "httpHeaders" = mkOverride 1002 null;
           "path" = mkOverride 1002 null;
+          "protocol" = mkOverride 1002 null;
           "scheme" = mkOverride 1002 null;
         };
 
@@ -32799,8 +33622,12 @@ let
       {
 
         options = {
+          "bindMountOptions" = mkOption {
+            description = "bindMountOptions is the list of additional bind mount options to apply when\nmounting this volume into the container. Allowed values are noexec,\nnodev, and nosuid. These are Linux mount options and have no effect on\nWindows nodes.\nThis field is not supported with image volumes.\nThis is an alpha field and requires enabling the VolumeBindMountOptions feature gate.";
+            type = (types.nullOr (types.listOf types.str));
+          };
           "mountPath" = mkOption {
-            description = "Path within the container at which the volume should be mounted.  Must\nnot contain ':'.";
+            description = "Path within the container at which the volume should be mounted.";
             type = types.str;
           };
           "mountPropagation" = mkOption {
@@ -32830,6 +33657,7 @@ let
         };
 
         config = {
+          "bindMountOptions" = mkOverride 1002 null;
           "mountPropagation" = mkOverride 1002 null;
           "readOnly" = mkOverride 1002 null;
           "recursiveReadOnly" = mkOverride 1002 null;
@@ -33265,7 +34093,7 @@ let
 
         options = {
           "key" = mkOption {
-            description = "The key to select.";
+            description = "The key to select from the ConfigMap's Data field.\nKeys in the BinaryData field are not currently propagated to container env vars.";
             type = types.str;
           };
           "name" = mkOption {
@@ -33500,6 +34328,10 @@ let
             description = "Name or number of the port to access on the container.\nNumber must be in the range 1 to 65535.\nName must be an IANA_SVC_NAME.";
             type = (types.either types.int types.str);
           };
+          "protocol" = mkOption {
+            description = "Protocol selects the wire protocol for the probe connection.\nNil defaults to HTTP/1.1.";
+            type = (types.nullOr types.str);
+          };
           "scheme" = mkOption {
             description = "Scheme to use for connecting to the host.\nDefaults to HTTP.";
             type = (types.nullOr types.str);
@@ -33510,6 +34342,7 @@ let
           "host" = mkOverride 1002 null;
           "httpHeaders" = mkOverride 1002 null;
           "path" = mkOverride 1002 null;
+          "protocol" = mkOverride 1002 null;
           "scheme" = mkOverride 1002 null;
         };
 
@@ -33652,6 +34485,10 @@ let
             description = "Name or number of the port to access on the container.\nNumber must be in the range 1 to 65535.\nName must be an IANA_SVC_NAME.";
             type = (types.either types.int types.str);
           };
+          "protocol" = mkOption {
+            description = "Protocol selects the wire protocol for the probe connection.\nNil defaults to HTTP/1.1.";
+            type = (types.nullOr types.str);
+          };
           "scheme" = mkOption {
             description = "Scheme to use for connecting to the host.\nDefaults to HTTP.";
             type = (types.nullOr types.str);
@@ -33662,6 +34499,7 @@ let
           "host" = mkOverride 1002 null;
           "httpHeaders" = mkOverride 1002 null;
           "path" = mkOverride 1002 null;
+          "protocol" = mkOverride 1002 null;
           "scheme" = mkOverride 1002 null;
         };
 
@@ -33810,6 +34648,10 @@ let
       {
 
         options = {
+          "mode" = mkOption {
+            description = "mode specifies the connection mode for the gRPC health probe.\nSet to \"TLS\" to use TLS without certificate verification.\nSet to \"Plaintext\" to use a plaintext (insecure) connection explicitly.\nIf not specified, the probe uses a plaintext (insecure) connection.";
+            type = (types.nullOr types.str);
+          };
           "port" = mkOption {
             description = "Port number of the gRPC service. Number must be in the range 1 to 65535.";
             type = types.int;
@@ -33821,6 +34663,7 @@ let
         };
 
         config = {
+          "mode" = mkOverride 1002 null;
           "service" = mkOverride 1002 null;
         };
 
@@ -33853,6 +34696,10 @@ let
             description = "Name or number of the port to access on the container.\nNumber must be in the range 1 to 65535.\nName must be an IANA_SVC_NAME.";
             type = (types.either types.int types.str);
           };
+          "protocol" = mkOption {
+            description = "Protocol selects the wire protocol for the probe connection.\nNil defaults to HTTP/1.1.";
+            type = (types.nullOr types.str);
+          };
           "scheme" = mkOption {
             description = "Scheme to use for connecting to the host.\nDefaults to HTTP.";
             type = (types.nullOr types.str);
@@ -33863,6 +34710,7 @@ let
           "host" = mkOverride 1002 null;
           "httpHeaders" = mkOverride 1002 null;
           "path" = mkOverride 1002 null;
+          "protocol" = mkOverride 1002 null;
           "scheme" = mkOverride 1002 null;
         };
 
@@ -34032,6 +34880,10 @@ let
       {
 
         options = {
+          "mode" = mkOption {
+            description = "mode specifies the connection mode for the gRPC health probe.\nSet to \"TLS\" to use TLS without certificate verification.\nSet to \"Plaintext\" to use a plaintext (insecure) connection explicitly.\nIf not specified, the probe uses a plaintext (insecure) connection.";
+            type = (types.nullOr types.str);
+          };
           "port" = mkOption {
             description = "Port number of the gRPC service. Number must be in the range 1 to 65535.";
             type = types.int;
@@ -34043,6 +34895,7 @@ let
         };
 
         config = {
+          "mode" = mkOverride 1002 null;
           "service" = mkOverride 1002 null;
         };
 
@@ -34075,6 +34928,10 @@ let
             description = "Name or number of the port to access on the container.\nNumber must be in the range 1 to 65535.\nName must be an IANA_SVC_NAME.";
             type = (types.either types.int types.str);
           };
+          "protocol" = mkOption {
+            description = "Protocol selects the wire protocol for the probe connection.\nNil defaults to HTTP/1.1.";
+            type = (types.nullOr types.str);
+          };
           "scheme" = mkOption {
             description = "Scheme to use for connecting to the host.\nDefaults to HTTP.";
             type = (types.nullOr types.str);
@@ -34085,6 +34942,7 @@ let
           "host" = mkOverride 1002 null;
           "httpHeaders" = mkOverride 1002 null;
           "path" = mkOverride 1002 null;
+          "protocol" = mkOverride 1002 null;
           "scheme" = mkOverride 1002 null;
         };
 
@@ -34265,7 +35123,7 @@ let
             type = (types.nullOr types.bool);
           };
           "procMount" = mkOption {
-            description = "procMount denotes the type of proc mount to use for the containers.\nThe default value is Default which uses the container runtime defaults for\nreadonly paths and masked paths.\nThis requires the ProcMountType feature flag to be enabled.\nNote that this field cannot be set when spec.os.name is windows.";
+            description = "procMount denotes the type of proc mount to use for the containers.\nThe default value is Default which uses the container runtime defaults for\nreadonly paths and masked paths.\nNote that this field cannot be set when spec.os.name is windows.";
             type = (types.nullOr types.str);
           };
           "readOnlyRootFilesystem" = mkOption {
@@ -34539,6 +35397,10 @@ let
       {
 
         options = {
+          "mode" = mkOption {
+            description = "mode specifies the connection mode for the gRPC health probe.\nSet to \"TLS\" to use TLS without certificate verification.\nSet to \"Plaintext\" to use a plaintext (insecure) connection explicitly.\nIf not specified, the probe uses a plaintext (insecure) connection.";
+            type = (types.nullOr types.str);
+          };
           "port" = mkOption {
             description = "Port number of the gRPC service. Number must be in the range 1 to 65535.";
             type = types.int;
@@ -34550,6 +35412,7 @@ let
         };
 
         config = {
+          "mode" = mkOverride 1002 null;
           "service" = mkOverride 1002 null;
         };
 
@@ -34582,6 +35445,10 @@ let
             description = "Name or number of the port to access on the container.\nNumber must be in the range 1 to 65535.\nName must be an IANA_SVC_NAME.";
             type = (types.either types.int types.str);
           };
+          "protocol" = mkOption {
+            description = "Protocol selects the wire protocol for the probe connection.\nNil defaults to HTTP/1.1.";
+            type = (types.nullOr types.str);
+          };
           "scheme" = mkOption {
             description = "Scheme to use for connecting to the host.\nDefaults to HTTP.";
             type = (types.nullOr types.str);
@@ -34592,6 +35459,7 @@ let
           "host" = mkOverride 1002 null;
           "httpHeaders" = mkOverride 1002 null;
           "path" = mkOverride 1002 null;
+          "protocol" = mkOverride 1002 null;
           "scheme" = mkOverride 1002 null;
         };
 
@@ -34653,8 +35521,12 @@ let
       {
 
         options = {
+          "bindMountOptions" = mkOption {
+            description = "bindMountOptions is the list of additional bind mount options to apply when\nmounting this volume into the container. Allowed values are noexec,\nnodev, and nosuid. These are Linux mount options and have no effect on\nWindows nodes.\nThis field is not supported with image volumes.\nThis is an alpha field and requires enabling the VolumeBindMountOptions feature gate.";
+            type = (types.nullOr (types.listOf types.str));
+          };
           "mountPath" = mkOption {
-            description = "Path within the container at which the volume should be mounted.  Must\nnot contain ':'.";
+            description = "Path within the container at which the volume should be mounted.";
             type = types.str;
           };
           "mountPropagation" = mkOption {
@@ -34684,6 +35556,7 @@ let
         };
 
         config = {
+          "bindMountOptions" = mkOverride 1002 null;
           "mountPropagation" = mkOverride 1002 null;
           "readOnly" = mkOverride 1002 null;
           "recursiveReadOnly" = mkOverride 1002 null;
@@ -34692,6 +35565,22 @@ let
         };
 
       };
+    "actions.github.com.v1alpha1.EphemeralRunnerSetSpecEphemeralRunnerSpecSpecEvictionResponders" = {
+
+      options = {
+        "name" = mkOption {
+          description = "name allows you to identify the responder responding to the Eviction.\n\nIt must be a valid domain-prefixed key (such as \"acme.io/foo\").\nDomain names *.k8s.io and *.kubernetes.io are reserved.\nThis field must be unique for each responder.\nThis field is required.";
+          type = types.str;
+        };
+        "priority" = mkOption {
+          description = "priority for this responder. Higher priorities are selected first by the evictionrequest-controller.\nIf there are responders with the same priority, the responder whose domain name comes first in the\nalphabetical higher domain order, will be picked. This means that the top domain labels are compared\nalphabetically first, followed by the lower domain labels. The key is compared last.\n\nThe responder that is the managing controller of the pod should set the value of\nthis field to 10000 to allow both for preemption or fallback registration by other\nresponders.\n\nThe minimum value is 0 and the maximum value is 100000.\nThe interval 0-999 is reserved for responders with *.k8s.io suffix.\nThis field is required.";
+          type = types.int;
+        };
+      };
+
+      config = { };
+
+    };
     "actions.github.com.v1alpha1.EphemeralRunnerSetSpecEphemeralRunnerSpecSpecHostAliases" = {
 
       options = {
@@ -35093,7 +35982,7 @@ let
 
         options = {
           "key" = mkOption {
-            description = "The key to select.";
+            description = "The key to select from the ConfigMap's Data field.\nKeys in the BinaryData field are not currently propagated to container env vars.";
             type = types.str;
           };
           "name" = mkOption {
@@ -35328,6 +36217,10 @@ let
             description = "Name or number of the port to access on the container.\nNumber must be in the range 1 to 65535.\nName must be an IANA_SVC_NAME.";
             type = (types.either types.int types.str);
           };
+          "protocol" = mkOption {
+            description = "Protocol selects the wire protocol for the probe connection.\nNil defaults to HTTP/1.1.";
+            type = (types.nullOr types.str);
+          };
           "scheme" = mkOption {
             description = "Scheme to use for connecting to the host.\nDefaults to HTTP.";
             type = (types.nullOr types.str);
@@ -35338,6 +36231,7 @@ let
           "host" = mkOverride 1002 null;
           "httpHeaders" = mkOverride 1002 null;
           "path" = mkOverride 1002 null;
+          "protocol" = mkOverride 1002 null;
           "scheme" = mkOverride 1002 null;
         };
 
@@ -35480,6 +36374,10 @@ let
             description = "Name or number of the port to access on the container.\nNumber must be in the range 1 to 65535.\nName must be an IANA_SVC_NAME.";
             type = (types.either types.int types.str);
           };
+          "protocol" = mkOption {
+            description = "Protocol selects the wire protocol for the probe connection.\nNil defaults to HTTP/1.1.";
+            type = (types.nullOr types.str);
+          };
           "scheme" = mkOption {
             description = "Scheme to use for connecting to the host.\nDefaults to HTTP.";
             type = (types.nullOr types.str);
@@ -35490,6 +36388,7 @@ let
           "host" = mkOverride 1002 null;
           "httpHeaders" = mkOverride 1002 null;
           "path" = mkOverride 1002 null;
+          "protocol" = mkOverride 1002 null;
           "scheme" = mkOverride 1002 null;
         };
 
@@ -35638,6 +36537,10 @@ let
       {
 
         options = {
+          "mode" = mkOption {
+            description = "mode specifies the connection mode for the gRPC health probe.\nSet to \"TLS\" to use TLS without certificate verification.\nSet to \"Plaintext\" to use a plaintext (insecure) connection explicitly.\nIf not specified, the probe uses a plaintext (insecure) connection.";
+            type = (types.nullOr types.str);
+          };
           "port" = mkOption {
             description = "Port number of the gRPC service. Number must be in the range 1 to 65535.";
             type = types.int;
@@ -35649,6 +36552,7 @@ let
         };
 
         config = {
+          "mode" = mkOverride 1002 null;
           "service" = mkOverride 1002 null;
         };
 
@@ -35681,6 +36585,10 @@ let
             description = "Name or number of the port to access on the container.\nNumber must be in the range 1 to 65535.\nName must be an IANA_SVC_NAME.";
             type = (types.either types.int types.str);
           };
+          "protocol" = mkOption {
+            description = "Protocol selects the wire protocol for the probe connection.\nNil defaults to HTTP/1.1.";
+            type = (types.nullOr types.str);
+          };
           "scheme" = mkOption {
             description = "Scheme to use for connecting to the host.\nDefaults to HTTP.";
             type = (types.nullOr types.str);
@@ -35691,6 +36599,7 @@ let
           "host" = mkOverride 1002 null;
           "httpHeaders" = mkOverride 1002 null;
           "path" = mkOverride 1002 null;
+          "protocol" = mkOverride 1002 null;
           "scheme" = mkOverride 1002 null;
         };
 
@@ -35859,6 +36768,10 @@ let
       {
 
         options = {
+          "mode" = mkOption {
+            description = "mode specifies the connection mode for the gRPC health probe.\nSet to \"TLS\" to use TLS without certificate verification.\nSet to \"Plaintext\" to use a plaintext (insecure) connection explicitly.\nIf not specified, the probe uses a plaintext (insecure) connection.";
+            type = (types.nullOr types.str);
+          };
           "port" = mkOption {
             description = "Port number of the gRPC service. Number must be in the range 1 to 65535.";
             type = types.int;
@@ -35870,6 +36783,7 @@ let
         };
 
         config = {
+          "mode" = mkOverride 1002 null;
           "service" = mkOverride 1002 null;
         };
 
@@ -35902,6 +36816,10 @@ let
             description = "Name or number of the port to access on the container.\nNumber must be in the range 1 to 65535.\nName must be an IANA_SVC_NAME.";
             type = (types.either types.int types.str);
           };
+          "protocol" = mkOption {
+            description = "Protocol selects the wire protocol for the probe connection.\nNil defaults to HTTP/1.1.";
+            type = (types.nullOr types.str);
+          };
           "scheme" = mkOption {
             description = "Scheme to use for connecting to the host.\nDefaults to HTTP.";
             type = (types.nullOr types.str);
@@ -35912,6 +36830,7 @@ let
           "host" = mkOverride 1002 null;
           "httpHeaders" = mkOverride 1002 null;
           "path" = mkOverride 1002 null;
+          "protocol" = mkOverride 1002 null;
           "scheme" = mkOverride 1002 null;
         };
 
@@ -36092,7 +37011,7 @@ let
             type = (types.nullOr types.bool);
           };
           "procMount" = mkOption {
-            description = "procMount denotes the type of proc mount to use for the containers.\nThe default value is Default which uses the container runtime defaults for\nreadonly paths and masked paths.\nThis requires the ProcMountType feature flag to be enabled.\nNote that this field cannot be set when spec.os.name is windows.";
+            description = "procMount denotes the type of proc mount to use for the containers.\nThe default value is Default which uses the container runtime defaults for\nreadonly paths and masked paths.\nNote that this field cannot be set when spec.os.name is windows.";
             type = (types.nullOr types.str);
           };
           "readOnlyRootFilesystem" = mkOption {
@@ -36366,6 +37285,10 @@ let
       {
 
         options = {
+          "mode" = mkOption {
+            description = "mode specifies the connection mode for the gRPC health probe.\nSet to \"TLS\" to use TLS without certificate verification.\nSet to \"Plaintext\" to use a plaintext (insecure) connection explicitly.\nIf not specified, the probe uses a plaintext (insecure) connection.";
+            type = (types.nullOr types.str);
+          };
           "port" = mkOption {
             description = "Port number of the gRPC service. Number must be in the range 1 to 65535.";
             type = types.int;
@@ -36377,6 +37300,7 @@ let
         };
 
         config = {
+          "mode" = mkOverride 1002 null;
           "service" = mkOverride 1002 null;
         };
 
@@ -36409,6 +37333,10 @@ let
             description = "Name or number of the port to access on the container.\nNumber must be in the range 1 to 65535.\nName must be an IANA_SVC_NAME.";
             type = (types.either types.int types.str);
           };
+          "protocol" = mkOption {
+            description = "Protocol selects the wire protocol for the probe connection.\nNil defaults to HTTP/1.1.";
+            type = (types.nullOr types.str);
+          };
           "scheme" = mkOption {
             description = "Scheme to use for connecting to the host.\nDefaults to HTTP.";
             type = (types.nullOr types.str);
@@ -36419,6 +37347,7 @@ let
           "host" = mkOverride 1002 null;
           "httpHeaders" = mkOverride 1002 null;
           "path" = mkOverride 1002 null;
+          "protocol" = mkOverride 1002 null;
           "scheme" = mkOverride 1002 null;
         };
 
@@ -36480,8 +37409,12 @@ let
       {
 
         options = {
+          "bindMountOptions" = mkOption {
+            description = "bindMountOptions is the list of additional bind mount options to apply when\nmounting this volume into the container. Allowed values are noexec,\nnodev, and nosuid. These are Linux mount options and have no effect on\nWindows nodes.\nThis field is not supported with image volumes.\nThis is an alpha field and requires enabling the VolumeBindMountOptions feature gate.";
+            type = (types.nullOr (types.listOf types.str));
+          };
           "mountPath" = mkOption {
-            description = "Path within the container at which the volume should be mounted.  Must\nnot contain ':'.";
+            description = "Path within the container at which the volume should be mounted.";
             type = types.str;
           };
           "mountPropagation" = mkOption {
@@ -36511,6 +37444,7 @@ let
         };
 
         config = {
+          "bindMountOptions" = mkOverride 1002 null;
           "mountPropagation" = mkOverride 1002 null;
           "readOnly" = mkOverride 1002 null;
           "recursiveReadOnly" = mkOverride 1002 null;
@@ -36555,7 +37489,7 @@ let
           type = (types.nullOr types.str);
         };
         "resourceClaimTemplateName" = mkOption {
-          description = "ResourceClaimTemplateName is the name of a ResourceClaimTemplate\nobject in the same namespace as this pod.\n\nThe template will be used to create a new ResourceClaim, which will\nbe bound to this pod. When this pod is deleted, the ResourceClaim\nwill also be deleted. The pod name and resource name, along with a\ngenerated component, will be used to form a unique name for the\nResourceClaim, which will be recorded in pod.status.resourceClaimStatuses.\n\nThis field is immutable and no changes will be made to the\ncorresponding ResourceClaim by the control plane after creating the\nResourceClaim.\n\nExactly one of ResourceClaimName and ResourceClaimTemplateName must\nbe set.";
+          description = "ResourceClaimTemplateName is the name of a ResourceClaimTemplate\nobject in the same namespace as this pod.\n\nThe template will be used to create a new ResourceClaim, which will\nbe bound to this pod. When this pod is deleted, the ResourceClaim\nwill also be deleted. The pod name and resource name, along with a\ngenerated component, will be used to form a unique name for the\nResourceClaim, which will be recorded in pod.status.resourceClaimStatuses.\n\nWhen the DRAWorkloadResourceClaims feature gate is enabled and the pod\nbelongs to a PodGroup that defines a PodGroupResourceClaim with the same\nName and ResourceClaimTemplateName, this PodResourceClaim resolves to the\nResourceClaim generated for the PodGroup. All pods in the group that\ndefine an equivalent PodResourceClaim matching the\nPodGroupResourceClaim's Name and ResourceClaimTemplateName share the same\ngenerated ResourceClaim. ResourceClaims generated for a PodGroup are\nowned by the PodGroup and their lifecycles are tied to the PodGroup\ninstead of any individual pod.\n\nThis field is immutable and no changes will be made to the\ncorresponding ResourceClaim by the control plane after creating the\nResourceClaim.\n\nExactly one of ResourceClaimName and ResourceClaimTemplateName must\nbe set.";
           type = (types.nullOr types.str);
         };
       };
@@ -36628,6 +37562,20 @@ let
       config = { };
 
     };
+    "actions.github.com.v1alpha1.EphemeralRunnerSetSpecEphemeralRunnerSpecSpecSchedulingGroup" = {
+
+      options = {
+        "podGroupName" = mkOption {
+          description = "PodGroupName specifies the name of the standalone PodGroup object\nthat represents the runtime instance of this group.\nMust be a DNS subdomain.";
+          type = (types.nullOr types.str);
+        };
+      };
+
+      config = {
+        "podGroupName" = mkOverride 1002 null;
+      };
+
+    };
     "actions.github.com.v1alpha1.EphemeralRunnerSetSpecEphemeralRunnerSpecSpecSecurityContext" = {
 
       options = {
@@ -36660,7 +37608,7 @@ let
           type = (types.nullOr types.int);
         };
         "seLinuxChangePolicy" = mkOption {
-          description = "seLinuxChangePolicy defines how the container's SELinux label is applied to all volumes used by the Pod.\nIt has no effect on nodes that do not support SELinux or to volumes does not support SELinux.\nValid values are \"MountOption\" and \"Recursive\".\n\n\"Recursive\" means relabeling of all files on all Pod volumes by the container runtime.\nThis may be slow for large volumes, but allows mixing privileged and unprivileged Pods sharing the same volume on the same node.\n\n\"MountOption\" mounts all eligible Pod volumes with `-o context` mount option.\nThis requires all Pods that share the same volume to use the same SELinux label.\nIt is not possible to share the same volume among privileged and unprivileged Pods.\nEligible volumes are in-tree FibreChannel and iSCSI volumes, and all CSI volumes\nwhose CSI driver announces SELinux support by setting spec.seLinuxMount: true in their\nCSIDriver instance. Other volumes are always re-labelled recursively.\n\"MountOption\" value is allowed only when SELinuxMount feature gate is enabled.\n\nIf not specified and SELinuxMount feature gate is enabled, \"MountOption\" is used.\nIf not specified and SELinuxMount feature gate is disabled, \"MountOption\" is used for ReadWriteOncePod volumes\nand \"Recursive\" for all other volumes.\n\nThis field affects only Pods that have SELinux label set, either in PodSecurityContext or in SecurityContext of all containers.\n\nAll Pods that use the same volume should use the same seLinuxChangePolicy, otherwise some pods can get stuck in ContainerCreating state.\nNote that this field cannot be set when spec.os.name is windows.";
+          description = "seLinuxChangePolicy defines how the container's SELinux label is applied to all volumes used by the Pod.\nIt has no effect on nodes that do not support SELinux or to volumes does not support SELinux.\nValid values are \"MountOption\" and \"Recursive\".\n\n\"Recursive\" means relabeling of all files on all Pod volumes by the container runtime.\nThis may be slow for large volumes, but allows mixing privileged and unprivileged Pods sharing the same volume on the same node.\n\n\"MountOption\" mounts all eligible Pod volumes with `-o context` mount option.\nThis requires all Pods that share the same volume to use the same SELinux label.\nIt is not possible to share the same volume among privileged and unprivileged Pods.\nEligible volumes are in-tree FibreChannel and iSCSI volumes, and all CSI volumes\nwhose CSI driver announces SELinux support by setting spec.seLinuxMount: true in their\nCSIDriver instance. Other volumes are always re-labelled recursively.\n\nIf not specified, \"MountOption\" is used.\n\nThis field affects only Pods that have SELinux label set, either in PodSecurityContext or in SecurityContext of all containers.\n\nAll Pods that use the same volume should use the same seLinuxChangePolicy, otherwise some pods can get stuck in ContainerCreating state.\nNote that this field cannot be set when spec.os.name is windows.";
           type = (types.nullOr types.str);
         };
         "seLinuxOptions" = mkOption {
@@ -37115,7 +38063,7 @@ let
           );
         };
         "image" = mkOption {
-          description = "image represents an OCI object (a container image or artifact) pulled and mounted on the kubelet's host machine.\nThe volume is resolved at pod startup depending on which PullPolicy value is provided:\n\n- Always: the kubelet always attempts to pull the reference. Container creation will fail If the pull fails.\n- Never: the kubelet never pulls the reference and only uses a local image or artifact. Container creation will fail if the reference isn't present.\n- IfNotPresent: the kubelet pulls if the reference isn't already present on disk. Container creation will fail if the reference isn't present and the pull fails.\n\nThe volume gets re-resolved if the pod gets deleted and recreated, which means that new remote content will become available on pod recreation.\nA failure to resolve or pull the image during pod startup will block containers from starting and may add significant latency. Failures will be retried using normal volume backoff and will be reported on the pod reason and message.\nThe types of objects that may be mounted by this volume are defined by the container runtime implementation on a host machine and at minimum must include all valid types supported by the container image field.\nThe OCI object gets mounted in a single directory (spec.containers[*].volumeMounts.mountPath) by merging the manifest layers in the same way as for container images.\nThe volume will be mounted read-only (ro) and non-executable files (noexec).\nSub path mounts for containers are not supported (spec.containers[*].volumeMounts.subpath) before 1.33.\nThe field spec.securityContext.fsGroupChangePolicy has no effect on this volume type.";
+          description = "image represents an OCI object (a container image or artifact) pulled and mounted on the kubelet's host machine.\nThe volume is resolved at pod startup depending on which PullPolicy value is provided:\n\n- Always: the kubelet always attempts to pull the reference. Container creation will fail If the pull fails.\n- Never: the kubelet never pulls the reference and only uses a local image or artifact. Container creation will fail if the reference isn't present.\n- IfNotPresent: the kubelet pulls if the reference isn't already present on disk. Container creation will fail if the reference isn't present and the pull fails.\n\nThe volume gets re-resolved if the pod gets deleted and recreated, which means that new remote content will become available on pod recreation.\nA failure to resolve or pull the image during pod startup will block containers from starting and may add significant latency. Failures will be retried using normal volume backoff and will be reported on the pod reason and message.\nThe types of objects that may be mounted by this volume are defined by the container runtime implementation on a host machine and at minimum must include all valid types supported by the container image field.\nThe OCI object gets mounted in a single directory (spec.containers[*].volumeMounts.mountPath) by merging the manifest layers in the same way as for container images.\nThe volume will be mounted read-only (ro).\nSub path mounts for containers are not supported (spec.containers[*].volumeMounts.subpath) before 1.33.\nThe field spec.securityContext.fsGroupChangePolicy has no effect on this volume type.";
           type = (
             types.nullOr (
               submoduleOf "actions.github.com.v1alpha1.EphemeralRunnerSetSpecEphemeralRunnerSpecSpecVolumesImage"
@@ -37159,7 +38107,7 @@ let
           );
         };
         "portworxVolume" = mkOption {
-          description = "portworxVolume represents a portworx volume attached and mounted on kubelets host machine.\nDeprecated: PortworxVolume is deprecated. All operations for the in-tree portworxVolume type\nare redirected to the pxd.portworx.com CSI driver when the CSIMigrationPortworx feature-gate\nis on.";
+          description = "portworxVolume represents a portworx volume attached and mounted on kubelets host machine.\nDeprecated: PortworxVolume is deprecated. All operations for the in-tree portworxVolume type\nare redirected to the pxd.portworx.com CSI driver.";
           type = (
             types.nullOr (
               submoduleOf "actions.github.com.v1alpha1.EphemeralRunnerSetSpecEphemeralRunnerSpecSpecVolumesPortworxVolume"
@@ -37457,6 +38405,10 @@ let
           description = "defaultMode is optional: mode bits used to set permissions on created files by default.\nMust be an octal value between 0000 and 0777 or a decimal value between 0 and 511.\nYAML accepts both octal and decimal values, JSON requires decimal values for mode bits.\nDefaults to 0644.\nDirectories within the path are not affected by this setting.\nThis might be in conflict with other options that affect the file\nmode, like fsGroup, and the result can be other mode bits set.";
           type = (types.nullOr types.int);
         };
+        "defaultUser" = mkOption {
+          description = "defaultUser is Optional: The owner UID of the created files by default.\nThe defaultUser field is only used as a fallback when the item-level user field is unset.\n(Alpha) This field requires the AtomicWriteVolumeUserFields feature gate to be enabled.";
+          type = (types.nullOr types.int);
+        };
         "items" = mkOption {
           description = "items if unspecified, each key-value pair in the Data field of the referenced\nConfigMap will be projected into the volume as a file whose name is the\nkey and content is the value. If specified, the listed keys will be\nprojected into the specified paths, and unlisted keys will not be\npresent. If a key is specified which is not present in the ConfigMap,\nthe volume setup will error unless it is marked optional. Paths must be\nrelative and may not contain the '..' path or start with '..'.";
           type = (
@@ -37479,6 +38431,7 @@ let
 
       config = {
         "defaultMode" = mkOverride 1002 null;
+        "defaultUser" = mkOverride 1002 null;
         "items" = mkOverride 1002 null;
         "name" = mkOverride 1002 null;
         "optional" = mkOverride 1002 null;
@@ -37500,10 +38453,15 @@ let
           description = "path is the relative path of the file to map the key to.\nMay not be an absolute path.\nMay not contain the path element '..'.\nMay not start with the string '..'.";
           type = types.str;
         };
+        "user" = mkOption {
+          description = "user is Optional: The owner UID of the created file.\nIf specified, the item-level user field takes precedence over defaultUser.\n(Alpha) This field requires the AtomicWriteVolumeUserFields feature gate to be enabled.";
+          type = (types.nullOr types.int);
+        };
       };
 
       config = {
         "mode" = mkOverride 1002 null;
+        "user" = mkOverride 1002 null;
       };
 
     };
@@ -37566,6 +38524,10 @@ let
           description = "Optional: mode bits to use on created files by default. Must be a\nOptional: mode bits used to set permissions on created files by default.\nMust be an octal value between 0000 and 0777 or a decimal value between 0 and 511.\nYAML accepts both octal and decimal values, JSON requires decimal values for mode bits.\nDefaults to 0644.\nDirectories within the path are not affected by this setting.\nThis might be in conflict with other options that affect the file\nmode, like fsGroup, and the result can be other mode bits set.";
           type = (types.nullOr types.int);
         };
+        "defaultUser" = mkOption {
+          description = "defaultUser is Optional: The owner UID of the created files by default.\nThe defaultUser field is only used as a fallback when the item-level user field is unset.\n(Alpha) This field requires the AtomicWriteVolumeUserFields feature gate to be enabled.";
+          type = (types.nullOr types.int);
+        };
         "items" = mkOption {
           description = "Items is a list of downward API volume file";
           type = (
@@ -37580,6 +38542,7 @@ let
 
       config = {
         "defaultMode" = mkOverride 1002 null;
+        "defaultUser" = mkOverride 1002 null;
         "items" = mkOverride 1002 null;
       };
 
@@ -37612,12 +38575,17 @@ let
               )
             );
           };
+          "user" = mkOption {
+            description = "user is Optional: The owner UID of the created file.\nIf specified, the item-level user field takes precedence over defaultUser.\n(Alpha) This field requires the AtomicWriteVolumeUserFields feature gate to be enabled.";
+            type = (types.nullOr types.int);
+          };
         };
 
         config = {
           "fieldRef" = mkOverride 1002 null;
           "mode" = mkOverride 1002 null;
           "resourceFieldRef" = mkOverride 1002 null;
+          "user" = mkOverride 1002 null;
         };
 
       };
@@ -37671,6 +38639,10 @@ let
           description = "medium represents what type of storage medium should back this directory.\nThe default is \"\" which means to use the node's default medium.\nMust be an empty string (default) or Memory.\nMore info: https://kubernetes.io/docs/concepts/storage/volumes#emptydir";
           type = (types.nullOr types.str);
         };
+        "mode" = mkOption {
+          description = "mode specifies the permission bits for the emptyDir directory, in numeric\nnotation (e.g., 0755, 01777). Must be a value between 0000 and 01777.\nIf not specified, defaults to 0777.\nThis might be in conflict with other options that affect the file\nmode, like fsGroup. If fsGroup is specified, the fsGroup permissions\nwill override the mode specified here.\nThis field has no effect on Windows.\nThis field is alpha and requires EmptyDirVolumeMode featuregate to be enabled.";
+          type = (types.nullOr types.int);
+        };
         "sizeLimit" = mkOption {
           description = "sizeLimit is the total amount of local storage required for this EmptyDir volume.\nThe size limit is also applicable for memory medium.\nThe maximum usage on memory medium EmptyDir would be the minimum value between\nthe SizeLimit specified here and the sum of memory limits of all containers in a pod.\nThe default is nil which means that the limit is undefined.\nMore info: https://kubernetes.io/docs/concepts/storage/volumes#emptydir";
           type = (types.nullOr (types.either types.int types.str));
@@ -37679,6 +38651,7 @@ let
 
       config = {
         "medium" = mkOverride 1002 null;
+        "mode" = mkOverride 1002 null;
         "sizeLimit" = mkOverride 1002 null;
       };
 
@@ -37770,7 +38743,7 @@ let
             type = (types.nullOr (types.listOf types.str));
           };
           "dataSource" = mkOption {
-            description = "dataSource field can be used to specify either:\n* An existing VolumeSnapshot object (snapshot.storage.k8s.io/VolumeSnapshot)\n* An existing PVC (PersistentVolumeClaim)\nIf the provisioner or an external controller can support the specified data source,\nit will create a new volume based on the contents of the specified data source.\nWhen the AnyVolumeDataSource feature gate is enabled, dataSource contents will be copied to dataSourceRef,\nand dataSourceRef contents will be copied to dataSource when dataSourceRef.namespace is not specified.\nIf the namespace is specified, then dataSourceRef will not be copied to dataSource.";
+            description = "dataSource field can be used to specify either:\n* An existing VolumeSnapshot object (snapshot.storage.k8s.io/VolumeSnapshot)\n* An existing PVC (PersistentVolumeClaim)\nIf the provisioner or an external controller can support the specified data source,\nit will create a new volume based on the contents of the specified data source.\ndataSource contents will be copied to dataSourceRef, and dataSourceRef contents will be\ncopied to dataSource when dataSourceRef.namespace is not specified.\nIf the namespace is specified, then dataSourceRef will not be copied to dataSource.";
             type = (
               types.nullOr (
                 submoduleOf "actions.github.com.v1alpha1.EphemeralRunnerSetSpecEphemeralRunnerSpecSpecVolumesEphemeralVolumeClaimTemplateSpecDataSource"
@@ -37778,7 +38751,7 @@ let
             );
           };
           "dataSourceRef" = mkOption {
-            description = "dataSourceRef specifies the object from which to populate the volume with data, if a non-empty\nvolume is desired. This may be any object from a non-empty API group (non\ncore object) or a PersistentVolumeClaim object.\nWhen this field is specified, volume binding will only succeed if the type of\nthe specified object matches some installed volume populator or dynamic\nprovisioner.\nThis field will replace the functionality of the dataSource field and as such\nif both fields are non-empty, they must have the same value. For backwards\ncompatibility, when namespace isn't specified in dataSourceRef,\nboth fields (dataSource and dataSourceRef) will be set to the same\nvalue automatically if one of them is empty and the other is non-empty.\nWhen namespace is specified in dataSourceRef,\ndataSource isn't set to the same value and must be empty.\nThere are three important differences between dataSource and dataSourceRef:\n* While dataSource only allows two specific types of objects, dataSourceRef\n  allows any non-core object, as well as PersistentVolumeClaim objects.\n* While dataSource ignores disallowed values (dropping them), dataSourceRef\n  preserves all values, and generates an error if a disallowed value is\n  specified.\n* While dataSource only allows local objects, dataSourceRef allows objects\n  in any namespaces.\n(Beta) Using this field requires the AnyVolumeDataSource feature gate to be enabled.\n(Alpha) Using the namespace field of dataSourceRef requires the CrossNamespaceVolumeDataSource feature gate to be enabled.";
+            description = "dataSourceRef specifies the object from which to populate the volume with data, if a non-empty\nvolume is desired. This may be any object from a non-empty API group (non\ncore object) or a PersistentVolumeClaim object.\nWhen this field is specified, volume binding will only succeed if the type of\nthe specified object matches some installed volume populator or dynamic\nprovisioner.\nThis field will replace the functionality of the dataSource field and as such\nif both fields are non-empty, they must have the same value. For backwards\ncompatibility, when namespace isn't specified in dataSourceRef,\nboth fields (dataSource and dataSourceRef) will be set to the same\nvalue automatically if one of them is empty and the other is non-empty.\nWhen namespace is specified in dataSourceRef,\ndataSource isn't set to the same value and must be empty.\nThere are three important differences between dataSource and dataSourceRef:\n* While dataSource only allows two specific types of objects, dataSourceRef\n  allows any non-core object, as well as PersistentVolumeClaim objects.\n* While dataSource ignores disallowed values (dropping them), dataSourceRef\n  preserves all values, and generates an error if a disallowed value is\n  specified.\n* While dataSource only allows local objects, dataSourceRef allows objects\n  in any namespaces.\n(Alpha) Using the namespace field of dataSourceRef requires the CrossNamespaceVolumeDataSource feature gate to be enabled.";
             type = (
               types.nullOr (
                 submoduleOf "actions.github.com.v1alpha1.EphemeralRunnerSetSpecEphemeralRunnerSpecSpecVolumesEphemeralVolumeClaimTemplateSpecDataSourceRef"
@@ -38337,6 +39310,10 @@ let
           description = "defaultMode are the mode bits used to set permissions on created files by default.\nMust be an octal value between 0000 and 0777 or a decimal value between 0 and 511.\nYAML accepts both octal and decimal values, JSON requires decimal values for mode bits.\nDirectories within the path are not affected by this setting.\nThis might be in conflict with other options that affect the file\nmode, like fsGroup, and the result can be other mode bits set.";
           type = (types.nullOr types.int);
         };
+        "defaultUser" = mkOption {
+          description = "defaultUser is Optional: The owner UID of the created files by default.\nThe defaultUser field is only used as a fallback when the item-level user field is unset.\n(Alpha) This field requires the AtomicWriteVolumeUserFields feature gate to be enabled.";
+          type = (types.nullOr types.int);
+        };
         "sources" = mkOption {
           description = "sources is the list of volume projections. Each entry in this list\nhandles one source.";
           type = (
@@ -38351,6 +39328,7 @@ let
 
       config = {
         "defaultMode" = mkOverride 1002 null;
+        "defaultUser" = mkOverride 1002 null;
         "sources" = mkOverride 1002 null;
       };
 
@@ -38447,6 +39425,10 @@ let
             description = "Select all ClusterTrustBundles that match this signer name.\nMutually-exclusive with name.  The contents of all selected\nClusterTrustBundles will be unified and deduplicated.";
             type = (types.nullOr types.str);
           };
+          "user" = mkOption {
+            description = "user is Optional: The owner UID of the created file.\nIf specified, the item-level user field takes precedence over defaultUser.\n(Alpha) This field requires the AtomicWriteVolumeUserFields feature gate to be enabled.";
+            type = (types.nullOr types.int);
+          };
         };
 
         config = {
@@ -38454,6 +39436,7 @@ let
           "name" = mkOverride 1002 null;
           "optional" = mkOverride 1002 null;
           "signerName" = mkOverride 1002 null;
+          "user" = mkOverride 1002 null;
         };
 
       };
@@ -38553,10 +39536,15 @@ let
             description = "path is the relative path of the file to map the key to.\nMay not be an absolute path.\nMay not contain the path element '..'.\nMay not start with the string '..'.";
             type = types.str;
           };
+          "user" = mkOption {
+            description = "user is Optional: The owner UID of the created file.\nIf specified, the item-level user field takes precedence over defaultUser.\n(Alpha) This field requires the AtomicWriteVolumeUserFields feature gate to be enabled.";
+            type = (types.nullOr types.int);
+          };
         };
 
         config = {
           "mode" = mkOverride 1002 null;
+          "user" = mkOverride 1002 null;
         };
 
       };
@@ -38609,12 +39597,17 @@ let
               )
             );
           };
+          "user" = mkOption {
+            description = "user is Optional: The owner UID of the created file.\nIf specified, the item-level user field takes precedence over defaultUser.\n(Alpha) This field requires the AtomicWriteVolumeUserFields feature gate to be enabled.";
+            type = (types.nullOr types.int);
+          };
         };
 
         config = {
           "fieldRef" = mkOverride 1002 null;
           "mode" = mkOverride 1002 null;
           "resourceFieldRef" = mkOverride 1002 null;
+          "user" = mkOverride 1002 null;
         };
 
       };
@@ -38689,6 +39682,10 @@ let
             description = "Kubelet's generated CSRs will be addressed to this signer.";
             type = types.str;
           };
+          "user" = mkOption {
+            description = "user is Optional: The owner UID of the created file.\nIf specified, the item-level user field takes precedence over defaultUser.\n(Alpha) This field requires the AtomicWriteVolumeUserFields feature gate to be enabled.";
+            type = (types.nullOr types.int);
+          };
           "userAnnotations" = mkOption {
             description = "userAnnotations allow pod authors to pass additional information to\nthe signer implementation.  Kubernetes does not restrict or validate this\nmetadata in any way.\n\nThese values are copied verbatim into the `spec.unverifiedUserAnnotations` field of\nthe PodCertificateRequest objects that Kubelet creates.\n\nEntries are subject to the same validation as object metadata annotations,\nwith the addition that all keys must be domain-prefixed. No restrictions\nare placed on values, except an overall size limitation on the entire field.\n\nSigners should document the keys and values they support. Signers should\ndeny requests that contain keys they do not recognize.";
             type = (types.nullOr (types.attrsOf types.str));
@@ -38700,6 +39697,7 @@ let
           "credentialBundlePath" = mkOverride 1002 null;
           "keyPath" = mkOverride 1002 null;
           "maxExpirationSeconds" = mkOverride 1002 null;
+          "user" = mkOverride 1002 null;
           "userAnnotations" = mkOverride 1002 null;
         };
 
@@ -38751,10 +39749,15 @@ let
             description = "path is the relative path of the file to map the key to.\nMay not be an absolute path.\nMay not contain the path element '..'.\nMay not start with the string '..'.";
             type = types.str;
           };
+          "user" = mkOption {
+            description = "user is Optional: The owner UID of the created file.\nIf specified, the item-level user field takes precedence over defaultUser.\n(Alpha) This field requires the AtomicWriteVolumeUserFields feature gate to be enabled.";
+            type = (types.nullOr types.int);
+          };
         };
 
         config = {
           "mode" = mkOverride 1002 null;
+          "user" = mkOverride 1002 null;
         };
 
       };
@@ -38774,11 +39777,16 @@ let
             description = "path is the path relative to the mount point of the file to project the\ntoken into.";
             type = types.str;
           };
+          "user" = mkOption {
+            description = "user is Optional: The owner UID of the created file.\nIf specified, the item-level user field takes precedence over defaultUser.\n(Alpha) This field requires the AtomicWriteVolumeUserFields feature gate to be enabled.";
+            type = (types.nullOr types.int);
+          };
         };
 
         config = {
           "audience" = mkOverride 1002 null;
           "expirationSeconds" = mkOverride 1002 null;
+          "user" = mkOverride 1002 null;
         };
 
       };
@@ -38964,6 +39972,10 @@ let
           description = "defaultMode is Optional: mode bits used to set permissions on created files by default.\nMust be an octal value between 0000 and 0777 or a decimal value between 0 and 511.\nYAML accepts both octal and decimal values, JSON requires decimal values\nfor mode bits. Defaults to 0644.\nDirectories within the path are not affected by this setting.\nThis might be in conflict with other options that affect the file\nmode, like fsGroup, and the result can be other mode bits set.";
           type = (types.nullOr types.int);
         };
+        "defaultUser" = mkOption {
+          description = "defaultUser is Optional: The owner UID of the created files by default.\nThe defaultUser field is only used as a fallback when the item-level user field is unset.\n(Alpha) This field requires the AtomicWriteVolumeUserFields feature gate to be enabled.";
+          type = (types.nullOr types.int);
+        };
         "items" = mkOption {
           description = "items If unspecified, each key-value pair in the Data field of the referenced\nSecret will be projected into the volume as a file whose name is the\nkey and content is the value. If specified, the listed keys will be\nprojected into the specified paths, and unlisted keys will not be\npresent. If a key is specified which is not present in the Secret,\nthe volume setup will error unless it is marked optional. Paths must be\nrelative and may not contain the '..' path or start with '..'.";
           type = (
@@ -38986,6 +39998,7 @@ let
 
       config = {
         "defaultMode" = mkOverride 1002 null;
+        "defaultUser" = mkOverride 1002 null;
         "items" = mkOverride 1002 null;
         "optional" = mkOverride 1002 null;
         "secretName" = mkOverride 1002 null;
@@ -39007,10 +40020,15 @@ let
           description = "path is the relative path of the file to map the key to.\nMay not be an absolute path.\nMay not contain the path element '..'.\nMay not start with the string '..'.";
           type = types.str;
         };
+        "user" = mkOption {
+          description = "user is Optional: The owner UID of the created file.\nIf specified, the item-level user field takes precedence over defaultUser.\n(Alpha) This field requires the AtomicWriteVolumeUserFields feature gate to be enabled.";
+          type = (types.nullOr types.int);
+        };
       };
 
       config = {
         "mode" = mkOverride 1002 null;
+        "user" = mkOverride 1002 null;
       };
 
     };
@@ -39092,28 +40110,6 @@ let
         "fsType" = mkOverride 1002 null;
         "storagePolicyID" = mkOverride 1002 null;
         "storagePolicyName" = mkOverride 1002 null;
-      };
-
-    };
-    "actions.github.com.v1alpha1.EphemeralRunnerSetSpecEphemeralRunnerSpecSpecWorkloadRef" = {
-
-      options = {
-        "name" = mkOption {
-          description = "Name defines the name of the Workload object this Pod belongs to.\nWorkload must be in the same namespace as the Pod.\nIf it doesn't match any existing Workload, the Pod will remain unschedulable\nuntil a Workload object is created and observed by the kube-scheduler.\nIt must be a DNS subdomain.";
-          type = types.str;
-        };
-        "podGroup" = mkOption {
-          description = "PodGroup is the name of the PodGroup within the Workload that this Pod\nbelongs to. If it doesn't match any existing PodGroup within the Workload,\nthe Pod will remain unschedulable until the Workload object is recreated\nand observed by the kube-scheduler. It must be a DNS label.";
-          type = types.str;
-        };
-        "podGroupReplicaKey" = mkOption {
-          description = "PodGroupReplicaKey specifies the replica key of the PodGroup to which this\nPod belongs. It is used to distinguish pods belonging to different replicas\nof the same pod group. The pod group policy is applied separately to each replica.\nWhen set, it must be a DNS label.";
-          type = (types.nullOr types.str);
-        };
-      };
-
-      config = {
-        "podGroupReplicaKey" = mkOverride 1002 null;
       };
 
     };
@@ -39246,33 +40242,24 @@ let
     "actions.github.com.v1alpha1.EphemeralRunnerSetStatus" = {
 
       options = {
-        "currentReplicas" = mkOption {
-          description = "CurrentReplicas is the number of currently running EphemeralRunner resources being managed by this EphemeralRunnerSet.";
-          type = types.int;
-        };
-        "failedEphemeralRunners" = mkOption {
-          description = "";
+        "appliedActionableRevision" = mkOption {
+          description = "AppliedActionableRevision is a restart-safe applied marker tracking the last successfully\napplied ActionableRevision value. Advances only after spec cleanup succeeds.\nUnset defaults to 0.";
           type = (types.nullOr types.int);
         };
-        "pendingEphemeralRunners" = mkOption {
-          description = "";
+        "finishedRunnerCleanupPatchID" = mkOption {
+          description = "FinishedRunnerCleanupPatchID records the listener patch ID for which finished\nephemeral runners were cleaned up. Scale-up is suppressed for the same patch ID\nuntil the listener publishes a fresh desired-state patch.\nUnset defaults to 0.";
           type = (types.nullOr types.int);
         };
         "phase" = mkOption {
           description = "EphemeralRunnerSetPhase is the phase of the ephemeral runner set resource";
           type = (types.nullOr types.str);
         };
-        "runningEphemeralRunners" = mkOption {
-          description = "";
-          type = (types.nullOr types.int);
-        };
       };
 
       config = {
-        "failedEphemeralRunners" = mkOverride 1002 null;
-        "pendingEphemeralRunners" = mkOverride 1002 null;
+        "appliedActionableRevision" = mkOverride 1002 null;
+        "finishedRunnerCleanupPatchID" = mkOverride 1002 null;
         "phase" = mkOverride 1002 null;
-        "runningEphemeralRunners" = mkOverride 1002 null;
       };
 
     };
@@ -39289,11 +40276,11 @@ let
         };
         "githubConfigSecret" = mkOption {
           description = "";
-          type = types.str;
+          type = (types.nullOr types.str);
         };
         "githubConfigUrl" = mkOption {
           description = "";
-          type = types.str;
+          type = (types.nullOr types.str);
         };
         "githubServerTLS" = mkOption {
           description = "";
@@ -39315,7 +40302,7 @@ let
         };
         "runnerScaleSetId" = mkOption {
           description = "";
-          type = types.int;
+          type = (types.nullOr types.int);
         };
         "spec" = mkOption {
           description = "Specification of the desired behavior of the pod.\nMore info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#spec-and-status";
@@ -39329,10 +40316,13 @@ let
 
       config = {
         "ephemeralRunnerConfigSecretMetadata" = mkOverride 1002 null;
+        "githubConfigSecret" = mkOverride 1002 null;
+        "githubConfigUrl" = mkOverride 1002 null;
         "githubServerTLS" = mkOverride 1002 null;
         "metadata" = mkOverride 1002 null;
         "proxy" = mkOverride 1002 null;
         "proxySecretRef" = mkOverride 1002 null;
+        "runnerScaleSetId" = mkOverride 1002 null;
         "spec" = mkOverride 1002 null;
         "vaultConfig" = mkOverride 1002 null;
       };
@@ -39397,7 +40387,7 @@ let
 
       options = {
         "key" = mkOption {
-          description = "The key to select.";
+          description = "The key to select from the ConfigMap's Data field.\nKeys in the BinaryData field are not currently propagated to container env vars.";
           type = types.str;
         };
         "name" = mkOption {
@@ -39560,6 +40550,18 @@ let
           );
           apply = attrsToList;
         };
+        "evictionResponders" = mkOption {
+          description = "evictionResponders reference responders that react to Evictions based on EvictionRequests.\nResponders should observe and communicate through the Eviction Resource API to help with\nthe graceful termination of a pod. The responders are selected sequentially, according to\ntheir specified priority.\n\nResponders should periodically report on an eviction progress by updating the\n.status.responders[].heartbeatTime field of the Eviction object. If this field is not updated\nwithin the heartbeat deadline defined by the Eviction API (currently 20 minutes), the eviction\nis passed over to the next responder with a lower priority. If there is no other responder,\nthe last default imperative-eviction.k8s.io/evictor responder with a priority of 100 will\nevict the pod using the imperative Eviction API (pods/<name>/eviction subresource).\n\nThe maximum length of the responders list is 10.\nResponders are not supported when the pod is part of a PodGroup (.spec.schedulingGroup is set).\nThis field can only be set on creation and is immutable afterwards.";
+          type = (
+            types.nullOr (
+              coerceAttrsOfSubmodulesToListByKey
+                "actions.github.com.v1alpha1.EphemeralRunnerSpecSpecEvictionResponders"
+                "name"
+                [ "name" ]
+            )
+          );
+          apply = attrsToList;
+        };
         "hostAliases" = mkOption {
           description = "HostAliases is an optional list of hosts and IPs that will be injected into the pod's hosts\nfile if specified.";
           type = (
@@ -39581,7 +40583,7 @@ let
           type = (types.nullOr types.bool);
         };
         "hostUsers" = mkOption {
-          description = "Use the host's user namespace.\nOptional: Default to true.\nIf set to true or not present, the pod will be run in the host user namespace, useful\nfor when the pod needs a feature only available to the host user namespace, such as\nloading a kernel module with CAP_SYS_MODULE.\nWhen set to false, a new userns is created for the pod. Setting false is useful for\nmitigating container breakout vulnerabilities even allowing users to run their\ncontainers as root without actually having root privileges on the host.\nThis field is alpha-level and is only honored by servers that enable the UserNamespacesSupport feature.";
+          description = "Use the host's user namespace.\nOptional: Default to true.\nIf set to true or not present, the pod will be run in the host user namespace, useful\nfor when the pod needs a feature only available to the host user namespace, such as\nloading a kernel module with CAP_SYS_MODULE.\nWhen set to false, a new userns is created for the pod. Setting false is useful for\nmitigating container breakout vulnerabilities even allowing users to run their\ncontainers as root without actually having root privileges on the host.";
           type = (types.nullOr types.bool);
         };
         "hostname" = mkOption {
@@ -39589,7 +40591,7 @@ let
           type = (types.nullOr types.str);
         };
         "hostnameOverride" = mkOption {
-          description = "HostnameOverride specifies an explicit override for the pod's hostname as perceived by the pod.\nThis field only specifies the pod's hostname and does not affect its DNS records.\nWhen this field is set to a non-empty string:\n- It takes precedence over the values set in `hostname` and `subdomain`.\n- The Pod's hostname will be set to this value.\n- `setHostnameAsFQDN` must be nil or set to false.\n- `hostNetwork` must be set to false.\n\nThis field must be a valid DNS subdomain as defined in RFC 1123 and contain at most 64 characters.\nRequires the HostnameOverride feature gate to be enabled.";
+          description = "HostnameOverride specifies an explicit override for the pod's hostname as perceived by the pod.\nThis field only specifies the pod's hostname and does not affect its DNS records.\nWhen this field is set to a non-empty string:\n- It takes precedence over the values set in `hostname` and `subdomain`.\n- The Pod's hostname will be set to this value.\n- `setHostnameAsFQDN` must be nil or set to false.\n- `hostNetwork` must be set to false.\n\nThis field must be a valid DNS subdomain as defined in RFC 1123 and contain at most 64 characters.";
           type = (types.nullOr types.str);
         };
         "imagePullSecrets" = mkOption {
@@ -39633,7 +40635,7 @@ let
           type = (types.nullOr (types.attrsOf (types.either types.int types.str)));
         };
         "preemptionPolicy" = mkOption {
-          description = "PreemptionPolicy is the Policy for preempting pods with lower priority.\nOne of Never, PreemptLowerPriority.\nDefaults to PreemptLowerPriority if unset.";
+          description = "PreemptionPolicy is the Policy for preempting pods with lower priority.\nOne of Never, PreemptLowerPriority.\nWhen Priority Admission Controller is enabled, it prevents users from setting\nthis field. The admission controller populates this field from PriorityClassName.\nDefaults to PreemptLowerPriority if unset.";
           type = (types.nullOr types.str);
         };
         "priority" = mkOption {
@@ -39691,6 +40693,12 @@ let
             )
           );
           apply = attrsToList;
+        };
+        "schedulingGroup" = mkOption {
+          description = "SchedulingGroup provides a reference to the immediate scheduling runtime\ngrouping object that this Pod belongs to.\nThis field is used by the scheduler to identify the group and apply the\ncorrect group scheduling policies. The association with a group also\nimpacts other lifecycle aspects of a Pod that are relevant in a wider context\nof scheduling like preemption, resource attachment, etc. If not specified,\nthe Pod is treated as a single unit in all of these aspects.\nThe group object referenced by this field may not exist at the time the\nPod is created.\nThis field is immutable, but a group object with the same name may be\nrecreated with different policies. Doing this during pod scheduling\nmay result in the placement not conforming to the expected policies.";
+          type = (
+            types.nullOr (submoduleOf "actions.github.com.v1alpha1.EphemeralRunnerSpecSpecSchedulingGroup")
+          );
         };
         "securityContext" = mkOption {
           description = "SecurityContext holds pod-level security attributes and common container settings.\nOptional: Defaults to empty.  See type description for default values of each field.";
@@ -39751,12 +40759,6 @@ let
           );
           apply = attrsToList;
         };
-        "workloadRef" = mkOption {
-          description = "WorkloadRef provides a reference to the Workload object that this Pod belongs to.\nThis field is used by the scheduler to identify the PodGroup and apply the\ncorrect group scheduling policies. The Workload object referenced\nby this field may not exist at the time the Pod is created.\nThis field is immutable, but a Workload object with the same name\nmay be recreated with different policies. Doing this during pod scheduling\nmay result in the placement not conforming to the expected policies.";
-          type = (
-            types.nullOr (submoduleOf "actions.github.com.v1alpha1.EphemeralRunnerSpecSpecWorkloadRef")
-          );
-        };
       };
 
       config = {
@@ -39767,6 +40769,7 @@ let
         "dnsPolicy" = mkOverride 1002 null;
         "enableServiceLinks" = mkOverride 1002 null;
         "ephemeralContainers" = mkOverride 1002 null;
+        "evictionResponders" = mkOverride 1002 null;
         "hostAliases" = mkOverride 1002 null;
         "hostIPC" = mkOverride 1002 null;
         "hostNetwork" = mkOverride 1002 null;
@@ -39790,6 +40793,7 @@ let
         "runtimeClassName" = mkOverride 1002 null;
         "schedulerName" = mkOverride 1002 null;
         "schedulingGates" = mkOverride 1002 null;
+        "schedulingGroup" = mkOverride 1002 null;
         "securityContext" = mkOverride 1002 null;
         "serviceAccount" = mkOverride 1002 null;
         "serviceAccountName" = mkOverride 1002 null;
@@ -39800,7 +40804,6 @@ let
         "tolerations" = mkOverride 1002 null;
         "topologySpreadConstraints" = mkOverride 1002 null;
         "volumes" = mkOverride 1002 null;
-        "workloadRef" = mkOverride 1002 null;
       };
 
     };
@@ -41096,7 +42099,7 @@ let
 
       options = {
         "key" = mkOption {
-          description = "The key to select.";
+          description = "The key to select from the ConfigMap's Data field.\nKeys in the BinaryData field are not currently propagated to container env vars.";
           type = types.str;
         };
         "name" = mkOption {
@@ -41323,6 +42326,10 @@ let
           description = "Name or number of the port to access on the container.\nNumber must be in the range 1 to 65535.\nName must be an IANA_SVC_NAME.";
           type = (types.either types.int types.str);
         };
+        "protocol" = mkOption {
+          description = "Protocol selects the wire protocol for the probe connection.\nNil defaults to HTTP/1.1.";
+          type = (types.nullOr types.str);
+        };
         "scheme" = mkOption {
           description = "Scheme to use for connecting to the host.\nDefaults to HTTP.";
           type = (types.nullOr types.str);
@@ -41333,6 +42340,7 @@ let
         "host" = mkOverride 1002 null;
         "httpHeaders" = mkOverride 1002 null;
         "path" = mkOverride 1002 null;
+        "protocol" = mkOverride 1002 null;
         "scheme" = mkOverride 1002 null;
       };
 
@@ -41470,6 +42478,10 @@ let
           description = "Name or number of the port to access on the container.\nNumber must be in the range 1 to 65535.\nName must be an IANA_SVC_NAME.";
           type = (types.either types.int types.str);
         };
+        "protocol" = mkOption {
+          description = "Protocol selects the wire protocol for the probe connection.\nNil defaults to HTTP/1.1.";
+          type = (types.nullOr types.str);
+        };
         "scheme" = mkOption {
           description = "Scheme to use for connecting to the host.\nDefaults to HTTP.";
           type = (types.nullOr types.str);
@@ -41480,6 +42492,7 @@ let
         "host" = mkOverride 1002 null;
         "httpHeaders" = mkOverride 1002 null;
         "path" = mkOverride 1002 null;
+        "protocol" = mkOverride 1002 null;
         "scheme" = mkOverride 1002 null;
       };
 
@@ -41623,6 +42636,10 @@ let
     "actions.github.com.v1alpha1.EphemeralRunnerSpecSpecContainersLivenessProbeGrpc" = {
 
       options = {
+        "mode" = mkOption {
+          description = "mode specifies the connection mode for the gRPC health probe.\nSet to \"TLS\" to use TLS without certificate verification.\nSet to \"Plaintext\" to use a plaintext (insecure) connection explicitly.\nIf not specified, the probe uses a plaintext (insecure) connection.";
+          type = (types.nullOr types.str);
+        };
         "port" = mkOption {
           description = "Port number of the gRPC service. Number must be in the range 1 to 65535.";
           type = types.int;
@@ -41634,6 +42651,7 @@ let
       };
 
       config = {
+        "mode" = mkOverride 1002 null;
         "service" = mkOverride 1002 null;
       };
 
@@ -41665,6 +42683,10 @@ let
           description = "Name or number of the port to access on the container.\nNumber must be in the range 1 to 65535.\nName must be an IANA_SVC_NAME.";
           type = (types.either types.int types.str);
         };
+        "protocol" = mkOption {
+          description = "Protocol selects the wire protocol for the probe connection.\nNil defaults to HTTP/1.1.";
+          type = (types.nullOr types.str);
+        };
         "scheme" = mkOption {
           description = "Scheme to use for connecting to the host.\nDefaults to HTTP.";
           type = (types.nullOr types.str);
@@ -41675,6 +42697,7 @@ let
         "host" = mkOverride 1002 null;
         "httpHeaders" = mkOverride 1002 null;
         "path" = mkOverride 1002 null;
+        "protocol" = mkOverride 1002 null;
         "scheme" = mkOverride 1002 null;
       };
 
@@ -41838,6 +42861,10 @@ let
     "actions.github.com.v1alpha1.EphemeralRunnerSpecSpecContainersReadinessProbeGrpc" = {
 
       options = {
+        "mode" = mkOption {
+          description = "mode specifies the connection mode for the gRPC health probe.\nSet to \"TLS\" to use TLS without certificate verification.\nSet to \"Plaintext\" to use a plaintext (insecure) connection explicitly.\nIf not specified, the probe uses a plaintext (insecure) connection.";
+          type = (types.nullOr types.str);
+        };
         "port" = mkOption {
           description = "Port number of the gRPC service. Number must be in the range 1 to 65535.";
           type = types.int;
@@ -41849,6 +42876,7 @@ let
       };
 
       config = {
+        "mode" = mkOverride 1002 null;
         "service" = mkOverride 1002 null;
       };
 
@@ -41880,6 +42908,10 @@ let
           description = "Name or number of the port to access on the container.\nNumber must be in the range 1 to 65535.\nName must be an IANA_SVC_NAME.";
           type = (types.either types.int types.str);
         };
+        "protocol" = mkOption {
+          description = "Protocol selects the wire protocol for the probe connection.\nNil defaults to HTTP/1.1.";
+          type = (types.nullOr types.str);
+        };
         "scheme" = mkOption {
           description = "Scheme to use for connecting to the host.\nDefaults to HTTP.";
           type = (types.nullOr types.str);
@@ -41890,6 +42922,7 @@ let
         "host" = mkOverride 1002 null;
         "httpHeaders" = mkOverride 1002 null;
         "path" = mkOverride 1002 null;
+        "protocol" = mkOverride 1002 null;
         "scheme" = mkOverride 1002 null;
       };
 
@@ -42062,7 +43095,7 @@ let
           type = (types.nullOr types.bool);
         };
         "procMount" = mkOption {
-          description = "procMount denotes the type of proc mount to use for the containers.\nThe default value is Default which uses the container runtime defaults for\nreadonly paths and masked paths.\nThis requires the ProcMountType feature flag to be enabled.\nNote that this field cannot be set when spec.os.name is windows.";
+          description = "procMount denotes the type of proc mount to use for the containers.\nThe default value is Default which uses the container runtime defaults for\nreadonly paths and masked paths.\nNote that this field cannot be set when spec.os.name is windows.";
           type = (types.nullOr types.str);
         };
         "readOnlyRootFilesystem" = mkOption {
@@ -42328,6 +43361,10 @@ let
     "actions.github.com.v1alpha1.EphemeralRunnerSpecSpecContainersStartupProbeGrpc" = {
 
       options = {
+        "mode" = mkOption {
+          description = "mode specifies the connection mode for the gRPC health probe.\nSet to \"TLS\" to use TLS without certificate verification.\nSet to \"Plaintext\" to use a plaintext (insecure) connection explicitly.\nIf not specified, the probe uses a plaintext (insecure) connection.";
+          type = (types.nullOr types.str);
+        };
         "port" = mkOption {
           description = "Port number of the gRPC service. Number must be in the range 1 to 65535.";
           type = types.int;
@@ -42339,6 +43376,7 @@ let
       };
 
       config = {
+        "mode" = mkOverride 1002 null;
         "service" = mkOverride 1002 null;
       };
 
@@ -42370,6 +43408,10 @@ let
           description = "Name or number of the port to access on the container.\nNumber must be in the range 1 to 65535.\nName must be an IANA_SVC_NAME.";
           type = (types.either types.int types.str);
         };
+        "protocol" = mkOption {
+          description = "Protocol selects the wire protocol for the probe connection.\nNil defaults to HTTP/1.1.";
+          type = (types.nullOr types.str);
+        };
         "scheme" = mkOption {
           description = "Scheme to use for connecting to the host.\nDefaults to HTTP.";
           type = (types.nullOr types.str);
@@ -42380,6 +43422,7 @@ let
         "host" = mkOverride 1002 null;
         "httpHeaders" = mkOverride 1002 null;
         "path" = mkOverride 1002 null;
+        "protocol" = mkOverride 1002 null;
         "scheme" = mkOverride 1002 null;
       };
 
@@ -42437,8 +43480,12 @@ let
     "actions.github.com.v1alpha1.EphemeralRunnerSpecSpecContainersVolumeMounts" = {
 
       options = {
+        "bindMountOptions" = mkOption {
+          description = "bindMountOptions is the list of additional bind mount options to apply when\nmounting this volume into the container. Allowed values are noexec,\nnodev, and nosuid. These are Linux mount options and have no effect on\nWindows nodes.\nThis field is not supported with image volumes.\nThis is an alpha field and requires enabling the VolumeBindMountOptions feature gate.";
+          type = (types.nullOr (types.listOf types.str));
+        };
         "mountPath" = mkOption {
-          description = "Path within the container at which the volume should be mounted.  Must\nnot contain ':'.";
+          description = "Path within the container at which the volume should be mounted.";
           type = types.str;
         };
         "mountPropagation" = mkOption {
@@ -42468,6 +43515,7 @@ let
       };
 
       config = {
+        "bindMountOptions" = mkOverride 1002 null;
         "mountPropagation" = mkOverride 1002 null;
         "readOnly" = mkOverride 1002 null;
         "recursiveReadOnly" = mkOverride 1002 null;
@@ -42898,7 +43946,7 @@ let
 
         options = {
           "key" = mkOption {
-            description = "The key to select.";
+            description = "The key to select from the ConfigMap's Data field.\nKeys in the BinaryData field are not currently propagated to container env vars.";
             type = types.str;
           };
           "name" = mkOption {
@@ -43127,6 +44175,10 @@ let
             description = "Name or number of the port to access on the container.\nNumber must be in the range 1 to 65535.\nName must be an IANA_SVC_NAME.";
             type = (types.either types.int types.str);
           };
+          "protocol" = mkOption {
+            description = "Protocol selects the wire protocol for the probe connection.\nNil defaults to HTTP/1.1.";
+            type = (types.nullOr types.str);
+          };
           "scheme" = mkOption {
             description = "Scheme to use for connecting to the host.\nDefaults to HTTP.";
             type = (types.nullOr types.str);
@@ -43137,6 +44189,7 @@ let
           "host" = mkOverride 1002 null;
           "httpHeaders" = mkOverride 1002 null;
           "path" = mkOverride 1002 null;
+          "protocol" = mkOverride 1002 null;
           "scheme" = mkOverride 1002 null;
         };
 
@@ -43275,6 +44328,10 @@ let
           description = "Name or number of the port to access on the container.\nNumber must be in the range 1 to 65535.\nName must be an IANA_SVC_NAME.";
           type = (types.either types.int types.str);
         };
+        "protocol" = mkOption {
+          description = "Protocol selects the wire protocol for the probe connection.\nNil defaults to HTTP/1.1.";
+          type = (types.nullOr types.str);
+        };
         "scheme" = mkOption {
           description = "Scheme to use for connecting to the host.\nDefaults to HTTP.";
           type = (types.nullOr types.str);
@@ -43285,6 +44342,7 @@ let
         "host" = mkOverride 1002 null;
         "httpHeaders" = mkOverride 1002 null;
         "path" = mkOverride 1002 null;
+        "protocol" = mkOverride 1002 null;
         "scheme" = mkOverride 1002 null;
       };
 
@@ -43429,6 +44487,10 @@ let
     "actions.github.com.v1alpha1.EphemeralRunnerSpecSpecEphemeralContainersLivenessProbeGrpc" = {
 
       options = {
+        "mode" = mkOption {
+          description = "mode specifies the connection mode for the gRPC health probe.\nSet to \"TLS\" to use TLS without certificate verification.\nSet to \"Plaintext\" to use a plaintext (insecure) connection explicitly.\nIf not specified, the probe uses a plaintext (insecure) connection.";
+          type = (types.nullOr types.str);
+        };
         "port" = mkOption {
           description = "Port number of the gRPC service. Number must be in the range 1 to 65535.";
           type = types.int;
@@ -43440,6 +44502,7 @@ let
       };
 
       config = {
+        "mode" = mkOverride 1002 null;
         "service" = mkOverride 1002 null;
       };
 
@@ -43471,6 +44534,10 @@ let
           description = "Name or number of the port to access on the container.\nNumber must be in the range 1 to 65535.\nName must be an IANA_SVC_NAME.";
           type = (types.either types.int types.str);
         };
+        "protocol" = mkOption {
+          description = "Protocol selects the wire protocol for the probe connection.\nNil defaults to HTTP/1.1.";
+          type = (types.nullOr types.str);
+        };
         "scheme" = mkOption {
           description = "Scheme to use for connecting to the host.\nDefaults to HTTP.";
           type = (types.nullOr types.str);
@@ -43481,6 +44548,7 @@ let
         "host" = mkOverride 1002 null;
         "httpHeaders" = mkOverride 1002 null;
         "path" = mkOverride 1002 null;
+        "protocol" = mkOverride 1002 null;
         "scheme" = mkOverride 1002 null;
       };
 
@@ -43645,6 +44713,10 @@ let
     "actions.github.com.v1alpha1.EphemeralRunnerSpecSpecEphemeralContainersReadinessProbeGrpc" = {
 
       options = {
+        "mode" = mkOption {
+          description = "mode specifies the connection mode for the gRPC health probe.\nSet to \"TLS\" to use TLS without certificate verification.\nSet to \"Plaintext\" to use a plaintext (insecure) connection explicitly.\nIf not specified, the probe uses a plaintext (insecure) connection.";
+          type = (types.nullOr types.str);
+        };
         "port" = mkOption {
           description = "Port number of the gRPC service. Number must be in the range 1 to 65535.";
           type = types.int;
@@ -43656,6 +44728,7 @@ let
       };
 
       config = {
+        "mode" = mkOverride 1002 null;
         "service" = mkOverride 1002 null;
       };
 
@@ -43687,6 +44760,10 @@ let
           description = "Name or number of the port to access on the container.\nNumber must be in the range 1 to 65535.\nName must be an IANA_SVC_NAME.";
           type = (types.either types.int types.str);
         };
+        "protocol" = mkOption {
+          description = "Protocol selects the wire protocol for the probe connection.\nNil defaults to HTTP/1.1.";
+          type = (types.nullOr types.str);
+        };
         "scheme" = mkOption {
           description = "Scheme to use for connecting to the host.\nDefaults to HTTP.";
           type = (types.nullOr types.str);
@@ -43697,6 +44774,7 @@ let
         "host" = mkOverride 1002 null;
         "httpHeaders" = mkOverride 1002 null;
         "path" = mkOverride 1002 null;
+        "protocol" = mkOverride 1002 null;
         "scheme" = mkOverride 1002 null;
       };
 
@@ -43871,7 +44949,7 @@ let
           type = (types.nullOr types.bool);
         };
         "procMount" = mkOption {
-          description = "procMount denotes the type of proc mount to use for the containers.\nThe default value is Default which uses the container runtime defaults for\nreadonly paths and masked paths.\nThis requires the ProcMountType feature flag to be enabled.\nNote that this field cannot be set when spec.os.name is windows.";
+          description = "procMount denotes the type of proc mount to use for the containers.\nThe default value is Default which uses the container runtime defaults for\nreadonly paths and masked paths.\nNote that this field cannot be set when spec.os.name is windows.";
           type = (types.nullOr types.str);
         };
         "readOnlyRootFilesystem" = mkOption {
@@ -44142,6 +45220,10 @@ let
     "actions.github.com.v1alpha1.EphemeralRunnerSpecSpecEphemeralContainersStartupProbeGrpc" = {
 
       options = {
+        "mode" = mkOption {
+          description = "mode specifies the connection mode for the gRPC health probe.\nSet to \"TLS\" to use TLS without certificate verification.\nSet to \"Plaintext\" to use a plaintext (insecure) connection explicitly.\nIf not specified, the probe uses a plaintext (insecure) connection.";
+          type = (types.nullOr types.str);
+        };
         "port" = mkOption {
           description = "Port number of the gRPC service. Number must be in the range 1 to 65535.";
           type = types.int;
@@ -44153,6 +45235,7 @@ let
       };
 
       config = {
+        "mode" = mkOverride 1002 null;
         "service" = mkOverride 1002 null;
       };
 
@@ -44184,6 +45267,10 @@ let
           description = "Name or number of the port to access on the container.\nNumber must be in the range 1 to 65535.\nName must be an IANA_SVC_NAME.";
           type = (types.either types.int types.str);
         };
+        "protocol" = mkOption {
+          description = "Protocol selects the wire protocol for the probe connection.\nNil defaults to HTTP/1.1.";
+          type = (types.nullOr types.str);
+        };
         "scheme" = mkOption {
           description = "Scheme to use for connecting to the host.\nDefaults to HTTP.";
           type = (types.nullOr types.str);
@@ -44194,6 +45281,7 @@ let
         "host" = mkOverride 1002 null;
         "httpHeaders" = mkOverride 1002 null;
         "path" = mkOverride 1002 null;
+        "protocol" = mkOverride 1002 null;
         "scheme" = mkOverride 1002 null;
       };
 
@@ -44252,8 +45340,12 @@ let
     "actions.github.com.v1alpha1.EphemeralRunnerSpecSpecEphemeralContainersVolumeMounts" = {
 
       options = {
+        "bindMountOptions" = mkOption {
+          description = "bindMountOptions is the list of additional bind mount options to apply when\nmounting this volume into the container. Allowed values are noexec,\nnodev, and nosuid. These are Linux mount options and have no effect on\nWindows nodes.\nThis field is not supported with image volumes.\nThis is an alpha field and requires enabling the VolumeBindMountOptions feature gate.";
+          type = (types.nullOr (types.listOf types.str));
+        };
         "mountPath" = mkOption {
-          description = "Path within the container at which the volume should be mounted.  Must\nnot contain ':'.";
+          description = "Path within the container at which the volume should be mounted.";
           type = types.str;
         };
         "mountPropagation" = mkOption {
@@ -44283,12 +45375,29 @@ let
       };
 
       config = {
+        "bindMountOptions" = mkOverride 1002 null;
         "mountPropagation" = mkOverride 1002 null;
         "readOnly" = mkOverride 1002 null;
         "recursiveReadOnly" = mkOverride 1002 null;
         "subPath" = mkOverride 1002 null;
         "subPathExpr" = mkOverride 1002 null;
       };
+
+    };
+    "actions.github.com.v1alpha1.EphemeralRunnerSpecSpecEvictionResponders" = {
+
+      options = {
+        "name" = mkOption {
+          description = "name allows you to identify the responder responding to the Eviction.\n\nIt must be a valid domain-prefixed key (such as \"acme.io/foo\").\nDomain names *.k8s.io and *.kubernetes.io are reserved.\nThis field must be unique for each responder.\nThis field is required.";
+          type = types.str;
+        };
+        "priority" = mkOption {
+          description = "priority for this responder. Higher priorities are selected first by the evictionrequest-controller.\nIf there are responders with the same priority, the responder whose domain name comes first in the\nalphabetical higher domain order, will be picked. This means that the top domain labels are compared\nalphabetically first, followed by the lower domain labels. The key is compared last.\n\nThe responder that is the managing controller of the pod should set the value of\nthis field to 10000 to allow both for preemption or fallback registration by other\nresponders.\n\nThe minimum value is 0 and the maximum value is 100000.\nThe interval 0-999 is reserved for responders with *.k8s.io suffix.\nThis field is required.";
+          type = types.int;
+        };
+      };
+
+      config = { };
 
     };
     "actions.github.com.v1alpha1.EphemeralRunnerSpecSpecHostAliases" = {
@@ -44688,7 +45797,7 @@ let
 
       options = {
         "key" = mkOption {
-          description = "The key to select.";
+          description = "The key to select from the ConfigMap's Data field.\nKeys in the BinaryData field are not currently propagated to container env vars.";
           type = types.str;
         };
         "name" = mkOption {
@@ -44915,6 +46024,10 @@ let
           description = "Name or number of the port to access on the container.\nNumber must be in the range 1 to 65535.\nName must be an IANA_SVC_NAME.";
           type = (types.either types.int types.str);
         };
+        "protocol" = mkOption {
+          description = "Protocol selects the wire protocol for the probe connection.\nNil defaults to HTTP/1.1.";
+          type = (types.nullOr types.str);
+        };
         "scheme" = mkOption {
           description = "Scheme to use for connecting to the host.\nDefaults to HTTP.";
           type = (types.nullOr types.str);
@@ -44925,6 +46038,7 @@ let
         "host" = mkOverride 1002 null;
         "httpHeaders" = mkOverride 1002 null;
         "path" = mkOverride 1002 null;
+        "protocol" = mkOverride 1002 null;
         "scheme" = mkOverride 1002 null;
       };
 
@@ -45062,6 +46176,10 @@ let
           description = "Name or number of the port to access on the container.\nNumber must be in the range 1 to 65535.\nName must be an IANA_SVC_NAME.";
           type = (types.either types.int types.str);
         };
+        "protocol" = mkOption {
+          description = "Protocol selects the wire protocol for the probe connection.\nNil defaults to HTTP/1.1.";
+          type = (types.nullOr types.str);
+        };
         "scheme" = mkOption {
           description = "Scheme to use for connecting to the host.\nDefaults to HTTP.";
           type = (types.nullOr types.str);
@@ -45072,6 +46190,7 @@ let
         "host" = mkOverride 1002 null;
         "httpHeaders" = mkOverride 1002 null;
         "path" = mkOverride 1002 null;
+        "protocol" = mkOverride 1002 null;
         "scheme" = mkOverride 1002 null;
       };
 
@@ -45215,6 +46334,10 @@ let
     "actions.github.com.v1alpha1.EphemeralRunnerSpecSpecInitContainersLivenessProbeGrpc" = {
 
       options = {
+        "mode" = mkOption {
+          description = "mode specifies the connection mode for the gRPC health probe.\nSet to \"TLS\" to use TLS without certificate verification.\nSet to \"Plaintext\" to use a plaintext (insecure) connection explicitly.\nIf not specified, the probe uses a plaintext (insecure) connection.";
+          type = (types.nullOr types.str);
+        };
         "port" = mkOption {
           description = "Port number of the gRPC service. Number must be in the range 1 to 65535.";
           type = types.int;
@@ -45226,6 +46349,7 @@ let
       };
 
       config = {
+        "mode" = mkOverride 1002 null;
         "service" = mkOverride 1002 null;
       };
 
@@ -45257,6 +46381,10 @@ let
           description = "Name or number of the port to access on the container.\nNumber must be in the range 1 to 65535.\nName must be an IANA_SVC_NAME.";
           type = (types.either types.int types.str);
         };
+        "protocol" = mkOption {
+          description = "Protocol selects the wire protocol for the probe connection.\nNil defaults to HTTP/1.1.";
+          type = (types.nullOr types.str);
+        };
         "scheme" = mkOption {
           description = "Scheme to use for connecting to the host.\nDefaults to HTTP.";
           type = (types.nullOr types.str);
@@ -45267,6 +46395,7 @@ let
         "host" = mkOverride 1002 null;
         "httpHeaders" = mkOverride 1002 null;
         "path" = mkOverride 1002 null;
+        "protocol" = mkOverride 1002 null;
         "scheme" = mkOverride 1002 null;
       };
 
@@ -45431,6 +46560,10 @@ let
     "actions.github.com.v1alpha1.EphemeralRunnerSpecSpecInitContainersReadinessProbeGrpc" = {
 
       options = {
+        "mode" = mkOption {
+          description = "mode specifies the connection mode for the gRPC health probe.\nSet to \"TLS\" to use TLS without certificate verification.\nSet to \"Plaintext\" to use a plaintext (insecure) connection explicitly.\nIf not specified, the probe uses a plaintext (insecure) connection.";
+          type = (types.nullOr types.str);
+        };
         "port" = mkOption {
           description = "Port number of the gRPC service. Number must be in the range 1 to 65535.";
           type = types.int;
@@ -45442,6 +46575,7 @@ let
       };
 
       config = {
+        "mode" = mkOverride 1002 null;
         "service" = mkOverride 1002 null;
       };
 
@@ -45473,6 +46607,10 @@ let
           description = "Name or number of the port to access on the container.\nNumber must be in the range 1 to 65535.\nName must be an IANA_SVC_NAME.";
           type = (types.either types.int types.str);
         };
+        "protocol" = mkOption {
+          description = "Protocol selects the wire protocol for the probe connection.\nNil defaults to HTTP/1.1.";
+          type = (types.nullOr types.str);
+        };
         "scheme" = mkOption {
           description = "Scheme to use for connecting to the host.\nDefaults to HTTP.";
           type = (types.nullOr types.str);
@@ -45483,6 +46621,7 @@ let
         "host" = mkOverride 1002 null;
         "httpHeaders" = mkOverride 1002 null;
         "path" = mkOverride 1002 null;
+        "protocol" = mkOverride 1002 null;
         "scheme" = mkOverride 1002 null;
       };
 
@@ -45656,7 +46795,7 @@ let
           type = (types.nullOr types.bool);
         };
         "procMount" = mkOption {
-          description = "procMount denotes the type of proc mount to use for the containers.\nThe default value is Default which uses the container runtime defaults for\nreadonly paths and masked paths.\nThis requires the ProcMountType feature flag to be enabled.\nNote that this field cannot be set when spec.os.name is windows.";
+          description = "procMount denotes the type of proc mount to use for the containers.\nThe default value is Default which uses the container runtime defaults for\nreadonly paths and masked paths.\nNote that this field cannot be set when spec.os.name is windows.";
           type = (types.nullOr types.str);
         };
         "readOnlyRootFilesystem" = mkOption {
@@ -45923,6 +47062,10 @@ let
     "actions.github.com.v1alpha1.EphemeralRunnerSpecSpecInitContainersStartupProbeGrpc" = {
 
       options = {
+        "mode" = mkOption {
+          description = "mode specifies the connection mode for the gRPC health probe.\nSet to \"TLS\" to use TLS without certificate verification.\nSet to \"Plaintext\" to use a plaintext (insecure) connection explicitly.\nIf not specified, the probe uses a plaintext (insecure) connection.";
+          type = (types.nullOr types.str);
+        };
         "port" = mkOption {
           description = "Port number of the gRPC service. Number must be in the range 1 to 65535.";
           type = types.int;
@@ -45934,6 +47077,7 @@ let
       };
 
       config = {
+        "mode" = mkOverride 1002 null;
         "service" = mkOverride 1002 null;
       };
 
@@ -45965,6 +47109,10 @@ let
           description = "Name or number of the port to access on the container.\nNumber must be in the range 1 to 65535.\nName must be an IANA_SVC_NAME.";
           type = (types.either types.int types.str);
         };
+        "protocol" = mkOption {
+          description = "Protocol selects the wire protocol for the probe connection.\nNil defaults to HTTP/1.1.";
+          type = (types.nullOr types.str);
+        };
         "scheme" = mkOption {
           description = "Scheme to use for connecting to the host.\nDefaults to HTTP.";
           type = (types.nullOr types.str);
@@ -45975,6 +47123,7 @@ let
         "host" = mkOverride 1002 null;
         "httpHeaders" = mkOverride 1002 null;
         "path" = mkOverride 1002 null;
+        "protocol" = mkOverride 1002 null;
         "scheme" = mkOverride 1002 null;
       };
 
@@ -46033,8 +47182,12 @@ let
     "actions.github.com.v1alpha1.EphemeralRunnerSpecSpecInitContainersVolumeMounts" = {
 
       options = {
+        "bindMountOptions" = mkOption {
+          description = "bindMountOptions is the list of additional bind mount options to apply when\nmounting this volume into the container. Allowed values are noexec,\nnodev, and nosuid. These are Linux mount options and have no effect on\nWindows nodes.\nThis field is not supported with image volumes.\nThis is an alpha field and requires enabling the VolumeBindMountOptions feature gate.";
+          type = (types.nullOr (types.listOf types.str));
+        };
         "mountPath" = mkOption {
-          description = "Path within the container at which the volume should be mounted.  Must\nnot contain ':'.";
+          description = "Path within the container at which the volume should be mounted.";
           type = types.str;
         };
         "mountPropagation" = mkOption {
@@ -46064,6 +47217,7 @@ let
       };
 
       config = {
+        "bindMountOptions" = mkOverride 1002 null;
         "mountPropagation" = mkOverride 1002 null;
         "readOnly" = mkOverride 1002 null;
         "recursiveReadOnly" = mkOverride 1002 null;
@@ -46108,7 +47262,7 @@ let
           type = (types.nullOr types.str);
         };
         "resourceClaimTemplateName" = mkOption {
-          description = "ResourceClaimTemplateName is the name of a ResourceClaimTemplate\nobject in the same namespace as this pod.\n\nThe template will be used to create a new ResourceClaim, which will\nbe bound to this pod. When this pod is deleted, the ResourceClaim\nwill also be deleted. The pod name and resource name, along with a\ngenerated component, will be used to form a unique name for the\nResourceClaim, which will be recorded in pod.status.resourceClaimStatuses.\n\nThis field is immutable and no changes will be made to the\ncorresponding ResourceClaim by the control plane after creating the\nResourceClaim.\n\nExactly one of ResourceClaimName and ResourceClaimTemplateName must\nbe set.";
+          description = "ResourceClaimTemplateName is the name of a ResourceClaimTemplate\nobject in the same namespace as this pod.\n\nThe template will be used to create a new ResourceClaim, which will\nbe bound to this pod. When this pod is deleted, the ResourceClaim\nwill also be deleted. The pod name and resource name, along with a\ngenerated component, will be used to form a unique name for the\nResourceClaim, which will be recorded in pod.status.resourceClaimStatuses.\n\nWhen the DRAWorkloadResourceClaims feature gate is enabled and the pod\nbelongs to a PodGroup that defines a PodGroupResourceClaim with the same\nName and ResourceClaimTemplateName, this PodResourceClaim resolves to the\nResourceClaim generated for the PodGroup. All pods in the group that\ndefine an equivalent PodResourceClaim matching the\nPodGroupResourceClaim's Name and ResourceClaimTemplateName share the same\ngenerated ResourceClaim. ResourceClaims generated for a PodGroup are\nowned by the PodGroup and their lifecycles are tied to the PodGroup\ninstead of any individual pod.\n\nThis field is immutable and no changes will be made to the\ncorresponding ResourceClaim by the control plane after creating the\nResourceClaim.\n\nExactly one of ResourceClaimName and ResourceClaimTemplateName must\nbe set.";
           type = (types.nullOr types.str);
         };
       };
@@ -46181,6 +47335,20 @@ let
       config = { };
 
     };
+    "actions.github.com.v1alpha1.EphemeralRunnerSpecSpecSchedulingGroup" = {
+
+      options = {
+        "podGroupName" = mkOption {
+          description = "PodGroupName specifies the name of the standalone PodGroup object\nthat represents the runtime instance of this group.\nMust be a DNS subdomain.";
+          type = (types.nullOr types.str);
+        };
+      };
+
+      config = {
+        "podGroupName" = mkOverride 1002 null;
+      };
+
+    };
     "actions.github.com.v1alpha1.EphemeralRunnerSpecSpecSecurityContext" = {
 
       options = {
@@ -46213,7 +47381,7 @@ let
           type = (types.nullOr types.int);
         };
         "seLinuxChangePolicy" = mkOption {
-          description = "seLinuxChangePolicy defines how the container's SELinux label is applied to all volumes used by the Pod.\nIt has no effect on nodes that do not support SELinux or to volumes does not support SELinux.\nValid values are \"MountOption\" and \"Recursive\".\n\n\"Recursive\" means relabeling of all files on all Pod volumes by the container runtime.\nThis may be slow for large volumes, but allows mixing privileged and unprivileged Pods sharing the same volume on the same node.\n\n\"MountOption\" mounts all eligible Pod volumes with `-o context` mount option.\nThis requires all Pods that share the same volume to use the same SELinux label.\nIt is not possible to share the same volume among privileged and unprivileged Pods.\nEligible volumes are in-tree FibreChannel and iSCSI volumes, and all CSI volumes\nwhose CSI driver announces SELinux support by setting spec.seLinuxMount: true in their\nCSIDriver instance. Other volumes are always re-labelled recursively.\n\"MountOption\" value is allowed only when SELinuxMount feature gate is enabled.\n\nIf not specified and SELinuxMount feature gate is enabled, \"MountOption\" is used.\nIf not specified and SELinuxMount feature gate is disabled, \"MountOption\" is used for ReadWriteOncePod volumes\nand \"Recursive\" for all other volumes.\n\nThis field affects only Pods that have SELinux label set, either in PodSecurityContext or in SecurityContext of all containers.\n\nAll Pods that use the same volume should use the same seLinuxChangePolicy, otherwise some pods can get stuck in ContainerCreating state.\nNote that this field cannot be set when spec.os.name is windows.";
+          description = "seLinuxChangePolicy defines how the container's SELinux label is applied to all volumes used by the Pod.\nIt has no effect on nodes that do not support SELinux or to volumes does not support SELinux.\nValid values are \"MountOption\" and \"Recursive\".\n\n\"Recursive\" means relabeling of all files on all Pod volumes by the container runtime.\nThis may be slow for large volumes, but allows mixing privileged and unprivileged Pods sharing the same volume on the same node.\n\n\"MountOption\" mounts all eligible Pod volumes with `-o context` mount option.\nThis requires all Pods that share the same volume to use the same SELinux label.\nIt is not possible to share the same volume among privileged and unprivileged Pods.\nEligible volumes are in-tree FibreChannel and iSCSI volumes, and all CSI volumes\nwhose CSI driver announces SELinux support by setting spec.seLinuxMount: true in their\nCSIDriver instance. Other volumes are always re-labelled recursively.\n\nIf not specified, \"MountOption\" is used.\n\nThis field affects only Pods that have SELinux label set, either in PodSecurityContext or in SecurityContext of all containers.\n\nAll Pods that use the same volume should use the same seLinuxChangePolicy, otherwise some pods can get stuck in ContainerCreating state.\nNote that this field cannot be set when spec.os.name is windows.";
           type = (types.nullOr types.str);
         };
         "seLinuxOptions" = mkOption {
@@ -46627,7 +47795,7 @@ let
           );
         };
         "image" = mkOption {
-          description = "image represents an OCI object (a container image or artifact) pulled and mounted on the kubelet's host machine.\nThe volume is resolved at pod startup depending on which PullPolicy value is provided:\n\n- Always: the kubelet always attempts to pull the reference. Container creation will fail If the pull fails.\n- Never: the kubelet never pulls the reference and only uses a local image or artifact. Container creation will fail if the reference isn't present.\n- IfNotPresent: the kubelet pulls if the reference isn't already present on disk. Container creation will fail if the reference isn't present and the pull fails.\n\nThe volume gets re-resolved if the pod gets deleted and recreated, which means that new remote content will become available on pod recreation.\nA failure to resolve or pull the image during pod startup will block containers from starting and may add significant latency. Failures will be retried using normal volume backoff and will be reported on the pod reason and message.\nThe types of objects that may be mounted by this volume are defined by the container runtime implementation on a host machine and at minimum must include all valid types supported by the container image field.\nThe OCI object gets mounted in a single directory (spec.containers[*].volumeMounts.mountPath) by merging the manifest layers in the same way as for container images.\nThe volume will be mounted read-only (ro) and non-executable files (noexec).\nSub path mounts for containers are not supported (spec.containers[*].volumeMounts.subpath) before 1.33.\nThe field spec.securityContext.fsGroupChangePolicy has no effect on this volume type.";
+          description = "image represents an OCI object (a container image or artifact) pulled and mounted on the kubelet's host machine.\nThe volume is resolved at pod startup depending on which PullPolicy value is provided:\n\n- Always: the kubelet always attempts to pull the reference. Container creation will fail If the pull fails.\n- Never: the kubelet never pulls the reference and only uses a local image or artifact. Container creation will fail if the reference isn't present.\n- IfNotPresent: the kubelet pulls if the reference isn't already present on disk. Container creation will fail if the reference isn't present and the pull fails.\n\nThe volume gets re-resolved if the pod gets deleted and recreated, which means that new remote content will become available on pod recreation.\nA failure to resolve or pull the image during pod startup will block containers from starting and may add significant latency. Failures will be retried using normal volume backoff and will be reported on the pod reason and message.\nThe types of objects that may be mounted by this volume are defined by the container runtime implementation on a host machine and at minimum must include all valid types supported by the container image field.\nThe OCI object gets mounted in a single directory (spec.containers[*].volumeMounts.mountPath) by merging the manifest layers in the same way as for container images.\nThe volume will be mounted read-only (ro).\nSub path mounts for containers are not supported (spec.containers[*].volumeMounts.subpath) before 1.33.\nThe field spec.securityContext.fsGroupChangePolicy has no effect on this volume type.";
           type = (
             types.nullOr (submoduleOf "actions.github.com.v1alpha1.EphemeralRunnerSpecSpecVolumesImage")
           );
@@ -46663,7 +47831,7 @@ let
           );
         };
         "portworxVolume" = mkOption {
-          description = "portworxVolume represents a portworx volume attached and mounted on kubelets host machine.\nDeprecated: PortworxVolume is deprecated. All operations for the in-tree portworxVolume type\nare redirected to the pxd.portworx.com CSI driver when the CSIMigrationPortworx feature-gate\nis on.";
+          description = "portworxVolume represents a portworx volume attached and mounted on kubelets host machine.\nDeprecated: PortworxVolume is deprecated. All operations for the in-tree portworxVolume type\nare redirected to the pxd.portworx.com CSI driver.";
           type = (
             types.nullOr (
               submoduleOf "actions.github.com.v1alpha1.EphemeralRunnerSpecSpecVolumesPortworxVolume"
@@ -46942,6 +48110,10 @@ let
           description = "defaultMode is optional: mode bits used to set permissions on created files by default.\nMust be an octal value between 0000 and 0777 or a decimal value between 0 and 511.\nYAML accepts both octal and decimal values, JSON requires decimal values for mode bits.\nDefaults to 0644.\nDirectories within the path are not affected by this setting.\nThis might be in conflict with other options that affect the file\nmode, like fsGroup, and the result can be other mode bits set.";
           type = (types.nullOr types.int);
         };
+        "defaultUser" = mkOption {
+          description = "defaultUser is Optional: The owner UID of the created files by default.\nThe defaultUser field is only used as a fallback when the item-level user field is unset.\n(Alpha) This field requires the AtomicWriteVolumeUserFields feature gate to be enabled.";
+          type = (types.nullOr types.int);
+        };
         "items" = mkOption {
           description = "items if unspecified, each key-value pair in the Data field of the referenced\nConfigMap will be projected into the volume as a file whose name is the\nkey and content is the value. If specified, the listed keys will be\nprojected into the specified paths, and unlisted keys will not be\npresent. If a key is specified which is not present in the ConfigMap,\nthe volume setup will error unless it is marked optional. Paths must be\nrelative and may not contain the '..' path or start with '..'.";
           type = (
@@ -46964,6 +48136,7 @@ let
 
       config = {
         "defaultMode" = mkOverride 1002 null;
+        "defaultUser" = mkOverride 1002 null;
         "items" = mkOverride 1002 null;
         "name" = mkOverride 1002 null;
         "optional" = mkOverride 1002 null;
@@ -46985,10 +48158,15 @@ let
           description = "path is the relative path of the file to map the key to.\nMay not be an absolute path.\nMay not contain the path element '..'.\nMay not start with the string '..'.";
           type = types.str;
         };
+        "user" = mkOption {
+          description = "user is Optional: The owner UID of the created file.\nIf specified, the item-level user field takes precedence over defaultUser.\n(Alpha) This field requires the AtomicWriteVolumeUserFields feature gate to be enabled.";
+          type = (types.nullOr types.int);
+        };
       };
 
       config = {
         "mode" = mkOverride 1002 null;
+        "user" = mkOverride 1002 null;
       };
 
     };
@@ -47050,6 +48228,10 @@ let
           description = "Optional: mode bits to use on created files by default. Must be a\nOptional: mode bits used to set permissions on created files by default.\nMust be an octal value between 0000 and 0777 or a decimal value between 0 and 511.\nYAML accepts both octal and decimal values, JSON requires decimal values for mode bits.\nDefaults to 0644.\nDirectories within the path are not affected by this setting.\nThis might be in conflict with other options that affect the file\nmode, like fsGroup, and the result can be other mode bits set.";
           type = (types.nullOr types.int);
         };
+        "defaultUser" = mkOption {
+          description = "defaultUser is Optional: The owner UID of the created files by default.\nThe defaultUser field is only used as a fallback when the item-level user field is unset.\n(Alpha) This field requires the AtomicWriteVolumeUserFields feature gate to be enabled.";
+          type = (types.nullOr types.int);
+        };
         "items" = mkOption {
           description = "Items is a list of downward API volume file";
           type = (
@@ -47064,6 +48246,7 @@ let
 
       config = {
         "defaultMode" = mkOverride 1002 null;
+        "defaultUser" = mkOverride 1002 null;
         "items" = mkOverride 1002 null;
       };
 
@@ -47095,12 +48278,17 @@ let
             )
           );
         };
+        "user" = mkOption {
+          description = "user is Optional: The owner UID of the created file.\nIf specified, the item-level user field takes precedence over defaultUser.\n(Alpha) This field requires the AtomicWriteVolumeUserFields feature gate to be enabled.";
+          type = (types.nullOr types.int);
+        };
       };
 
       config = {
         "fieldRef" = mkOverride 1002 null;
         "mode" = mkOverride 1002 null;
         "resourceFieldRef" = mkOverride 1002 null;
+        "user" = mkOverride 1002 null;
       };
 
     };
@@ -47152,6 +48340,10 @@ let
           description = "medium represents what type of storage medium should back this directory.\nThe default is \"\" which means to use the node's default medium.\nMust be an empty string (default) or Memory.\nMore info: https://kubernetes.io/docs/concepts/storage/volumes#emptydir";
           type = (types.nullOr types.str);
         };
+        "mode" = mkOption {
+          description = "mode specifies the permission bits for the emptyDir directory, in numeric\nnotation (e.g., 0755, 01777). Must be a value between 0000 and 01777.\nIf not specified, defaults to 0777.\nThis might be in conflict with other options that affect the file\nmode, like fsGroup. If fsGroup is specified, the fsGroup permissions\nwill override the mode specified here.\nThis field has no effect on Windows.\nThis field is alpha and requires EmptyDirVolumeMode featuregate to be enabled.";
+          type = (types.nullOr types.int);
+        };
         "sizeLimit" = mkOption {
           description = "sizeLimit is the total amount of local storage required for this EmptyDir volume.\nThe size limit is also applicable for memory medium.\nThe maximum usage on memory medium EmptyDir would be the minimum value between\nthe SizeLimit specified here and the sum of memory limits of all containers in a pod.\nThe default is nil which means that the limit is undefined.\nMore info: https://kubernetes.io/docs/concepts/storage/volumes#emptydir";
           type = (types.nullOr (types.either types.int types.str));
@@ -47160,6 +48352,7 @@ let
 
       config = {
         "medium" = mkOverride 1002 null;
+        "mode" = mkOverride 1002 null;
         "sizeLimit" = mkOverride 1002 null;
       };
 
@@ -47248,7 +48441,7 @@ let
           type = (types.nullOr (types.listOf types.str));
         };
         "dataSource" = mkOption {
-          description = "dataSource field can be used to specify either:\n* An existing VolumeSnapshot object (snapshot.storage.k8s.io/VolumeSnapshot)\n* An existing PVC (PersistentVolumeClaim)\nIf the provisioner or an external controller can support the specified data source,\nit will create a new volume based on the contents of the specified data source.\nWhen the AnyVolumeDataSource feature gate is enabled, dataSource contents will be copied to dataSourceRef,\nand dataSourceRef contents will be copied to dataSource when dataSourceRef.namespace is not specified.\nIf the namespace is specified, then dataSourceRef will not be copied to dataSource.";
+          description = "dataSource field can be used to specify either:\n* An existing VolumeSnapshot object (snapshot.storage.k8s.io/VolumeSnapshot)\n* An existing PVC (PersistentVolumeClaim)\nIf the provisioner or an external controller can support the specified data source,\nit will create a new volume based on the contents of the specified data source.\ndataSource contents will be copied to dataSourceRef, and dataSourceRef contents will be\ncopied to dataSource when dataSourceRef.namespace is not specified.\nIf the namespace is specified, then dataSourceRef will not be copied to dataSource.";
           type = (
             types.nullOr (
               submoduleOf "actions.github.com.v1alpha1.EphemeralRunnerSpecSpecVolumesEphemeralVolumeClaimTemplateSpecDataSource"
@@ -47256,7 +48449,7 @@ let
           );
         };
         "dataSourceRef" = mkOption {
-          description = "dataSourceRef specifies the object from which to populate the volume with data, if a non-empty\nvolume is desired. This may be any object from a non-empty API group (non\ncore object) or a PersistentVolumeClaim object.\nWhen this field is specified, volume binding will only succeed if the type of\nthe specified object matches some installed volume populator or dynamic\nprovisioner.\nThis field will replace the functionality of the dataSource field and as such\nif both fields are non-empty, they must have the same value. For backwards\ncompatibility, when namespace isn't specified in dataSourceRef,\nboth fields (dataSource and dataSourceRef) will be set to the same\nvalue automatically if one of them is empty and the other is non-empty.\nWhen namespace is specified in dataSourceRef,\ndataSource isn't set to the same value and must be empty.\nThere are three important differences between dataSource and dataSourceRef:\n* While dataSource only allows two specific types of objects, dataSourceRef\n  allows any non-core object, as well as PersistentVolumeClaim objects.\n* While dataSource ignores disallowed values (dropping them), dataSourceRef\n  preserves all values, and generates an error if a disallowed value is\n  specified.\n* While dataSource only allows local objects, dataSourceRef allows objects\n  in any namespaces.\n(Beta) Using this field requires the AnyVolumeDataSource feature gate to be enabled.\n(Alpha) Using the namespace field of dataSourceRef requires the CrossNamespaceVolumeDataSource feature gate to be enabled.";
+          description = "dataSourceRef specifies the object from which to populate the volume with data, if a non-empty\nvolume is desired. This may be any object from a non-empty API group (non\ncore object) or a PersistentVolumeClaim object.\nWhen this field is specified, volume binding will only succeed if the type of\nthe specified object matches some installed volume populator or dynamic\nprovisioner.\nThis field will replace the functionality of the dataSource field and as such\nif both fields are non-empty, they must have the same value. For backwards\ncompatibility, when namespace isn't specified in dataSourceRef,\nboth fields (dataSource and dataSourceRef) will be set to the same\nvalue automatically if one of them is empty and the other is non-empty.\nWhen namespace is specified in dataSourceRef,\ndataSource isn't set to the same value and must be empty.\nThere are three important differences between dataSource and dataSourceRef:\n* While dataSource only allows two specific types of objects, dataSourceRef\n  allows any non-core object, as well as PersistentVolumeClaim objects.\n* While dataSource ignores disallowed values (dropping them), dataSourceRef\n  preserves all values, and generates an error if a disallowed value is\n  specified.\n* While dataSource only allows local objects, dataSourceRef allows objects\n  in any namespaces.\n(Alpha) Using the namespace field of dataSourceRef requires the CrossNamespaceVolumeDataSource feature gate to be enabled.";
           type = (
             types.nullOr (
               submoduleOf "actions.github.com.v1alpha1.EphemeralRunnerSpecSpecVolumesEphemeralVolumeClaimTemplateSpecDataSourceRef"
@@ -47811,6 +49004,10 @@ let
           description = "defaultMode are the mode bits used to set permissions on created files by default.\nMust be an octal value between 0000 and 0777 or a decimal value between 0 and 511.\nYAML accepts both octal and decimal values, JSON requires decimal values for mode bits.\nDirectories within the path are not affected by this setting.\nThis might be in conflict with other options that affect the file\nmode, like fsGroup, and the result can be other mode bits set.";
           type = (types.nullOr types.int);
         };
+        "defaultUser" = mkOption {
+          description = "defaultUser is Optional: The owner UID of the created files by default.\nThe defaultUser field is only used as a fallback when the item-level user field is unset.\n(Alpha) This field requires the AtomicWriteVolumeUserFields feature gate to be enabled.";
+          type = (types.nullOr types.int);
+        };
         "sources" = mkOption {
           description = "sources is the list of volume projections. Each entry in this list\nhandles one source.";
           type = (
@@ -47825,6 +49022,7 @@ let
 
       config = {
         "defaultMode" = mkOverride 1002 null;
+        "defaultUser" = mkOverride 1002 null;
         "sources" = mkOverride 1002 null;
       };
 
@@ -47919,6 +49117,10 @@ let
           description = "Select all ClusterTrustBundles that match this signer name.\nMutually-exclusive with name.  The contents of all selected\nClusterTrustBundles will be unified and deduplicated.";
           type = (types.nullOr types.str);
         };
+        "user" = mkOption {
+          description = "user is Optional: The owner UID of the created file.\nIf specified, the item-level user field takes precedence over defaultUser.\n(Alpha) This field requires the AtomicWriteVolumeUserFields feature gate to be enabled.";
+          type = (types.nullOr types.int);
+        };
       };
 
       config = {
@@ -47926,6 +49128,7 @@ let
         "name" = mkOverride 1002 null;
         "optional" = mkOverride 1002 null;
         "signerName" = mkOverride 1002 null;
+        "user" = mkOverride 1002 null;
       };
 
     };
@@ -48023,10 +49226,15 @@ let
           description = "path is the relative path of the file to map the key to.\nMay not be an absolute path.\nMay not contain the path element '..'.\nMay not start with the string '..'.";
           type = types.str;
         };
+        "user" = mkOption {
+          description = "user is Optional: The owner UID of the created file.\nIf specified, the item-level user field takes precedence over defaultUser.\n(Alpha) This field requires the AtomicWriteVolumeUserFields feature gate to be enabled.";
+          type = (types.nullOr types.int);
+        };
       };
 
       config = {
         "mode" = mkOverride 1002 null;
+        "user" = mkOverride 1002 null;
       };
 
     };
@@ -48077,12 +49285,17 @@ let
             )
           );
         };
+        "user" = mkOption {
+          description = "user is Optional: The owner UID of the created file.\nIf specified, the item-level user field takes precedence over defaultUser.\n(Alpha) This field requires the AtomicWriteVolumeUserFields feature gate to be enabled.";
+          type = (types.nullOr types.int);
+        };
       };
 
       config = {
         "fieldRef" = mkOverride 1002 null;
         "mode" = mkOverride 1002 null;
         "resourceFieldRef" = mkOverride 1002 null;
+        "user" = mkOverride 1002 null;
       };
 
     };
@@ -48156,6 +49369,10 @@ let
           description = "Kubelet's generated CSRs will be addressed to this signer.";
           type = types.str;
         };
+        "user" = mkOption {
+          description = "user is Optional: The owner UID of the created file.\nIf specified, the item-level user field takes precedence over defaultUser.\n(Alpha) This field requires the AtomicWriteVolumeUserFields feature gate to be enabled.";
+          type = (types.nullOr types.int);
+        };
         "userAnnotations" = mkOption {
           description = "userAnnotations allow pod authors to pass additional information to\nthe signer implementation.  Kubernetes does not restrict or validate this\nmetadata in any way.\n\nThese values are copied verbatim into the `spec.unverifiedUserAnnotations` field of\nthe PodCertificateRequest objects that Kubelet creates.\n\nEntries are subject to the same validation as object metadata annotations,\nwith the addition that all keys must be domain-prefixed. No restrictions\nare placed on values, except an overall size limitation on the entire field.\n\nSigners should document the keys and values they support. Signers should\ndeny requests that contain keys they do not recognize.";
           type = (types.nullOr (types.attrsOf types.str));
@@ -48167,6 +49384,7 @@ let
         "credentialBundlePath" = mkOverride 1002 null;
         "keyPath" = mkOverride 1002 null;
         "maxExpirationSeconds" = mkOverride 1002 null;
+        "user" = mkOverride 1002 null;
         "userAnnotations" = mkOverride 1002 null;
       };
 
@@ -48216,10 +49434,15 @@ let
           description = "path is the relative path of the file to map the key to.\nMay not be an absolute path.\nMay not contain the path element '..'.\nMay not start with the string '..'.";
           type = types.str;
         };
+        "user" = mkOption {
+          description = "user is Optional: The owner UID of the created file.\nIf specified, the item-level user field takes precedence over defaultUser.\n(Alpha) This field requires the AtomicWriteVolumeUserFields feature gate to be enabled.";
+          type = (types.nullOr types.int);
+        };
       };
 
       config = {
         "mode" = mkOverride 1002 null;
+        "user" = mkOverride 1002 null;
       };
 
     };
@@ -48238,11 +49461,16 @@ let
           description = "path is the path relative to the mount point of the file to project the\ntoken into.";
           type = types.str;
         };
+        "user" = mkOption {
+          description = "user is Optional: The owner UID of the created file.\nIf specified, the item-level user field takes precedence over defaultUser.\n(Alpha) This field requires the AtomicWriteVolumeUserFields feature gate to be enabled.";
+          type = (types.nullOr types.int);
+        };
       };
 
       config = {
         "audience" = mkOverride 1002 null;
         "expirationSeconds" = mkOverride 1002 null;
+        "user" = mkOverride 1002 null;
       };
 
     };
@@ -48423,6 +49651,10 @@ let
           description = "defaultMode is Optional: mode bits used to set permissions on created files by default.\nMust be an octal value between 0000 and 0777 or a decimal value between 0 and 511.\nYAML accepts both octal and decimal values, JSON requires decimal values\nfor mode bits. Defaults to 0644.\nDirectories within the path are not affected by this setting.\nThis might be in conflict with other options that affect the file\nmode, like fsGroup, and the result can be other mode bits set.";
           type = (types.nullOr types.int);
         };
+        "defaultUser" = mkOption {
+          description = "defaultUser is Optional: The owner UID of the created files by default.\nThe defaultUser field is only used as a fallback when the item-level user field is unset.\n(Alpha) This field requires the AtomicWriteVolumeUserFields feature gate to be enabled.";
+          type = (types.nullOr types.int);
+        };
         "items" = mkOption {
           description = "items If unspecified, each key-value pair in the Data field of the referenced\nSecret will be projected into the volume as a file whose name is the\nkey and content is the value. If specified, the listed keys will be\nprojected into the specified paths, and unlisted keys will not be\npresent. If a key is specified which is not present in the Secret,\nthe volume setup will error unless it is marked optional. Paths must be\nrelative and may not contain the '..' path or start with '..'.";
           type = (
@@ -48443,6 +49675,7 @@ let
 
       config = {
         "defaultMode" = mkOverride 1002 null;
+        "defaultUser" = mkOverride 1002 null;
         "items" = mkOverride 1002 null;
         "optional" = mkOverride 1002 null;
         "secretName" = mkOverride 1002 null;
@@ -48464,10 +49697,15 @@ let
           description = "path is the relative path of the file to map the key to.\nMay not be an absolute path.\nMay not contain the path element '..'.\nMay not start with the string '..'.";
           type = types.str;
         };
+        "user" = mkOption {
+          description = "user is Optional: The owner UID of the created file.\nIf specified, the item-level user field takes precedence over defaultUser.\n(Alpha) This field requires the AtomicWriteVolumeUserFields feature gate to be enabled.";
+          type = (types.nullOr types.int);
+        };
       };
 
       config = {
         "mode" = mkOverride 1002 null;
+        "user" = mkOverride 1002 null;
       };
 
     };
@@ -48548,28 +49786,6 @@ let
         "fsType" = mkOverride 1002 null;
         "storagePolicyID" = mkOverride 1002 null;
         "storagePolicyName" = mkOverride 1002 null;
-      };
-
-    };
-    "actions.github.com.v1alpha1.EphemeralRunnerSpecSpecWorkloadRef" = {
-
-      options = {
-        "name" = mkOption {
-          description = "Name defines the name of the Workload object this Pod belongs to.\nWorkload must be in the same namespace as the Pod.\nIf it doesn't match any existing Workload, the Pod will remain unschedulable\nuntil a Workload object is created and observed by the kube-scheduler.\nIt must be a DNS subdomain.";
-          type = types.str;
-        };
-        "podGroup" = mkOption {
-          description = "PodGroup is the name of the PodGroup within the Workload that this Pod\nbelongs to. If it doesn't match any existing PodGroup within the Workload,\nthe Pod will remain unschedulable until the Workload object is recreated\nand observed by the kube-scheduler. It must be a DNS label.";
-          type = types.str;
-        };
-        "podGroupReplicaKey" = mkOption {
-          description = "PodGroupReplicaKey specifies the replica key of the PodGroup to which this\nPod belongs. It is used to distinguish pods belonging to different replicas\nof the same pod group. The pod group policy is applied separately to each replica.\nWhen set, it must be a DNS label.";
-          type = (types.nullOr types.str);
-        };
-      };
-
-      config = {
-        "podGroupReplicaKey" = mkOverride 1002 null;
       };
 
     };
@@ -48723,7 +49939,7 @@ let
           type = (types.nullOr types.str);
         };
         "phase" = mkOption {
-          description = "Phase describes phases where EphemeralRunner can be in.\nThe underlying type is a PodPhase, but the meaning is more restrictive\n\nThe PodFailed phase should be set only when EphemeralRunner fails to start\nafter multiple retries. That signals that this EphemeralRunner won't work,\nand manual inspection is required\n\nThe PodSucceded phase should be set only when confirmed that EphemeralRunner\nactually executed the job and has been removed from the service.";
+          description = "Phase describes phases where EphemeralRunner can be in.\nThe underlying type is a PodPhase, but the meaning is more restrictive\n\nThe PodFailed phase should be set only when EphemeralRunner fails to start\nafter multiple retries. That signals that this EphemeralRunner won't work,\nand manual inspection is required\n\nThe PodSucceded phase should be set only when confirmed that EphemeralRunner\nactually executed the job and has been removed from the service.\n\nRunning means a job has been assigned to this EphemeralRunner. It does not\nmean the runner is merely online and waiting for work; an idle registered\nrunner stays Pending.";
           type = (types.nullOr types.str);
         };
         "ready" = mkOption {
