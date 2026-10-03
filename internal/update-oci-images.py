@@ -141,6 +141,17 @@ def resolve_latest(images: list[Image]) -> list[Result]:
         except (OSError, subprocess.CalledProcessError) as err:
             results.append(Result(image, "error", None, str(err)))
             continue
+        if parse_version(image.tag) is None and image.tag in candidates:
+            # A floating tag such as "latest" never moves to another tag, only to new
+            # content under the same one, so follow its digest instead.
+            try:
+                digest = crane_digest(image.image_name, image.tag)
+            except (OSError, subprocess.CalledProcessError) as err:
+                results.append(Result(image, "error", None, str(err)))
+                continue
+            status = "up-to-date" if digest == image.digest else "update"
+            results.append(Result(image, status, image.tag))
+            continue
         latest = select_version(candidates, image.tag)
         if latest is None:
             results.append(Result(image, "error", None, "no usable tag published"))
@@ -205,6 +216,10 @@ def apply_image(image: Image, new_tag: str, dry_run: bool, push: bool) -> Result
         original = f.read()
 
     message = f"{image.pname}: {image.tag} -> {new_tag}"
+    if new_tag == image.tag:
+        message = (
+            f"{image.pname}: {image.tag} {image.digest[7:19]} -> {new_digest[7:19]}"
+        )
 
     if dry_run:
         sys.stdout.writelines(
