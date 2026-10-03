@@ -6,7 +6,7 @@
 }:
 stdenvNoCC.mkDerivation (finalAttrs: {
   pname = "aws-ip-ranges-s3";
-  version = "0-unstable-2026-09-26";
+  version = "0-unstable-2026-10-03";
 
   __structuredAttrs = true;
 
