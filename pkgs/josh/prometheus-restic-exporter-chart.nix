@@ -7,13 +7,13 @@
 }:
 stdenvNoCC.mkDerivation (finalAttrs: {
   pname = "prometheus-restic-exporter-chart";
-  version = "2.0.4";
+  version = "2.0.5";
 
   src = fetchFromGitHub {
     owner = "josh";
     repo = "restic-exporter";
     tag = "v${finalAttrs.version}";
-    hash = "sha256-GZxCawHupl/bbOCrMXZgVjH4fpwfAm5aOaKp0Vy/Q44=";
+    hash = "sha256-PAKfdfGiD9tFOl/P33pPsKylnDOJWCSqmamVZrBsNes=";
   };
 
   buildCommand = ''
