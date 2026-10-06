@@ -2,8 +2,8 @@
 kubepkgs.fetchhelm {
   url = "https://prometheus-community.github.io/helm-charts";
   chart = "kube-prometheus-stack";
-  version = "91.9.0";
-  hash = "sha256-5jj5S/K9F0OdQyxoP5lE1e/F0nRBwzXpUVTcbSpiISo=";
+  version = "92.0.0";
+  hash = "sha256-lyT/f6wRjZbNEEOKZoo37yUmT5jTJRfITOh81yYdaRk=";
 
   crds.file = ../../crds/kube-prometheus-stack.nix;
 
