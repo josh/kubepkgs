@@ -357,7 +357,7 @@ let
 
       options = {
         "interval" = mkOption {
-          description = "Interval represent the periodicity of the snapshot.";
+          description = "Interval represents the periodicity of the snapshot.";
           type = (types.nullOr types.str);
         };
         "path" = mkOption {
@@ -405,7 +405,7 @@ let
           );
         };
         "phase" = mkOption {
-          description = "ConditionType represent a resource's status";
+          description = "ConditionType represents a resource's status";
           type = (types.nullOr types.str);
         };
         "snapshotScheduleStatus" = mkOption {
@@ -450,7 +450,7 @@ let
           type = (types.nullOr types.str);
         };
         "type" = mkOption {
-          description = "ConditionType represent a resource's status";
+          description = "ConditionType represents a resource's status";
           type = (types.nullOr types.str);
         };
       };
@@ -907,6 +907,7 @@ let
                 ".rgw.root"
                 ".nfs"
                 ".mgr"
+                ".nvmeof"
               ]
             )
           );
@@ -1050,7 +1051,7 @@ let
 
       options = {
         "interval" = mkOption {
-          description = "Interval represent the periodicity of the snapshot.";
+          description = "Interval represents the periodicity of the snapshot.";
           type = (types.nullOr types.str);
         };
         "path" = mkOption {
@@ -1214,7 +1215,7 @@ let
           type = (types.nullOr types.int);
         };
         "phase" = mkOption {
-          description = "ConditionType represent a resource's status";
+          description = "ConditionType represents a resource's status";
           type = (types.nullOr types.str);
         };
         "poolID" = mkOption {
@@ -1302,7 +1303,7 @@ let
           type = (types.nullOr types.str);
         };
         "type" = mkOption {
-          description = "ConditionType represent a resource's status";
+          description = "ConditionType represents a resource's status";
           type = (types.nullOr types.str);
         };
       };
@@ -1708,7 +1709,7 @@ let
           type = (globalSubmoduleOf "io.k8s.apimachinery.pkg.apis.meta.v1.ObjectMeta");
         };
         "spec" = mkOption {
-          description = "BucketNotificationSpec represent the spec of a Bucket Notification";
+          description = "BucketNotificationSpec represents the spec of a Bucket Notification";
           type = (submoduleOf "ceph.rook.io.v1.CephBucketNotificationSpec");
         };
         "status" = mkOption {
@@ -1896,7 +1897,7 @@ let
           type = (types.nullOr types.str);
         };
         "type" = mkOption {
-          description = "ConditionType represent a resource's status";
+          description = "ConditionType represents a resource's status";
           type = (types.nullOr types.str);
         };
       };
@@ -1927,7 +1928,7 @@ let
           type = (globalSubmoduleOf "io.k8s.apimachinery.pkg.apis.meta.v1.ObjectMeta");
         };
         "spec" = mkOption {
-          description = "BucketTopicSpec represent the spec of a Bucket Topic";
+          description = "BucketTopicSpec represents the spec of a Bucket Topic";
           type = (submoduleOf "ceph.rook.io.v1.CephBucketTopicSpec");
         };
         "status" = mkOption {
@@ -3553,7 +3554,7 @@ let
           type = (types.nullOr types.int);
         };
         "phase" = mkOption {
-          description = "ConditionType represent a resource's status";
+          description = "ConditionType represents a resource's status";
           type = (types.nullOr types.str);
         };
       };
@@ -3682,7 +3683,7 @@ let
           type = (types.nullOr (types.attrsOf types.attrs));
         };
         "logCollector" = mkOption {
-          description = "Logging represents loggings settings";
+          description = "LogCollector represents logging settings";
           type = (types.nullOr (submoduleOf "ceph.rook.io.v1.CephClusterSpecLogCollector"));
         };
         "mgr" = mkOption {
@@ -3975,6 +3976,10 @@ let
           description = "SSL determines whether SSL should be used";
           type = (types.nullOr types.bool);
         };
+        "sslCertificateRef" = mkOption {
+          description = "SSLCertificateRef references a Kubernetes secret of type kubernetes.io/tls in the CephCluster namespace. If set, Rook will configure the dashboard with this certificate instead of creating a self-signed certificate.";
+          type = (types.nullOr (types.withMaxLength 253 (types.withMinLength 1 types.str)));
+        };
         "urlPrefix" = mkOption {
           description = "URLPrefix is a prefix for all URLs to use the dashboard with a reverse proxy";
           type = (types.nullOr types.str);
@@ -3987,6 +3992,7 @@ let
         "prometheusEndpoint" = mkOverride 1002 null;
         "prometheusEndpointSSLVerify" = mkOverride 1002 null;
         "ssl" = mkOverride 1002 null;
+        "sslCertificateRef" = mkOverride 1002 null;
         "urlPrefix" = mkOverride 1002 null;
       };
 
@@ -4472,7 +4478,7 @@ let
           type = (types.nullOr (types.listOf types.str));
         };
         "dataSource" = mkOption {
-          description = "dataSource field can be used to specify either:\n* An existing VolumeSnapshot object (snapshot.storage.k8s.io/VolumeSnapshot)\n* An existing PVC (PersistentVolumeClaim)\nIf the provisioner or an external controller can support the specified data source,\nit will create a new volume based on the contents of the specified data source.\nWhen the AnyVolumeDataSource feature gate is enabled, dataSource contents will be copied to dataSourceRef,\nand dataSourceRef contents will be copied to dataSource when dataSourceRef.namespace is not specified.\nIf the namespace is specified, then dataSourceRef will not be copied to dataSource.";
+          description = "dataSource field can be used to specify either:\n* An existing VolumeSnapshot object (snapshot.storage.k8s.io/VolumeSnapshot)\n* An existing PVC (PersistentVolumeClaim)\nIf the provisioner or an external controller can support the specified data source,\nit will create a new volume based on the contents of the specified data source.\ndataSource contents will be copied to dataSourceRef, and dataSourceRef contents will be\ncopied to dataSource when dataSourceRef.namespace is not specified.\nIf the namespace is specified, then dataSourceRef will not be copied to dataSource.";
           type = (
             types.nullOr (
               submoduleOf "ceph.rook.io.v1.CephClusterSpecMonStretchClusterZonesVolumeClaimTemplateSpecDataSource"
@@ -4480,7 +4486,7 @@ let
           );
         };
         "dataSourceRef" = mkOption {
-          description = "dataSourceRef specifies the object from which to populate the volume with data, if a non-empty\nvolume is desired. This may be any object from a non-empty API group (non\ncore object) or a PersistentVolumeClaim object.\nWhen this field is specified, volume binding will only succeed if the type of\nthe specified object matches some installed volume populator or dynamic\nprovisioner.\nThis field will replace the functionality of the dataSource field and as such\nif both fields are non-empty, they must have the same value. For backwards\ncompatibility, when namespace isn't specified in dataSourceRef,\nboth fields (dataSource and dataSourceRef) will be set to the same\nvalue automatically if one of them is empty and the other is non-empty.\nWhen namespace is specified in dataSourceRef,\ndataSource isn't set to the same value and must be empty.\nThere are three important differences between dataSource and dataSourceRef:\n* While dataSource only allows two specific types of objects, dataSourceRef\n  allows any non-core object, as well as PersistentVolumeClaim objects.\n* While dataSource ignores disallowed values (dropping them), dataSourceRef\n  preserves all values, and generates an error if a disallowed value is\n  specified.\n* While dataSource only allows local objects, dataSourceRef allows objects\n  in any namespaces.\n(Beta) Using this field requires the AnyVolumeDataSource feature gate to be enabled.\n(Alpha) Using the namespace field of dataSourceRef requires the CrossNamespaceVolumeDataSource feature gate to be enabled.";
+          description = "dataSourceRef specifies the object from which to populate the volume with data, if a non-empty\nvolume is desired. This may be any object from a non-empty API group (non\ncore object) or a PersistentVolumeClaim object.\nWhen this field is specified, volume binding will only succeed if the type of\nthe specified object matches some installed volume populator or dynamic\nprovisioner.\nThis field will replace the functionality of the dataSource field and as such\nif both fields are non-empty, they must have the same value. For backwards\ncompatibility, when namespace isn't specified in dataSourceRef,\nboth fields (dataSource and dataSourceRef) will be set to the same\nvalue automatically if one of them is empty and the other is non-empty.\nWhen namespace is specified in dataSourceRef,\ndataSource isn't set to the same value and must be empty.\nThere are three important differences between dataSource and dataSourceRef:\n* While dataSource only allows two specific types of objects, dataSourceRef\n  allows any non-core object, as well as PersistentVolumeClaim objects.\n* While dataSource ignores disallowed values (dropping them), dataSourceRef\n  preserves all values, and generates an error if a disallowed value is\n  specified.\n* While dataSource only allows local objects, dataSourceRef allows objects\n  in any namespaces.\n(Alpha) Using the namespace field of dataSourceRef requires the CrossNamespaceVolumeDataSource feature gate to be enabled.";
           type = (
             types.nullOr (
               submoduleOf "ceph.rook.io.v1.CephClusterSpecMonStretchClusterZonesVolumeClaimTemplateSpecDataSourceRef"
@@ -4711,13 +4717,13 @@ let
           type = (types.nullOr (types.listOf types.str));
         };
         "dataSource" = mkOption {
-          description = "dataSource field can be used to specify either:\n* An existing VolumeSnapshot object (snapshot.storage.k8s.io/VolumeSnapshot)\n* An existing PVC (PersistentVolumeClaim)\nIf the provisioner or an external controller can support the specified data source,\nit will create a new volume based on the contents of the specified data source.\nWhen the AnyVolumeDataSource feature gate is enabled, dataSource contents will be copied to dataSourceRef,\nand dataSourceRef contents will be copied to dataSource when dataSourceRef.namespace is not specified.\nIf the namespace is specified, then dataSourceRef will not be copied to dataSource.";
+          description = "dataSource field can be used to specify either:\n* An existing VolumeSnapshot object (snapshot.storage.k8s.io/VolumeSnapshot)\n* An existing PVC (PersistentVolumeClaim)\nIf the provisioner or an external controller can support the specified data source,\nit will create a new volume based on the contents of the specified data source.\ndataSource contents will be copied to dataSourceRef, and dataSourceRef contents will be\ncopied to dataSource when dataSourceRef.namespace is not specified.\nIf the namespace is specified, then dataSourceRef will not be copied to dataSource.";
           type = (
             types.nullOr (submoduleOf "ceph.rook.io.v1.CephClusterSpecMonVolumeClaimTemplateSpecDataSource")
           );
         };
         "dataSourceRef" = mkOption {
-          description = "dataSourceRef specifies the object from which to populate the volume with data, if a non-empty\nvolume is desired. This may be any object from a non-empty API group (non\ncore object) or a PersistentVolumeClaim object.\nWhen this field is specified, volume binding will only succeed if the type of\nthe specified object matches some installed volume populator or dynamic\nprovisioner.\nThis field will replace the functionality of the dataSource field and as such\nif both fields are non-empty, they must have the same value. For backwards\ncompatibility, when namespace isn't specified in dataSourceRef,\nboth fields (dataSource and dataSourceRef) will be set to the same\nvalue automatically if one of them is empty and the other is non-empty.\nWhen namespace is specified in dataSourceRef,\ndataSource isn't set to the same value and must be empty.\nThere are three important differences between dataSource and dataSourceRef:\n* While dataSource only allows two specific types of objects, dataSourceRef\n  allows any non-core object, as well as PersistentVolumeClaim objects.\n* While dataSource ignores disallowed values (dropping them), dataSourceRef\n  preserves all values, and generates an error if a disallowed value is\n  specified.\n* While dataSource only allows local objects, dataSourceRef allows objects\n  in any namespaces.\n(Beta) Using this field requires the AnyVolumeDataSource feature gate to be enabled.\n(Alpha) Using the namespace field of dataSourceRef requires the CrossNamespaceVolumeDataSource feature gate to be enabled.";
+          description = "dataSourceRef specifies the object from which to populate the volume with data, if a non-empty\nvolume is desired. This may be any object from a non-empty API group (non\ncore object) or a PersistentVolumeClaim object.\nWhen this field is specified, volume binding will only succeed if the type of\nthe specified object matches some installed volume populator or dynamic\nprovisioner.\nThis field will replace the functionality of the dataSource field and as such\nif both fields are non-empty, they must have the same value. For backwards\ncompatibility, when namespace isn't specified in dataSourceRef,\nboth fields (dataSource and dataSourceRef) will be set to the same\nvalue automatically if one of them is empty and the other is non-empty.\nWhen namespace is specified in dataSourceRef,\ndataSource isn't set to the same value and must be empty.\nThere are three important differences between dataSource and dataSourceRef:\n* While dataSource only allows two specific types of objects, dataSourceRef\n  allows any non-core object, as well as PersistentVolumeClaim objects.\n* While dataSource ignores disallowed values (dropping them), dataSourceRef\n  preserves all values, and generates an error if a disallowed value is\n  specified.\n* While dataSource only allows local objects, dataSourceRef allows objects\n  in any namespaces.\n(Alpha) Using the namespace field of dataSourceRef requires the CrossNamespaceVolumeDataSource feature gate to be enabled.";
           type = (
             types.nullOr (submoduleOf "ceph.rook.io.v1.CephClusterSpecMonVolumeClaimTemplateSpecDataSourceRef")
           );
@@ -4969,7 +4975,7 @@ let
           type = (types.nullOr (types.listOf types.str));
         };
         "dataSource" = mkOption {
-          description = "dataSource field can be used to specify either:\n* An existing VolumeSnapshot object (snapshot.storage.k8s.io/VolumeSnapshot)\n* An existing PVC (PersistentVolumeClaim)\nIf the provisioner or an external controller can support the specified data source,\nit will create a new volume based on the contents of the specified data source.\nWhen the AnyVolumeDataSource feature gate is enabled, dataSource contents will be copied to dataSourceRef,\nand dataSourceRef contents will be copied to dataSource when dataSourceRef.namespace is not specified.\nIf the namespace is specified, then dataSourceRef will not be copied to dataSource.";
+          description = "dataSource field can be used to specify either:\n* An existing VolumeSnapshot object (snapshot.storage.k8s.io/VolumeSnapshot)\n* An existing PVC (PersistentVolumeClaim)\nIf the provisioner or an external controller can support the specified data source,\nit will create a new volume based on the contents of the specified data source.\ndataSource contents will be copied to dataSourceRef, and dataSourceRef contents will be\ncopied to dataSource when dataSourceRef.namespace is not specified.\nIf the namespace is specified, then dataSourceRef will not be copied to dataSource.";
           type = (
             types.nullOr (
               submoduleOf "ceph.rook.io.v1.CephClusterSpecMonZonesVolumeClaimTemplateSpecDataSource"
@@ -4977,7 +4983,7 @@ let
           );
         };
         "dataSourceRef" = mkOption {
-          description = "dataSourceRef specifies the object from which to populate the volume with data, if a non-empty\nvolume is desired. This may be any object from a non-empty API group (non\ncore object) or a PersistentVolumeClaim object.\nWhen this field is specified, volume binding will only succeed if the type of\nthe specified object matches some installed volume populator or dynamic\nprovisioner.\nThis field will replace the functionality of the dataSource field and as such\nif both fields are non-empty, they must have the same value. For backwards\ncompatibility, when namespace isn't specified in dataSourceRef,\nboth fields (dataSource and dataSourceRef) will be set to the same\nvalue automatically if one of them is empty and the other is non-empty.\nWhen namespace is specified in dataSourceRef,\ndataSource isn't set to the same value and must be empty.\nThere are three important differences between dataSource and dataSourceRef:\n* While dataSource only allows two specific types of objects, dataSourceRef\n  allows any non-core object, as well as PersistentVolumeClaim objects.\n* While dataSource ignores disallowed values (dropping them), dataSourceRef\n  preserves all values, and generates an error if a disallowed value is\n  specified.\n* While dataSource only allows local objects, dataSourceRef allows objects\n  in any namespaces.\n(Beta) Using this field requires the AnyVolumeDataSource feature gate to be enabled.\n(Alpha) Using the namespace field of dataSourceRef requires the CrossNamespaceVolumeDataSource feature gate to be enabled.";
+          description = "dataSourceRef specifies the object from which to populate the volume with data, if a non-empty\nvolume is desired. This may be any object from a non-empty API group (non\ncore object) or a PersistentVolumeClaim object.\nWhen this field is specified, volume binding will only succeed if the type of\nthe specified object matches some installed volume populator or dynamic\nprovisioner.\nThis field will replace the functionality of the dataSource field and as such\nif both fields are non-empty, they must have the same value. For backwards\ncompatibility, when namespace isn't specified in dataSourceRef,\nboth fields (dataSource and dataSourceRef) will be set to the same\nvalue automatically if one of them is empty and the other is non-empty.\nWhen namespace is specified in dataSourceRef,\ndataSource isn't set to the same value and must be empty.\nThere are three important differences between dataSource and dataSourceRef:\n* While dataSource only allows two specific types of objects, dataSourceRef\n  allows any non-core object, as well as PersistentVolumeClaim objects.\n* While dataSource ignores disallowed values (dropping them), dataSourceRef\n  preserves all values, and generates an error if a disallowed value is\n  specified.\n* While dataSource only allows local objects, dataSourceRef allows objects\n  in any namespaces.\n(Alpha) Using the namespace field of dataSourceRef requires the CrossNamespaceVolumeDataSource feature gate to be enabled.";
           type = (
             types.nullOr (
               submoduleOf "ceph.rook.io.v1.CephClusterSpecMonZonesVolumeClaimTemplateSpecDataSourceRef"
@@ -5173,6 +5179,10 @@ let
           description = "Whether to disable the metrics reported by Ceph. If false, the prometheus mgr module and Ceph exporter are enabled.\nIf true, the prometheus mgr module and Ceph exporter are both disabled. Default is false.";
           type = (types.nullOr types.bool);
         };
+        "metricsTLS" = mkOption {
+          description = "MetricsTLS configures native HTTPS for the MGR Prometheus metrics endpoint.\nRequires Ceph with prometheus module TLS support: https://github.com/ceph/ceph/pull/70989\nRook mounts a Kubernetes TLS Secret into the mgr pod and configures the module.";
+          type = (types.nullOr (submoduleOf "ceph.rook.io.v1.CephClusterSpecMonitoringMetricsTLS"));
+        };
         "port" = mkOption {
           description = "Port is the prometheus server port";
           type = (types.nullOr (types.withMaximum 65535 (types.withMinimum 0 types.int)));
@@ -5186,6 +5196,7 @@ let
         "externalMgrPrometheusPort" = mkOverride 1002 null;
         "interval" = mkOverride 1002 null;
         "metricsDisabled" = mkOverride 1002 null;
+        "metricsTLS" = mkOverride 1002 null;
         "port" = mkOverride 1002 null;
       };
 
@@ -5290,6 +5301,91 @@ let
         "namespace" = mkOverride 1002 null;
         "resourceVersion" = mkOverride 1002 null;
         "uid" = mkOverride 1002 null;
+      };
+
+    };
+    "ceph.rook.io.v1.CephClusterSpecMonitoringMetricsTLS" = {
+
+      options = {
+        "ca" = mkOption {
+          description = "CA is an optional trust anchor for the ServiceMonitor tlsConfig.ca.\nOmit when the server cert contains a public CA.";
+          type = (types.nullOr (submoduleOf "ceph.rook.io.v1.CephClusterSpecMonitoringMetricsTLSCa"));
+        };
+        "secretName" = mkOption {
+          description = "SecretName is the Kubernetes Secret containing tls.crt and tls.key for the\nmgr HTTPS listener.";
+          type = (types.withMaxLength 253 (types.withMinLength 1 types.str));
+        };
+      };
+
+      config = {
+        "ca" = mkOverride 1002 null;
+      };
+
+    };
+    "ceph.rook.io.v1.CephClusterSpecMonitoringMetricsTLSCa" = {
+
+      options = {
+        "configMap" = mkOption {
+          description = "Selects a key from a ConfigMap.";
+          type = (
+            types.nullOr (submoduleOf "ceph.rook.io.v1.CephClusterSpecMonitoringMetricsTLSCaConfigMap")
+          );
+        };
+        "secret" = mkOption {
+          description = "SecretKeySelector selects a key of a Secret.";
+          type = (types.nullOr (submoduleOf "ceph.rook.io.v1.CephClusterSpecMonitoringMetricsTLSCaSecret"));
+        };
+      };
+
+      config = {
+        "configMap" = mkOverride 1002 null;
+        "secret" = mkOverride 1002 null;
+      };
+
+    };
+    "ceph.rook.io.v1.CephClusterSpecMonitoringMetricsTLSCaConfigMap" = {
+
+      options = {
+        "key" = mkOption {
+          description = "The key to select from the ConfigMap's Data field.\nKeys in the BinaryData field are not currently propagated to container env vars.";
+          type = types.str;
+        };
+        "name" = mkOption {
+          description = "Name of the referent.\nThis field is effectively required, but due to backwards compatibility is\nallowed to be empty. Instances of this type with an empty value here are\nalmost certainly wrong.\nMore info: https://kubernetes.io/docs/concepts/overview/working-with-objects/names/#names";
+          type = (types.nullOr types.str);
+        };
+        "optional" = mkOption {
+          description = "Specify whether the ConfigMap or its key must be defined";
+          type = (types.nullOr types.bool);
+        };
+      };
+
+      config = {
+        "name" = mkOverride 1002 null;
+        "optional" = mkOverride 1002 null;
+      };
+
+    };
+    "ceph.rook.io.v1.CephClusterSpecMonitoringMetricsTLSCaSecret" = {
+
+      options = {
+        "key" = mkOption {
+          description = "The key of the secret to select from.  Must be a valid secret key.";
+          type = types.str;
+        };
+        "name" = mkOption {
+          description = "Name of the referent.\nThis field is effectively required, but due to backwards compatibility is\nallowed to be empty. Instances of this type with an empty value here are\nalmost certainly wrong.\nMore info: https://kubernetes.io/docs/concepts/overview/working-with-objects/names/#names";
+          type = (types.nullOr types.str);
+        };
+        "optional" = mkOption {
+          description = "Specify whether the Secret or its key must be defined";
+          type = (types.nullOr types.bool);
+        };
+      };
+
+      config = {
+        "name" = mkOverride 1002 null;
+        "optional" = mkOverride 1002 null;
       };
 
     };
@@ -5745,7 +5841,7 @@ let
           type = (types.nullOr (types.withMinimum 1 types.int));
         };
         "scheduleAlways" = mkOption {
-          description = "Whether to always schedule OSDs on a node even if the node is not currently scheduleable or ready";
+          description = "Whether to always schedule OSDs on a node even if the node is not currently schedulable or ready";
           type = (types.nullOr types.bool);
         };
         "storageClassDeviceSets" = mkOption {
@@ -6039,7 +6135,7 @@ let
           type = (types.nullOr (types.listOf types.str));
         };
         "dataSource" = mkOption {
-          description = "dataSource field can be used to specify either:\n* An existing VolumeSnapshot object (snapshot.storage.k8s.io/VolumeSnapshot)\n* An existing PVC (PersistentVolumeClaim)\nIf the provisioner or an external controller can support the specified data source,\nit will create a new volume based on the contents of the specified data source.\nWhen the AnyVolumeDataSource feature gate is enabled, dataSource contents will be copied to dataSourceRef,\nand dataSourceRef contents will be copied to dataSource when dataSourceRef.namespace is not specified.\nIf the namespace is specified, then dataSourceRef will not be copied to dataSource.";
+          description = "dataSource field can be used to specify either:\n* An existing VolumeSnapshot object (snapshot.storage.k8s.io/VolumeSnapshot)\n* An existing PVC (PersistentVolumeClaim)\nIf the provisioner or an external controller can support the specified data source,\nit will create a new volume based on the contents of the specified data source.\ndataSource contents will be copied to dataSourceRef, and dataSourceRef contents will be\ncopied to dataSource when dataSourceRef.namespace is not specified.\nIf the namespace is specified, then dataSourceRef will not be copied to dataSource.";
           type = (
             types.nullOr (
               submoduleOf "ceph.rook.io.v1.CephClusterSpecStorageNodesVolumeClaimTemplatesSpecDataSource"
@@ -6047,7 +6143,7 @@ let
           );
         };
         "dataSourceRef" = mkOption {
-          description = "dataSourceRef specifies the object from which to populate the volume with data, if a non-empty\nvolume is desired. This may be any object from a non-empty API group (non\ncore object) or a PersistentVolumeClaim object.\nWhen this field is specified, volume binding will only succeed if the type of\nthe specified object matches some installed volume populator or dynamic\nprovisioner.\nThis field will replace the functionality of the dataSource field and as such\nif both fields are non-empty, they must have the same value. For backwards\ncompatibility, when namespace isn't specified in dataSourceRef,\nboth fields (dataSource and dataSourceRef) will be set to the same\nvalue automatically if one of them is empty and the other is non-empty.\nWhen namespace is specified in dataSourceRef,\ndataSource isn't set to the same value and must be empty.\nThere are three important differences between dataSource and dataSourceRef:\n* While dataSource only allows two specific types of objects, dataSourceRef\n  allows any non-core object, as well as PersistentVolumeClaim objects.\n* While dataSource ignores disallowed values (dropping them), dataSourceRef\n  preserves all values, and generates an error if a disallowed value is\n  specified.\n* While dataSource only allows local objects, dataSourceRef allows objects\n  in any namespaces.\n(Beta) Using this field requires the AnyVolumeDataSource feature gate to be enabled.\n(Alpha) Using the namespace field of dataSourceRef requires the CrossNamespaceVolumeDataSource feature gate to be enabled.";
+          description = "dataSourceRef specifies the object from which to populate the volume with data, if a non-empty\nvolume is desired. This may be any object from a non-empty API group (non\ncore object) or a PersistentVolumeClaim object.\nWhen this field is specified, volume binding will only succeed if the type of\nthe specified object matches some installed volume populator or dynamic\nprovisioner.\nThis field will replace the functionality of the dataSource field and as such\nif both fields are non-empty, they must have the same value. For backwards\ncompatibility, when namespace isn't specified in dataSourceRef,\nboth fields (dataSource and dataSourceRef) will be set to the same\nvalue automatically if one of them is empty and the other is non-empty.\nWhen namespace is specified in dataSourceRef,\ndataSource isn't set to the same value and must be empty.\nThere are three important differences between dataSource and dataSourceRef:\n* While dataSource only allows two specific types of objects, dataSourceRef\n  allows any non-core object, as well as PersistentVolumeClaim objects.\n* While dataSource ignores disallowed values (dropping them), dataSourceRef\n  preserves all values, and generates an error if a disallowed value is\n  specified.\n* While dataSource only allows local objects, dataSourceRef allows objects\n  in any namespaces.\n(Alpha) Using the namespace field of dataSourceRef requires the CrossNamespaceVolumeDataSource feature gate to be enabled.";
           type = (
             types.nullOr (
               submoduleOf "ceph.rook.io.v1.CephClusterSpecStorageNodesVolumeClaimTemplatesSpecDataSourceRef"
@@ -8598,7 +8694,7 @@ let
           type = (types.nullOr (types.listOf types.str));
         };
         "dataSource" = mkOption {
-          description = "dataSource field can be used to specify either:\n* An existing VolumeSnapshot object (snapshot.storage.k8s.io/VolumeSnapshot)\n* An existing PVC (PersistentVolumeClaim)\nIf the provisioner or an external controller can support the specified data source,\nit will create a new volume based on the contents of the specified data source.\nWhen the AnyVolumeDataSource feature gate is enabled, dataSource contents will be copied to dataSourceRef,\nand dataSourceRef contents will be copied to dataSource when dataSourceRef.namespace is not specified.\nIf the namespace is specified, then dataSourceRef will not be copied to dataSource.";
+          description = "dataSource field can be used to specify either:\n* An existing VolumeSnapshot object (snapshot.storage.k8s.io/VolumeSnapshot)\n* An existing PVC (PersistentVolumeClaim)\nIf the provisioner or an external controller can support the specified data source,\nit will create a new volume based on the contents of the specified data source.\ndataSource contents will be copied to dataSourceRef, and dataSourceRef contents will be\ncopied to dataSource when dataSourceRef.namespace is not specified.\nIf the namespace is specified, then dataSourceRef will not be copied to dataSource.";
           type = (
             types.nullOr (
               submoduleOf "ceph.rook.io.v1.CephClusterSpecStorageStorageClassDeviceSetsVolumeClaimTemplatesSpecDataSource"
@@ -8606,7 +8702,7 @@ let
           );
         };
         "dataSourceRef" = mkOption {
-          description = "dataSourceRef specifies the object from which to populate the volume with data, if a non-empty\nvolume is desired. This may be any object from a non-empty API group (non\ncore object) or a PersistentVolumeClaim object.\nWhen this field is specified, volume binding will only succeed if the type of\nthe specified object matches some installed volume populator or dynamic\nprovisioner.\nThis field will replace the functionality of the dataSource field and as such\nif both fields are non-empty, they must have the same value. For backwards\ncompatibility, when namespace isn't specified in dataSourceRef,\nboth fields (dataSource and dataSourceRef) will be set to the same\nvalue automatically if one of them is empty and the other is non-empty.\nWhen namespace is specified in dataSourceRef,\ndataSource isn't set to the same value and must be empty.\nThere are three important differences between dataSource and dataSourceRef:\n* While dataSource only allows two specific types of objects, dataSourceRef\n  allows any non-core object, as well as PersistentVolumeClaim objects.\n* While dataSource ignores disallowed values (dropping them), dataSourceRef\n  preserves all values, and generates an error if a disallowed value is\n  specified.\n* While dataSource only allows local objects, dataSourceRef allows objects\n  in any namespaces.\n(Beta) Using this field requires the AnyVolumeDataSource feature gate to be enabled.\n(Alpha) Using the namespace field of dataSourceRef requires the CrossNamespaceVolumeDataSource feature gate to be enabled.";
+          description = "dataSourceRef specifies the object from which to populate the volume with data, if a non-empty\nvolume is desired. This may be any object from a non-empty API group (non\ncore object) or a PersistentVolumeClaim object.\nWhen this field is specified, volume binding will only succeed if the type of\nthe specified object matches some installed volume populator or dynamic\nprovisioner.\nThis field will replace the functionality of the dataSource field and as such\nif both fields are non-empty, they must have the same value. For backwards\ncompatibility, when namespace isn't specified in dataSourceRef,\nboth fields (dataSource and dataSourceRef) will be set to the same\nvalue automatically if one of them is empty and the other is non-empty.\nWhen namespace is specified in dataSourceRef,\ndataSource isn't set to the same value and must be empty.\nThere are three important differences between dataSource and dataSourceRef:\n* While dataSource only allows two specific types of objects, dataSourceRef\n  allows any non-core object, as well as PersistentVolumeClaim objects.\n* While dataSource ignores disallowed values (dropping them), dataSourceRef\n  preserves all values, and generates an error if a disallowed value is\n  specified.\n* While dataSource only allows local objects, dataSourceRef allows objects\n  in any namespaces.\n(Alpha) Using the namespace field of dataSourceRef requires the CrossNamespaceVolumeDataSource feature gate to be enabled.";
           type = (
             types.nullOr (
               submoduleOf "ceph.rook.io.v1.CephClusterSpecStorageStorageClassDeviceSetsVolumeClaimTemplatesSpecDataSourceRef"
@@ -8868,7 +8964,7 @@ let
           type = (types.nullOr (types.listOf types.str));
         };
         "dataSource" = mkOption {
-          description = "dataSource field can be used to specify either:\n* An existing VolumeSnapshot object (snapshot.storage.k8s.io/VolumeSnapshot)\n* An existing PVC (PersistentVolumeClaim)\nIf the provisioner or an external controller can support the specified data source,\nit will create a new volume based on the contents of the specified data source.\nWhen the AnyVolumeDataSource feature gate is enabled, dataSource contents will be copied to dataSourceRef,\nand dataSourceRef contents will be copied to dataSource when dataSourceRef.namespace is not specified.\nIf the namespace is specified, then dataSourceRef will not be copied to dataSource.";
+          description = "dataSource field can be used to specify either:\n* An existing VolumeSnapshot object (snapshot.storage.k8s.io/VolumeSnapshot)\n* An existing PVC (PersistentVolumeClaim)\nIf the provisioner or an external controller can support the specified data source,\nit will create a new volume based on the contents of the specified data source.\ndataSource contents will be copied to dataSourceRef, and dataSourceRef contents will be\ncopied to dataSource when dataSourceRef.namespace is not specified.\nIf the namespace is specified, then dataSourceRef will not be copied to dataSource.";
           type = (
             types.nullOr (
               submoduleOf "ceph.rook.io.v1.CephClusterSpecStorageVolumeClaimTemplatesSpecDataSource"
@@ -8876,7 +8972,7 @@ let
           );
         };
         "dataSourceRef" = mkOption {
-          description = "dataSourceRef specifies the object from which to populate the volume with data, if a non-empty\nvolume is desired. This may be any object from a non-empty API group (non\ncore object) or a PersistentVolumeClaim object.\nWhen this field is specified, volume binding will only succeed if the type of\nthe specified object matches some installed volume populator or dynamic\nprovisioner.\nThis field will replace the functionality of the dataSource field and as such\nif both fields are non-empty, they must have the same value. For backwards\ncompatibility, when namespace isn't specified in dataSourceRef,\nboth fields (dataSource and dataSourceRef) will be set to the same\nvalue automatically if one of them is empty and the other is non-empty.\nWhen namespace is specified in dataSourceRef,\ndataSource isn't set to the same value and must be empty.\nThere are three important differences between dataSource and dataSourceRef:\n* While dataSource only allows two specific types of objects, dataSourceRef\n  allows any non-core object, as well as PersistentVolumeClaim objects.\n* While dataSource ignores disallowed values (dropping them), dataSourceRef\n  preserves all values, and generates an error if a disallowed value is\n  specified.\n* While dataSource only allows local objects, dataSourceRef allows objects\n  in any namespaces.\n(Beta) Using this field requires the AnyVolumeDataSource feature gate to be enabled.\n(Alpha) Using the namespace field of dataSourceRef requires the CrossNamespaceVolumeDataSource feature gate to be enabled.";
+          description = "dataSourceRef specifies the object from which to populate the volume with data, if a non-empty\nvolume is desired. This may be any object from a non-empty API group (non\ncore object) or a PersistentVolumeClaim object.\nWhen this field is specified, volume binding will only succeed if the type of\nthe specified object matches some installed volume populator or dynamic\nprovisioner.\nThis field will replace the functionality of the dataSource field and as such\nif both fields are non-empty, they must have the same value. For backwards\ncompatibility, when namespace isn't specified in dataSourceRef,\nboth fields (dataSource and dataSourceRef) will be set to the same\nvalue automatically if one of them is empty and the other is non-empty.\nWhen namespace is specified in dataSourceRef,\ndataSource isn't set to the same value and must be empty.\nThere are three important differences between dataSource and dataSourceRef:\n* While dataSource only allows two specific types of objects, dataSourceRef\n  allows any non-core object, as well as PersistentVolumeClaim objects.\n* While dataSource ignores disallowed values (dropping them), dataSourceRef\n  preserves all values, and generates an error if a disallowed value is\n  specified.\n* While dataSource only allows local objects, dataSourceRef allows objects\n  in any namespaces.\n(Alpha) Using the namespace field of dataSourceRef requires the CrossNamespaceVolumeDataSource feature gate to be enabled.";
           type = (
             types.nullOr (
               submoduleOf "ceph.rook.io.v1.CephClusterSpecStorageVolumeClaimTemplatesSpecDataSourceRef"
@@ -9065,7 +9161,7 @@ let
           type = (types.nullOr types.int);
         };
         "phase" = mkOption {
-          description = "ConditionType represent a resource's status";
+          description = "ConditionType represents a resource's status";
           type = (types.nullOr types.str);
         };
         "state" = mkOption {
@@ -9127,7 +9223,7 @@ let
           type = (types.nullOr types.str);
         };
         "versions" = mkOption {
-          description = "CephDaemonsVersions show the current ceph version for different ceph daemons";
+          description = "CephDaemonsVersions shows the current ceph version for different ceph daemons";
           type = (types.nullOr (submoduleOf "ceph.rook.io.v1.CephClusterStatusCephVersions"));
         };
       };
@@ -9492,7 +9588,7 @@ let
           type = (types.nullOr types.str);
         };
         "type" = mkOption {
-          description = "ConditionType represent a resource's status";
+          description = "ConditionType represents a resource's status";
           type = (types.nullOr types.str);
         };
       };
@@ -10921,7 +11017,7 @@ let
           type = (types.nullOr types.str);
         };
         "type" = mkOption {
-          description = "ConditionType represent a resource's status";
+          description = "ConditionType represents a resource's status";
           type = (types.nullOr types.str);
         };
       };
@@ -11177,7 +11273,7 @@ let
 
       options = {
         "interval" = mkOption {
-          description = "Interval represent the periodicity of the snapshot.";
+          description = "Interval represents the periodicity of the snapshot.";
           type = (types.nullOr types.str);
         };
         "path" = mkOption {
@@ -11509,7 +11605,7 @@ let
 
       options = {
         "interval" = mkOption {
-          description = "Interval represent the periodicity of the snapshot.";
+          description = "Interval represents the periodicity of the snapshot.";
           type = (types.nullOr types.str);
         };
         "path" = mkOption {
@@ -11825,6 +11921,10 @@ let
     "ceph.rook.io.v1.CephFilesystemSpecMetadataServerLivenessProbeProbeGrpc" = {
 
       options = {
+        "mode" = mkOption {
+          description = "mode specifies the connection mode for the gRPC health probe.\nSet to \"TLS\" to use TLS without certificate verification.\nSet to \"Plaintext\" to use a plaintext (insecure) connection explicitly.\nIf not specified, the probe uses a plaintext (insecure) connection.";
+          type = (types.nullOr types.str);
+        };
         "port" = mkOption {
           description = "Port number of the gRPC service. Number must be in the range 1 to 65535.";
           type = types.int;
@@ -11836,6 +11936,7 @@ let
       };
 
       config = {
+        "mode" = mkOverride 1002 null;
         "service" = mkOverride 1002 null;
       };
 
@@ -11867,6 +11968,10 @@ let
           description = "Name or number of the port to access on the container.\nNumber must be in the range 1 to 65535.\nName must be an IANA_SVC_NAME.";
           type = (types.either types.int types.str);
         };
+        "protocol" = mkOption {
+          description = "Protocol selects the wire protocol for the probe connection.\nNil defaults to HTTP/1.1.";
+          type = (types.nullOr types.str);
+        };
         "scheme" = mkOption {
           description = "Scheme to use for connecting to the host.\nDefaults to HTTP.";
           type = (types.nullOr types.str);
@@ -11877,6 +11982,7 @@ let
         "host" = mkOverride 1002 null;
         "httpHeaders" = mkOverride 1002 null;
         "path" = mkOverride 1002 null;
+        "protocol" = mkOverride 1002 null;
         "scheme" = mkOverride 1002 null;
       };
 
@@ -13159,6 +13265,10 @@ let
     "ceph.rook.io.v1.CephFilesystemSpecMetadataServerStartupProbeProbeGrpc" = {
 
       options = {
+        "mode" = mkOption {
+          description = "mode specifies the connection mode for the gRPC health probe.\nSet to \"TLS\" to use TLS without certificate verification.\nSet to \"Plaintext\" to use a plaintext (insecure) connection explicitly.\nIf not specified, the probe uses a plaintext (insecure) connection.";
+          type = (types.nullOr types.str);
+        };
         "port" = mkOption {
           description = "Port number of the gRPC service. Number must be in the range 1 to 65535.";
           type = types.int;
@@ -13170,6 +13280,7 @@ let
       };
 
       config = {
+        "mode" = mkOverride 1002 null;
         "service" = mkOverride 1002 null;
       };
 
@@ -13201,6 +13312,10 @@ let
           description = "Name or number of the port to access on the container.\nNumber must be in the range 1 to 65535.\nName must be an IANA_SVC_NAME.";
           type = (types.either types.int types.str);
         };
+        "protocol" = mkOption {
+          description = "Protocol selects the wire protocol for the probe connection.\nNil defaults to HTTP/1.1.";
+          type = (types.nullOr types.str);
+        };
         "scheme" = mkOption {
           description = "Scheme to use for connecting to the host.\nDefaults to HTTP.";
           type = (types.nullOr types.str);
@@ -13211,6 +13326,7 @@ let
         "host" = mkOverride 1002 null;
         "httpHeaders" = mkOverride 1002 null;
         "path" = mkOverride 1002 null;
+        "protocol" = mkOverride 1002 null;
         "scheme" = mkOverride 1002 null;
       };
 
@@ -13323,7 +13439,7 @@ let
 
       options = {
         "interval" = mkOption {
-          description = "Interval represent the periodicity of the snapshot.";
+          description = "Interval represents the periodicity of the snapshot.";
           type = (types.nullOr types.str);
         };
         "path" = mkOption {
@@ -13405,7 +13521,7 @@ let
           type = (types.nullOr types.int);
         };
         "phase" = mkOption {
-          description = "ConditionType represent a resource's status";
+          description = "ConditionType represents a resource's status";
           type = (types.nullOr types.str);
         };
         "snapshotScheduleStatus" = mkOption {
@@ -13487,7 +13603,7 @@ let
           type = (types.nullOr types.str);
         };
         "type" = mkOption {
-          description = "ConditionType represent a resource's status";
+          description = "ConditionType represents a resource's status";
           type = (types.nullOr types.str);
         };
       };
@@ -13601,7 +13717,7 @@ let
 
       options = {
         "remote" = mkOption {
-          description = "Remote are the remote cluster information";
+          description = "Remote is the remote cluster information";
           type = (
             types.nullOr (
               submoduleOf "ceph.rook.io.v1.CephFilesystemStatusMirroringStatusDaemonsStatusFilesystemsPeersRemote"
@@ -13609,7 +13725,7 @@ let
           );
         };
         "stats" = mkOption {
-          description = "Stats are the stat a peer mirror";
+          description = "Stats is the mirror stat for a given peer";
           type = (
             types.nullOr (
               submoduleOf "ceph.rook.io.v1.CephFilesystemStatusMirroringStatusDaemonsStatusFilesystemsPeersStats"
@@ -13912,7 +14028,7 @@ let
           type = (types.nullOr types.int);
         };
         "phase" = mkOption {
-          description = "ConditionType represent a resource's status";
+          description = "ConditionType represents a resource's status";
           type = (types.nullOr types.str);
         };
       };
@@ -14132,6 +14248,10 @@ let
           description = "";
           type = (types.nullOr types.int);
         };
+        "defaultUser" = mkOption {
+          description = "";
+          type = (types.nullOr types.int);
+        };
         "items" = mkOption {
           description = "";
           type = (
@@ -14154,6 +14274,7 @@ let
 
       config = {
         "defaultMode" = mkOverride 1002 null;
+        "defaultUser" = mkOverride 1002 null;
         "items" = mkOverride 1002 null;
         "name" = mkOverride 1002 null;
         "optional" = mkOverride 1002 null;
@@ -14175,10 +14296,15 @@ let
           description = "";
           type = types.str;
         };
+        "user" = mkOption {
+          description = "";
+          type = (types.nullOr types.int);
+        };
       };
 
       config = {
         "mode" = mkOverride 1002 null;
+        "user" = mkOverride 1002 null;
       };
 
     };
@@ -14189,6 +14315,10 @@ let
           description = "";
           type = (types.nullOr types.str);
         };
+        "mode" = mkOption {
+          description = "";
+          type = (types.nullOr types.int);
+        };
         "sizeLimit" = mkOption {
           description = "";
           type = (types.nullOr (types.either types.int types.str));
@@ -14197,6 +14327,7 @@ let
 
       config = {
         "medium" = mkOverride 1002 null;
+        "mode" = mkOverride 1002 null;
         "sizeLimit" = mkOverride 1002 null;
       };
 
@@ -14244,6 +14375,10 @@ let
           description = "";
           type = (types.nullOr types.int);
         };
+        "defaultUser" = mkOption {
+          description = "";
+          type = (types.nullOr types.int);
+        };
         "sources" = mkOption {
           description = "";
           type = (
@@ -14258,6 +14393,7 @@ let
 
       config = {
         "defaultMode" = mkOverride 1002 null;
+        "defaultUser" = mkOverride 1002 null;
         "sources" = mkOverride 1002 null;
       };
 
@@ -14353,6 +14489,10 @@ let
             description = "";
             type = (types.nullOr types.str);
           };
+          "user" = mkOption {
+            description = "";
+            type = (types.nullOr types.int);
+          };
         };
 
         config = {
@@ -14360,6 +14500,7 @@ let
           "name" = mkOverride 1002 null;
           "optional" = mkOverride 1002 null;
           "signerName" = mkOverride 1002 null;
+          "user" = mkOverride 1002 null;
         };
 
       };
@@ -14458,10 +14599,15 @@ let
             description = "";
             type = types.str;
           };
+          "user" = mkOption {
+            description = "";
+            type = (types.nullOr types.int);
+          };
         };
 
         config = {
           "mode" = mkOverride 1002 null;
+          "user" = mkOverride 1002 null;
         };
 
       };
@@ -14513,12 +14659,17 @@ let
               )
             );
           };
+          "user" = mkOption {
+            description = "";
+            type = (types.nullOr types.int);
+          };
         };
 
         config = {
           "fieldRef" = mkOverride 1002 null;
           "mode" = mkOverride 1002 null;
           "resourceFieldRef" = mkOverride 1002 null;
+          "user" = mkOverride 1002 null;
         };
 
       };
@@ -14593,6 +14744,10 @@ let
             description = "";
             type = types.str;
           };
+          "user" = mkOption {
+            description = "";
+            type = (types.nullOr types.int);
+          };
           "userAnnotations" = mkOption {
             description = "";
             type = (types.nullOr (types.attrsOf types.str));
@@ -14604,6 +14759,7 @@ let
           "credentialBundlePath" = mkOverride 1002 null;
           "keyPath" = mkOverride 1002 null;
           "maxExpirationSeconds" = mkOverride 1002 null;
+          "user" = mkOverride 1002 null;
           "userAnnotations" = mkOverride 1002 null;
         };
 
@@ -14653,10 +14809,15 @@ let
           description = "";
           type = types.str;
         };
+        "user" = mkOption {
+          description = "";
+          type = (types.nullOr types.int);
+        };
       };
 
       config = {
         "mode" = mkOverride 1002 null;
+        "user" = mkOverride 1002 null;
       };
 
     };
@@ -14676,11 +14837,16 @@ let
             description = "";
             type = types.str;
           };
+          "user" = mkOption {
+            description = "";
+            type = (types.nullOr types.int);
+          };
         };
 
         config = {
           "audience" = mkOverride 1002 null;
           "expirationSeconds" = mkOverride 1002 null;
+          "user" = mkOverride 1002 null;
         };
 
       };
@@ -14688,6 +14854,10 @@ let
 
       options = {
         "defaultMode" = mkOption {
+          description = "";
+          type = (types.nullOr types.int);
+        };
+        "defaultUser" = mkOption {
           description = "";
           type = (types.nullOr types.int);
         };
@@ -14713,6 +14883,7 @@ let
 
       config = {
         "defaultMode" = mkOverride 1002 null;
+        "defaultUser" = mkOverride 1002 null;
         "items" = mkOverride 1002 null;
         "optional" = mkOverride 1002 null;
         "secretName" = mkOverride 1002 null;
@@ -14734,10 +14905,15 @@ let
           description = "";
           type = types.str;
         };
+        "user" = mkOption {
+          description = "";
+          type = (types.nullOr types.int);
+        };
       };
 
       config = {
         "mode" = mkOverride 1002 null;
+        "user" = mkOverride 1002 null;
       };
 
     };
@@ -14825,6 +15001,10 @@ let
           description = "";
           type = (types.nullOr types.int);
         };
+        "defaultUser" = mkOption {
+          description = "";
+          type = (types.nullOr types.int);
+        };
         "items" = mkOption {
           description = "";
           type = (
@@ -14847,6 +15027,7 @@ let
 
       config = {
         "defaultMode" = mkOverride 1002 null;
+        "defaultUser" = mkOverride 1002 null;
         "items" = mkOverride 1002 null;
         "name" = mkOverride 1002 null;
         "optional" = mkOverride 1002 null;
@@ -14868,10 +15049,15 @@ let
           description = "";
           type = types.str;
         };
+        "user" = mkOption {
+          description = "";
+          type = (types.nullOr types.int);
+        };
       };
 
       config = {
         "mode" = mkOverride 1002 null;
+        "user" = mkOverride 1002 null;
       };
 
     };
@@ -14882,6 +15068,10 @@ let
           description = "";
           type = (types.nullOr types.str);
         };
+        "mode" = mkOption {
+          description = "";
+          type = (types.nullOr types.int);
+        };
         "sizeLimit" = mkOption {
           description = "";
           type = (types.nullOr (types.either types.int types.str));
@@ -14890,6 +15080,7 @@ let
 
       config = {
         "medium" = mkOverride 1002 null;
+        "mode" = mkOverride 1002 null;
         "sizeLimit" = mkOverride 1002 null;
       };
 
@@ -14937,6 +15128,10 @@ let
           description = "";
           type = (types.nullOr types.int);
         };
+        "defaultUser" = mkOption {
+          description = "";
+          type = (types.nullOr types.int);
+        };
         "sources" = mkOption {
           description = "";
           type = (
@@ -14951,6 +15146,7 @@ let
 
       config = {
         "defaultMode" = mkOverride 1002 null;
+        "defaultUser" = mkOverride 1002 null;
         "sources" = mkOverride 1002 null;
       };
 
@@ -15046,6 +15242,10 @@ let
             description = "";
             type = (types.nullOr types.str);
           };
+          "user" = mkOption {
+            description = "";
+            type = (types.nullOr types.int);
+          };
         };
 
         config = {
@@ -15053,6 +15253,7 @@ let
           "name" = mkOverride 1002 null;
           "optional" = mkOverride 1002 null;
           "signerName" = mkOverride 1002 null;
+          "user" = mkOverride 1002 null;
         };
 
       };
@@ -15151,10 +15352,15 @@ let
             description = "";
             type = types.str;
           };
+          "user" = mkOption {
+            description = "";
+            type = (types.nullOr types.int);
+          };
         };
 
         config = {
           "mode" = mkOverride 1002 null;
+          "user" = mkOverride 1002 null;
         };
 
       };
@@ -15206,12 +15412,17 @@ let
               )
             );
           };
+          "user" = mkOption {
+            description = "";
+            type = (types.nullOr types.int);
+          };
         };
 
         config = {
           "fieldRef" = mkOverride 1002 null;
           "mode" = mkOverride 1002 null;
           "resourceFieldRef" = mkOverride 1002 null;
+          "user" = mkOverride 1002 null;
         };
 
       };
@@ -15286,6 +15497,10 @@ let
             description = "";
             type = types.str;
           };
+          "user" = mkOption {
+            description = "";
+            type = (types.nullOr types.int);
+          };
           "userAnnotations" = mkOption {
             description = "";
             type = (types.nullOr (types.attrsOf types.str));
@@ -15297,6 +15512,7 @@ let
           "credentialBundlePath" = mkOverride 1002 null;
           "keyPath" = mkOverride 1002 null;
           "maxExpirationSeconds" = mkOverride 1002 null;
+          "user" = mkOverride 1002 null;
           "userAnnotations" = mkOverride 1002 null;
         };
 
@@ -15346,10 +15562,15 @@ let
           description = "";
           type = types.str;
         };
+        "user" = mkOption {
+          description = "";
+          type = (types.nullOr types.int);
+        };
       };
 
       config = {
         "mode" = mkOverride 1002 null;
+        "user" = mkOverride 1002 null;
       };
 
     };
@@ -15369,11 +15590,16 @@ let
             description = "";
             type = types.str;
           };
+          "user" = mkOption {
+            description = "";
+            type = (types.nullOr types.int);
+          };
         };
 
         config = {
           "audience" = mkOverride 1002 null;
           "expirationSeconds" = mkOverride 1002 null;
+          "user" = mkOverride 1002 null;
         };
 
       };
@@ -15381,6 +15607,10 @@ let
 
       options = {
         "defaultMode" = mkOption {
+          description = "";
+          type = (types.nullOr types.int);
+        };
+        "defaultUser" = mkOption {
           description = "";
           type = (types.nullOr types.int);
         };
@@ -15406,6 +15636,7 @@ let
 
       config = {
         "defaultMode" = mkOverride 1002 null;
+        "defaultUser" = mkOverride 1002 null;
         "items" = mkOverride 1002 null;
         "optional" = mkOverride 1002 null;
         "secretName" = mkOverride 1002 null;
@@ -15427,10 +15658,15 @@ let
           description = "";
           type = types.str;
         };
+        "user" = mkOption {
+          description = "";
+          type = (types.nullOr types.int);
+        };
       };
 
       config = {
         "mode" = mkOverride 1002 null;
+        "user" = mkOverride 1002 null;
       };
 
     };
@@ -15571,6 +15807,10 @@ let
           description = "";
           type = (types.nullOr types.int);
         };
+        "defaultUser" = mkOption {
+          description = "";
+          type = (types.nullOr types.int);
+        };
         "items" = mkOption {
           description = "";
           type = (
@@ -15593,6 +15833,7 @@ let
 
       config = {
         "defaultMode" = mkOverride 1002 null;
+        "defaultUser" = mkOverride 1002 null;
         "items" = mkOverride 1002 null;
         "name" = mkOverride 1002 null;
         "optional" = mkOverride 1002 null;
@@ -15614,10 +15855,15 @@ let
           description = "";
           type = types.str;
         };
+        "user" = mkOption {
+          description = "";
+          type = (types.nullOr types.int);
+        };
       };
 
       config = {
         "mode" = mkOverride 1002 null;
+        "user" = mkOverride 1002 null;
       };
 
     };
@@ -15628,6 +15874,10 @@ let
           description = "";
           type = (types.nullOr types.str);
         };
+        "mode" = mkOption {
+          description = "";
+          type = (types.nullOr types.int);
+        };
         "sizeLimit" = mkOption {
           description = "";
           type = (types.nullOr (types.either types.int types.str));
@@ -15636,6 +15886,7 @@ let
 
       config = {
         "medium" = mkOverride 1002 null;
+        "mode" = mkOverride 1002 null;
         "sizeLimit" = mkOverride 1002 null;
       };
 
@@ -15683,6 +15934,10 @@ let
           description = "";
           type = (types.nullOr types.int);
         };
+        "defaultUser" = mkOption {
+          description = "";
+          type = (types.nullOr types.int);
+        };
         "sources" = mkOption {
           description = "";
           type = (
@@ -15697,6 +15952,7 @@ let
 
       config = {
         "defaultMode" = mkOverride 1002 null;
+        "defaultUser" = mkOverride 1002 null;
         "sources" = mkOverride 1002 null;
       };
 
@@ -15792,6 +16048,10 @@ let
             description = "";
             type = (types.nullOr types.str);
           };
+          "user" = mkOption {
+            description = "";
+            type = (types.nullOr types.int);
+          };
         };
 
         config = {
@@ -15799,6 +16059,7 @@ let
           "name" = mkOverride 1002 null;
           "optional" = mkOverride 1002 null;
           "signerName" = mkOverride 1002 null;
+          "user" = mkOverride 1002 null;
         };
 
       };
@@ -15898,10 +16159,15 @@ let
             description = "";
             type = types.str;
           };
+          "user" = mkOption {
+            description = "";
+            type = (types.nullOr types.int);
+          };
         };
 
         config = {
           "mode" = mkOverride 1002 null;
+          "user" = mkOverride 1002 null;
         };
 
       };
@@ -15954,12 +16220,17 @@ let
               )
             );
           };
+          "user" = mkOption {
+            description = "";
+            type = (types.nullOr types.int);
+          };
         };
 
         config = {
           "fieldRef" = mkOverride 1002 null;
           "mode" = mkOverride 1002 null;
           "resourceFieldRef" = mkOverride 1002 null;
+          "user" = mkOverride 1002 null;
         };
 
       };
@@ -16034,6 +16305,10 @@ let
             description = "";
             type = types.str;
           };
+          "user" = mkOption {
+            description = "";
+            type = (types.nullOr types.int);
+          };
           "userAnnotations" = mkOption {
             description = "";
             type = (types.nullOr (types.attrsOf types.str));
@@ -16045,6 +16320,7 @@ let
           "credentialBundlePath" = mkOverride 1002 null;
           "keyPath" = mkOverride 1002 null;
           "maxExpirationSeconds" = mkOverride 1002 null;
+          "user" = mkOverride 1002 null;
           "userAnnotations" = mkOverride 1002 null;
         };
 
@@ -16096,10 +16372,15 @@ let
             description = "";
             type = types.str;
           };
+          "user" = mkOption {
+            description = "";
+            type = (types.nullOr types.int);
+          };
         };
 
         config = {
           "mode" = mkOverride 1002 null;
+          "user" = mkOverride 1002 null;
         };
 
       };
@@ -16119,11 +16400,16 @@ let
             description = "";
             type = types.str;
           };
+          "user" = mkOption {
+            description = "";
+            type = (types.nullOr types.int);
+          };
         };
 
         config = {
           "audience" = mkOverride 1002 null;
           "expirationSeconds" = mkOverride 1002 null;
+          "user" = mkOverride 1002 null;
         };
 
       };
@@ -16131,6 +16417,10 @@ let
 
       options = {
         "defaultMode" = mkOption {
+          description = "";
+          type = (types.nullOr types.int);
+        };
+        "defaultUser" = mkOption {
           description = "";
           type = (types.nullOr types.int);
         };
@@ -16156,6 +16446,7 @@ let
 
       config = {
         "defaultMode" = mkOverride 1002 null;
+        "defaultUser" = mkOverride 1002 null;
         "items" = mkOverride 1002 null;
         "optional" = mkOverride 1002 null;
         "secretName" = mkOverride 1002 null;
@@ -16177,10 +16468,15 @@ let
           description = "";
           type = types.str;
         };
+        "user" = mkOption {
+          description = "";
+          type = (types.nullOr types.int);
+        };
       };
 
       config = {
         "mode" = mkOverride 1002 null;
+        "user" = mkOverride 1002 null;
       };
 
     };
@@ -16321,6 +16617,10 @@ let
           description = "";
           type = (types.nullOr types.int);
         };
+        "defaultUser" = mkOption {
+          description = "";
+          type = (types.nullOr types.int);
+        };
         "items" = mkOption {
           description = "";
           type = (
@@ -16343,6 +16643,7 @@ let
 
       config = {
         "defaultMode" = mkOverride 1002 null;
+        "defaultUser" = mkOverride 1002 null;
         "items" = mkOverride 1002 null;
         "name" = mkOverride 1002 null;
         "optional" = mkOverride 1002 null;
@@ -16364,10 +16665,15 @@ let
           description = "";
           type = types.str;
         };
+        "user" = mkOption {
+          description = "";
+          type = (types.nullOr types.int);
+        };
       };
 
       config = {
         "mode" = mkOverride 1002 null;
+        "user" = mkOverride 1002 null;
       };
 
     };
@@ -16378,6 +16684,10 @@ let
           description = "";
           type = (types.nullOr types.str);
         };
+        "mode" = mkOption {
+          description = "";
+          type = (types.nullOr types.int);
+        };
         "sizeLimit" = mkOption {
           description = "";
           type = (types.nullOr (types.either types.int types.str));
@@ -16386,6 +16696,7 @@ let
 
       config = {
         "medium" = mkOverride 1002 null;
+        "mode" = mkOverride 1002 null;
         "sizeLimit" = mkOverride 1002 null;
       };
 
@@ -16433,6 +16744,10 @@ let
           description = "";
           type = (types.nullOr types.int);
         };
+        "defaultUser" = mkOption {
+          description = "";
+          type = (types.nullOr types.int);
+        };
         "sources" = mkOption {
           description = "";
           type = (
@@ -16447,6 +16762,7 @@ let
 
       config = {
         "defaultMode" = mkOverride 1002 null;
+        "defaultUser" = mkOverride 1002 null;
         "sources" = mkOverride 1002 null;
       };
 
@@ -16542,6 +16858,10 @@ let
             description = "";
             type = (types.nullOr types.str);
           };
+          "user" = mkOption {
+            description = "";
+            type = (types.nullOr types.int);
+          };
         };
 
         config = {
@@ -16549,6 +16869,7 @@ let
           "name" = mkOverride 1002 null;
           "optional" = mkOverride 1002 null;
           "signerName" = mkOverride 1002 null;
+          "user" = mkOverride 1002 null;
         };
 
       };
@@ -16648,10 +16969,15 @@ let
             description = "";
             type = types.str;
           };
+          "user" = mkOption {
+            description = "";
+            type = (types.nullOr types.int);
+          };
         };
 
         config = {
           "mode" = mkOverride 1002 null;
+          "user" = mkOverride 1002 null;
         };
 
       };
@@ -16704,12 +17030,17 @@ let
               )
             );
           };
+          "user" = mkOption {
+            description = "";
+            type = (types.nullOr types.int);
+          };
         };
 
         config = {
           "fieldRef" = mkOverride 1002 null;
           "mode" = mkOverride 1002 null;
           "resourceFieldRef" = mkOverride 1002 null;
+          "user" = mkOverride 1002 null;
         };
 
       };
@@ -16784,6 +17115,10 @@ let
             description = "";
             type = types.str;
           };
+          "user" = mkOption {
+            description = "";
+            type = (types.nullOr types.int);
+          };
           "userAnnotations" = mkOption {
             description = "";
             type = (types.nullOr (types.attrsOf types.str));
@@ -16795,6 +17130,7 @@ let
           "credentialBundlePath" = mkOverride 1002 null;
           "keyPath" = mkOverride 1002 null;
           "maxExpirationSeconds" = mkOverride 1002 null;
+          "user" = mkOverride 1002 null;
           "userAnnotations" = mkOverride 1002 null;
         };
 
@@ -16845,10 +17181,15 @@ let
             description = "";
             type = types.str;
           };
+          "user" = mkOption {
+            description = "";
+            type = (types.nullOr types.int);
+          };
         };
 
         config = {
           "mode" = mkOverride 1002 null;
+          "user" = mkOverride 1002 null;
         };
 
       };
@@ -16868,11 +17209,16 @@ let
             description = "";
             type = types.str;
           };
+          "user" = mkOption {
+            description = "";
+            type = (types.nullOr types.int);
+          };
         };
 
         config = {
           "audience" = mkOverride 1002 null;
           "expirationSeconds" = mkOverride 1002 null;
+          "user" = mkOverride 1002 null;
         };
 
       };
@@ -16880,6 +17226,10 @@ let
 
       options = {
         "defaultMode" = mkOption {
+          description = "";
+          type = (types.nullOr types.int);
+        };
+        "defaultUser" = mkOption {
           description = "";
           type = (types.nullOr types.int);
         };
@@ -16905,6 +17255,7 @@ let
 
       config = {
         "defaultMode" = mkOverride 1002 null;
+        "defaultUser" = mkOverride 1002 null;
         "items" = mkOverride 1002 null;
         "optional" = mkOverride 1002 null;
         "secretName" = mkOverride 1002 null;
@@ -16926,10 +17277,15 @@ let
           description = "";
           type = types.str;
         };
+        "user" = mkOption {
+          description = "";
+          type = (types.nullOr types.int);
+        };
       };
 
       config = {
         "mode" = mkOverride 1002 null;
+        "user" = mkOverride 1002 null;
       };
 
     };
@@ -16974,7 +17330,7 @@ let
           type = (types.nullOr (submoduleOf "ceph.rook.io.v1.CephNFSSpecServerLivenessProbe"));
         };
         "logLevel" = mkOption {
-          description = "LogLevel set logging level";
+          description = "LogLevel sets logging level";
           type = (types.nullOr types.str);
         };
         "placement" = mkOption {
@@ -17105,6 +17461,10 @@ let
     "ceph.rook.io.v1.CephNFSSpecServerLivenessProbeProbeGrpc" = {
 
       options = {
+        "mode" = mkOption {
+          description = "mode specifies the connection mode for the gRPC health probe.\nSet to \"TLS\" to use TLS without certificate verification.\nSet to \"Plaintext\" to use a plaintext (insecure) connection explicitly.\nIf not specified, the probe uses a plaintext (insecure) connection.";
+          type = (types.nullOr types.str);
+        };
         "port" = mkOption {
           description = "Port number of the gRPC service. Number must be in the range 1 to 65535.";
           type = types.int;
@@ -17116,6 +17476,7 @@ let
       };
 
       config = {
+        "mode" = mkOverride 1002 null;
         "service" = mkOverride 1002 null;
       };
 
@@ -17147,6 +17508,10 @@ let
           description = "Name or number of the port to access on the container.\nNumber must be in the range 1 to 65535.\nName must be an IANA_SVC_NAME.";
           type = (types.either types.int types.str);
         };
+        "protocol" = mkOption {
+          description = "Protocol selects the wire protocol for the probe connection.\nNil defaults to HTTP/1.1.";
+          type = (types.nullOr types.str);
+        };
         "scheme" = mkOption {
           description = "Scheme to use for connecting to the host.\nDefaults to HTTP.";
           type = (types.nullOr types.str);
@@ -17157,6 +17522,7 @@ let
         "host" = mkOverride 1002 null;
         "httpHeaders" = mkOverride 1002 null;
         "path" = mkOverride 1002 null;
+        "protocol" = mkOverride 1002 null;
         "scheme" = mkOverride 1002 null;
       };
 
@@ -18408,7 +18774,7 @@ let
           type = (types.nullOr types.str);
         };
         "type" = mkOption {
-          description = "ConditionType represent a resource's status";
+          description = "ConditionType represents a resource's status";
           type = (types.nullOr types.str);
         };
       };
@@ -18497,10 +18863,6 @@ let
         "placement" = mkOption {
           description = "";
           type = (types.nullOr (submoduleOf "ceph.rook.io.v1.CephNVMeOFGatewaySpecPlacement"));
-        };
-        "pool" = mkOption {
-          description = "Pool is the RADOS pool where NVMe-oF configuration is stored";
-          type = (types.withMinLength 1 types.str);
         };
         "ports" = mkOption {
           description = "Ports configuration for the NVMe-oF gateway";
@@ -18630,6 +18992,10 @@ let
     "ceph.rook.io.v1.CephNVMeOFGatewaySpecLivenessProbeProbeGrpc" = {
 
       options = {
+        "mode" = mkOption {
+          description = "mode specifies the connection mode for the gRPC health probe.\nSet to \"TLS\" to use TLS without certificate verification.\nSet to \"Plaintext\" to use a plaintext (insecure) connection explicitly.\nIf not specified, the probe uses a plaintext (insecure) connection.";
+          type = (types.nullOr types.str);
+        };
         "port" = mkOption {
           description = "Port number of the gRPC service. Number must be in the range 1 to 65535.";
           type = types.int;
@@ -18641,6 +19007,7 @@ let
       };
 
       config = {
+        "mode" = mkOverride 1002 null;
         "service" = mkOverride 1002 null;
       };
 
@@ -18672,6 +19039,10 @@ let
           description = "Name or number of the port to access on the container.\nNumber must be in the range 1 to 65535.\nName must be an IANA_SVC_NAME.";
           type = (types.either types.int types.str);
         };
+        "protocol" = mkOption {
+          description = "Protocol selects the wire protocol for the probe connection.\nNil defaults to HTTP/1.1.";
+          type = (types.nullOr types.str);
+        };
         "scheme" = mkOption {
           description = "Scheme to use for connecting to the host.\nDefaults to HTTP.";
           type = (types.nullOr types.str);
@@ -18682,6 +19053,7 @@ let
         "host" = mkOverride 1002 null;
         "httpHeaders" = mkOverride 1002 null;
         "path" = mkOverride 1002 null;
+        "protocol" = mkOverride 1002 null;
         "scheme" = mkOverride 1002 null;
       };
 
@@ -19966,7 +20338,7 @@ let
           type = (types.nullOr types.str);
         };
         "type" = mkOption {
-          description = "ConditionType represent a resource's status";
+          description = "ConditionType represents a resource's status";
           type = (types.nullOr types.str);
         };
       };
@@ -19997,7 +20369,7 @@ let
           type = (globalSubmoduleOf "io.k8s.apimachinery.pkg.apis.meta.v1.ObjectMeta");
         };
         "spec" = mkOption {
-          description = "ObjectRealmSpec represent the spec of an ObjectRealm";
+          description = "ObjectRealmSpec represents the spec of a CephObjectRealm";
           type = (types.nullOr (submoduleOf "ceph.rook.io.v1.CephObjectRealmSpec"));
         };
         "status" = mkOption {
@@ -20097,7 +20469,7 @@ let
           type = (types.nullOr types.str);
         };
         "type" = mkOption {
-          description = "ConditionType represent a resource's status";
+          description = "ConditionType represents a resource's status";
           type = (types.nullOr types.str);
         };
       };
@@ -20128,7 +20500,7 @@ let
           type = (globalSubmoduleOf "io.k8s.apimachinery.pkg.apis.meta.v1.ObjectMeta");
         };
         "spec" = mkOption {
-          description = "ObjectStoreSpec represent the spec of a pool";
+          description = "ObjectStoreSpec represents the spec of a CephObjectStore";
           type = (submoduleOf "ceph.rook.io.v1.CephObjectStoreSpec");
         };
         "status" = mkOption {
@@ -20160,7 +20532,7 @@ let
           type = (globalSubmoduleOf "io.k8s.apimachinery.pkg.apis.meta.v1.ObjectMeta");
         };
         "spec" = mkOption {
-          description = "ObjectStoreAccountSpec represent the spec of a RGW Account";
+          description = "ObjectStoreAccountSpec represents the spec of an RGW Account";
           type = (submoduleOf "ceph.rook.io.v1.CephObjectStoreAccountSpec");
         };
         "status" = mkOption {
@@ -20563,7 +20935,7 @@ let
 
       options = {
         "interval" = mkOption {
-          description = "Interval represent the periodicity of the snapshot.";
+          description = "Interval represents the periodicity of the snapshot.";
           type = (types.nullOr types.str);
         };
         "path" = mkOption {
@@ -20909,6 +21281,10 @@ let
           description = "";
           type = (types.nullOr types.int);
         };
+        "defaultUser" = mkOption {
+          description = "";
+          type = (types.nullOr types.int);
+        };
         "items" = mkOption {
           description = "";
           type = (
@@ -20931,6 +21307,7 @@ let
 
       config = {
         "defaultMode" = mkOverride 1002 null;
+        "defaultUser" = mkOverride 1002 null;
         "items" = mkOverride 1002 null;
         "name" = mkOverride 1002 null;
         "optional" = mkOverride 1002 null;
@@ -20952,10 +21329,15 @@ let
           description = "";
           type = types.str;
         };
+        "user" = mkOption {
+          description = "";
+          type = (types.nullOr types.int);
+        };
       };
 
       config = {
         "mode" = mkOverride 1002 null;
+        "user" = mkOverride 1002 null;
       };
 
     };
@@ -20966,6 +21348,10 @@ let
           description = "";
           type = (types.nullOr types.str);
         };
+        "mode" = mkOption {
+          description = "";
+          type = (types.nullOr types.int);
+        };
         "sizeLimit" = mkOption {
           description = "";
           type = (types.nullOr (types.either types.int types.str));
@@ -20974,6 +21360,7 @@ let
 
       config = {
         "medium" = mkOverride 1002 null;
+        "mode" = mkOverride 1002 null;
         "sizeLimit" = mkOverride 1002 null;
       };
 
@@ -21022,6 +21409,10 @@ let
           description = "";
           type = (types.nullOr types.int);
         };
+        "defaultUser" = mkOption {
+          description = "";
+          type = (types.nullOr types.int);
+        };
         "sources" = mkOption {
           description = "";
           type = (
@@ -21036,6 +21427,7 @@ let
 
       config = {
         "defaultMode" = mkOverride 1002 null;
+        "defaultUser" = mkOverride 1002 null;
         "sources" = mkOverride 1002 null;
       };
 
@@ -21131,6 +21523,10 @@ let
             description = "";
             type = (types.nullOr types.str);
           };
+          "user" = mkOption {
+            description = "";
+            type = (types.nullOr types.int);
+          };
         };
 
         config = {
@@ -21138,6 +21534,7 @@ let
           "name" = mkOverride 1002 null;
           "optional" = mkOverride 1002 null;
           "signerName" = mkOverride 1002 null;
+          "user" = mkOverride 1002 null;
         };
 
       };
@@ -21237,10 +21634,15 @@ let
             description = "";
             type = types.str;
           };
+          "user" = mkOption {
+            description = "";
+            type = (types.nullOr types.int);
+          };
         };
 
         config = {
           "mode" = mkOverride 1002 null;
+          "user" = mkOverride 1002 null;
         };
 
       };
@@ -21293,12 +21695,17 @@ let
               )
             );
           };
+          "user" = mkOption {
+            description = "";
+            type = (types.nullOr types.int);
+          };
         };
 
         config = {
           "fieldRef" = mkOverride 1002 null;
           "mode" = mkOverride 1002 null;
           "resourceFieldRef" = mkOverride 1002 null;
+          "user" = mkOverride 1002 null;
         };
 
       };
@@ -21373,6 +21780,10 @@ let
             description = "";
             type = types.str;
           };
+          "user" = mkOption {
+            description = "";
+            type = (types.nullOr types.int);
+          };
           "userAnnotations" = mkOption {
             description = "";
             type = (types.nullOr (types.attrsOf types.str));
@@ -21384,6 +21795,7 @@ let
           "credentialBundlePath" = mkOverride 1002 null;
           "keyPath" = mkOverride 1002 null;
           "maxExpirationSeconds" = mkOverride 1002 null;
+          "user" = mkOverride 1002 null;
           "userAnnotations" = mkOverride 1002 null;
         };
 
@@ -21435,10 +21847,15 @@ let
             description = "";
             type = types.str;
           };
+          "user" = mkOption {
+            description = "";
+            type = (types.nullOr types.int);
+          };
         };
 
         config = {
           "mode" = mkOverride 1002 null;
+          "user" = mkOverride 1002 null;
         };
 
       };
@@ -21458,11 +21875,16 @@ let
             description = "";
             type = types.str;
           };
+          "user" = mkOption {
+            description = "";
+            type = (types.nullOr types.int);
+          };
         };
 
         config = {
           "audience" = mkOverride 1002 null;
           "expirationSeconds" = mkOverride 1002 null;
+          "user" = mkOverride 1002 null;
         };
 
       };
@@ -21470,6 +21892,10 @@ let
 
       options = {
         "defaultMode" = mkOption {
+          description = "";
+          type = (types.nullOr types.int);
+        };
+        "defaultUser" = mkOption {
           description = "";
           type = (types.nullOr types.int);
         };
@@ -21495,6 +21921,7 @@ let
 
       config = {
         "defaultMode" = mkOverride 1002 null;
+        "defaultUser" = mkOverride 1002 null;
         "items" = mkOverride 1002 null;
         "optional" = mkOverride 1002 null;
         "secretName" = mkOverride 1002 null;
@@ -21516,10 +21943,15 @@ let
           description = "";
           type = types.str;
         };
+        "user" = mkOption {
+          description = "";
+          type = (types.nullOr types.int);
+        };
       };
 
       config = {
         "mode" = mkOverride 1002 null;
+        "user" = mkOverride 1002 null;
       };
 
     };
@@ -22905,6 +23337,10 @@ let
     "ceph.rook.io.v1.CephObjectStoreSpecHealthCheckReadinessProbeProbeGrpc" = {
 
       options = {
+        "mode" = mkOption {
+          description = "mode specifies the connection mode for the gRPC health probe.\nSet to \"TLS\" to use TLS without certificate verification.\nSet to \"Plaintext\" to use a plaintext (insecure) connection explicitly.\nIf not specified, the probe uses a plaintext (insecure) connection.";
+          type = (types.nullOr types.str);
+        };
         "port" = mkOption {
           description = "Port number of the gRPC service. Number must be in the range 1 to 65535.";
           type = types.int;
@@ -22916,6 +23352,7 @@ let
       };
 
       config = {
+        "mode" = mkOverride 1002 null;
         "service" = mkOverride 1002 null;
       };
 
@@ -22947,6 +23384,10 @@ let
           description = "Name or number of the port to access on the container.\nNumber must be in the range 1 to 65535.\nName must be an IANA_SVC_NAME.";
           type = (types.either types.int types.str);
         };
+        "protocol" = mkOption {
+          description = "Protocol selects the wire protocol for the probe connection.\nNil defaults to HTTP/1.1.";
+          type = (types.nullOr types.str);
+        };
         "scheme" = mkOption {
           description = "Scheme to use for connecting to the host.\nDefaults to HTTP.";
           type = (types.nullOr types.str);
@@ -22957,6 +23398,7 @@ let
         "host" = mkOverride 1002 null;
         "httpHeaders" = mkOverride 1002 null;
         "path" = mkOverride 1002 null;
+        "protocol" = mkOverride 1002 null;
         "scheme" = mkOverride 1002 null;
       };
 
@@ -23102,6 +23544,10 @@ let
     "ceph.rook.io.v1.CephObjectStoreSpecHealthCheckStartupProbeProbeGrpc" = {
 
       options = {
+        "mode" = mkOption {
+          description = "mode specifies the connection mode for the gRPC health probe.\nSet to \"TLS\" to use TLS without certificate verification.\nSet to \"Plaintext\" to use a plaintext (insecure) connection explicitly.\nIf not specified, the probe uses a plaintext (insecure) connection.";
+          type = (types.nullOr types.str);
+        };
         "port" = mkOption {
           description = "Port number of the gRPC service. Number must be in the range 1 to 65535.";
           type = types.int;
@@ -23113,6 +23559,7 @@ let
       };
 
       config = {
+        "mode" = mkOverride 1002 null;
         "service" = mkOverride 1002 null;
       };
 
@@ -23144,6 +23591,10 @@ let
           description = "Name or number of the port to access on the container.\nNumber must be in the range 1 to 65535.\nName must be an IANA_SVC_NAME.";
           type = (types.either types.int types.str);
         };
+        "protocol" = mkOption {
+          description = "Protocol selects the wire protocol for the probe connection.\nNil defaults to HTTP/1.1.";
+          type = (types.nullOr types.str);
+        };
         "scheme" = mkOption {
           description = "Scheme to use for connecting to the host.\nDefaults to HTTP.";
           type = (types.nullOr types.str);
@@ -23154,6 +23605,7 @@ let
         "host" = mkOverride 1002 null;
         "httpHeaders" = mkOverride 1002 null;
         "path" = mkOverride 1002 null;
+        "protocol" = mkOverride 1002 null;
         "scheme" = mkOverride 1002 null;
       };
 
@@ -23420,7 +23872,7 @@ let
 
       options = {
         "interval" = mkOption {
-          description = "Interval represent the periodicity of the snapshot.";
+          description = "Interval represents the periodicity of the snapshot.";
           type = (types.nullOr types.str);
         };
         "path" = mkOption {
@@ -23930,7 +24382,7 @@ let
           type = (types.nullOr types.int);
         };
         "phase" = mkOption {
-          description = "ConditionType represent a resource's status";
+          description = "ConditionType represents a resource's status";
           type = (types.nullOr types.str);
         };
         "replicas" = mkOption {
@@ -24018,7 +24470,7 @@ let
           type = (types.nullOr types.str);
         };
         "type" = mkOption {
-          description = "ConditionType represent a resource's status";
+          description = "ConditionType represents a resource's status";
           type = (types.nullOr types.str);
         };
       };
@@ -24068,7 +24520,7 @@ let
           type = (globalSubmoduleOf "io.k8s.apimachinery.pkg.apis.meta.v1.ObjectMeta");
         };
         "spec" = mkOption {
-          description = "ObjectStoreUserSpec represent the spec of an Objectstoreuser";
+          description = "ObjectStoreUserSpec represents the spec of a CephObjectStoreUser";
           type = (submoduleOf "ceph.rook.io.v1.CephObjectStoreUserSpec");
         };
         "status" = mkOption {
@@ -24098,6 +24550,14 @@ let
         "clusterNamespace" = mkOption {
           description = "The namespace where the parent CephCluster and CephObjectStore are found";
           type = (types.nullOr types.str);
+        };
+        "defaultPlacement" = mkOption {
+          description = "DefaultPlacement sets the default pool placement target for buckets\ncreated by this user. It must name a placement target known to the\nzonegroup serving the referenced object store; RGW rejects unknown\ntargets. If this field is absent the controller does not manage the\nuser's placement: an existing value (set previously through this\nfield, or outside of Rook) is left in place.";
+          type = (types.nullOr (types.withMaxLength 2048 (types.withMinLength 1 types.str)));
+        };
+        "defaultStorageClass" = mkOption {
+          description = "DefaultStorageClass sets the default storage class for objects created\nby this user, within the placement set by DefaultPlacement (which must\nalso be set). The storage class must exist on that placement target;\nRGW rejects unknown storage classes. If this field is absent the\ncontroller does not manage the user's storage class: an existing value\nis preserved, except when DefaultPlacement changes, which resets the\nstorage class to the new target's default (STANDARD).";
+          type = (types.nullOr (types.withMaxLength 2048 (types.withMinLength 1 types.str)));
         };
         "displayName" = mkOption {
           description = "The display name for the ceph user.";
@@ -24135,6 +24595,8 @@ let
         "accountRef" = mkOverride 1002 null;
         "capabilities" = mkOverride 1002 null;
         "clusterNamespace" = mkOverride 1002 null;
+        "defaultPlacement" = mkOverride 1002 null;
+        "defaultStorageClass" = mkOverride 1002 null;
         "displayName" = mkOverride 1002 null;
         "keys" = mkOverride 1002 null;
         "opMask" = mkOverride 1002 null;
@@ -24158,6 +24620,19 @@ let
     "ceph.rook.io.v1.CephObjectStoreUserSpecCapabilities" = {
 
       options = {
+        "accounts" = mkOption {
+          description = "Add capabilities for user to manage accounts. Documented in https://docs.ceph.com/en/latest/radosgw/admin/?#add-remove-admin-capabilities\nNote: Only supported from Ceph Squid (v19.2.3) onwards";
+          type = (
+            types.nullOr (
+              types.enum [
+                "*"
+                "read"
+                "write"
+                "read, write"
+              ]
+            )
+          );
+        };
         "amz-cache" = mkOption {
           description = "Add capabilities for user to send request to RGW Cache API header. Documented in https://docs.ceph.com/en/latest/radosgw/rgw-cache/#cache-api";
           type = (
@@ -24340,6 +24815,19 @@ let
             )
           );
         };
+        "userInfoWithoutKeys" = mkOption {
+          description = "Add capabilities for user to fetch user info without keys. Documented in https://docs.ceph.com/en/latest/radosgw/admin/?#add-remove-admin-capabilities\nNote: Only supported from Ceph Squid (v19.2.0) onwards";
+          type = (
+            types.nullOr (
+              types.enum [
+                "*"
+                "read"
+                "write"
+                "read, write"
+              ]
+            )
+          );
+        };
         "users" = mkOption {
           description = "Admin capabilities to read/write Ceph object store users. Documented in https://docs.ceph.com/en/latest/radosgw/admin/?#add-remove-admin-capabilities";
           type = (
@@ -24369,6 +24857,7 @@ let
       };
 
       config = {
+        "accounts" = mkOverride 1002 null;
         "amz-cache" = mkOverride 1002 null;
         "bilog" = mkOverride 1002 null;
         "bucket" = mkOverride 1002 null;
@@ -24383,6 +24872,7 @@ let
         "usage" = mkOverride 1002 null;
         "user" = mkOverride 1002 null;
         "user-policy" = mkOverride 1002 null;
+        "userInfoWithoutKeys" = mkOverride 1002 null;
         "users" = mkOverride 1002 null;
         "zone" = mkOverride 1002 null;
       };
@@ -24556,7 +25046,7 @@ let
           type = (globalSubmoduleOf "io.k8s.apimachinery.pkg.apis.meta.v1.ObjectMeta");
         };
         "spec" = mkOption {
-          description = "ObjectZoneSpec represent the spec of an ObjectZone";
+          description = "ObjectZoneSpec represents the spec of a CephObjectZone";
           type = (submoduleOf "ceph.rook.io.v1.CephObjectZoneSpec");
         };
         "status" = mkOption {
@@ -24588,7 +25078,7 @@ let
           type = (globalSubmoduleOf "io.k8s.apimachinery.pkg.apis.meta.v1.ObjectMeta");
         };
         "spec" = mkOption {
-          description = "ObjectZoneGroupSpec represent the spec of an ObjectZoneGroup";
+          description = "ObjectZoneGroupSpec represents the spec of a CephObjectZoneGroup";
           type = (submoduleOf "ceph.rook.io.v1.CephObjectZoneGroupSpec");
         };
         "status" = mkOption {
@@ -24666,7 +25156,7 @@ let
           type = (types.nullOr types.str);
         };
         "type" = mkOption {
-          description = "ConditionType represent a resource's status";
+          description = "ConditionType represents a resource's status";
           type = (types.nullOr types.str);
         };
       };
@@ -24906,7 +25396,7 @@ let
 
       options = {
         "interval" = mkOption {
-          description = "Interval represent the periodicity of the snapshot.";
+          description = "Interval represents the periodicity of the snapshot.";
           type = (types.nullOr types.str);
         };
         "path" = mkOption {
@@ -25233,7 +25723,7 @@ let
 
       options = {
         "interval" = mkOption {
-          description = "Interval represent the periodicity of the snapshot.";
+          description = "Interval represents the periodicity of the snapshot.";
           type = (types.nullOr types.str);
         };
         "path" = mkOption {
@@ -25517,7 +26007,7 @@ let
           type = (types.nullOr types.str);
         };
         "type" = mkOption {
-          description = "ConditionType represent a resource's status";
+          description = "ConditionType represents a resource's status";
           type = (types.nullOr types.str);
         };
       };
@@ -26834,7 +27324,7 @@ let
           type = (types.nullOr types.str);
         };
         "type" = mkOption {
-          description = "ConditionType represent a resource's status";
+          description = "ConditionType represents a resource's status";
           type = (types.nullOr types.str);
         };
       };
@@ -26939,7 +27429,7 @@ let
         };
         "status" = mkOption {
           description = "ClientProfileStatus defines the observed state of Ceph CSI\nconfiguration for volumes and snapshots configured to use\nthis profile";
-          type = (types.nullOr types.attrs);
+          type = (types.nullOr (submoduleOf "csi.ceph.io.v1.ClientProfileStatus"));
         };
       };
 
@@ -27017,6 +27507,117 @@ let
 
       config = {
         "blockPoolIdMapping" = mkOverride 1002 null;
+      };
+
+    };
+    "csi.ceph.io.v1.ClientProfileReplication" = {
+
+      options = {
+        "apiVersion" = mkOption {
+          description = "APIVersion defines the versioned schema of this representation of an object.\nServers should convert recognized schemas to the latest internal value, and\nmay reject unrecognized values.\nMore info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources";
+          type = (types.nullOr types.str);
+        };
+        "kind" = mkOption {
+          description = "Kind is a string value representing the REST resource this object represents.\nServers may infer this from the endpoint the client submits requests to.\nCannot be updated.\nIn CamelCase.\nMore info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds";
+          type = (types.nullOr types.str);
+        };
+        "metadata" = mkOption {
+          description = "Standard object's metadata. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#metadata";
+          type = (types.nullOr (globalSubmoduleOf "io.k8s.apimachinery.pkg.apis.meta.v1.ObjectMeta"));
+        };
+        "spec" = mkOption {
+          description = "spec defines the desired state of ClientProfileReplication";
+          type = (submoduleOf "csi.ceph.io.v1.ClientProfileReplicationSpec");
+        };
+        "status" = mkOption {
+          description = "status defines the observed state of ClientProfileReplication";
+          type = (types.nullOr (submoduleOf "csi.ceph.io.v1.ClientProfileReplicationStatus"));
+        };
+      };
+
+      config = {
+        "apiVersion" = mkOverride 1002 null;
+        "kind" = mkOverride 1002 null;
+        "metadata" = mkOverride 1002 null;
+        "status" = mkOverride 1002 null;
+      };
+
+    };
+    "csi.ceph.io.v1.ClientProfileReplicationSpec" = {
+
+      options = {
+        "localClientProfile" = mkOption {
+          description = "LocalClientProfile is the name of the local ClientProfile CR";
+          type = types.str;
+        };
+        "rbd" = mkOption {
+          description = "RBD contains RBD-specific replication configuration";
+          type = (types.nullOr (submoduleOf "csi.ceph.io.v1.ClientProfileReplicationSpecRbd"));
+        };
+        "remoteClientProfile" = mkOption {
+          description = "RemoteClientProfile is the name of the remote cluster's client profile";
+          type = types.str;
+        };
+      };
+
+      config = {
+        "rbd" = mkOverride 1002 null;
+      };
+
+    };
+    "csi.ceph.io.v1.ClientProfileReplicationSpecRbd" = {
+
+      options = {
+        "poolMapping" = mkOption {
+          description = "PoolMapping maps local pool names to remote pool IDs";
+          type = (
+            types.nullOr (
+              coerceAttrsOfSubmodulesToListByKey "csi.ceph.io.v1.ClientProfileReplicationSpecRbdPoolMapping"
+                "name"
+                [ ]
+            )
+          );
+          apply = attrsToList;
+        };
+      };
+
+      config = {
+        "poolMapping" = mkOverride 1002 null;
+      };
+
+    };
+    "csi.ceph.io.v1.ClientProfileReplicationSpecRbdPoolMapping" = {
+
+      options = {
+        "name" = mkOption {
+          description = "Name is the pool name (must be consistent across clusters)";
+          type = types.str;
+        };
+        "remoteID" = mkOption {
+          description = "RemoteID is the pool ID on the remote cluster";
+          type = types.str;
+        };
+      };
+
+      config = { };
+
+    };
+    "csi.ceph.io.v1.ClientProfileReplicationStatus" = {
+
+      options = {
+        "message" = mkOption {
+          description = "Message provides human-readable details about the current phase";
+          type = (types.nullOr types.str);
+        };
+        "phase" = mkOption {
+          description = "Phase indicates the current state of this CR";
+          type = (types.nullOr types.str);
+        };
+      };
+
+      config = {
+        "message" = mkOverride 1002 null;
+        "phase" = mkOverride 1002 null;
       };
 
     };
@@ -27112,14 +27713,40 @@ let
             )
           );
         };
+        "nodePublishSecret" = mkOption {
+          description = "SecretReference represents a Secret Reference. It has enough information to retrieve secret\nin any namespace";
+          type = (
+            types.nullOr (submoduleOf "csi.ceph.io.v1.ClientProfileSpecCephFsCephCsiSecretsNodePublishSecret")
+          );
+        };
       };
 
       config = {
         "controllerPublishSecret" = mkOverride 1002 null;
+        "nodePublishSecret" = mkOverride 1002 null;
       };
 
     };
     "csi.ceph.io.v1.ClientProfileSpecCephFsCephCsiSecretsControllerPublishSecret" = {
+
+      options = {
+        "name" = mkOption {
+          description = "name is unique within a namespace to reference a secret resource.";
+          type = (types.nullOr types.str);
+        };
+        "namespace" = mkOption {
+          description = "namespace defines the space within which the secret name must be unique.";
+          type = (types.nullOr types.str);
+        };
+      };
+
+      config = {
+        "name" = mkOverride 1002 null;
+        "namespace" = mkOverride 1002 null;
+      };
+
+    };
+    "csi.ceph.io.v1.ClientProfileSpecCephFsCephCsiSecretsNodePublishSecret" = {
 
       options = {
         "name" = mkOption {
@@ -27168,14 +27795,40 @@ let
             )
           );
         };
+        "nodePublishSecret" = mkOption {
+          description = "SecretReference represents a Secret Reference. It has enough information to retrieve secret\nin any namespace";
+          type = (
+            types.nullOr (submoduleOf "csi.ceph.io.v1.ClientProfileSpecNvmeofCephCsiSecretsNodePublishSecret")
+          );
+        };
       };
 
       config = {
         "controllerPublishSecret" = mkOverride 1002 null;
+        "nodePublishSecret" = mkOverride 1002 null;
       };
 
     };
     "csi.ceph.io.v1.ClientProfileSpecNvmeofCephCsiSecretsControllerPublishSecret" = {
+
+      options = {
+        "name" = mkOption {
+          description = "name is unique within a namespace to reference a secret resource.";
+          type = (types.nullOr types.str);
+        };
+        "namespace" = mkOption {
+          description = "namespace defines the space within which the secret name must be unique.";
+          type = (types.nullOr types.str);
+        };
+      };
+
+      config = {
+        "name" = mkOverride 1002 null;
+        "namespace" = mkOverride 1002 null;
+      };
+
+    };
+    "csi.ceph.io.v1.ClientProfileSpecNvmeofCephCsiSecretsNodePublishSecret" = {
 
       options = {
         "name" = mkOption {
@@ -27224,10 +27877,17 @@ let
             )
           );
         };
+        "nodePublishSecret" = mkOption {
+          description = "SecretReference represents a Secret Reference. It has enough information to retrieve secret\nin any namespace";
+          type = (
+            types.nullOr (submoduleOf "csi.ceph.io.v1.ClientProfileSpecRbdCephCsiSecretsNodePublishSecret")
+          );
+        };
       };
 
       config = {
         "controllerPublishSecret" = mkOverride 1002 null;
+        "nodePublishSecret" = mkOverride 1002 null;
       };
 
     };
@@ -27247,6 +27907,44 @@ let
       config = {
         "name" = mkOverride 1002 null;
         "namespace" = mkOverride 1002 null;
+      };
+
+    };
+    "csi.ceph.io.v1.ClientProfileSpecRbdCephCsiSecretsNodePublishSecret" = {
+
+      options = {
+        "name" = mkOption {
+          description = "name is unique within a namespace to reference a secret resource.";
+          type = (types.nullOr types.str);
+        };
+        "namespace" = mkOption {
+          description = "namespace defines the space within which the secret name must be unique.";
+          type = (types.nullOr types.str);
+        };
+      };
+
+      config = {
+        "name" = mkOverride 1002 null;
+        "namespace" = mkOverride 1002 null;
+      };
+
+    };
+    "csi.ceph.io.v1.ClientProfileStatus" = {
+
+      options = {
+        "message" = mkOption {
+          description = "Message provides human-readable details about the current phase";
+          type = (types.nullOr types.str);
+        };
+        "phase" = mkOption {
+          description = "Phase indicates the current state of this CR";
+          type = (types.nullOr types.str);
+        };
+      };
+
+      config = {
+        "message" = mkOverride 1002 null;
+        "phase" = mkOverride 1002 null;
       };
 
     };
@@ -29014,8 +29712,12 @@ let
     "csi.ceph.io.v1.DriverSpecControllerPluginVolumesMount" = {
 
       options = {
+        "bindMountOptions" = mkOption {
+          description = "bindMountOptions is the list of additional bind mount options to apply when\nmounting this volume into the container. Allowed values are noexec,\nnodev, and nosuid. These are Linux mount options and have no effect on\nWindows nodes.\nThis field is not supported with image volumes.\nThis is an alpha field and requires enabling the VolumeBindMountOptions feature gate.";
+          type = (types.nullOr (types.listOf types.str));
+        };
         "mountPath" = mkOption {
-          description = "Path within the container at which the volume should be mounted.  Must\nnot contain ':'.";
+          description = "Path within the container at which the volume should be mounted.";
           type = types.str;
         };
         "mountPropagation" = mkOption {
@@ -29045,6 +29747,7 @@ let
       };
 
       config = {
+        "bindMountOptions" = mkOverride 1002 null;
         "mountPropagation" = mkOverride 1002 null;
         "readOnly" = mkOverride 1002 null;
         "recursiveReadOnly" = mkOverride 1002 null;
@@ -29149,7 +29852,7 @@ let
           );
         };
         "image" = mkOption {
-          description = "image represents an OCI object (a container image or artifact) pulled and mounted on the kubelet's host machine.\nThe volume is resolved at pod startup depending on which PullPolicy value is provided:\n\n- Always: the kubelet always attempts to pull the reference. Container creation will fail If the pull fails.\n- Never: the kubelet never pulls the reference and only uses a local image or artifact. Container creation will fail if the reference isn't present.\n- IfNotPresent: the kubelet pulls if the reference isn't already present on disk. Container creation will fail if the reference isn't present and the pull fails.\n\nThe volume gets re-resolved if the pod gets deleted and recreated, which means that new remote content will become available on pod recreation.\nA failure to resolve or pull the image during pod startup will block containers from starting and may add significant latency. Failures will be retried using normal volume backoff and will be reported on the pod reason and message.\nThe types of objects that may be mounted by this volume are defined by the container runtime implementation on a host machine and at minimum must include all valid types supported by the container image field.\nThe OCI object gets mounted in a single directory (spec.containers[*].volumeMounts.mountPath) by merging the manifest layers in the same way as for container images.\nThe volume will be mounted read-only (ro) and non-executable files (noexec).\nSub path mounts for containers are not supported (spec.containers[*].volumeMounts.subpath) before 1.33.\nThe field spec.securityContext.fsGroupChangePolicy has no effect on this volume type.";
+          description = "image represents an OCI object (a container image or artifact) pulled and mounted on the kubelet's host machine.\nThe volume is resolved at pod startup depending on which PullPolicy value is provided:\n\n- Always: the kubelet always attempts to pull the reference. Container creation will fail If the pull fails.\n- Never: the kubelet never pulls the reference and only uses a local image or artifact. Container creation will fail if the reference isn't present.\n- IfNotPresent: the kubelet pulls if the reference isn't already present on disk. Container creation will fail if the reference isn't present and the pull fails.\n\nThe volume gets re-resolved if the pod gets deleted and recreated, which means that new remote content will become available on pod recreation.\nA failure to resolve or pull the image during pod startup will block containers from starting and may add significant latency. Failures will be retried using normal volume backoff and will be reported on the pod reason and message.\nThe types of objects that may be mounted by this volume are defined by the container runtime implementation on a host machine and at minimum must include all valid types supported by the container image field.\nThe OCI object gets mounted in a single directory (spec.containers[*].volumeMounts.mountPath) by merging the manifest layers in the same way as for container images.\nThe volume will be mounted read-only (ro).\nSub path mounts for containers are not supported (spec.containers[*].volumeMounts.subpath) before 1.33.\nThe field spec.securityContext.fsGroupChangePolicy has no effect on this volume type.";
           type = (types.nullOr (submoduleOf "csi.ceph.io.v1.DriverSpecControllerPluginVolumesVolumeImage"));
         };
         "iscsi" = mkOption {
@@ -29181,7 +29884,7 @@ let
           );
         };
         "portworxVolume" = mkOption {
-          description = "portworxVolume represents a portworx volume attached and mounted on kubelets host machine.\nDeprecated: PortworxVolume is deprecated. All operations for the in-tree portworxVolume type\nare redirected to the pxd.portworx.com CSI driver when the CSIMigrationPortworx feature-gate\nis on.";
+          description = "portworxVolume represents a portworx volume attached and mounted on kubelets host machine.\nDeprecated: PortworxVolume is deprecated. All operations for the in-tree portworxVolume type\nare redirected to the pxd.portworx.com CSI driver.";
           type = (
             types.nullOr (submoduleOf "csi.ceph.io.v1.DriverSpecControllerPluginVolumesVolumePortworxVolume")
           );
@@ -29448,6 +30151,10 @@ let
           description = "defaultMode is optional: mode bits used to set permissions on created files by default.\nMust be an octal value between 0000 and 0777 or a decimal value between 0 and 511.\nYAML accepts both octal and decimal values, JSON requires decimal values for mode bits.\nDefaults to 0644.\nDirectories within the path are not affected by this setting.\nThis might be in conflict with other options that affect the file\nmode, like fsGroup, and the result can be other mode bits set.";
           type = (types.nullOr types.int);
         };
+        "defaultUser" = mkOption {
+          description = "defaultUser is Optional: The owner UID of the created files by default.\nThe defaultUser field is only used as a fallback when the item-level user field is unset.\n(Alpha) This field requires the AtomicWriteVolumeUserFields feature gate to be enabled.";
+          type = (types.nullOr types.int);
+        };
         "items" = mkOption {
           description = "items if unspecified, each key-value pair in the Data field of the referenced\nConfigMap will be projected into the volume as a file whose name is the\nkey and content is the value. If specified, the listed keys will be\nprojected into the specified paths, and unlisted keys will not be\npresent. If a key is specified which is not present in the ConfigMap,\nthe volume setup will error unless it is marked optional. Paths must be\nrelative and may not contain the '..' path or start with '..'.";
           type = (
@@ -29468,6 +30175,7 @@ let
 
       config = {
         "defaultMode" = mkOverride 1002 null;
+        "defaultUser" = mkOverride 1002 null;
         "items" = mkOverride 1002 null;
         "name" = mkOverride 1002 null;
         "optional" = mkOverride 1002 null;
@@ -29489,10 +30197,15 @@ let
           description = "path is the relative path of the file to map the key to.\nMay not be an absolute path.\nMay not contain the path element '..'.\nMay not start with the string '..'.";
           type = types.str;
         };
+        "user" = mkOption {
+          description = "user is Optional: The owner UID of the created file.\nIf specified, the item-level user field takes precedence over defaultUser.\n(Alpha) This field requires the AtomicWriteVolumeUserFields feature gate to be enabled.";
+          type = (types.nullOr types.int);
+        };
       };
 
       config = {
         "mode" = mkOverride 1002 null;
+        "user" = mkOverride 1002 null;
       };
 
     };
@@ -29554,6 +30267,10 @@ let
           description = "Optional: mode bits to use on created files by default. Must be a\nOptional: mode bits used to set permissions on created files by default.\nMust be an octal value between 0000 and 0777 or a decimal value between 0 and 511.\nYAML accepts both octal and decimal values, JSON requires decimal values for mode bits.\nDefaults to 0644.\nDirectories within the path are not affected by this setting.\nThis might be in conflict with other options that affect the file\nmode, like fsGroup, and the result can be other mode bits set.";
           type = (types.nullOr types.int);
         };
+        "defaultUser" = mkOption {
+          description = "defaultUser is Optional: The owner UID of the created files by default.\nThe defaultUser field is only used as a fallback when the item-level user field is unset.\n(Alpha) This field requires the AtomicWriteVolumeUserFields feature gate to be enabled.";
+          type = (types.nullOr types.int);
+        };
         "items" = mkOption {
           description = "Items is a list of downward API volume file";
           type = (
@@ -29566,6 +30283,7 @@ let
 
       config = {
         "defaultMode" = mkOverride 1002 null;
+        "defaultUser" = mkOverride 1002 null;
         "items" = mkOverride 1002 null;
       };
 
@@ -29597,12 +30315,17 @@ let
             )
           );
         };
+        "user" = mkOption {
+          description = "user is Optional: The owner UID of the created file.\nIf specified, the item-level user field takes precedence over defaultUser.\n(Alpha) This field requires the AtomicWriteVolumeUserFields feature gate to be enabled.";
+          type = (types.nullOr types.int);
+        };
       };
 
       config = {
         "fieldRef" = mkOverride 1002 null;
         "mode" = mkOverride 1002 null;
         "resourceFieldRef" = mkOverride 1002 null;
+        "user" = mkOverride 1002 null;
       };
 
     };
@@ -29654,6 +30377,10 @@ let
           description = "medium represents what type of storage medium should back this directory.\nThe default is \"\" which means to use the node's default medium.\nMust be an empty string (default) or Memory.\nMore info: https://kubernetes.io/docs/concepts/storage/volumes#emptydir";
           type = (types.nullOr types.str);
         };
+        "mode" = mkOption {
+          description = "mode specifies the permission bits for the emptyDir directory, in numeric\nnotation (e.g., 0755, 01777). Must be a value between 0000 and 01777.\nIf not specified, defaults to 0777.\nThis might be in conflict with other options that affect the file\nmode, like fsGroup. If fsGroup is specified, the fsGroup permissions\nwill override the mode specified here.\nThis field has no effect on Windows.\nThis field is alpha and requires EmptyDirVolumeMode featuregate to be enabled.";
+          type = (types.nullOr types.int);
+        };
         "sizeLimit" = mkOption {
           description = "sizeLimit is the total amount of local storage required for this EmptyDir volume.\nThe size limit is also applicable for memory medium.\nThe maximum usage on memory medium EmptyDir would be the minimum value between\nthe SizeLimit specified here and the sum of memory limits of all containers in a pod.\nThe default is nil which means that the limit is undefined.\nMore info: https://kubernetes.io/docs/concepts/storage/volumes#emptydir";
           type = (types.nullOr (types.either types.int types.str));
@@ -29662,6 +30389,7 @@ let
 
       config = {
         "medium" = mkOverride 1002 null;
+        "mode" = mkOverride 1002 null;
         "sizeLimit" = mkOverride 1002 null;
       };
 
@@ -29712,7 +30440,7 @@ let
           type = (types.nullOr (types.listOf types.str));
         };
         "dataSource" = mkOption {
-          description = "dataSource field can be used to specify either:\n* An existing VolumeSnapshot object (snapshot.storage.k8s.io/VolumeSnapshot)\n* An existing PVC (PersistentVolumeClaim)\nIf the provisioner or an external controller can support the specified data source,\nit will create a new volume based on the contents of the specified data source.\nWhen the AnyVolumeDataSource feature gate is enabled, dataSource contents will be copied to dataSourceRef,\nand dataSourceRef contents will be copied to dataSource when dataSourceRef.namespace is not specified.\nIf the namespace is specified, then dataSourceRef will not be copied to dataSource.";
+          description = "dataSource field can be used to specify either:\n* An existing VolumeSnapshot object (snapshot.storage.k8s.io/VolumeSnapshot)\n* An existing PVC (PersistentVolumeClaim)\nIf the provisioner or an external controller can support the specified data source,\nit will create a new volume based on the contents of the specified data source.\ndataSource contents will be copied to dataSourceRef, and dataSourceRef contents will be\ncopied to dataSource when dataSourceRef.namespace is not specified.\nIf the namespace is specified, then dataSourceRef will not be copied to dataSource.";
           type = (
             types.nullOr (
               submoduleOf "csi.ceph.io.v1.DriverSpecControllerPluginVolumesVolumeEphemeralVolumeClaimTemplateSpecDataSource"
@@ -29720,7 +30448,7 @@ let
           );
         };
         "dataSourceRef" = mkOption {
-          description = "dataSourceRef specifies the object from which to populate the volume with data, if a non-empty\nvolume is desired. This may be any object from a non-empty API group (non\ncore object) or a PersistentVolumeClaim object.\nWhen this field is specified, volume binding will only succeed if the type of\nthe specified object matches some installed volume populator or dynamic\nprovisioner.\nThis field will replace the functionality of the dataSource field and as such\nif both fields are non-empty, they must have the same value. For backwards\ncompatibility, when namespace isn't specified in dataSourceRef,\nboth fields (dataSource and dataSourceRef) will be set to the same\nvalue automatically if one of them is empty and the other is non-empty.\nWhen namespace is specified in dataSourceRef,\ndataSource isn't set to the same value and must be empty.\nThere are three important differences between dataSource and dataSourceRef:\n* While dataSource only allows two specific types of objects, dataSourceRef\n  allows any non-core object, as well as PersistentVolumeClaim objects.\n* While dataSource ignores disallowed values (dropping them), dataSourceRef\n  preserves all values, and generates an error if a disallowed value is\n  specified.\n* While dataSource only allows local objects, dataSourceRef allows objects\n  in any namespaces.\n(Beta) Using this field requires the AnyVolumeDataSource feature gate to be enabled.\n(Alpha) Using the namespace field of dataSourceRef requires the CrossNamespaceVolumeDataSource feature gate to be enabled.";
+          description = "dataSourceRef specifies the object from which to populate the volume with data, if a non-empty\nvolume is desired. This may be any object from a non-empty API group (non\ncore object) or a PersistentVolumeClaim object.\nWhen this field is specified, volume binding will only succeed if the type of\nthe specified object matches some installed volume populator or dynamic\nprovisioner.\nThis field will replace the functionality of the dataSource field and as such\nif both fields are non-empty, they must have the same value. For backwards\ncompatibility, when namespace isn't specified in dataSourceRef,\nboth fields (dataSource and dataSourceRef) will be set to the same\nvalue automatically if one of them is empty and the other is non-empty.\nWhen namespace is specified in dataSourceRef,\ndataSource isn't set to the same value and must be empty.\nThere are three important differences between dataSource and dataSourceRef:\n* While dataSource only allows two specific types of objects, dataSourceRef\n  allows any non-core object, as well as PersistentVolumeClaim objects.\n* While dataSource ignores disallowed values (dropping them), dataSourceRef\n  preserves all values, and generates an error if a disallowed value is\n  specified.\n* While dataSource only allows local objects, dataSourceRef allows objects\n  in any namespaces.\n(Alpha) Using the namespace field of dataSourceRef requires the CrossNamespaceVolumeDataSource feature gate to be enabled.";
           type = (
             types.nullOr (
               submoduleOf "csi.ceph.io.v1.DriverSpecControllerPluginVolumesVolumeEphemeralVolumeClaimTemplateSpecDataSourceRef"
@@ -30272,6 +31000,10 @@ let
           description = "defaultMode are the mode bits used to set permissions on created files by default.\nMust be an octal value between 0000 and 0777 or a decimal value between 0 and 511.\nYAML accepts both octal and decimal values, JSON requires decimal values for mode bits.\nDirectories within the path are not affected by this setting.\nThis might be in conflict with other options that affect the file\nmode, like fsGroup, and the result can be other mode bits set.";
           type = (types.nullOr types.int);
         };
+        "defaultUser" = mkOption {
+          description = "defaultUser is Optional: The owner UID of the created files by default.\nThe defaultUser field is only used as a fallback when the item-level user field is unset.\n(Alpha) This field requires the AtomicWriteVolumeUserFields feature gate to be enabled.";
+          type = (types.nullOr types.int);
+        };
         "sources" = mkOption {
           description = "sources is the list of volume projections. Each entry in this list\nhandles one source.";
           type = (
@@ -30284,6 +31016,7 @@ let
 
       config = {
         "defaultMode" = mkOverride 1002 null;
+        "defaultUser" = mkOverride 1002 null;
         "sources" = mkOverride 1002 null;
       };
 
@@ -30378,6 +31111,10 @@ let
           description = "Select all ClusterTrustBundles that match this signer name.\nMutually-exclusive with name.  The contents of all selected\nClusterTrustBundles will be unified and deduplicated.";
           type = (types.nullOr types.str);
         };
+        "user" = mkOption {
+          description = "user is Optional: The owner UID of the created file.\nIf specified, the item-level user field takes precedence over defaultUser.\n(Alpha) This field requires the AtomicWriteVolumeUserFields feature gate to be enabled.";
+          type = (types.nullOr types.int);
+        };
       };
 
       config = {
@@ -30385,6 +31122,7 @@ let
         "name" = mkOverride 1002 null;
         "optional" = mkOverride 1002 null;
         "signerName" = mkOverride 1002 null;
+        "user" = mkOverride 1002 null;
       };
 
     };
@@ -30482,10 +31220,15 @@ let
           description = "path is the relative path of the file to map the key to.\nMay not be an absolute path.\nMay not contain the path element '..'.\nMay not start with the string '..'.";
           type = types.str;
         };
+        "user" = mkOption {
+          description = "user is Optional: The owner UID of the created file.\nIf specified, the item-level user field takes precedence over defaultUser.\n(Alpha) This field requires the AtomicWriteVolumeUserFields feature gate to be enabled.";
+          type = (types.nullOr types.int);
+        };
       };
 
       config = {
         "mode" = mkOverride 1002 null;
+        "user" = mkOverride 1002 null;
       };
 
     };
@@ -30536,12 +31279,17 @@ let
             )
           );
         };
+        "user" = mkOption {
+          description = "user is Optional: The owner UID of the created file.\nIf specified, the item-level user field takes precedence over defaultUser.\n(Alpha) This field requires the AtomicWriteVolumeUserFields feature gate to be enabled.";
+          type = (types.nullOr types.int);
+        };
       };
 
       config = {
         "fieldRef" = mkOverride 1002 null;
         "mode" = mkOverride 1002 null;
         "resourceFieldRef" = mkOverride 1002 null;
+        "user" = mkOverride 1002 null;
       };
 
     };
@@ -30614,6 +31362,10 @@ let
           description = "Kubelet's generated CSRs will be addressed to this signer.";
           type = types.str;
         };
+        "user" = mkOption {
+          description = "user is Optional: The owner UID of the created file.\nIf specified, the item-level user field takes precedence over defaultUser.\n(Alpha) This field requires the AtomicWriteVolumeUserFields feature gate to be enabled.";
+          type = (types.nullOr types.int);
+        };
         "userAnnotations" = mkOption {
           description = "userAnnotations allow pod authors to pass additional information to\nthe signer implementation.  Kubernetes does not restrict or validate this\nmetadata in any way.\n\nThese values are copied verbatim into the `spec.unverifiedUserAnnotations` field of\nthe PodCertificateRequest objects that Kubelet creates.\n\nEntries are subject to the same validation as object metadata annotations,\nwith the addition that all keys must be domain-prefixed. No restrictions\nare placed on values, except an overall size limitation on the entire field.\n\nSigners should document the keys and values they support. Signers should\ndeny requests that contain keys they do not recognize.";
           type = (types.nullOr (types.attrsOf types.str));
@@ -30625,6 +31377,7 @@ let
         "credentialBundlePath" = mkOverride 1002 null;
         "keyPath" = mkOverride 1002 null;
         "maxExpirationSeconds" = mkOverride 1002 null;
+        "user" = mkOverride 1002 null;
         "userAnnotations" = mkOverride 1002 null;
       };
 
@@ -30674,10 +31427,15 @@ let
           description = "path is the relative path of the file to map the key to.\nMay not be an absolute path.\nMay not contain the path element '..'.\nMay not start with the string '..'.";
           type = types.str;
         };
+        "user" = mkOption {
+          description = "user is Optional: The owner UID of the created file.\nIf specified, the item-level user field takes precedence over defaultUser.\n(Alpha) This field requires the AtomicWriteVolumeUserFields feature gate to be enabled.";
+          type = (types.nullOr types.int);
+        };
       };
 
       config = {
         "mode" = mkOverride 1002 null;
+        "user" = mkOverride 1002 null;
       };
 
     };
@@ -30696,11 +31454,16 @@ let
           description = "path is the path relative to the mount point of the file to project the\ntoken into.";
           type = types.str;
         };
+        "user" = mkOption {
+          description = "user is Optional: The owner UID of the created file.\nIf specified, the item-level user field takes precedence over defaultUser.\n(Alpha) This field requires the AtomicWriteVolumeUserFields feature gate to be enabled.";
+          type = (types.nullOr types.int);
+        };
       };
 
       config = {
         "audience" = mkOverride 1002 null;
         "expirationSeconds" = mkOverride 1002 null;
+        "user" = mkOverride 1002 null;
       };
 
     };
@@ -30881,6 +31644,10 @@ let
           description = "defaultMode is Optional: mode bits used to set permissions on created files by default.\nMust be an octal value between 0000 and 0777 or a decimal value between 0 and 511.\nYAML accepts both octal and decimal values, JSON requires decimal values\nfor mode bits. Defaults to 0644.\nDirectories within the path are not affected by this setting.\nThis might be in conflict with other options that affect the file\nmode, like fsGroup, and the result can be other mode bits set.";
           type = (types.nullOr types.int);
         };
+        "defaultUser" = mkOption {
+          description = "defaultUser is Optional: The owner UID of the created files by default.\nThe defaultUser field is only used as a fallback when the item-level user field is unset.\n(Alpha) This field requires the AtomicWriteVolumeUserFields feature gate to be enabled.";
+          type = (types.nullOr types.int);
+        };
         "items" = mkOption {
           description = "items If unspecified, each key-value pair in the Data field of the referenced\nSecret will be projected into the volume as a file whose name is the\nkey and content is the value. If specified, the listed keys will be\nprojected into the specified paths, and unlisted keys will not be\npresent. If a key is specified which is not present in the Secret,\nthe volume setup will error unless it is marked optional. Paths must be\nrelative and may not contain the '..' path or start with '..'.";
           type = (
@@ -30901,6 +31668,7 @@ let
 
       config = {
         "defaultMode" = mkOverride 1002 null;
+        "defaultUser" = mkOverride 1002 null;
         "items" = mkOverride 1002 null;
         "optional" = mkOverride 1002 null;
         "secretName" = mkOverride 1002 null;
@@ -30922,10 +31690,15 @@ let
           description = "path is the relative path of the file to map the key to.\nMay not be an absolute path.\nMay not contain the path element '..'.\nMay not start with the string '..'.";
           type = types.str;
         };
+        "user" = mkOption {
+          description = "user is Optional: The owner UID of the created file.\nIf specified, the item-level user field takes precedence over defaultUser.\n(Alpha) This field requires the AtomicWriteVolumeUserFields feature gate to be enabled.";
+          type = (types.nullOr types.int);
+        };
       };
 
       config = {
         "mode" = mkOverride 1002 null;
+        "user" = mkOverride 1002 null;
       };
 
     };
@@ -32531,8 +33304,12 @@ let
     "csi.ceph.io.v1.DriverSpecNodePluginVolumesMount" = {
 
       options = {
+        "bindMountOptions" = mkOption {
+          description = "bindMountOptions is the list of additional bind mount options to apply when\nmounting this volume into the container. Allowed values are noexec,\nnodev, and nosuid. These are Linux mount options and have no effect on\nWindows nodes.\nThis field is not supported with image volumes.\nThis is an alpha field and requires enabling the VolumeBindMountOptions feature gate.";
+          type = (types.nullOr (types.listOf types.str));
+        };
         "mountPath" = mkOption {
-          description = "Path within the container at which the volume should be mounted.  Must\nnot contain ':'.";
+          description = "Path within the container at which the volume should be mounted.";
           type = types.str;
         };
         "mountPropagation" = mkOption {
@@ -32562,6 +33339,7 @@ let
       };
 
       config = {
+        "bindMountOptions" = mkOverride 1002 null;
         "mountPropagation" = mkOverride 1002 null;
         "readOnly" = mkOverride 1002 null;
         "recursiveReadOnly" = mkOverride 1002 null;
@@ -32646,7 +33424,7 @@ let
           type = (types.nullOr (submoduleOf "csi.ceph.io.v1.DriverSpecNodePluginVolumesVolumeHostPath"));
         };
         "image" = mkOption {
-          description = "image represents an OCI object (a container image or artifact) pulled and mounted on the kubelet's host machine.\nThe volume is resolved at pod startup depending on which PullPolicy value is provided:\n\n- Always: the kubelet always attempts to pull the reference. Container creation will fail If the pull fails.\n- Never: the kubelet never pulls the reference and only uses a local image or artifact. Container creation will fail if the reference isn't present.\n- IfNotPresent: the kubelet pulls if the reference isn't already present on disk. Container creation will fail if the reference isn't present and the pull fails.\n\nThe volume gets re-resolved if the pod gets deleted and recreated, which means that new remote content will become available on pod recreation.\nA failure to resolve or pull the image during pod startup will block containers from starting and may add significant latency. Failures will be retried using normal volume backoff and will be reported on the pod reason and message.\nThe types of objects that may be mounted by this volume are defined by the container runtime implementation on a host machine and at minimum must include all valid types supported by the container image field.\nThe OCI object gets mounted in a single directory (spec.containers[*].volumeMounts.mountPath) by merging the manifest layers in the same way as for container images.\nThe volume will be mounted read-only (ro) and non-executable files (noexec).\nSub path mounts for containers are not supported (spec.containers[*].volumeMounts.subpath) before 1.33.\nThe field spec.securityContext.fsGroupChangePolicy has no effect on this volume type.";
+          description = "image represents an OCI object (a container image or artifact) pulled and mounted on the kubelet's host machine.\nThe volume is resolved at pod startup depending on which PullPolicy value is provided:\n\n- Always: the kubelet always attempts to pull the reference. Container creation will fail If the pull fails.\n- Never: the kubelet never pulls the reference and only uses a local image or artifact. Container creation will fail if the reference isn't present.\n- IfNotPresent: the kubelet pulls if the reference isn't already present on disk. Container creation will fail if the reference isn't present and the pull fails.\n\nThe volume gets re-resolved if the pod gets deleted and recreated, which means that new remote content will become available on pod recreation.\nA failure to resolve or pull the image during pod startup will block containers from starting and may add significant latency. Failures will be retried using normal volume backoff and will be reported on the pod reason and message.\nThe types of objects that may be mounted by this volume are defined by the container runtime implementation on a host machine and at minimum must include all valid types supported by the container image field.\nThe OCI object gets mounted in a single directory (spec.containers[*].volumeMounts.mountPath) by merging the manifest layers in the same way as for container images.\nThe volume will be mounted read-only (ro).\nSub path mounts for containers are not supported (spec.containers[*].volumeMounts.subpath) before 1.33.\nThe field spec.securityContext.fsGroupChangePolicy has no effect on this volume type.";
           type = (types.nullOr (submoduleOf "csi.ceph.io.v1.DriverSpecNodePluginVolumesVolumeImage"));
         };
         "iscsi" = mkOption {
@@ -32674,7 +33452,7 @@ let
           );
         };
         "portworxVolume" = mkOption {
-          description = "portworxVolume represents a portworx volume attached and mounted on kubelets host machine.\nDeprecated: PortworxVolume is deprecated. All operations for the in-tree portworxVolume type\nare redirected to the pxd.portworx.com CSI driver when the CSIMigrationPortworx feature-gate\nis on.";
+          description = "portworxVolume represents a portworx volume attached and mounted on kubelets host machine.\nDeprecated: PortworxVolume is deprecated. All operations for the in-tree portworxVolume type\nare redirected to the pxd.portworx.com CSI driver.";
           type = (
             types.nullOr (submoduleOf "csi.ceph.io.v1.DriverSpecNodePluginVolumesVolumePortworxVolume")
           );
@@ -32935,6 +33713,10 @@ let
           description = "defaultMode is optional: mode bits used to set permissions on created files by default.\nMust be an octal value between 0000 and 0777 or a decimal value between 0 and 511.\nYAML accepts both octal and decimal values, JSON requires decimal values for mode bits.\nDefaults to 0644.\nDirectories within the path are not affected by this setting.\nThis might be in conflict with other options that affect the file\nmode, like fsGroup, and the result can be other mode bits set.";
           type = (types.nullOr types.int);
         };
+        "defaultUser" = mkOption {
+          description = "defaultUser is Optional: The owner UID of the created files by default.\nThe defaultUser field is only used as a fallback when the item-level user field is unset.\n(Alpha) This field requires the AtomicWriteVolumeUserFields feature gate to be enabled.";
+          type = (types.nullOr types.int);
+        };
         "items" = mkOption {
           description = "items if unspecified, each key-value pair in the Data field of the referenced\nConfigMap will be projected into the volume as a file whose name is the\nkey and content is the value. If specified, the listed keys will be\nprojected into the specified paths, and unlisted keys will not be\npresent. If a key is specified which is not present in the ConfigMap,\nthe volume setup will error unless it is marked optional. Paths must be\nrelative and may not contain the '..' path or start with '..'.";
           type = (
@@ -32955,6 +33737,7 @@ let
 
       config = {
         "defaultMode" = mkOverride 1002 null;
+        "defaultUser" = mkOverride 1002 null;
         "items" = mkOverride 1002 null;
         "name" = mkOverride 1002 null;
         "optional" = mkOverride 1002 null;
@@ -32976,10 +33759,15 @@ let
           description = "path is the relative path of the file to map the key to.\nMay not be an absolute path.\nMay not contain the path element '..'.\nMay not start with the string '..'.";
           type = types.str;
         };
+        "user" = mkOption {
+          description = "user is Optional: The owner UID of the created file.\nIf specified, the item-level user field takes precedence over defaultUser.\n(Alpha) This field requires the AtomicWriteVolumeUserFields feature gate to be enabled.";
+          type = (types.nullOr types.int);
+        };
       };
 
       config = {
         "mode" = mkOverride 1002 null;
+        "user" = mkOverride 1002 null;
       };
 
     };
@@ -33039,6 +33827,10 @@ let
           description = "Optional: mode bits to use on created files by default. Must be a\nOptional: mode bits used to set permissions on created files by default.\nMust be an octal value between 0000 and 0777 or a decimal value between 0 and 511.\nYAML accepts both octal and decimal values, JSON requires decimal values for mode bits.\nDefaults to 0644.\nDirectories within the path are not affected by this setting.\nThis might be in conflict with other options that affect the file\nmode, like fsGroup, and the result can be other mode bits set.";
           type = (types.nullOr types.int);
         };
+        "defaultUser" = mkOption {
+          description = "defaultUser is Optional: The owner UID of the created files by default.\nThe defaultUser field is only used as a fallback when the item-level user field is unset.\n(Alpha) This field requires the AtomicWriteVolumeUserFields feature gate to be enabled.";
+          type = (types.nullOr types.int);
+        };
         "items" = mkOption {
           description = "Items is a list of downward API volume file";
           type = (
@@ -33051,6 +33843,7 @@ let
 
       config = {
         "defaultMode" = mkOverride 1002 null;
+        "defaultUser" = mkOverride 1002 null;
         "items" = mkOverride 1002 null;
       };
 
@@ -33082,12 +33875,17 @@ let
             )
           );
         };
+        "user" = mkOption {
+          description = "user is Optional: The owner UID of the created file.\nIf specified, the item-level user field takes precedence over defaultUser.\n(Alpha) This field requires the AtomicWriteVolumeUserFields feature gate to be enabled.";
+          type = (types.nullOr types.int);
+        };
       };
 
       config = {
         "fieldRef" = mkOverride 1002 null;
         "mode" = mkOverride 1002 null;
         "resourceFieldRef" = mkOverride 1002 null;
+        "user" = mkOverride 1002 null;
       };
 
     };
@@ -33139,6 +33937,10 @@ let
           description = "medium represents what type of storage medium should back this directory.\nThe default is \"\" which means to use the node's default medium.\nMust be an empty string (default) or Memory.\nMore info: https://kubernetes.io/docs/concepts/storage/volumes#emptydir";
           type = (types.nullOr types.str);
         };
+        "mode" = mkOption {
+          description = "mode specifies the permission bits for the emptyDir directory, in numeric\nnotation (e.g., 0755, 01777). Must be a value between 0000 and 01777.\nIf not specified, defaults to 0777.\nThis might be in conflict with other options that affect the file\nmode, like fsGroup. If fsGroup is specified, the fsGroup permissions\nwill override the mode specified here.\nThis field has no effect on Windows.\nThis field is alpha and requires EmptyDirVolumeMode featuregate to be enabled.";
+          type = (types.nullOr types.int);
+        };
         "sizeLimit" = mkOption {
           description = "sizeLimit is the total amount of local storage required for this EmptyDir volume.\nThe size limit is also applicable for memory medium.\nThe maximum usage on memory medium EmptyDir would be the minimum value between\nthe SizeLimit specified here and the sum of memory limits of all containers in a pod.\nThe default is nil which means that the limit is undefined.\nMore info: https://kubernetes.io/docs/concepts/storage/volumes#emptydir";
           type = (types.nullOr (types.either types.int types.str));
@@ -33147,6 +33949,7 @@ let
 
       config = {
         "medium" = mkOverride 1002 null;
+        "mode" = mkOverride 1002 null;
         "sizeLimit" = mkOverride 1002 null;
       };
 
@@ -33197,7 +34000,7 @@ let
           type = (types.nullOr (types.listOf types.str));
         };
         "dataSource" = mkOption {
-          description = "dataSource field can be used to specify either:\n* An existing VolumeSnapshot object (snapshot.storage.k8s.io/VolumeSnapshot)\n* An existing PVC (PersistentVolumeClaim)\nIf the provisioner or an external controller can support the specified data source,\nit will create a new volume based on the contents of the specified data source.\nWhen the AnyVolumeDataSource feature gate is enabled, dataSource contents will be copied to dataSourceRef,\nand dataSourceRef contents will be copied to dataSource when dataSourceRef.namespace is not specified.\nIf the namespace is specified, then dataSourceRef will not be copied to dataSource.";
+          description = "dataSource field can be used to specify either:\n* An existing VolumeSnapshot object (snapshot.storage.k8s.io/VolumeSnapshot)\n* An existing PVC (PersistentVolumeClaim)\nIf the provisioner or an external controller can support the specified data source,\nit will create a new volume based on the contents of the specified data source.\ndataSource contents will be copied to dataSourceRef, and dataSourceRef contents will be\ncopied to dataSource when dataSourceRef.namespace is not specified.\nIf the namespace is specified, then dataSourceRef will not be copied to dataSource.";
           type = (
             types.nullOr (
               submoduleOf "csi.ceph.io.v1.DriverSpecNodePluginVolumesVolumeEphemeralVolumeClaimTemplateSpecDataSource"
@@ -33205,7 +34008,7 @@ let
           );
         };
         "dataSourceRef" = mkOption {
-          description = "dataSourceRef specifies the object from which to populate the volume with data, if a non-empty\nvolume is desired. This may be any object from a non-empty API group (non\ncore object) or a PersistentVolumeClaim object.\nWhen this field is specified, volume binding will only succeed if the type of\nthe specified object matches some installed volume populator or dynamic\nprovisioner.\nThis field will replace the functionality of the dataSource field and as such\nif both fields are non-empty, they must have the same value. For backwards\ncompatibility, when namespace isn't specified in dataSourceRef,\nboth fields (dataSource and dataSourceRef) will be set to the same\nvalue automatically if one of them is empty and the other is non-empty.\nWhen namespace is specified in dataSourceRef,\ndataSource isn't set to the same value and must be empty.\nThere are three important differences between dataSource and dataSourceRef:\n* While dataSource only allows two specific types of objects, dataSourceRef\n  allows any non-core object, as well as PersistentVolumeClaim objects.\n* While dataSource ignores disallowed values (dropping them), dataSourceRef\n  preserves all values, and generates an error if a disallowed value is\n  specified.\n* While dataSource only allows local objects, dataSourceRef allows objects\n  in any namespaces.\n(Beta) Using this field requires the AnyVolumeDataSource feature gate to be enabled.\n(Alpha) Using the namespace field of dataSourceRef requires the CrossNamespaceVolumeDataSource feature gate to be enabled.";
+          description = "dataSourceRef specifies the object from which to populate the volume with data, if a non-empty\nvolume is desired. This may be any object from a non-empty API group (non\ncore object) or a PersistentVolumeClaim object.\nWhen this field is specified, volume binding will only succeed if the type of\nthe specified object matches some installed volume populator or dynamic\nprovisioner.\nThis field will replace the functionality of the dataSource field and as such\nif both fields are non-empty, they must have the same value. For backwards\ncompatibility, when namespace isn't specified in dataSourceRef,\nboth fields (dataSource and dataSourceRef) will be set to the same\nvalue automatically if one of them is empty and the other is non-empty.\nWhen namespace is specified in dataSourceRef,\ndataSource isn't set to the same value and must be empty.\nThere are three important differences between dataSource and dataSourceRef:\n* While dataSource only allows two specific types of objects, dataSourceRef\n  allows any non-core object, as well as PersistentVolumeClaim objects.\n* While dataSource ignores disallowed values (dropping them), dataSourceRef\n  preserves all values, and generates an error if a disallowed value is\n  specified.\n* While dataSource only allows local objects, dataSourceRef allows objects\n  in any namespaces.\n(Alpha) Using the namespace field of dataSourceRef requires the CrossNamespaceVolumeDataSource feature gate to be enabled.";
           type = (
             types.nullOr (
               submoduleOf "csi.ceph.io.v1.DriverSpecNodePluginVolumesVolumeEphemeralVolumeClaimTemplateSpecDataSourceRef"
@@ -33752,6 +34555,10 @@ let
           description = "defaultMode are the mode bits used to set permissions on created files by default.\nMust be an octal value between 0000 and 0777 or a decimal value between 0 and 511.\nYAML accepts both octal and decimal values, JSON requires decimal values for mode bits.\nDirectories within the path are not affected by this setting.\nThis might be in conflict with other options that affect the file\nmode, like fsGroup, and the result can be other mode bits set.";
           type = (types.nullOr types.int);
         };
+        "defaultUser" = mkOption {
+          description = "defaultUser is Optional: The owner UID of the created files by default.\nThe defaultUser field is only used as a fallback when the item-level user field is unset.\n(Alpha) This field requires the AtomicWriteVolumeUserFields feature gate to be enabled.";
+          type = (types.nullOr types.int);
+        };
         "sources" = mkOption {
           description = "sources is the list of volume projections. Each entry in this list\nhandles one source.";
           type = (
@@ -33764,6 +34571,7 @@ let
 
       config = {
         "defaultMode" = mkOverride 1002 null;
+        "defaultUser" = mkOverride 1002 null;
         "sources" = mkOverride 1002 null;
       };
 
@@ -33856,6 +34664,10 @@ let
           description = "Select all ClusterTrustBundles that match this signer name.\nMutually-exclusive with name.  The contents of all selected\nClusterTrustBundles will be unified and deduplicated.";
           type = (types.nullOr types.str);
         };
+        "user" = mkOption {
+          description = "user is Optional: The owner UID of the created file.\nIf specified, the item-level user field takes precedence over defaultUser.\n(Alpha) This field requires the AtomicWriteVolumeUserFields feature gate to be enabled.";
+          type = (types.nullOr types.int);
+        };
       };
 
       config = {
@@ -33863,6 +34675,7 @@ let
         "name" = mkOverride 1002 null;
         "optional" = mkOverride 1002 null;
         "signerName" = mkOverride 1002 null;
+        "user" = mkOverride 1002 null;
       };
 
     };
@@ -33960,10 +34773,15 @@ let
           description = "path is the relative path of the file to map the key to.\nMay not be an absolute path.\nMay not contain the path element '..'.\nMay not start with the string '..'.";
           type = types.str;
         };
+        "user" = mkOption {
+          description = "user is Optional: The owner UID of the created file.\nIf specified, the item-level user field takes precedence over defaultUser.\n(Alpha) This field requires the AtomicWriteVolumeUserFields feature gate to be enabled.";
+          type = (types.nullOr types.int);
+        };
       };
 
       config = {
         "mode" = mkOverride 1002 null;
+        "user" = mkOverride 1002 null;
       };
 
     };
@@ -34014,12 +34832,17 @@ let
             )
           );
         };
+        "user" = mkOption {
+          description = "user is Optional: The owner UID of the created file.\nIf specified, the item-level user field takes precedence over defaultUser.\n(Alpha) This field requires the AtomicWriteVolumeUserFields feature gate to be enabled.";
+          type = (types.nullOr types.int);
+        };
       };
 
       config = {
         "fieldRef" = mkOverride 1002 null;
         "mode" = mkOverride 1002 null;
         "resourceFieldRef" = mkOverride 1002 null;
+        "user" = mkOverride 1002 null;
       };
 
     };
@@ -34092,6 +34915,10 @@ let
           description = "Kubelet's generated CSRs will be addressed to this signer.";
           type = types.str;
         };
+        "user" = mkOption {
+          description = "user is Optional: The owner UID of the created file.\nIf specified, the item-level user field takes precedence over defaultUser.\n(Alpha) This field requires the AtomicWriteVolumeUserFields feature gate to be enabled.";
+          type = (types.nullOr types.int);
+        };
         "userAnnotations" = mkOption {
           description = "userAnnotations allow pod authors to pass additional information to\nthe signer implementation.  Kubernetes does not restrict or validate this\nmetadata in any way.\n\nThese values are copied verbatim into the `spec.unverifiedUserAnnotations` field of\nthe PodCertificateRequest objects that Kubelet creates.\n\nEntries are subject to the same validation as object metadata annotations,\nwith the addition that all keys must be domain-prefixed. No restrictions\nare placed on values, except an overall size limitation on the entire field.\n\nSigners should document the keys and values they support. Signers should\ndeny requests that contain keys they do not recognize.";
           type = (types.nullOr (types.attrsOf types.str));
@@ -34103,6 +34930,7 @@ let
         "credentialBundlePath" = mkOverride 1002 null;
         "keyPath" = mkOverride 1002 null;
         "maxExpirationSeconds" = mkOverride 1002 null;
+        "user" = mkOverride 1002 null;
         "userAnnotations" = mkOverride 1002 null;
       };
 
@@ -34152,10 +34980,15 @@ let
           description = "path is the relative path of the file to map the key to.\nMay not be an absolute path.\nMay not contain the path element '..'.\nMay not start with the string '..'.";
           type = types.str;
         };
+        "user" = mkOption {
+          description = "user is Optional: The owner UID of the created file.\nIf specified, the item-level user field takes precedence over defaultUser.\n(Alpha) This field requires the AtomicWriteVolumeUserFields feature gate to be enabled.";
+          type = (types.nullOr types.int);
+        };
       };
 
       config = {
         "mode" = mkOverride 1002 null;
+        "user" = mkOverride 1002 null;
       };
 
     };
@@ -34174,11 +35007,16 @@ let
           description = "path is the path relative to the mount point of the file to project the\ntoken into.";
           type = types.str;
         };
+        "user" = mkOption {
+          description = "user is Optional: The owner UID of the created file.\nIf specified, the item-level user field takes precedence over defaultUser.\n(Alpha) This field requires the AtomicWriteVolumeUserFields feature gate to be enabled.";
+          type = (types.nullOr types.int);
+        };
       };
 
       config = {
         "audience" = mkOverride 1002 null;
         "expirationSeconds" = mkOverride 1002 null;
+        "user" = mkOverride 1002 null;
       };
 
     };
@@ -34357,6 +35195,10 @@ let
           description = "defaultMode is Optional: mode bits used to set permissions on created files by default.\nMust be an octal value between 0000 and 0777 or a decimal value between 0 and 511.\nYAML accepts both octal and decimal values, JSON requires decimal values\nfor mode bits. Defaults to 0644.\nDirectories within the path are not affected by this setting.\nThis might be in conflict with other options that affect the file\nmode, like fsGroup, and the result can be other mode bits set.";
           type = (types.nullOr types.int);
         };
+        "defaultUser" = mkOption {
+          description = "defaultUser is Optional: The owner UID of the created files by default.\nThe defaultUser field is only used as a fallback when the item-level user field is unset.\n(Alpha) This field requires the AtomicWriteVolumeUserFields feature gate to be enabled.";
+          type = (types.nullOr types.int);
+        };
         "items" = mkOption {
           description = "items If unspecified, each key-value pair in the Data field of the referenced\nSecret will be projected into the volume as a file whose name is the\nkey and content is the value. If specified, the listed keys will be\nprojected into the specified paths, and unlisted keys will not be\npresent. If a key is specified which is not present in the Secret,\nthe volume setup will error unless it is marked optional. Paths must be\nrelative and may not contain the '..' path or start with '..'.";
           type = (
@@ -34377,6 +35219,7 @@ let
 
       config = {
         "defaultMode" = mkOverride 1002 null;
+        "defaultUser" = mkOverride 1002 null;
         "items" = mkOverride 1002 null;
         "optional" = mkOverride 1002 null;
         "secretName" = mkOverride 1002 null;
@@ -34398,10 +35241,15 @@ let
           description = "path is the relative path of the file to map the key to.\nMay not be an absolute path.\nMay not contain the path element '..'.\nMay not start with the string '..'.";
           type = types.str;
         };
+        "user" = mkOption {
+          description = "user is Optional: The owner UID of the created file.\nIf specified, the item-level user field takes precedence over defaultUser.\n(Alpha) This field requires the AtomicWriteVolumeUserFields feature gate to be enabled.";
+          type = (types.nullOr types.int);
+        };
       };
 
       config = {
         "mode" = mkOverride 1002 null;
+        "user" = mkOverride 1002 null;
       };
 
     };
@@ -36347,8 +37195,12 @@ let
     "csi.ceph.io.v1.OperatorConfigSpecDriverSpecDefaultsControllerPluginVolumesMount" = {
 
       options = {
+        "bindMountOptions" = mkOption {
+          description = "bindMountOptions is the list of additional bind mount options to apply when\nmounting this volume into the container. Allowed values are noexec,\nnodev, and nosuid. These are Linux mount options and have no effect on\nWindows nodes.\nThis field is not supported with image volumes.\nThis is an alpha field and requires enabling the VolumeBindMountOptions feature gate.";
+          type = (types.nullOr (types.listOf types.str));
+        };
         "mountPath" = mkOption {
-          description = "Path within the container at which the volume should be mounted.  Must\nnot contain ':'.";
+          description = "Path within the container at which the volume should be mounted.";
           type = types.str;
         };
         "mountPropagation" = mkOption {
@@ -36378,6 +37230,7 @@ let
       };
 
       config = {
+        "bindMountOptions" = mkOverride 1002 null;
         "mountPropagation" = mkOverride 1002 null;
         "readOnly" = mkOverride 1002 null;
         "recursiveReadOnly" = mkOverride 1002 null;
@@ -36526,7 +37379,7 @@ let
           );
         };
         "image" = mkOption {
-          description = "image represents an OCI object (a container image or artifact) pulled and mounted on the kubelet's host machine.\nThe volume is resolved at pod startup depending on which PullPolicy value is provided:\n\n- Always: the kubelet always attempts to pull the reference. Container creation will fail If the pull fails.\n- Never: the kubelet never pulls the reference and only uses a local image or artifact. Container creation will fail if the reference isn't present.\n- IfNotPresent: the kubelet pulls if the reference isn't already present on disk. Container creation will fail if the reference isn't present and the pull fails.\n\nThe volume gets re-resolved if the pod gets deleted and recreated, which means that new remote content will become available on pod recreation.\nA failure to resolve or pull the image during pod startup will block containers from starting and may add significant latency. Failures will be retried using normal volume backoff and will be reported on the pod reason and message.\nThe types of objects that may be mounted by this volume are defined by the container runtime implementation on a host machine and at minimum must include all valid types supported by the container image field.\nThe OCI object gets mounted in a single directory (spec.containers[*].volumeMounts.mountPath) by merging the manifest layers in the same way as for container images.\nThe volume will be mounted read-only (ro) and non-executable files (noexec).\nSub path mounts for containers are not supported (spec.containers[*].volumeMounts.subpath) before 1.33.\nThe field spec.securityContext.fsGroupChangePolicy has no effect on this volume type.";
+          description = "image represents an OCI object (a container image or artifact) pulled and mounted on the kubelet's host machine.\nThe volume is resolved at pod startup depending on which PullPolicy value is provided:\n\n- Always: the kubelet always attempts to pull the reference. Container creation will fail If the pull fails.\n- Never: the kubelet never pulls the reference and only uses a local image or artifact. Container creation will fail if the reference isn't present.\n- IfNotPresent: the kubelet pulls if the reference isn't already present on disk. Container creation will fail if the reference isn't present and the pull fails.\n\nThe volume gets re-resolved if the pod gets deleted and recreated, which means that new remote content will become available on pod recreation.\nA failure to resolve or pull the image during pod startup will block containers from starting and may add significant latency. Failures will be retried using normal volume backoff and will be reported on the pod reason and message.\nThe types of objects that may be mounted by this volume are defined by the container runtime implementation on a host machine and at minimum must include all valid types supported by the container image field.\nThe OCI object gets mounted in a single directory (spec.containers[*].volumeMounts.mountPath) by merging the manifest layers in the same way as for container images.\nThe volume will be mounted read-only (ro).\nSub path mounts for containers are not supported (spec.containers[*].volumeMounts.subpath) before 1.33.\nThe field spec.securityContext.fsGroupChangePolicy has no effect on this volume type.";
           type = (
             types.nullOr (
               submoduleOf "csi.ceph.io.v1.OperatorConfigSpecDriverSpecDefaultsControllerPluginVolumesVolumeImage"
@@ -36570,7 +37423,7 @@ let
           );
         };
         "portworxVolume" = mkOption {
-          description = "portworxVolume represents a portworx volume attached and mounted on kubelets host machine.\nDeprecated: PortworxVolume is deprecated. All operations for the in-tree portworxVolume type\nare redirected to the pxd.portworx.com CSI driver when the CSIMigrationPortworx feature-gate\nis on.";
+          description = "portworxVolume represents a portworx volume attached and mounted on kubelets host machine.\nDeprecated: PortworxVolume is deprecated. All operations for the in-tree portworxVolume type\nare redirected to the pxd.portworx.com CSI driver.";
           type = (
             types.nullOr (
               submoduleOf "csi.ceph.io.v1.OperatorConfigSpecDriverSpecDefaultsControllerPluginVolumesVolumePortworxVolume"
@@ -36868,6 +37721,10 @@ let
           description = "defaultMode is optional: mode bits used to set permissions on created files by default.\nMust be an octal value between 0000 and 0777 or a decimal value between 0 and 511.\nYAML accepts both octal and decimal values, JSON requires decimal values for mode bits.\nDefaults to 0644.\nDirectories within the path are not affected by this setting.\nThis might be in conflict with other options that affect the file\nmode, like fsGroup, and the result can be other mode bits set.";
           type = (types.nullOr types.int);
         };
+        "defaultUser" = mkOption {
+          description = "defaultUser is Optional: The owner UID of the created files by default.\nThe defaultUser field is only used as a fallback when the item-level user field is unset.\n(Alpha) This field requires the AtomicWriteVolumeUserFields feature gate to be enabled.";
+          type = (types.nullOr types.int);
+        };
         "items" = mkOption {
           description = "items if unspecified, each key-value pair in the Data field of the referenced\nConfigMap will be projected into the volume as a file whose name is the\nkey and content is the value. If specified, the listed keys will be\nprojected into the specified paths, and unlisted keys will not be\npresent. If a key is specified which is not present in the ConfigMap,\nthe volume setup will error unless it is marked optional. Paths must be\nrelative and may not contain the '..' path or start with '..'.";
           type = (
@@ -36890,6 +37747,7 @@ let
 
       config = {
         "defaultMode" = mkOverride 1002 null;
+        "defaultUser" = mkOverride 1002 null;
         "items" = mkOverride 1002 null;
         "name" = mkOverride 1002 null;
         "optional" = mkOverride 1002 null;
@@ -36911,10 +37769,15 @@ let
           description = "path is the relative path of the file to map the key to.\nMay not be an absolute path.\nMay not contain the path element '..'.\nMay not start with the string '..'.";
           type = types.str;
         };
+        "user" = mkOption {
+          description = "user is Optional: The owner UID of the created file.\nIf specified, the item-level user field takes precedence over defaultUser.\n(Alpha) This field requires the AtomicWriteVolumeUserFields feature gate to be enabled.";
+          type = (types.nullOr types.int);
+        };
       };
 
       config = {
         "mode" = mkOverride 1002 null;
+        "user" = mkOverride 1002 null;
       };
 
     };
@@ -36977,6 +37840,10 @@ let
           description = "Optional: mode bits to use on created files by default. Must be a\nOptional: mode bits used to set permissions on created files by default.\nMust be an octal value between 0000 and 0777 or a decimal value between 0 and 511.\nYAML accepts both octal and decimal values, JSON requires decimal values for mode bits.\nDefaults to 0644.\nDirectories within the path are not affected by this setting.\nThis might be in conflict with other options that affect the file\nmode, like fsGroup, and the result can be other mode bits set.";
           type = (types.nullOr types.int);
         };
+        "defaultUser" = mkOption {
+          description = "defaultUser is Optional: The owner UID of the created files by default.\nThe defaultUser field is only used as a fallback when the item-level user field is unset.\n(Alpha) This field requires the AtomicWriteVolumeUserFields feature gate to be enabled.";
+          type = (types.nullOr types.int);
+        };
         "items" = mkOption {
           description = "Items is a list of downward API volume file";
           type = (
@@ -36991,6 +37858,7 @@ let
 
       config = {
         "defaultMode" = mkOverride 1002 null;
+        "defaultUser" = mkOverride 1002 null;
         "items" = mkOverride 1002 null;
       };
 
@@ -37023,12 +37891,17 @@ let
               )
             );
           };
+          "user" = mkOption {
+            description = "user is Optional: The owner UID of the created file.\nIf specified, the item-level user field takes precedence over defaultUser.\n(Alpha) This field requires the AtomicWriteVolumeUserFields feature gate to be enabled.";
+            type = (types.nullOr types.int);
+          };
         };
 
         config = {
           "fieldRef" = mkOverride 1002 null;
           "mode" = mkOverride 1002 null;
           "resourceFieldRef" = mkOverride 1002 null;
+          "user" = mkOverride 1002 null;
         };
 
       };
@@ -37082,6 +37955,10 @@ let
           description = "medium represents what type of storage medium should back this directory.\nThe default is \"\" which means to use the node's default medium.\nMust be an empty string (default) or Memory.\nMore info: https://kubernetes.io/docs/concepts/storage/volumes#emptydir";
           type = (types.nullOr types.str);
         };
+        "mode" = mkOption {
+          description = "mode specifies the permission bits for the emptyDir directory, in numeric\nnotation (e.g., 0755, 01777). Must be a value between 0000 and 01777.\nIf not specified, defaults to 0777.\nThis might be in conflict with other options that affect the file\nmode, like fsGroup. If fsGroup is specified, the fsGroup permissions\nwill override the mode specified here.\nThis field has no effect on Windows.\nThis field is alpha and requires EmptyDirVolumeMode featuregate to be enabled.";
+          type = (types.nullOr types.int);
+        };
         "sizeLimit" = mkOption {
           description = "sizeLimit is the total amount of local storage required for this EmptyDir volume.\nThe size limit is also applicable for memory medium.\nThe maximum usage on memory medium EmptyDir would be the minimum value between\nthe SizeLimit specified here and the sum of memory limits of all containers in a pod.\nThe default is nil which means that the limit is undefined.\nMore info: https://kubernetes.io/docs/concepts/storage/volumes#emptydir";
           type = (types.nullOr (types.either types.int types.str));
@@ -37090,6 +37967,7 @@ let
 
       config = {
         "medium" = mkOverride 1002 null;
+        "mode" = mkOverride 1002 null;
         "sizeLimit" = mkOverride 1002 null;
       };
 
@@ -37142,7 +38020,7 @@ let
             type = (types.nullOr (types.listOf types.str));
           };
           "dataSource" = mkOption {
-            description = "dataSource field can be used to specify either:\n* An existing VolumeSnapshot object (snapshot.storage.k8s.io/VolumeSnapshot)\n* An existing PVC (PersistentVolumeClaim)\nIf the provisioner or an external controller can support the specified data source,\nit will create a new volume based on the contents of the specified data source.\nWhen the AnyVolumeDataSource feature gate is enabled, dataSource contents will be copied to dataSourceRef,\nand dataSourceRef contents will be copied to dataSource when dataSourceRef.namespace is not specified.\nIf the namespace is specified, then dataSourceRef will not be copied to dataSource.";
+            description = "dataSource field can be used to specify either:\n* An existing VolumeSnapshot object (snapshot.storage.k8s.io/VolumeSnapshot)\n* An existing PVC (PersistentVolumeClaim)\nIf the provisioner or an external controller can support the specified data source,\nit will create a new volume based on the contents of the specified data source.\ndataSource contents will be copied to dataSourceRef, and dataSourceRef contents will be\ncopied to dataSource when dataSourceRef.namespace is not specified.\nIf the namespace is specified, then dataSourceRef will not be copied to dataSource.";
             type = (
               types.nullOr (
                 submoduleOf "csi.ceph.io.v1.OperatorConfigSpecDriverSpecDefaultsControllerPluginVolumesVolumeEphemeralVolumeClaimTemplateSpecDataSource"
@@ -37150,7 +38028,7 @@ let
             );
           };
           "dataSourceRef" = mkOption {
-            description = "dataSourceRef specifies the object from which to populate the volume with data, if a non-empty\nvolume is desired. This may be any object from a non-empty API group (non\ncore object) or a PersistentVolumeClaim object.\nWhen this field is specified, volume binding will only succeed if the type of\nthe specified object matches some installed volume populator or dynamic\nprovisioner.\nThis field will replace the functionality of the dataSource field and as such\nif both fields are non-empty, they must have the same value. For backwards\ncompatibility, when namespace isn't specified in dataSourceRef,\nboth fields (dataSource and dataSourceRef) will be set to the same\nvalue automatically if one of them is empty and the other is non-empty.\nWhen namespace is specified in dataSourceRef,\ndataSource isn't set to the same value and must be empty.\nThere are three important differences between dataSource and dataSourceRef:\n* While dataSource only allows two specific types of objects, dataSourceRef\n  allows any non-core object, as well as PersistentVolumeClaim objects.\n* While dataSource ignores disallowed values (dropping them), dataSourceRef\n  preserves all values, and generates an error if a disallowed value is\n  specified.\n* While dataSource only allows local objects, dataSourceRef allows objects\n  in any namespaces.\n(Beta) Using this field requires the AnyVolumeDataSource feature gate to be enabled.\n(Alpha) Using the namespace field of dataSourceRef requires the CrossNamespaceVolumeDataSource feature gate to be enabled.";
+            description = "dataSourceRef specifies the object from which to populate the volume with data, if a non-empty\nvolume is desired. This may be any object from a non-empty API group (non\ncore object) or a PersistentVolumeClaim object.\nWhen this field is specified, volume binding will only succeed if the type of\nthe specified object matches some installed volume populator or dynamic\nprovisioner.\nThis field will replace the functionality of the dataSource field and as such\nif both fields are non-empty, they must have the same value. For backwards\ncompatibility, when namespace isn't specified in dataSourceRef,\nboth fields (dataSource and dataSourceRef) will be set to the same\nvalue automatically if one of them is empty and the other is non-empty.\nWhen namespace is specified in dataSourceRef,\ndataSource isn't set to the same value and must be empty.\nThere are three important differences between dataSource and dataSourceRef:\n* While dataSource only allows two specific types of objects, dataSourceRef\n  allows any non-core object, as well as PersistentVolumeClaim objects.\n* While dataSource ignores disallowed values (dropping them), dataSourceRef\n  preserves all values, and generates an error if a disallowed value is\n  specified.\n* While dataSource only allows local objects, dataSourceRef allows objects\n  in any namespaces.\n(Alpha) Using the namespace field of dataSourceRef requires the CrossNamespaceVolumeDataSource feature gate to be enabled.";
             type = (
               types.nullOr (
                 submoduleOf "csi.ceph.io.v1.OperatorConfigSpecDriverSpecDefaultsControllerPluginVolumesVolumeEphemeralVolumeClaimTemplateSpecDataSourceRef"
@@ -37709,6 +38587,10 @@ let
           description = "defaultMode are the mode bits used to set permissions on created files by default.\nMust be an octal value between 0000 and 0777 or a decimal value between 0 and 511.\nYAML accepts both octal and decimal values, JSON requires decimal values for mode bits.\nDirectories within the path are not affected by this setting.\nThis might be in conflict with other options that affect the file\nmode, like fsGroup, and the result can be other mode bits set.";
           type = (types.nullOr types.int);
         };
+        "defaultUser" = mkOption {
+          description = "defaultUser is Optional: The owner UID of the created files by default.\nThe defaultUser field is only used as a fallback when the item-level user field is unset.\n(Alpha) This field requires the AtomicWriteVolumeUserFields feature gate to be enabled.";
+          type = (types.nullOr types.int);
+        };
         "sources" = mkOption {
           description = "sources is the list of volume projections. Each entry in this list\nhandles one source.";
           type = (
@@ -37723,6 +38605,7 @@ let
 
       config = {
         "defaultMode" = mkOverride 1002 null;
+        "defaultUser" = mkOverride 1002 null;
         "sources" = mkOverride 1002 null;
       };
 
@@ -37819,6 +38702,10 @@ let
             description = "Select all ClusterTrustBundles that match this signer name.\nMutually-exclusive with name.  The contents of all selected\nClusterTrustBundles will be unified and deduplicated.";
             type = (types.nullOr types.str);
           };
+          "user" = mkOption {
+            description = "user is Optional: The owner UID of the created file.\nIf specified, the item-level user field takes precedence over defaultUser.\n(Alpha) This field requires the AtomicWriteVolumeUserFields feature gate to be enabled.";
+            type = (types.nullOr types.int);
+          };
         };
 
         config = {
@@ -37826,6 +38713,7 @@ let
           "name" = mkOverride 1002 null;
           "optional" = mkOverride 1002 null;
           "signerName" = mkOverride 1002 null;
+          "user" = mkOverride 1002 null;
         };
 
       };
@@ -37925,10 +38813,15 @@ let
             description = "path is the relative path of the file to map the key to.\nMay not be an absolute path.\nMay not contain the path element '..'.\nMay not start with the string '..'.";
             type = types.str;
           };
+          "user" = mkOption {
+            description = "user is Optional: The owner UID of the created file.\nIf specified, the item-level user field takes precedence over defaultUser.\n(Alpha) This field requires the AtomicWriteVolumeUserFields feature gate to be enabled.";
+            type = (types.nullOr types.int);
+          };
         };
 
         config = {
           "mode" = mkOverride 1002 null;
+          "user" = mkOverride 1002 null;
         };
 
       };
@@ -37981,12 +38874,17 @@ let
               )
             );
           };
+          "user" = mkOption {
+            description = "user is Optional: The owner UID of the created file.\nIf specified, the item-level user field takes precedence over defaultUser.\n(Alpha) This field requires the AtomicWriteVolumeUserFields feature gate to be enabled.";
+            type = (types.nullOr types.int);
+          };
         };
 
         config = {
           "fieldRef" = mkOverride 1002 null;
           "mode" = mkOverride 1002 null;
           "resourceFieldRef" = mkOverride 1002 null;
+          "user" = mkOverride 1002 null;
         };
 
       };
@@ -38061,6 +38959,10 @@ let
             description = "Kubelet's generated CSRs will be addressed to this signer.";
             type = types.str;
           };
+          "user" = mkOption {
+            description = "user is Optional: The owner UID of the created file.\nIf specified, the item-level user field takes precedence over defaultUser.\n(Alpha) This field requires the AtomicWriteVolumeUserFields feature gate to be enabled.";
+            type = (types.nullOr types.int);
+          };
           "userAnnotations" = mkOption {
             description = "userAnnotations allow pod authors to pass additional information to\nthe signer implementation.  Kubernetes does not restrict or validate this\nmetadata in any way.\n\nThese values are copied verbatim into the `spec.unverifiedUserAnnotations` field of\nthe PodCertificateRequest objects that Kubelet creates.\n\nEntries are subject to the same validation as object metadata annotations,\nwith the addition that all keys must be domain-prefixed. No restrictions\nare placed on values, except an overall size limitation on the entire field.\n\nSigners should document the keys and values they support. Signers should\ndeny requests that contain keys they do not recognize.";
             type = (types.nullOr (types.attrsOf types.str));
@@ -38072,6 +38974,7 @@ let
           "credentialBundlePath" = mkOverride 1002 null;
           "keyPath" = mkOverride 1002 null;
           "maxExpirationSeconds" = mkOverride 1002 null;
+          "user" = mkOverride 1002 null;
           "userAnnotations" = mkOverride 1002 null;
         };
 
@@ -38123,10 +39026,15 @@ let
             description = "path is the relative path of the file to map the key to.\nMay not be an absolute path.\nMay not contain the path element '..'.\nMay not start with the string '..'.";
             type = types.str;
           };
+          "user" = mkOption {
+            description = "user is Optional: The owner UID of the created file.\nIf specified, the item-level user field takes precedence over defaultUser.\n(Alpha) This field requires the AtomicWriteVolumeUserFields feature gate to be enabled.";
+            type = (types.nullOr types.int);
+          };
         };
 
         config = {
           "mode" = mkOverride 1002 null;
+          "user" = mkOverride 1002 null;
         };
 
       };
@@ -38146,11 +39054,16 @@ let
             description = "path is the path relative to the mount point of the file to project the\ntoken into.";
             type = types.str;
           };
+          "user" = mkOption {
+            description = "user is Optional: The owner UID of the created file.\nIf specified, the item-level user field takes precedence over defaultUser.\n(Alpha) This field requires the AtomicWriteVolumeUserFields feature gate to be enabled.";
+            type = (types.nullOr types.int);
+          };
         };
 
         config = {
           "audience" = mkOverride 1002 null;
           "expirationSeconds" = mkOverride 1002 null;
+          "user" = mkOverride 1002 null;
         };
 
       };
@@ -38336,6 +39249,10 @@ let
           description = "defaultMode is Optional: mode bits used to set permissions on created files by default.\nMust be an octal value between 0000 and 0777 or a decimal value between 0 and 511.\nYAML accepts both octal and decimal values, JSON requires decimal values\nfor mode bits. Defaults to 0644.\nDirectories within the path are not affected by this setting.\nThis might be in conflict with other options that affect the file\nmode, like fsGroup, and the result can be other mode bits set.";
           type = (types.nullOr types.int);
         };
+        "defaultUser" = mkOption {
+          description = "defaultUser is Optional: The owner UID of the created files by default.\nThe defaultUser field is only used as a fallback when the item-level user field is unset.\n(Alpha) This field requires the AtomicWriteVolumeUserFields feature gate to be enabled.";
+          type = (types.nullOr types.int);
+        };
         "items" = mkOption {
           description = "items If unspecified, each key-value pair in the Data field of the referenced\nSecret will be projected into the volume as a file whose name is the\nkey and content is the value. If specified, the listed keys will be\nprojected into the specified paths, and unlisted keys will not be\npresent. If a key is specified which is not present in the Secret,\nthe volume setup will error unless it is marked optional. Paths must be\nrelative and may not contain the '..' path or start with '..'.";
           type = (
@@ -38358,6 +39275,7 @@ let
 
       config = {
         "defaultMode" = mkOverride 1002 null;
+        "defaultUser" = mkOverride 1002 null;
         "items" = mkOverride 1002 null;
         "optional" = mkOverride 1002 null;
         "secretName" = mkOverride 1002 null;
@@ -38379,10 +39297,15 @@ let
           description = "path is the relative path of the file to map the key to.\nMay not be an absolute path.\nMay not contain the path element '..'.\nMay not start with the string '..'.";
           type = types.str;
         };
+        "user" = mkOption {
+          description = "user is Optional: The owner UID of the created file.\nIf specified, the item-level user field takes precedence over defaultUser.\n(Alpha) This field requires the AtomicWriteVolumeUserFields feature gate to be enabled.";
+          type = (types.nullOr types.int);
+        };
       };
 
       config = {
         "mode" = mkOverride 1002 null;
+        "user" = mkOverride 1002 null;
       };
 
     };
@@ -40060,8 +40983,12 @@ let
     "csi.ceph.io.v1.OperatorConfigSpecDriverSpecDefaultsNodePluginVolumesMount" = {
 
       options = {
+        "bindMountOptions" = mkOption {
+          description = "bindMountOptions is the list of additional bind mount options to apply when\nmounting this volume into the container. Allowed values are noexec,\nnodev, and nosuid. These are Linux mount options and have no effect on\nWindows nodes.\nThis field is not supported with image volumes.\nThis is an alpha field and requires enabling the VolumeBindMountOptions feature gate.";
+          type = (types.nullOr (types.listOf types.str));
+        };
         "mountPath" = mkOption {
-          description = "Path within the container at which the volume should be mounted.  Must\nnot contain ':'.";
+          description = "Path within the container at which the volume should be mounted.";
           type = types.str;
         };
         "mountPropagation" = mkOption {
@@ -40091,6 +41018,7 @@ let
       };
 
       config = {
+        "bindMountOptions" = mkOverride 1002 null;
         "mountPropagation" = mkOverride 1002 null;
         "readOnly" = mkOverride 1002 null;
         "recursiveReadOnly" = mkOverride 1002 null;
@@ -40239,7 +41167,7 @@ let
           );
         };
         "image" = mkOption {
-          description = "image represents an OCI object (a container image or artifact) pulled and mounted on the kubelet's host machine.\nThe volume is resolved at pod startup depending on which PullPolicy value is provided:\n\n- Always: the kubelet always attempts to pull the reference. Container creation will fail If the pull fails.\n- Never: the kubelet never pulls the reference and only uses a local image or artifact. Container creation will fail if the reference isn't present.\n- IfNotPresent: the kubelet pulls if the reference isn't already present on disk. Container creation will fail if the reference isn't present and the pull fails.\n\nThe volume gets re-resolved if the pod gets deleted and recreated, which means that new remote content will become available on pod recreation.\nA failure to resolve or pull the image during pod startup will block containers from starting and may add significant latency. Failures will be retried using normal volume backoff and will be reported on the pod reason and message.\nThe types of objects that may be mounted by this volume are defined by the container runtime implementation on a host machine and at minimum must include all valid types supported by the container image field.\nThe OCI object gets mounted in a single directory (spec.containers[*].volumeMounts.mountPath) by merging the manifest layers in the same way as for container images.\nThe volume will be mounted read-only (ro) and non-executable files (noexec).\nSub path mounts for containers are not supported (spec.containers[*].volumeMounts.subpath) before 1.33.\nThe field spec.securityContext.fsGroupChangePolicy has no effect on this volume type.";
+          description = "image represents an OCI object (a container image or artifact) pulled and mounted on the kubelet's host machine.\nThe volume is resolved at pod startup depending on which PullPolicy value is provided:\n\n- Always: the kubelet always attempts to pull the reference. Container creation will fail If the pull fails.\n- Never: the kubelet never pulls the reference and only uses a local image or artifact. Container creation will fail if the reference isn't present.\n- IfNotPresent: the kubelet pulls if the reference isn't already present on disk. Container creation will fail if the reference isn't present and the pull fails.\n\nThe volume gets re-resolved if the pod gets deleted and recreated, which means that new remote content will become available on pod recreation.\nA failure to resolve or pull the image during pod startup will block containers from starting and may add significant latency. Failures will be retried using normal volume backoff and will be reported on the pod reason and message.\nThe types of objects that may be mounted by this volume are defined by the container runtime implementation on a host machine and at minimum must include all valid types supported by the container image field.\nThe OCI object gets mounted in a single directory (spec.containers[*].volumeMounts.mountPath) by merging the manifest layers in the same way as for container images.\nThe volume will be mounted read-only (ro).\nSub path mounts for containers are not supported (spec.containers[*].volumeMounts.subpath) before 1.33.\nThe field spec.securityContext.fsGroupChangePolicy has no effect on this volume type.";
           type = (
             types.nullOr (
               submoduleOf "csi.ceph.io.v1.OperatorConfigSpecDriverSpecDefaultsNodePluginVolumesVolumeImage"
@@ -40283,7 +41211,7 @@ let
           );
         };
         "portworxVolume" = mkOption {
-          description = "portworxVolume represents a portworx volume attached and mounted on kubelets host machine.\nDeprecated: PortworxVolume is deprecated. All operations for the in-tree portworxVolume type\nare redirected to the pxd.portworx.com CSI driver when the CSIMigrationPortworx feature-gate\nis on.";
+          description = "portworxVolume represents a portworx volume attached and mounted on kubelets host machine.\nDeprecated: PortworxVolume is deprecated. All operations for the in-tree portworxVolume type\nare redirected to the pxd.portworx.com CSI driver.";
           type = (
             types.nullOr (
               submoduleOf "csi.ceph.io.v1.OperatorConfigSpecDriverSpecDefaultsNodePluginVolumesVolumePortworxVolume"
@@ -40578,6 +41506,10 @@ let
           description = "defaultMode is optional: mode bits used to set permissions on created files by default.\nMust be an octal value between 0000 and 0777 or a decimal value between 0 and 511.\nYAML accepts both octal and decimal values, JSON requires decimal values for mode bits.\nDefaults to 0644.\nDirectories within the path are not affected by this setting.\nThis might be in conflict with other options that affect the file\nmode, like fsGroup, and the result can be other mode bits set.";
           type = (types.nullOr types.int);
         };
+        "defaultUser" = mkOption {
+          description = "defaultUser is Optional: The owner UID of the created files by default.\nThe defaultUser field is only used as a fallback when the item-level user field is unset.\n(Alpha) This field requires the AtomicWriteVolumeUserFields feature gate to be enabled.";
+          type = (types.nullOr types.int);
+        };
         "items" = mkOption {
           description = "items if unspecified, each key-value pair in the Data field of the referenced\nConfigMap will be projected into the volume as a file whose name is the\nkey and content is the value. If specified, the listed keys will be\nprojected into the specified paths, and unlisted keys will not be\npresent. If a key is specified which is not present in the ConfigMap,\nthe volume setup will error unless it is marked optional. Paths must be\nrelative and may not contain the '..' path or start with '..'.";
           type = (
@@ -40600,6 +41532,7 @@ let
 
       config = {
         "defaultMode" = mkOverride 1002 null;
+        "defaultUser" = mkOverride 1002 null;
         "items" = mkOverride 1002 null;
         "name" = mkOverride 1002 null;
         "optional" = mkOverride 1002 null;
@@ -40621,10 +41554,15 @@ let
           description = "path is the relative path of the file to map the key to.\nMay not be an absolute path.\nMay not contain the path element '..'.\nMay not start with the string '..'.";
           type = types.str;
         };
+        "user" = mkOption {
+          description = "user is Optional: The owner UID of the created file.\nIf specified, the item-level user field takes precedence over defaultUser.\n(Alpha) This field requires the AtomicWriteVolumeUserFields feature gate to be enabled.";
+          type = (types.nullOr types.int);
+        };
       };
 
       config = {
         "mode" = mkOverride 1002 null;
+        "user" = mkOverride 1002 null;
       };
 
     };
@@ -40687,6 +41625,10 @@ let
           description = "Optional: mode bits to use on created files by default. Must be a\nOptional: mode bits used to set permissions on created files by default.\nMust be an octal value between 0000 and 0777 or a decimal value between 0 and 511.\nYAML accepts both octal and decimal values, JSON requires decimal values for mode bits.\nDefaults to 0644.\nDirectories within the path are not affected by this setting.\nThis might be in conflict with other options that affect the file\nmode, like fsGroup, and the result can be other mode bits set.";
           type = (types.nullOr types.int);
         };
+        "defaultUser" = mkOption {
+          description = "defaultUser is Optional: The owner UID of the created files by default.\nThe defaultUser field is only used as a fallback when the item-level user field is unset.\n(Alpha) This field requires the AtomicWriteVolumeUserFields feature gate to be enabled.";
+          type = (types.nullOr types.int);
+        };
         "items" = mkOption {
           description = "Items is a list of downward API volume file";
           type = (
@@ -40701,6 +41643,7 @@ let
 
       config = {
         "defaultMode" = mkOverride 1002 null;
+        "defaultUser" = mkOverride 1002 null;
         "items" = mkOverride 1002 null;
       };
 
@@ -40732,12 +41675,17 @@ let
             )
           );
         };
+        "user" = mkOption {
+          description = "user is Optional: The owner UID of the created file.\nIf specified, the item-level user field takes precedence over defaultUser.\n(Alpha) This field requires the AtomicWriteVolumeUserFields feature gate to be enabled.";
+          type = (types.nullOr types.int);
+        };
       };
 
       config = {
         "fieldRef" = mkOverride 1002 null;
         "mode" = mkOverride 1002 null;
         "resourceFieldRef" = mkOverride 1002 null;
+        "user" = mkOverride 1002 null;
       };
 
     };
@@ -40791,6 +41739,10 @@ let
           description = "medium represents what type of storage medium should back this directory.\nThe default is \"\" which means to use the node's default medium.\nMust be an empty string (default) or Memory.\nMore info: https://kubernetes.io/docs/concepts/storage/volumes#emptydir";
           type = (types.nullOr types.str);
         };
+        "mode" = mkOption {
+          description = "mode specifies the permission bits for the emptyDir directory, in numeric\nnotation (e.g., 0755, 01777). Must be a value between 0000 and 01777.\nIf not specified, defaults to 0777.\nThis might be in conflict with other options that affect the file\nmode, like fsGroup. If fsGroup is specified, the fsGroup permissions\nwill override the mode specified here.\nThis field has no effect on Windows.\nThis field is alpha and requires EmptyDirVolumeMode featuregate to be enabled.";
+          type = (types.nullOr types.int);
+        };
         "sizeLimit" = mkOption {
           description = "sizeLimit is the total amount of local storage required for this EmptyDir volume.\nThe size limit is also applicable for memory medium.\nThe maximum usage on memory medium EmptyDir would be the minimum value between\nthe SizeLimit specified here and the sum of memory limits of all containers in a pod.\nThe default is nil which means that the limit is undefined.\nMore info: https://kubernetes.io/docs/concepts/storage/volumes#emptydir";
           type = (types.nullOr (types.either types.int types.str));
@@ -40799,6 +41751,7 @@ let
 
       config = {
         "medium" = mkOverride 1002 null;
+        "mode" = mkOverride 1002 null;
         "sizeLimit" = mkOverride 1002 null;
       };
 
@@ -40851,7 +41804,7 @@ let
             type = (types.nullOr (types.listOf types.str));
           };
           "dataSource" = mkOption {
-            description = "dataSource field can be used to specify either:\n* An existing VolumeSnapshot object (snapshot.storage.k8s.io/VolumeSnapshot)\n* An existing PVC (PersistentVolumeClaim)\nIf the provisioner or an external controller can support the specified data source,\nit will create a new volume based on the contents of the specified data source.\nWhen the AnyVolumeDataSource feature gate is enabled, dataSource contents will be copied to dataSourceRef,\nand dataSourceRef contents will be copied to dataSource when dataSourceRef.namespace is not specified.\nIf the namespace is specified, then dataSourceRef will not be copied to dataSource.";
+            description = "dataSource field can be used to specify either:\n* An existing VolumeSnapshot object (snapshot.storage.k8s.io/VolumeSnapshot)\n* An existing PVC (PersistentVolumeClaim)\nIf the provisioner or an external controller can support the specified data source,\nit will create a new volume based on the contents of the specified data source.\ndataSource contents will be copied to dataSourceRef, and dataSourceRef contents will be\ncopied to dataSource when dataSourceRef.namespace is not specified.\nIf the namespace is specified, then dataSourceRef will not be copied to dataSource.";
             type = (
               types.nullOr (
                 submoduleOf "csi.ceph.io.v1.OperatorConfigSpecDriverSpecDefaultsNodePluginVolumesVolumeEphemeralVolumeClaimTemplateSpecDataSource"
@@ -40859,7 +41812,7 @@ let
             );
           };
           "dataSourceRef" = mkOption {
-            description = "dataSourceRef specifies the object from which to populate the volume with data, if a non-empty\nvolume is desired. This may be any object from a non-empty API group (non\ncore object) or a PersistentVolumeClaim object.\nWhen this field is specified, volume binding will only succeed if the type of\nthe specified object matches some installed volume populator or dynamic\nprovisioner.\nThis field will replace the functionality of the dataSource field and as such\nif both fields are non-empty, they must have the same value. For backwards\ncompatibility, when namespace isn't specified in dataSourceRef,\nboth fields (dataSource and dataSourceRef) will be set to the same\nvalue automatically if one of them is empty and the other is non-empty.\nWhen namespace is specified in dataSourceRef,\ndataSource isn't set to the same value and must be empty.\nThere are three important differences between dataSource and dataSourceRef:\n* While dataSource only allows two specific types of objects, dataSourceRef\n  allows any non-core object, as well as PersistentVolumeClaim objects.\n* While dataSource ignores disallowed values (dropping them), dataSourceRef\n  preserves all values, and generates an error if a disallowed value is\n  specified.\n* While dataSource only allows local objects, dataSourceRef allows objects\n  in any namespaces.\n(Beta) Using this field requires the AnyVolumeDataSource feature gate to be enabled.\n(Alpha) Using the namespace field of dataSourceRef requires the CrossNamespaceVolumeDataSource feature gate to be enabled.";
+            description = "dataSourceRef specifies the object from which to populate the volume with data, if a non-empty\nvolume is desired. This may be any object from a non-empty API group (non\ncore object) or a PersistentVolumeClaim object.\nWhen this field is specified, volume binding will only succeed if the type of\nthe specified object matches some installed volume populator or dynamic\nprovisioner.\nThis field will replace the functionality of the dataSource field and as such\nif both fields are non-empty, they must have the same value. For backwards\ncompatibility, when namespace isn't specified in dataSourceRef,\nboth fields (dataSource and dataSourceRef) will be set to the same\nvalue automatically if one of them is empty and the other is non-empty.\nWhen namespace is specified in dataSourceRef,\ndataSource isn't set to the same value and must be empty.\nThere are three important differences between dataSource and dataSourceRef:\n* While dataSource only allows two specific types of objects, dataSourceRef\n  allows any non-core object, as well as PersistentVolumeClaim objects.\n* While dataSource ignores disallowed values (dropping them), dataSourceRef\n  preserves all values, and generates an error if a disallowed value is\n  specified.\n* While dataSource only allows local objects, dataSourceRef allows objects\n  in any namespaces.\n(Alpha) Using the namespace field of dataSourceRef requires the CrossNamespaceVolumeDataSource feature gate to be enabled.";
             type = (
               types.nullOr (
                 submoduleOf "csi.ceph.io.v1.OperatorConfigSpecDriverSpecDefaultsNodePluginVolumesVolumeEphemeralVolumeClaimTemplateSpecDataSourceRef"
@@ -41415,6 +42368,10 @@ let
           description = "defaultMode are the mode bits used to set permissions on created files by default.\nMust be an octal value between 0000 and 0777 or a decimal value between 0 and 511.\nYAML accepts both octal and decimal values, JSON requires decimal values for mode bits.\nDirectories within the path are not affected by this setting.\nThis might be in conflict with other options that affect the file\nmode, like fsGroup, and the result can be other mode bits set.";
           type = (types.nullOr types.int);
         };
+        "defaultUser" = mkOption {
+          description = "defaultUser is Optional: The owner UID of the created files by default.\nThe defaultUser field is only used as a fallback when the item-level user field is unset.\n(Alpha) This field requires the AtomicWriteVolumeUserFields feature gate to be enabled.";
+          type = (types.nullOr types.int);
+        };
         "sources" = mkOption {
           description = "sources is the list of volume projections. Each entry in this list\nhandles one source.";
           type = (
@@ -41429,6 +42386,7 @@ let
 
       config = {
         "defaultMode" = mkOverride 1002 null;
+        "defaultUser" = mkOverride 1002 null;
         "sources" = mkOverride 1002 null;
       };
 
@@ -41524,6 +42482,10 @@ let
             description = "Select all ClusterTrustBundles that match this signer name.\nMutually-exclusive with name.  The contents of all selected\nClusterTrustBundles will be unified and deduplicated.";
             type = (types.nullOr types.str);
           };
+          "user" = mkOption {
+            description = "user is Optional: The owner UID of the created file.\nIf specified, the item-level user field takes precedence over defaultUser.\n(Alpha) This field requires the AtomicWriteVolumeUserFields feature gate to be enabled.";
+            type = (types.nullOr types.int);
+          };
         };
 
         config = {
@@ -41531,6 +42493,7 @@ let
           "name" = mkOverride 1002 null;
           "optional" = mkOverride 1002 null;
           "signerName" = mkOverride 1002 null;
+          "user" = mkOverride 1002 null;
         };
 
       };
@@ -41630,10 +42593,15 @@ let
             description = "path is the relative path of the file to map the key to.\nMay not be an absolute path.\nMay not contain the path element '..'.\nMay not start with the string '..'.";
             type = types.str;
           };
+          "user" = mkOption {
+            description = "user is Optional: The owner UID of the created file.\nIf specified, the item-level user field takes precedence over defaultUser.\n(Alpha) This field requires the AtomicWriteVolumeUserFields feature gate to be enabled.";
+            type = (types.nullOr types.int);
+          };
         };
 
         config = {
           "mode" = mkOverride 1002 null;
+          "user" = mkOverride 1002 null;
         };
 
       };
@@ -41686,12 +42654,17 @@ let
               )
             );
           };
+          "user" = mkOption {
+            description = "user is Optional: The owner UID of the created file.\nIf specified, the item-level user field takes precedence over defaultUser.\n(Alpha) This field requires the AtomicWriteVolumeUserFields feature gate to be enabled.";
+            type = (types.nullOr types.int);
+          };
         };
 
         config = {
           "fieldRef" = mkOverride 1002 null;
           "mode" = mkOverride 1002 null;
           "resourceFieldRef" = mkOverride 1002 null;
+          "user" = mkOverride 1002 null;
         };
 
       };
@@ -41766,6 +42739,10 @@ let
             description = "Kubelet's generated CSRs will be addressed to this signer.";
             type = types.str;
           };
+          "user" = mkOption {
+            description = "user is Optional: The owner UID of the created file.\nIf specified, the item-level user field takes precedence over defaultUser.\n(Alpha) This field requires the AtomicWriteVolumeUserFields feature gate to be enabled.";
+            type = (types.nullOr types.int);
+          };
           "userAnnotations" = mkOption {
             description = "userAnnotations allow pod authors to pass additional information to\nthe signer implementation.  Kubernetes does not restrict or validate this\nmetadata in any way.\n\nThese values are copied verbatim into the `spec.unverifiedUserAnnotations` field of\nthe PodCertificateRequest objects that Kubelet creates.\n\nEntries are subject to the same validation as object metadata annotations,\nwith the addition that all keys must be domain-prefixed. No restrictions\nare placed on values, except an overall size limitation on the entire field.\n\nSigners should document the keys and values they support. Signers should\ndeny requests that contain keys they do not recognize.";
             type = (types.nullOr (types.attrsOf types.str));
@@ -41777,6 +42754,7 @@ let
           "credentialBundlePath" = mkOverride 1002 null;
           "keyPath" = mkOverride 1002 null;
           "maxExpirationSeconds" = mkOverride 1002 null;
+          "user" = mkOverride 1002 null;
           "userAnnotations" = mkOverride 1002 null;
         };
 
@@ -41828,10 +42806,15 @@ let
             description = "path is the relative path of the file to map the key to.\nMay not be an absolute path.\nMay not contain the path element '..'.\nMay not start with the string '..'.";
             type = types.str;
           };
+          "user" = mkOption {
+            description = "user is Optional: The owner UID of the created file.\nIf specified, the item-level user field takes precedence over defaultUser.\n(Alpha) This field requires the AtomicWriteVolumeUserFields feature gate to be enabled.";
+            type = (types.nullOr types.int);
+          };
         };
 
         config = {
           "mode" = mkOverride 1002 null;
+          "user" = mkOverride 1002 null;
         };
 
       };
@@ -41851,11 +42834,16 @@ let
             description = "path is the path relative to the mount point of the file to project the\ntoken into.";
             type = types.str;
           };
+          "user" = mkOption {
+            description = "user is Optional: The owner UID of the created file.\nIf specified, the item-level user field takes precedence over defaultUser.\n(Alpha) This field requires the AtomicWriteVolumeUserFields feature gate to be enabled.";
+            type = (types.nullOr types.int);
+          };
         };
 
         config = {
           "audience" = mkOverride 1002 null;
           "expirationSeconds" = mkOverride 1002 null;
+          "user" = mkOverride 1002 null;
         };
 
       };
@@ -42040,6 +43028,10 @@ let
           description = "defaultMode is Optional: mode bits used to set permissions on created files by default.\nMust be an octal value between 0000 and 0777 or a decimal value between 0 and 511.\nYAML accepts both octal and decimal values, JSON requires decimal values\nfor mode bits. Defaults to 0644.\nDirectories within the path are not affected by this setting.\nThis might be in conflict with other options that affect the file\nmode, like fsGroup, and the result can be other mode bits set.";
           type = (types.nullOr types.int);
         };
+        "defaultUser" = mkOption {
+          description = "defaultUser is Optional: The owner UID of the created files by default.\nThe defaultUser field is only used as a fallback when the item-level user field is unset.\n(Alpha) This field requires the AtomicWriteVolumeUserFields feature gate to be enabled.";
+          type = (types.nullOr types.int);
+        };
         "items" = mkOption {
           description = "items If unspecified, each key-value pair in the Data field of the referenced\nSecret will be projected into the volume as a file whose name is the\nkey and content is the value. If specified, the listed keys will be\nprojected into the specified paths, and unlisted keys will not be\npresent. If a key is specified which is not present in the Secret,\nthe volume setup will error unless it is marked optional. Paths must be\nrelative and may not contain the '..' path or start with '..'.";
           type = (
@@ -42062,6 +43054,7 @@ let
 
       config = {
         "defaultMode" = mkOverride 1002 null;
+        "defaultUser" = mkOverride 1002 null;
         "items" = mkOverride 1002 null;
         "optional" = mkOverride 1002 null;
         "secretName" = mkOverride 1002 null;
@@ -42083,10 +43076,15 @@ let
           description = "path is the relative path of the file to map the key to.\nMay not be an absolute path.\nMay not contain the path element '..'.\nMay not start with the string '..'.";
           type = types.str;
         };
+        "user" = mkOption {
+          description = "user is Optional: The owner UID of the created file.\nIf specified, the item-level user field takes precedence over defaultUser.\n(Alpha) This field requires the AtomicWriteVolumeUserFields feature gate to be enabled.";
+          type = (types.nullOr types.int);
+        };
       };
 
       config = {
         "mode" = mkOverride 1002 null;
+        "user" = mkOverride 1002 null;
       };
 
     };
@@ -42188,11 +43186,11 @@ let
 
       options = {
         "apiVersion" = mkOption {
-          description = "\nAPIVersion defines the versioned schema of this representation of an object.\nServers should convert recognized schemas to the latest internal value, and\nmay reject unrecognized values.\nMore info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources\n";
+          description = "APIVersion defines the versioned schema of this representation of an object.\nServers should convert recognized schemas to the latest internal value, and\nmay reject unrecognized values.\nMore info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources";
           type = (types.nullOr types.str);
         };
         "kind" = mkOption {
-          description = "\nKind is a string value representing the REST resource this object represents.\nServers may infer this from the endpoint the client submits requests to.\nCannot be updated.\nIn CamelCase.\nMore info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds\n";
+          description = "Kind is a string value representing the REST resource this object represents.\nServers may infer this from the endpoint the client submits requests to.\nCannot be updated.\nIn CamelCase.\nMore info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds";
           type = (types.nullOr types.str);
         };
         "metadata" = mkOption {
@@ -42200,12 +43198,12 @@ let
           type = (types.nullOr (globalSubmoduleOf "io.k8s.apimachinery.pkg.apis.meta.v1.ObjectMeta"));
         };
         "spec" = mkOption {
-          description = "";
+          description = "ObjectBucketSpec defines the desired state of ObjectBucket. Fields defined here should be normal among all providers.\nAuthentication must be of a type defined in this package to pass type checks in reconciler";
           type = (types.nullOr (submoduleOf "objectbucket.io.v1alpha1.ObjectBucketSpec"));
         };
         "status" = mkOption {
-          description = "";
-          type = (types.nullOr types.attrs);
+          description = "ObjectBucketStatus defines the observed state of ObjectBucket";
+          type = (types.nullOr (submoduleOf "objectbucket.io.v1alpha1.ObjectBucketStatus"));
         };
       };
 
@@ -42222,11 +43220,11 @@ let
 
       options = {
         "apiVersion" = mkOption {
-          description = "\nAPIVersion defines the versioned schema of this representation of an object.\nServers should convert recognized schemas to the latest internal value, and\nmay reject unrecognized values.\nMore info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources\n";
+          description = "APIVersion defines the versioned schema of this representation of an object.\nServers should convert recognized schemas to the latest internal value, and\nmay reject unrecognized values.\nMore info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources";
           type = (types.nullOr types.str);
         };
         "kind" = mkOption {
-          description = "\nKind is a string value representing the REST resource this object represents.\nServers may infer this from the endpoint the client submits requests to.\nCannot be updated.\nIn CamelCase.\nMore info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds\n";
+          description = "Kind is a string value representing the REST resource this object represents.\nServers may infer this from the endpoint the client submits requests to.\nCannot be updated.\nIn CamelCase.\nMore info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds";
           type = (types.nullOr types.str);
         };
         "metadata" = mkOption {
@@ -42234,12 +43232,12 @@ let
           type = (types.nullOr (globalSubmoduleOf "io.k8s.apimachinery.pkg.apis.meta.v1.ObjectMeta"));
         };
         "spec" = mkOption {
-          description = "";
+          description = "ObjectBucketClaimSpec defines the desired state of ObjectBucketClaim";
           type = (types.nullOr (submoduleOf "objectbucket.io.v1alpha1.ObjectBucketClaimSpec"));
         };
         "status" = mkOption {
-          description = "";
-          type = (types.nullOr types.attrs);
+          description = "ObjectBucketClaimStatus defines the observed state of ObjectBucketClaim";
+          type = (types.nullOr (submoduleOf "objectbucket.io.v1alpha1.ObjectBucketClaimStatus"));
         };
       };
 
@@ -42256,24 +43254,24 @@ let
 
       options = {
         "additionalConfig" = mkOption {
-          description = "";
-          type = (types.nullOr types.attrs);
+          description = "AdditionalConfig gives providers a location to set\nproprietary config values (tenant, namespace, etc)";
+          type = (types.nullOr (types.attrsOf types.str));
         };
         "bucketName" = mkOption {
-          description = "";
+          description = "BucketName (not recommended) the name of the bucket.  Caution!\nIn-store bucket names may collide across namespaces.  If you define\nthe name yourself, try to make it as unique as possible.";
           type = (types.nullOr types.str);
         };
         "generateBucketName" = mkOption {
-          description = "";
+          description = "GenerateBucketName (recommended) a prefix for a bucket name to be\nfollowed by a hyphen and 5 random characters. Protects against\nin-store name collisions.";
           type = (types.nullOr types.str);
         };
         "objectBucketName" = mkOption {
-          description = "";
+          description = "ObjectBucketName is the name of the object bucket resource. This is the authoritative\ndetermination for binding.";
           type = (types.nullOr types.str);
         };
         "storageClassName" = mkOption {
-          description = "";
-          type = (types.nullOr types.str);
+          description = "StorageClass names the StorageClass object representing the desired provisioner and parameters";
+          type = (types.withMinLength 1 types.str);
         };
       };
 
@@ -42282,7 +43280,29 @@ let
         "bucketName" = mkOverride 1002 null;
         "generateBucketName" = mkOverride 1002 null;
         "objectBucketName" = mkOverride 1002 null;
-        "storageClassName" = mkOverride 1002 null;
+      };
+
+    };
+    "objectbucket.io.v1alpha1.ObjectBucketClaimStatus" = {
+
+      options = {
+        "phase" = mkOption {
+          description = "ObjectBucketClaimStatusPhase is set by the controller to save the state of the provisioning process.";
+          type = (
+            types.nullOr (
+              types.enum [
+                "Pending"
+                "Bound"
+                "Released"
+                "Failed"
+              ]
+            )
+          );
+        };
+      };
+
+      config = {
+        "phase" = mkOverride 1002 null;
       };
 
     };
@@ -42291,37 +43311,83 @@ let
       options = {
         "additionalState" = mkOption {
           description = "";
-          type = (types.nullOr types.attrs);
-        };
-        "authentication" = mkOption {
-          description = "";
-          type = (types.nullOr types.attrs);
+          type = (types.nullOr (types.attrsOf types.str));
         };
         "claimRef" = mkOption {
-          description = "";
-          type = (types.nullOr types.attrs);
+          description = "ObjectReference contains enough information to let you inspect or modify the referred object.";
+          type = (types.nullOr (submoduleOf "objectbucket.io.v1alpha1.ObjectBucketSpecClaimRef"));
         };
         "endpoint" = mkOption {
-          description = "";
+          description = "Endpoint contains all connection relevant data that an app may require for accessing\nthe bucket";
           type = (types.nullOr (submoduleOf "objectbucket.io.v1alpha1.ObjectBucketSpecEndpoint"));
         };
         "reclaimPolicy" = mkOption {
-          description = "";
-          type = (types.nullOr types.str);
+          description = "PersistentVolumeReclaimPolicy describes a policy for end-of-life maintenance of persistent volumes.";
+          type = (
+            types.nullOr (
+              types.enum [
+                "Recycle"
+                "Retain"
+                "Delete"
+              ]
+            )
+          );
         };
         "storageClassName" = mkOption {
           description = "";
-          type = (types.nullOr types.str);
+          type = types.str;
         };
       };
 
       config = {
         "additionalState" = mkOverride 1002 null;
-        "authentication" = mkOverride 1002 null;
         "claimRef" = mkOverride 1002 null;
         "endpoint" = mkOverride 1002 null;
         "reclaimPolicy" = mkOverride 1002 null;
-        "storageClassName" = mkOverride 1002 null;
+      };
+
+    };
+    "objectbucket.io.v1alpha1.ObjectBucketSpecClaimRef" = {
+
+      options = {
+        "apiVersion" = mkOption {
+          description = "API version of the referent.";
+          type = (types.nullOr types.str);
+        };
+        "fieldPath" = mkOption {
+          description = "If referring to a piece of an object instead of an entire object, this string\nshould contain a valid JSON/Go field access statement, such as desiredState.manifest.containers[2].\nFor example, if the object reference is to a container within a pod, this would take on a value like:\n\"spec.containers{name}\" (where \"name\" refers to the name of the container that triggered\nthe event) or if no container name is specified \"spec.containers[2]\" (container with\nindex 2 in this pod). This syntax is chosen only to have some well-defined way of\nreferencing a part of an object.";
+          type = (types.nullOr types.str);
+        };
+        "kind" = mkOption {
+          description = "Kind of the referent.\nMore info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds";
+          type = (types.nullOr types.str);
+        };
+        "name" = mkOption {
+          description = "Name of the referent.\nMore info: https://kubernetes.io/docs/concepts/overview/working-with-objects/names/#names";
+          type = (types.nullOr types.str);
+        };
+        "namespace" = mkOption {
+          description = "Namespace of the referent.\nMore info: https://kubernetes.io/docs/concepts/overview/working-with-objects/namespaces/";
+          type = (types.nullOr types.str);
+        };
+        "resourceVersion" = mkOption {
+          description = "Specific resourceVersion to which this reference is made, if any.\nMore info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#concurrency-control-and-consistency";
+          type = (types.nullOr types.str);
+        };
+        "uid" = mkOption {
+          description = "UID of the referent.\nMore info: https://kubernetes.io/docs/concepts/overview/working-with-objects/names/#uids";
+          type = (types.nullOr types.str);
+        };
+      };
+
+      config = {
+        "apiVersion" = mkOverride 1002 null;
+        "fieldPath" = mkOverride 1002 null;
+        "kind" = mkOverride 1002 null;
+        "name" = mkOverride 1002 null;
+        "namespace" = mkOverride 1002 null;
+        "resourceVersion" = mkOverride 1002 null;
+        "uid" = mkOverride 1002 null;
       };
 
     };
@@ -42330,7 +43396,7 @@ let
       options = {
         "additionalConfig" = mkOption {
           description = "";
-          type = (types.nullOr types.attrs);
+          type = (types.nullOr (types.attrsOf types.str));
         };
         "bucketHost" = mkOption {
           description = "";
@@ -42361,6 +43427,28 @@ let
         "bucketPort" = mkOverride 1002 null;
         "region" = mkOverride 1002 null;
         "subRegion" = mkOverride 1002 null;
+      };
+
+    };
+    "objectbucket.io.v1alpha1.ObjectBucketStatus" = {
+
+      options = {
+        "phase" = mkOption {
+          description = "ObjectBucketStatusPhase is set by the controller to save the state of the provisioning process.";
+          type = (
+            types.nullOr (
+              types.enum [
+                "Bound"
+                "Released"
+                "Failed"
+              ]
+            )
+          );
+        };
+      };
+
+      config = {
+        "phase" = mkOverride 1002 null;
       };
 
     };
@@ -42526,7 +43614,7 @@ in
         default = { };
       };
       "ceph.rook.io"."v1"."CephObjectStoreAccount" = mkOption {
-        description = "CephObjectStoreAccount represent the RGW user account";
+        description = "CephObjectStoreAccount represents the RGW user account";
         type = (
           types.attrsOf (
             submoduleForDefinition "ceph.rook.io.v1.CephObjectStoreAccount" "cephobjectstoreaccounts"
@@ -42616,6 +43704,18 @@ in
         );
         default = { };
       };
+      "csi.ceph.io"."v1"."ClientProfileReplication" = mkOption {
+        description = "ClientProfileReplication is the Schema for the clientprofilereplications API";
+        type = (
+          types.attrsOf (
+            submoduleForDefinition "csi.ceph.io.v1.ClientProfileReplication" "clientprofilereplications"
+              "ClientProfileReplication"
+              "csi.ceph.io"
+              "v1"
+          )
+        );
+        default = { };
+      };
       "csi.ceph.io"."v1"."Driver" = mkOption {
         description = "Driver is the Schema for the drivers API";
         type = (
@@ -42635,7 +43735,7 @@ in
         default = { };
       };
       "objectbucket.io"."v1alpha1"."ObjectBucket" = mkOption {
-        description = "";
+        description = "ObjectBucket is the Schema for the objectbuckets API";
         type = (
           types.attrsOf (
             submoduleForDefinition "objectbucket.io.v1alpha1.ObjectBucket" "objectbuckets" "ObjectBucket"
@@ -42646,7 +43746,7 @@ in
         default = { };
       };
       "objectbucket.io"."v1alpha1"."ObjectBucketClaim" = mkOption {
-        description = "";
+        description = "ObjectBucketClaim is the Schema for the objectbucketclaims API";
         type = (
           types.attrsOf (
             submoduleForDefinition "objectbucket.io.v1alpha1.ObjectBucketClaim" "objectbucketclaims"
@@ -42826,7 +43926,7 @@ in
         default = { };
       };
       "cephObjectStoreAccounts" = mkOption {
-        description = "CephObjectStoreAccount represent the RGW user account";
+        description = "CephObjectStoreAccount represents the RGW user account";
         type = (
           types.attrsOf (
             submoduleForDefinition "ceph.rook.io.v1.CephObjectStoreAccount" "cephobjectstoreaccounts"
@@ -42905,6 +44005,18 @@ in
         );
         default = { };
       };
+      "clientProfileReplications" = mkOption {
+        description = "ClientProfileReplication is the Schema for the clientprofilereplications API";
+        type = (
+          types.attrsOf (
+            submoduleForDefinition "csi.ceph.io.v1.ClientProfileReplication" "clientprofilereplications"
+              "ClientProfileReplication"
+              "csi.ceph.io"
+              "v1"
+          )
+        );
+        default = { };
+      };
       "drivers" = mkOption {
         description = "Driver is the Schema for the drivers API";
         type = (
@@ -42913,7 +44025,7 @@ in
         default = { };
       };
       "objectBuckets" = mkOption {
-        description = "";
+        description = "ObjectBucket is the Schema for the objectbuckets API";
         type = (
           types.attrsOf (
             submoduleForDefinition "objectbucket.io.v1alpha1.ObjectBucket" "objectbuckets" "ObjectBucket"
@@ -42924,7 +44036,7 @@ in
         default = { };
       };
       "objectBucketClaims" = mkOption {
-        description = "";
+        description = "ObjectBucketClaim is the Schema for the objectbucketclaims API";
         type = (
           types.attrsOf (
             submoduleForDefinition "objectbucket.io.v1alpha1.ObjectBucketClaim" "objectbucketclaims"
@@ -43111,6 +44223,13 @@ in
         attrName = "clientProfileMappings";
       }
       {
+        name = "clientprofilereplications";
+        group = "csi.ceph.io";
+        version = "v1";
+        kind = "ClientProfileReplication";
+        attrName = "clientProfileReplications";
+      }
+      {
         name = "drivers";
         group = "csi.ceph.io";
         version = "v1";
@@ -43179,6 +44298,9 @@ in
       "csi.ceph.io"."v1"."ClientProfileMapping" =
         mkAliasDefinitions
           options.resources."clientProfileMappings";
+      "csi.ceph.io"."v1"."ClientProfileReplication" =
+        mkAliasDefinitions
+          options.resources."clientProfileReplications";
       "csi.ceph.io"."v1"."Driver" = mkAliasDefinitions options.resources."drivers";
       "objectbucket.io"."v1alpha1"."ObjectBucket" = mkAliasDefinitions options.resources."objectBuckets";
       "objectbucket.io"."v1alpha1"."ObjectBucketClaim" =
@@ -43321,6 +44443,12 @@ in
         group = "csi.ceph.io";
         version = "v1";
         kind = "ClientProfileMapping";
+        default.metadata.namespace = lib.mkDefault config.namespace;
+      }
+      {
+        group = "csi.ceph.io";
+        version = "v1";
+        kind = "ClientProfileReplication";
         default.metadata.namespace = lib.mkDefault config.namespace;
       }
       {
