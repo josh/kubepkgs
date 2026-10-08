@@ -8,13 +8,13 @@
 }:
 stdenvNoCC.mkDerivation (finalAttrs: {
   pname = "restic-rados-server-chart";
-  version = "1.0.0";
+  version = "1.0.1";
 
   src = fetchFromGitHub {
     owner = "josh";
     repo = "restic-rados-server";
     tag = "v${finalAttrs.version}";
-    hash = "sha256-SZiFHnG+ZkA49Raz1OijaUFSjb9hjKtIFuvg5uqC2T0=";
+    hash = "sha256-oxpUB3+sg1sH1TQnv30yNEDFJi6SOLSzNWoMMdCAIDk=";
   };
 
   buildCommand = ''
