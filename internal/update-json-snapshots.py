@@ -100,7 +100,7 @@ def fetch(url: str, jq_filter: str | None) -> str:
     """
     headers = {
         "User-Agent": "update-json-snapshots",
-        "Accept": "application/vnd.github+json",
+        "Accept": "application/vnd.github+json, application/json;q=0.9, */*;q=0.8",
     }
     log(f"+ fetch {url}")
     request = urllib.request.Request(url, headers=headers)
