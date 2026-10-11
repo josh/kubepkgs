@@ -1,4 +1,6 @@
 {
+  lib,
+  skopeo,
   testers,
 }:
 {
@@ -14,8 +16,8 @@ testers.runNixOSTest {
 
   testScript = ''
     machine.wait_for_unit("multi-user.target")
-    machine.succeed("podman load < ${image}")
-    image = "${image.imageName}:${image.imageTag}"
+    image = "localhost/${image.imageName}:${image.imageTag}"
+    machine.succeed(f"${lib.meta.getExe skopeo} copy --insecure-policy oci:${image}:${image.imageTag} containers-storage:{image}")
   ''
   + testScript;
 }

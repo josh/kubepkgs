@@ -3,6 +3,8 @@
   callPackage,
   crane,
   dockerTools,
+  runCommand,
+  skopeo,
   writeShellApplication,
 }:
 {
@@ -18,7 +20,7 @@
 let
   testOciImage = callPackage ./test-oci-image.nix { };
 
-  image = dockerTools.buildLayeredImage {
+  stream = dockerTools.streamLayeredImage {
     inherit
       name
       config
@@ -27,14 +29,24 @@ let
       ;
 
     contents = contents ++ [ fakeNss ];
-
-    compressor = "none";
-
-    meta = {
-      platforms = lib.platforms.linux;
-    }
-    // meta;
   };
+
+  image =
+    runCommand "${name}-oci"
+      {
+        nativeBuildInputs = [ skopeo ];
+        passthru = {
+          inherit (stream) imageName imageTag;
+        };
+        meta = {
+          platforms = lib.platforms.linux;
+        }
+        // meta;
+      }
+      ''
+        ${stream} | skopeo copy --insecure-policy --tmpdir "$TMPDIR" --dest-compress-format gzip \
+          docker-archive:/dev/stdin "oci:$out:${stream.imageTag}"
+      '';
 
   copyTo = writeShellApplication {
     name = "copy-to";
