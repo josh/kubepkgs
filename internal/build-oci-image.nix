@@ -3,6 +3,7 @@
   callPackage,
   crane,
   dockerTools,
+  jq,
   runCommand,
   skopeo,
   writeShellApplication,
@@ -34,7 +35,10 @@ let
   image =
     runCommand "${name}-oci"
       {
-        nativeBuildInputs = [ skopeo ];
+        nativeBuildInputs = [
+          jq
+          skopeo
+        ];
         passthru = {
           inherit (stream) imageName imageTag;
         };
@@ -46,6 +50,13 @@ let
       ''
         ${stream} | skopeo copy --insecure-policy --tmpdir "$TMPDIR" --dest-compress-format gzip \
           docker-archive:/dev/stdin "oci:$out:${stream.imageTag}"
+
+        manifest=$(jq -r '.manifests[0].digest' "$out/index.json")
+        config=$(jq -r .config.digest "$out/blobs/sha256/''${manifest#sha256:}")
+        jq --compact-output --slurpfile config "$out/blobs/sha256/''${config#sha256:}" \
+          '.manifests[0].platform = ($config[0] | {architecture, os})' \
+          "$out/index.json" >index.json
+        install -m 444 index.json "$out/index.json"
       '';
 
   copyTo = writeShellApplication {
