@@ -1,6 +1,7 @@
 {
   "tag": "0.2.0",
-  "digest": "sha256:1db16acb2a54e9484ecee6e236c6c31d0aab191d39d534b3230cc40157aeddc3",
+  "upstreamDigest": "sha256:1db16acb2a54e9484ecee6e236c6c31d0aab191d39d534b3230cc40157aeddc3",
+  "digest": "sha256:63714de77a3295e478373c7e36b16d846431b3fcfc70a0a0641924eb4007b023",
   "manifests": [
     "sha256:dea7a48960ac46f0c3fb3007d3c762eaac3d485dde4497595510938aef51d5ba",
     "sha256:fc6c9e002f4ee9886ae969db0059f023377747a178d693dcc7ccf175fd050d3d",
@@ -29,5 +30,66 @@
     "sha256:a10d31eeaaa2d3aaaf28f8c0d20b16b41224494ae6c51526b0401fe186cf3dba",
     "sha256:4a24c5352ac0ab7d6213762ac31ce7dbc41f0af21aab86212fe6b53c6c197525",
     "sha256:a68c6a50678850fe36f562a95c8e675da80e040d5ca988e5c9374847819b7939"
-  ]
+  ],
+  "index": {
+    "schemaVersion": 2,
+    "mediaType": "application/vnd.oci.image.index.v1+json",
+    "manifests": [
+      {
+        "mediaType": "application/vnd.oci.image.manifest.v1+json",
+        "digest": "sha256:dea7a48960ac46f0c3fb3007d3c762eaac3d485dde4497595510938aef51d5ba",
+        "size": 2474,
+        "platform": {
+          "architecture": "amd64",
+          "os": "linux"
+        }
+      },
+      {
+        "mediaType": "application/vnd.oci.image.manifest.v1+json",
+        "digest": "sha256:fc6c9e002f4ee9886ae969db0059f023377747a178d693dcc7ccf175fd050d3d",
+        "size": 2474,
+        "platform": {
+          "architecture": "arm64",
+          "os": "linux"
+        }
+      },
+      {
+        "mediaType": "application/vnd.oci.image.manifest.v1+json",
+        "digest": "sha256:73ab520d581f939f033a32aa23b30ebfe825d8b2f7be5a7eea7ec8eca9267160",
+        "size": 1112,
+        "annotations": {
+          "vnd.docker.reference.digest": "sha256:dea7a48960ac46f0c3fb3007d3c762eaac3d485dde4497595510938aef51d5ba",
+          "vnd.docker.reference.type": "attestation-manifest"
+        },
+        "platform": {
+          "architecture": "unknown",
+          "os": "unknown"
+        }
+      },
+      {
+        "mediaType": "application/vnd.oci.image.manifest.v1+json",
+        "digest": "sha256:66c2874094fb5e220d452845cabb779212d23454abf8c625b81bb003c9e78c15",
+        "size": 1112,
+        "annotations": {
+          "vnd.docker.reference.digest": "sha256:fc6c9e002f4ee9886ae969db0059f023377747a178d693dcc7ccf175fd050d3d",
+          "vnd.docker.reference.type": "attestation-manifest"
+        },
+        "platform": {
+          "architecture": "unknown",
+          "os": "unknown"
+        }
+      }
+    ],
+    "annotations": {
+      "org.opencontainers.image.created": "2026-10-05T08:23:11.502Z",
+      "org.opencontainers.image.description": "Default sandbox image for Umpteenth runs",
+      "org.opencontainers.image.documentation": "https://umpteenth.dev",
+      "org.opencontainers.image.licenses": "AGPL-3.0",
+      "org.opencontainers.image.revision": "9c271019c4802547fdb7c60541b9987080c89f50",
+      "org.opencontainers.image.source": "https://github.com/stonith404/umpteenth",
+      "org.opencontainers.image.title": "Umpteenth Sandbox",
+      "org.opencontainers.image.url": "https://github.com/stonith404/umpteenth",
+      "org.opencontainers.image.version": "0.2.0"
+    }
+  }
 }

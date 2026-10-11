@@ -1,5 +1,6 @@
 import dataclasses
 import difflib
+import hashlib
 import json
 import os
 import re
@@ -13,6 +14,8 @@ CRANE_PATH = "@crane@"
 GH_PATH = "@gh@"
 GIT_PATH = "@git@"
 NIX_PATH = "@nix@"
+
+PLATFORMS = {("linux", "amd64"), ("linux", "arm64")}
 
 STORE_PREFIX = re.compile(r"^/nix/store/[^/]+/")
 
@@ -39,7 +42,7 @@ class Image:
     pname: str
     image_name: str
     tag: str
-    digest: str
+    upstream_digest: str
     lock: str
 
 
@@ -113,7 +116,7 @@ def discover(repo_root: str) -> list[Image]:
             pname=info["pname"],
             image_name=info["imageName"],
             tag=info["tag"],
-            digest=info["digest"],
+            upstream_digest=info["upstreamDigest"],
             lock=STORE_PREFIX.sub("", info["lock"]),
         )
         for attr, info in sorted(data.items())
@@ -163,14 +166,41 @@ def classify(image: Image, latest: str) -> Result:
     return Result(image, "update", latest)
 
 
-def build_lock(image_name: str, tag: str, digest: str) -> dict:
-    root = crane_manifest(image_name, digest)
-    manifests = [m["digest"] for m in root.get("manifests", [])]
+def canonical_json(value) -> str:
+    """Must match Nix's builtins.toJSON byte for byte."""
+    return json.dumps(value, sort_keys=True, separators=(",", ":"), ensure_ascii=False)
+
+
+def trim_index(root: dict) -> dict:
+    kept = {
+        m["digest"]
+        for m in root["manifests"]
+        if (m.get("platform", {}).get("os"), m.get("platform", {}).get("architecture"))
+        in PLATFORMS
+    }
+    if not kept:
+        raise ValueError("index has none of the mirrored platforms")
+    manifests = [
+        m
+        for m in root["manifests"]
+        if m["digest"] in kept
+        or m.get("annotations", {}).get("vnd.docker.reference.digest") in kept
+    ]
+    return {**root, "manifests": manifests}
+
+
+def build_lock(image_name: str, tag: str, upstream_digest: str) -> dict:
+    root = crane_manifest(image_name, upstream_digest)
+    if "manifests" not in root:
+        raise ValueError(f"{image_name}@{upstream_digest} is not an index")
+    index = trim_index(root)
+    digest = "sha256:" + hashlib.sha256(canonical_json(index).encode()).hexdigest()
+    manifests = [m["digest"] for m in index["manifests"]]
 
     blobs: list[str] = []
     seen: set[str] = set()
-
-    def add(child: dict) -> None:
+    for child_digest in manifests:
+        child = crane_manifest(image_name, child_digest)
         candidates = [child["config"]["digest"]]
         candidates += [layer["digest"] for layer in child.get("layers", [])]
         for candidate in candidates:
@@ -178,13 +208,14 @@ def build_lock(image_name: str, tag: str, digest: str) -> dict:
                 seen.add(candidate)
                 blobs.append(candidate)
 
-    if manifests:
-        for child_digest in manifests:
-            add(crane_manifest(image_name, child_digest))
-    else:
-        add(root)
-
-    return {"tag": tag, "digest": digest, "manifests": manifests, "blobs": blobs}
+    return {
+        "tag": tag,
+        "upstreamDigest": upstream_digest,
+        "digest": digest,
+        "manifests": manifests,
+        "blobs": blobs,
+        "index": index,
+    }
 
 
 def git(*args: str) -> str:
@@ -278,8 +309,8 @@ def write_github_summary(results: list[Result]) -> None:
 def init_lock(image_ref: str, lock_path: str) -> None:
     """Accepts <imageName>:<tag> or <imageName>:<tag>@<digest>.
 
-    Pass the digest to pin exactly what is deployed; tags move, so resolving one here can
-    pick up content the cluster has never run.
+    Pass the upstream index digest to pin exactly what is deployed; tags move, so
+    resolving one here can pick up content the cluster has never run.
     """
     ref, _, digest = image_ref.partition("@")
     image_name, _, tag = ref.rpartition(":")

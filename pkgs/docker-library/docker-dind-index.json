@@ -1,13 +1,10 @@
 {
   "tag": "29.9.0-dind",
-  "digest": "sha256:0b6d18a4a222e71c88be6034926b4f6cde2fc33c2218643d03ccfddc65995470",
+  "upstreamDigest": "sha256:0b6d18a4a222e71c88be6034926b4f6cde2fc33c2218643d03ccfddc65995470",
+  "digest": "sha256:062cbebed293af9f4430a481cdb5a24c75764ab2cde89e30b4ae4f5530f3d2f1",
   "manifests": [
     "sha256:4c42359ca23de31b73b7a58396a9ca1f3b9c8e0ffbb309f34c3b14c12d889d69",
     "sha256:bf3a34bdd535548b17f67268c5b7deec2c324a9341964ccf0c0f58cd0c54d13f",
-    "sha256:2decf0983544851895132f2f4d2045e4bf66f8faaa4ba9267f9f4407d870e793",
-    "sha256:6242d179b157b693bef39d0cf43f18c4939b7471d91017f094371772141cbd6f",
-    "sha256:061344f2a91d48d385af5e8732ba9eef2bf4bb12aaa2b1aff9dee63d65ba60c7",
-    "sha256:bcea45e6cab84ca495e2e2ab80faf6c7037dbb1f374928b8a5dda244f81a74a4",
     "sha256:0a02e01c20ef73e6060775ba3e33e415d289af3bfcf5b1b60e95674beb894875",
     "sha256:444fc49b5a419265ea242d8866b469c8fbc63cb034f10c99d47b257fae4be486"
   ],
@@ -31,42 +28,6 @@
     "sha256:5dc0788178164023cd35b9bad014b84e89e17f777c5a7e887af892fbdce73e15",
     "sha256:9e79113a7571d08b26657a5220f62cba10e0236829cfba0c12df2de6678d5882",
     "sha256:1a77cba84911ac7ebdd1ae91faa4e41d8009aa1baf08d05a927f069c3d73e772",
-    "sha256:e207bcc3e8baa011eb1bbe4b2fba5c4d9a2eae230fecbe5eccf34b6c7c9e2879",
-    "sha256:f218cc0a85b16ce88f0b295e09ea08f059389ba0e628af7344be20a2700e9091",
-    "sha256:a74c8ee89eb00a0a9734dda4df51b0f17403de9d2a1b7685e18c0b6906c5fe4b",
-    "sha256:ad527a6c2b86b3fbf72e4f20454d4e38bd9189c2b346a5d0323f56fb54e742f6",
-    "sha256:a87953753f8005f00b31dde9cc31a1cc1ac3f75f578b51b138bcbe14a1a5a60c",
-    "sha256:7e4dac01c4164cf51e36817e44f491ddcb391b440d2def8aedc64e0735ee4c92",
-    "sha256:1b211f0569ed5e8133f14668b5323df1641525dfb070e39dc64daf2ae11731c4",
-    "sha256:2a590ec94751daf3b2a9c0ceeb23d5a43bbec42c902f6cf20d9843e1d7fb0c7d",
-    "sha256:48e6c238f43887b2226c196c0d37df11d66bb2343f539f3ac976bec2892b5b1d",
-    "sha256:b92520e0f5ba8f229d8b9cd7fd4c2de8e6865222bf9cff45c73d1333c19432f2",
-    "sha256:398c57f5a148cc724d0efee555cb17076f48170cff16b79bf539cf306b1defd0",
-    "sha256:fa05233302fe8b1892e15073ea53e04e5865ec3b1312c866c997c0341468eaca",
-    "sha256:e7090acc8cf6e953381e5d74ebf6affd7012cbf5da6e3bec06bc5eb4964d403d",
-    "sha256:5484473af66443518c4f9577a064a07c765fd84f16873815be6426f259e6aa2e",
-    "sha256:557d2c212be812f99e947449bb829e57ff697a8c5d69b1282cca2f10471d0592",
-    "sha256:3db375b5f9a03c5dfe873a7af36555fd682fddea5d1a660c42ee06e6cd241b4f",
-    "sha256:2e042a39df72e470b6cd18efe589515b56dd13af721e768d80cc5cd0e2afb67f",
-    "sha256:04207abfb39fd8fb7e08f3eab7b3a59172b2b51a439f07b141b1ca219742d2f2",
-    "sha256:d0b4e36bb3321730555945b07dcd7d1223d7e0494ed8165542fae3b506b61c56",
-    "sha256:7b694adf9dd1b9680f02f1458dca365ef3c3afa077ecb86f4c1ae12b519305e0",
-    "sha256:a865faf385b74a58cc1c059383e168b480f5f94ff33d208c959376fb636f2858",
-    "sha256:7259cf363f381540aab6c36301803f63352ba7f1a2defbd6f4af24386934a5bf",
-    "sha256:06505b0afb6779457183151ca4d181f5ba2aa1b20b2ff57408b51794046a0a51",
-    "sha256:93b72dcfc94cef5b8df80f1c86481e17bab5cfa88d4456d2b87a1587dae40ce5",
-    "sha256:c02752905c48276fc096d0adcf410cddce236ddd75d3cd1affa747080734bbfb",
-    "sha256:fa24a23e2d59c55df18b694b13a6bdecc8377bdf4d94d0f18df6d51adaf59c98",
-    "sha256:c5b61c20ac986dd68d5f9dd3591e3b5ca81d05ff5a645d87496a6b96a60188c8",
-    "sha256:1e71fae475da4b67402e0f8942d7435726d8216e08384877af1a9f8293f65b17",
-    "sha256:fbe29fcee281bc31e07bf2f21902a36b7aa3375b21765d068432f33573979652",
-    "sha256:a1b7e7c5468a49dcc1c7eccfb72ea6a0219bd0ff1663334b3c6ce5bfe3eaa17f",
-    "sha256:bd093f93b60dac660729b47f3bd38acee3f554b09a82547ffff9367efa78e44f",
-    "sha256:be51e05cb667873b690af8acea5f509c8b7abc6de5fa9f423639b33489a4d06e",
-    "sha256:fb505891b7b920a7940a9b2feda1b32392af305a50a8a2dcc0e78e5127b09a5a",
-    "sha256:60a8d80c9daa0f1a99213c0517f5ca4113a423f891189a2672f2555f48a7e379",
-    "sha256:a3d9fcd5391244818a3c369d801902ac6056507c3fdc2050bdd6a9d8383a3be4",
-    "sha256:a179d36972b4e10a0959018a60a79fb2fd26f56577d8bb65678bedf1c52f179c",
     "sha256:78341604239c450067a5d7556cc8af6a42c0d0d6e64148dc8468ff20499399ce",
     "sha256:a9986cd6f37dbddae7862a6d4be71683472e7c2ea708e87db14f8a6393c00f00",
     "sha256:04cd3e3d201c524b167ba67ca1d24ffe60636b92c5ec19971a44f5303f4f78ca",
@@ -85,5 +46,78 @@
     "sha256:da629e0a8d1beb57ef92fcb9b04e8035cf7185be4c0d19a1f4fbb01fba4edb22",
     "sha256:f7370cc5a80bd6939e79e796e1de48394db3543bd4bde18b1a229a702ea6f128",
     "sha256:71fcbca26de052036b003ccb5dfc35051a7c9e4c08d37e3885a8e293eb872cb7"
-  ]
+  ],
+  "index": {
+    "manifests": [
+      {
+        "annotations": {
+          "com.docker.official-images.bashbrew.arch": "amd64",
+          "org.opencontainers.image.base.digest": "sha256:4caa52207e95c68c3087006eefb3a5f6ca48ad1c0ba3aa3e6843549a0720b7bb",
+          "org.opencontainers.image.base.name": "docker:29-cli",
+          "org.opencontainers.image.created": "2026-10-09T01:10:20Z",
+          "org.opencontainers.image.revision": "60a6918b24ba2972a786f595e19755b7effcad15",
+          "org.opencontainers.image.source": "https://github.com/docker-library/docker.git#60a6918b24ba2972a786f595e19755b7effcad15:29/dind",
+          "org.opencontainers.image.url": "https://hub.docker.com/_/docker",
+          "org.opencontainers.image.version": "29.9.0-dind"
+        },
+        "digest": "sha256:4c42359ca23de31b73b7a58396a9ca1f3b9c8e0ffbb309f34c3b14c12d889d69",
+        "mediaType": "application/vnd.oci.image.manifest.v1+json",
+        "platform": {
+          "architecture": "amd64",
+          "os": "linux"
+        },
+        "size": 4004
+      },
+      {
+        "annotations": {
+          "com.docker.official-images.bashbrew.arch": "amd64",
+          "vnd.docker.reference.digest": "sha256:4c42359ca23de31b73b7a58396a9ca1f3b9c8e0ffbb309f34c3b14c12d889d69",
+          "vnd.docker.reference.type": "attestation-manifest"
+        },
+        "digest": "sha256:bf3a34bdd535548b17f67268c5b7deec2c324a9341964ccf0c0f58cd0c54d13f",
+        "mediaType": "application/vnd.oci.image.manifest.v1+json",
+        "platform": {
+          "architecture": "unknown",
+          "os": "unknown"
+        },
+        "size": 567
+      },
+      {
+        "annotations": {
+          "com.docker.official-images.bashbrew.arch": "arm64v8",
+          "org.opencontainers.image.base.digest": "sha256:b840c948ec2a78bf90a99e713f7ad711c0dea887a86723fba3d47703dfe43506",
+          "org.opencontainers.image.base.name": "docker:29-cli",
+          "org.opencontainers.image.created": "2026-10-09T01:10:01Z",
+          "org.opencontainers.image.revision": "60a6918b24ba2972a786f595e19755b7effcad15",
+          "org.opencontainers.image.source": "https://github.com/docker-library/docker.git#60a6918b24ba2972a786f595e19755b7effcad15:29/dind",
+          "org.opencontainers.image.url": "https://hub.docker.com/_/docker",
+          "org.opencontainers.image.version": "29.9.0-dind"
+        },
+        "digest": "sha256:0a02e01c20ef73e6060775ba3e33e415d289af3bfcf5b1b60e95674beb894875",
+        "mediaType": "application/vnd.oci.image.manifest.v1+json",
+        "platform": {
+          "architecture": "arm64",
+          "os": "linux",
+          "variant": "v8"
+        },
+        "size": 4006
+      },
+      {
+        "annotations": {
+          "com.docker.official-images.bashbrew.arch": "arm64v8",
+          "vnd.docker.reference.digest": "sha256:0a02e01c20ef73e6060775ba3e33e415d289af3bfcf5b1b60e95674beb894875",
+          "vnd.docker.reference.type": "attestation-manifest"
+        },
+        "digest": "sha256:444fc49b5a419265ea242d8866b469c8fbc63cb034f10c99d47b257fae4be486",
+        "mediaType": "application/vnd.oci.image.manifest.v1+json",
+        "platform": {
+          "architecture": "unknown",
+          "os": "unknown"
+        },
+        "size": 567
+      }
+    ],
+    "mediaType": "application/vnd.oci.image.index.v1+json",
+    "schemaVersion": 2
+  }
 }
