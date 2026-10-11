@@ -2,6 +2,8 @@
   lib,
   callPackage,
   stdenvNoCC,
+  crane,
+  writeShellApplication,
 }:
 {
   imageName,
@@ -21,7 +23,7 @@ let
       manifest = true;
     };
 in
-stdenvNoCC.mkDerivation {
+stdenvNoCC.mkDerivation (finalAttrs: {
   inherit pname;
   version = parsed.tag;
 
@@ -64,6 +66,20 @@ stdenvNoCC.mkDerivation {
       inherit (parsed) tag digest;
       lock = builtins.toString lock;
     };
+
+    copyTo = writeShellApplication {
+      name = "copy-to";
+      runtimeInputs = [ crane ];
+      text = ''
+        if [ $# -lt 1 ]; then
+          echo "usage: copy-to REF [crane push flags...]" >&2
+          exit 1
+        fi
+        ref=$1
+        shift
+        exec crane push --index "${finalAttrs.finalPackage}" "$ref" "$@"
+      '';
+    };
   };
 
   meta = {
@@ -71,4 +87,4 @@ stdenvNoCC.mkDerivation {
     platforms = lib.platforms.all;
   }
   // meta;
-}
+})

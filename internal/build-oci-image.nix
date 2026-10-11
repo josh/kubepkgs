@@ -1,7 +1,9 @@
 {
   lib,
   callPackage,
+  crane,
   dockerTools,
+  writeShellApplication,
 }:
 {
   name,
@@ -33,12 +35,28 @@ let
     }
     // meta;
   };
+
+  copyTo = writeShellApplication {
+    name = "copy-to";
+    runtimeInputs = [ crane ];
+    text = ''
+      if [ $# -lt 1 ]; then
+        echo "usage: copy-to REF [crane push flags...]" >&2
+        exit 1
+      fi
+      ref=$1
+      shift
+      exec crane push "${image}" "$ref" "$@"
+    '';
+  };
 in
-if testScript == null then
-  image
-else
-  image.overrideAttrs (old: {
-    passthru = old.passthru // {
+image.overrideAttrs (old: {
+  passthru =
+    old.passthru
+    // {
+      inherit copyTo;
+    }
+    // lib.attrsets.optionalAttrs (testScript != null) {
       tests.integration = testOciImage { inherit image testScript; };
     };
-  })
+})
