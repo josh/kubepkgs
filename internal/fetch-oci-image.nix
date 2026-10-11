@@ -2,6 +2,7 @@
   lib,
   callPackage,
   stdenvNoCC,
+  crane,
   skopeo,
   writeShellApplication,
 }:
@@ -93,7 +94,10 @@ stdenvNoCC.mkDerivation (finalAttrs: {
 
     copyTo = writeShellApplication {
       name = "copy-to";
-      runtimeInputs = [ skopeo ];
+      runtimeInputs = [
+        crane
+        skopeo
+      ];
       text = ''
         if [ $# -lt 1 ]; then
           echo "usage: copy-to REF [skopeo copy flags...]" >&2
@@ -101,6 +105,10 @@ stdenvNoCC.mkDerivation (finalAttrs: {
         fi
         ref=$1
         shift
+        if [ "$(crane digest "$ref" 2>/dev/null)" = "${digest}" ]; then
+          echo "existing manifest: $ref@${digest}" >&2
+          exit 0
+        fi
         exec skopeo copy --insecure-policy --all --preserve-digests \
           "oci:${finalAttrs.finalPackage}:${imageTag}" "docker://$ref" "$@"
       '';
