@@ -87,7 +87,9 @@
     in
     {
       overlays.default = final: _prev: {
-        kubepkgs = importPackages final;
+        kubepkgs = importPackages final // {
+          buildOciImage = final.callPackage ./internal/build-oci-image.nix { };
+        };
       };
 
       packages = eachSystem (
