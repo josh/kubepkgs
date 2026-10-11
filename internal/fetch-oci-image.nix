@@ -2,7 +2,8 @@
   lib,
   callPackage,
   stdenvNoCC,
-  crane,
+  jq,
+  skopeo,
   writeShellApplication,
 }:
 {
@@ -29,6 +30,7 @@ stdenvNoCC.mkDerivation (finalAttrs: {
 
   __structuredAttrs = true;
 
+  indexDigest = parsed.digest;
   indexFile = fetchManifest parsed.digest;
 
   manifestDigests = parsed.manifests;
@@ -37,18 +39,34 @@ stdenvNoCC.mkDerivation (finalAttrs: {
   blobDigests = parsed.blobs;
   blobFiles = builtins.map (digest: fetchOciBlob { inherit imageName digest; }) parsed.blobs;
 
+  nativeBuildInputs = [ jq ];
+
   buildCommand = ''
     mkdir -p "$out/blobs/sha256"
     printf '%s' '{"imageLayoutVersion":"1.0.0"}' >"$out/oci-layout"
-    install -m 444 "$indexFile" "$out/index.json"
 
+    ln -s "$indexFile" "$out/blobs/sha256/''${indexDigest#sha256:}"
     for i in "''${!manifestDigests[@]}"; do
-      install -m 444 "''${manifestFiles[i]}" "$out/blobs/sha256/''${manifestDigests[i]#sha256:}"
+      ln -s "''${manifestFiles[i]}" "$out/blobs/sha256/''${manifestDigests[i]#sha256:}"
+    done
+    for i in "''${!blobDigests[@]}"; do
+      ln -s "''${blobFiles[i]}" "$out/blobs/sha256/''${blobDigests[i]#sha256:}"
     done
 
-    for i in "''${!blobDigests[@]}"; do
-      install -m 444 "''${blobFiles[i]}" "$out/blobs/sha256/''${blobDigests[i]#sha256:}"
-    done
+    jq --compact-output \
+      --arg digest "$indexDigest" \
+      --arg tag "${finalAttrs.passthru.imageTag}" \
+      --argjson size "$(stat -c %s "$indexFile")" \
+      '{
+        schemaVersion: 2,
+        mediaType: "application/vnd.oci.image.index.v1+json",
+        manifests: [{
+          mediaType: (.mediaType // "application/vnd.oci.image.index.v1+json"),
+          digest: $digest,
+          size: $size,
+          annotations: {"org.opencontainers.image.ref.name": $tag}
+        }]
+      }' "$indexFile" >"$out/index.json"
   '';
 
   passthru = {
@@ -69,15 +87,16 @@ stdenvNoCC.mkDerivation (finalAttrs: {
 
     copyTo = writeShellApplication {
       name = "copy-to";
-      runtimeInputs = [ crane ];
+      runtimeInputs = [ skopeo ];
       text = ''
         if [ $# -lt 1 ]; then
-          echo "usage: copy-to REF [crane push flags...]" >&2
+          echo "usage: copy-to REF [skopeo copy flags...]" >&2
           exit 1
         fi
         ref=$1
         shift
-        exec crane push --index "${finalAttrs.finalPackage}" "$ref" "$@"
+        exec skopeo copy --insecure-policy --all --preserve-digests \
+          "oci:${finalAttrs.finalPackage}:${finalAttrs.passthru.imageTag}" "docker://$ref" "$@"
       '';
     };
   };
