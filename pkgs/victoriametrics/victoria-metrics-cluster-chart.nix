@@ -2,8 +2,8 @@
 kubepkgs.fetchhelm {
   url = "https://victoriametrics.github.io/helm-charts";
   chart = "victoria-metrics-cluster";
-  version = "0.52.0";
-  hash = "sha256-EMdIPwvpj/SetyyKPoWBILiU2KCwa4GIzN8DoCBICxs=";
+  version = "0.53.0";
+  hash = "sha256-+UFkrpChMgFv75c9HgTrMLZg8RFvTpvnazpteyWUJ14=";
 
   meta = {
     description = "Helm chart for a VictoriaMetrics cluster, a time series database and long-term remote storage for Prometheus";
