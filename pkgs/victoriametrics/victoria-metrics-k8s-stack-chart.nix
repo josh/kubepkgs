@@ -2,8 +2,8 @@
 kubepkgs.fetchhelm {
   url = "https://victoriametrics.github.io/helm-charts";
   chart = "victoria-metrics-k8s-stack";
-  version = "0.95.2";
-  hash = "sha256-Xi7TYFUfYi2X5cEe/Q2eTqnJi6gw9Fz6QveWV9Q6C88=";
+  version = "0.96.0";
+  hash = "sha256-wesVPJxkB50HIf9YzLi8zOEgfMmta0hJX4n9D9QMHjI=";
 
   crds.file = ../../crds/victoria-metrics-k8s-stack.nix;
 
