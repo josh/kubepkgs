@@ -8,13 +8,13 @@
 }:
 stdenvNoCC.mkDerivation (finalAttrs: {
   pname = "ceph-mgr-endpoint-controller-chart";
-  version = "0.7.4";
+  version = "0.7.5";
 
   src = fetchFromGitHub {
     owner = "josh";
     repo = "ceph-mgr-endpoint-controller";
     tag = "v${finalAttrs.version}";
-    hash = "sha256-yDppUBHU1THw6JvjBqN74Y1ub6IXLoMi8TvLhlCh4Fg=";
+    hash = "sha256-EusyHgBBhFmZAFU5HL99mIFvLPubsUmWsWnrI4GwsDo=";
   };
 
   buildCommand = ''
