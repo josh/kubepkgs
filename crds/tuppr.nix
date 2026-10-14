@@ -335,6 +335,10 @@ let
           description = "Namespace of the resource (optional, for namespaced resources)";
           type = (types.nullOr types.str);
         };
+        "skipAfterPreHooks" = mkOption {
+          description = "SkipAfterPreHooks excludes this check from every health check run after\nthe pre-hooks have completed, before the first batch and between batches.\nSet it on checks the pre-hooks themselves invalidate for the upgrade\nwindow (for example a Ceph HEALTH_OK check while a pre-hook holds\n`noout`). The initial check before the pre-hooks always runs. Only\nTalosUpgrade has hooks, so this has no effect on a KubernetesUpgrade.";
+          type = (types.nullOr types.bool);
+        };
         "timeout" = mkOption {
           description = "Timeout for this health check";
           type = (types.nullOr (types.withMinLength 2 types.str));
@@ -346,6 +350,7 @@ let
         "labelSelector" = mkOverride 1002 null;
         "name" = mkOverride 1002 null;
         "namespace" = mkOverride 1002 null;
+        "skipAfterPreHooks" = mkOverride 1002 null;
         "timeout" = mkOverride 1002 null;
       };
 
@@ -877,6 +882,10 @@ let
           description = "Namespace of the resource (optional, for namespaced resources)";
           type = (types.nullOr types.str);
         };
+        "skipAfterPreHooks" = mkOption {
+          description = "SkipAfterPreHooks excludes this check from every health check run after\nthe pre-hooks have completed, before the first batch and between batches.\nSet it on checks the pre-hooks themselves invalidate for the upgrade\nwindow (for example a Ceph HEALTH_OK check while a pre-hook holds\n`noout`). The initial check before the pre-hooks always runs. Only\nTalosUpgrade has hooks, so this has no effect on a KubernetesUpgrade.";
+          type = (types.nullOr types.bool);
+        };
         "timeout" = mkOption {
           description = "Timeout for this health check";
           type = (types.nullOr (types.withMinLength 2 types.str));
@@ -888,6 +897,7 @@ let
         "labelSelector" = mkOverride 1002 null;
         "name" = mkOverride 1002 null;
         "namespace" = mkOverride 1002 null;
+        "skipAfterPreHooks" = mkOverride 1002 null;
         "timeout" = mkOverride 1002 null;
       };
 
