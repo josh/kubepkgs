@@ -2,8 +2,8 @@
 kubepkgs.fetchhelm {
   url = "https://pkgs.tailscale.com/helmcharts";
   chart = "tailscale-operator";
-  version = "1.102.4";
-  hash = "sha256-dMU3iun/5Vl8TJwT5zqu1hwlUR3HolZ2KYPi7JtkTuI=";
+  version = "1.104.1";
+  hash = "sha256-/GFsFzT/OlSwvJPH+WCuhp49Q70usnjJbrOYo7cSqQ8=";
 
   crds.file = ../../crds/tailscale-operator.nix;
 
