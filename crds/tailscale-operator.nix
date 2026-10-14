@@ -544,6 +544,18 @@ let
           description = "If specified, applies affinity rules to the pods deployed by the DNSConfig resource.";
           type = (types.nullOr (submoduleOf "tailscale.com.v1alpha1.DNSConfigSpecNameserverPodAffinity"));
         };
+        "imagePullSecrets" = mkOption {
+          description = "Nameserver Pod's image pull Secrets.\nhttps://kubernetes.io/docs/reference/kubernetes-api/workload-resources/pod-v1/#PodSpec";
+          type = (
+            types.nullOr (
+              coerceAttrsOfSubmodulesToListByKey
+                "tailscale.com.v1alpha1.DNSConfigSpecNameserverPodImagePullSecrets"
+                "name"
+                [ ]
+            )
+          );
+          apply = attrsToList;
+        };
         "nodeSelector" = mkOption {
           description = "If specified, applies node selector rules to the pods deployed by the DNSConfig resource.";
           type = (types.nullOr (types.attrsOf types.str));
@@ -560,6 +572,7 @@ let
 
       config = {
         "affinity" = mkOverride 1002 null;
+        "imagePullSecrets" = mkOverride 1002 null;
         "nodeSelector" = mkOverride 1002 null;
         "tolerations" = mkOverride 1002 null;
       };
@@ -1498,6 +1511,20 @@ let
         };
 
       };
+    "tailscale.com.v1alpha1.DNSConfigSpecNameserverPodImagePullSecrets" = {
+
+      options = {
+        "name" = mkOption {
+          description = "Name of the referent.\nThis field is effectively required, but due to backwards compatibility is\nallowed to be empty. Instances of this type with an empty value here are\nalmost certainly wrong.\nMore info: https://kubernetes.io/docs/concepts/overview/working-with-objects/names/#names";
+          type = (types.nullOr types.str);
+        };
+      };
+
+      config = {
+        "name" = mkOverride 1002 null;
+      };
+
+    };
     "tailscale.com.v1alpha1.DNSConfigSpecNameserverPodTolerations" = {
 
       options = {
@@ -1510,7 +1537,7 @@ let
           type = (types.nullOr types.str);
         };
         "operator" = mkOption {
-          description = "Operator represents a key's relationship to the value.\nValid operators are Exists and Equal. Defaults to Equal.\nExists is equivalent to wildcard for value, so that a pod can\ntolerate all taints of a particular category.";
+          description = "Operator represents a key's relationship to the value.\nValid operators are Exists, Equal, Lt, and Gt. Defaults to Equal.\nExists is equivalent to wildcard for value, so that a pod can\ntolerate all taints of a particular category.\nLt and Gt perform numeric comparisons (requires feature gate TaintTolerationComparisonOperators).";
           type = (types.nullOr types.str);
         };
         "tolerationSeconds" = mkOption {
@@ -1634,7 +1661,7 @@ let
         };
         "metadata" = mkOption {
           description = "Standard object's metadata. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#metadata";
-          type = (globalSubmoduleOf "io.k8s.apimachinery.pkg.apis.meta.v1.ObjectMeta");
+          type = (types.nullOr (globalSubmoduleOf "io.k8s.apimachinery.pkg.apis.meta.v1.ObjectMeta"));
         };
         "spec" = mkOption {
           description = "Spec describes the desired state of the PeerRelay.\nMore info:\nhttps://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#spec-and-status";
@@ -1649,6 +1676,7 @@ let
       config = {
         "apiVersion" = mkOverride 1002 null;
         "kind" = mkOverride 1002 null;
+        "metadata" = mkOverride 1002 null;
         "status" = mkOverride 1002 null;
       };
 
@@ -1676,6 +1704,10 @@ let
           description = "Service contains configuration values to modify the LoadBalancer service used to expose the peer relay.";
           type = (types.nullOr (submoduleOf "tailscale.com.v1alpha1.PeerRelaySpecService"));
         };
+        "staticEndpoints" = mkOption {
+          description = "StaticEndpoints is an optional list of address:port pairs on which every replica of this PeerRelay is\nreachable from outside the cluster, for example the public side of a NAT or firewall in front of the\ncluster. These supplement the endpoints discovered from each replica's LoadBalancer Service: they are\nadded to every replica's entries in status.endpoints and advertised to peers alongside them. If an entry\nnames an address a replica's load balancer already provides, the entry's port takes precedence for that\naddress. Each address may appear at most once across all entries.\nEntries take the form accepted by Go's net/netip.ParseAddrPort, e.g. 203.0.113.1:41641. IPv6\naddresses must be enclosed in brackets, e.g. [2001:db8::1]:41641.";
+          type = (types.nullOr (types.listOf types.str));
+        };
         "tags" = mkOption {
           description = "Tags that the Tailscale node will be tagged with.\nDefaults to [tag:k8s].\nTo autoapprove the device defined by a PeerRelay,\nyou can configure Tailscale ACLs to give these tags the necessary\npermissions.\nSee https://tailscale.com/kb/1337/acl-syntax#autoapprovers.\nIf you specify custom tags here, you must also make the operator an owner of these tags.\nSee  https://tailscale.com/kb/1236/kubernetes-operator/#setting-up-the-kubernetes-operator.\nTags cannot be changed once a PeerRelay node has been created.\nTag values must be in form ^tag:[a-zA-Z][a-zA-Z0-9-]*$.";
           type = (types.nullOr (types.listOf types.str));
@@ -1692,6 +1724,7 @@ let
         "proxyClass" = mkOverride 1002 null;
         "replicas" = mkOverride 1002 null;
         "service" = mkOverride 1002 null;
+        "staticEndpoints" = mkOverride 1002 null;
         "tags" = mkOverride 1002 null;
         "tailnet" = mkOverride 1002 null;
       };
@@ -1732,10 +1765,15 @@ let
           description = "Annotations to apply to the LoadBalancer service. Any annotations that conflict with those used by known\ncloud providers to ensure IP addresses rather than DNS names are ignored.";
           type = (types.nullOr (types.attrsOf types.str));
         };
+        "port" = mkOption {
+          description = "Port is the UDP port each peer relay replica listens on and that its LoadBalancer Service exposes\nexternally. The two are always equal: the relay advertises address:port to peers, so the load balancer\nmust forward without rewriting the port. Changing the port on an existing PeerRelay briefly interrupts\nrelay traffic while the load balancer updates. Defaults to 41641.";
+          type = (types.nullOr (types.withMaximum 65535 (types.withMinimum 1 types.int)));
+        };
       };
 
       config = {
         "annotations" = mkOverride 1002 null;
+        "port" = mkOverride 1002 null;
       };
 
     };
@@ -1749,7 +1787,7 @@ let
           );
         };
         "endpoints" = mkOption {
-          description = "Endpoints lists the public address:port pairs each peer relay replica is reachable on. Entries appear as the\nunderlying cloud provisions each Service. A replica has one entry per address its LoadBalancer Service was\ngiven, which is usually one, but a load balancer spanning several availability zones has an address in each\nand every one of them is listed.";
+          description = "Endpoints lists the public address:port pairs each peer relay replica is reachable on. Entries appear as the\nunderlying cloud provisions each Service. A replica has one entry per address its LoadBalancer Service was\ngiven, which is usually one, but a load balancer spanning several availability zones has an address in each\nand every one of them is listed. Entries from spec.staticEndpoints are listed for every replica in addition\nto the load balancer addresses.";
           type = (
             types.nullOr (types.listOf (submoduleOf "tailscale.com.v1alpha1.PeerRelayStatusEndpoints"))
           );
@@ -1806,7 +1844,7 @@ let
 
       options = {
         "address" = mkOption {
-          description = "Address is the public IP or hostname the cloud has allocated for this replica's LoadBalancer Service.\nPeers reach this relay by connecting to Address:Port over UDP.";
+          description = "Address is the public IP or hostname the cloud has allocated for this replica's LoadBalancer Service, or\nan address supplied via spec.staticEndpoints. Peers reach this relay by connecting to Address:Port over UDP.";
           type = types.str;
         };
         "port" = mkOption {
@@ -3093,7 +3131,7 @@ let
           type = (types.nullOr types.int);
         };
         "seLinuxChangePolicy" = mkOption {
-          description = "seLinuxChangePolicy defines how the container's SELinux label is applied to all volumes used by the Pod.\nIt has no effect on nodes that do not support SELinux or to volumes does not support SELinux.\nValid values are \"MountOption\" and \"Recursive\".\n\n\"Recursive\" means relabeling of all files on all Pod volumes by the container runtime.\nThis may be slow for large volumes, but allows mixing privileged and unprivileged Pods sharing the same volume on the same node.\n\n\"MountOption\" mounts all eligible Pod volumes with `-o context` mount option.\nThis requires all Pods that share the same volume to use the same SELinux label.\nIt is not possible to share the same volume among privileged and unprivileged Pods.\nEligible volumes are in-tree FibreChannel and iSCSI volumes, and all CSI volumes\nwhose CSI driver announces SELinux support by setting spec.seLinuxMount: true in their\nCSIDriver instance. Other volumes are always re-labelled recursively.\n\"MountOption\" value is allowed only when SELinuxMount feature gate is enabled.\n\nIf not specified and SELinuxMount feature gate is enabled, \"MountOption\" is used.\nIf not specified and SELinuxMount feature gate is disabled, \"MountOption\" is used for ReadWriteOncePod volumes\nand \"Recursive\" for all other volumes.\n\nThis field affects only Pods that have SELinux label set, either in PodSecurityContext or in SecurityContext of all containers.\n\nAll Pods that use the same volume should use the same seLinuxChangePolicy, otherwise some pods can get stuck in ContainerCreating state.\nNote that this field cannot be set when spec.os.name is windows.";
+          description = "seLinuxChangePolicy defines how the container's SELinux label is applied to all volumes used by the Pod.\nIt has no effect on nodes that do not support SELinux or to volumes does not support SELinux.\nValid values are \"MountOption\" and \"Recursive\".\n\n\"Recursive\" means relabeling of all files on all Pod volumes by the container runtime.\nThis may be slow for large volumes, but allows mixing privileged and unprivileged Pods sharing the same volume on the same node.\n\n\"MountOption\" mounts all eligible Pod volumes with `-o context` mount option.\nThis requires all Pods that share the same volume to use the same SELinux label.\nIt is not possible to share the same volume among privileged and unprivileged Pods.\nEligible volumes are in-tree FibreChannel and iSCSI volumes, and all CSI volumes\nwhose CSI driver announces SELinux support by setting spec.seLinuxMount: true in their\nCSIDriver instance. Other volumes are always re-labelled recursively.\n\nIf not specified, \"MountOption\" is used.\n\nThis field affects only Pods that have SELinux label set, either in PodSecurityContext or in SecurityContext of all containers.\n\nAll Pods that use the same volume should use the same seLinuxChangePolicy, otherwise some pods can get stuck in ContainerCreating state.\nNote that this field cannot be set when spec.os.name is windows.";
           type = (types.nullOr types.str);
         };
         "seLinuxOptions" = mkOption {
@@ -3446,7 +3484,7 @@ let
           type = (types.nullOr types.bool);
         };
         "procMount" = mkOption {
-          description = "procMount denotes the type of proc mount to use for the containers.\nThe default value is Default which uses the container runtime defaults for\nreadonly paths and masked paths.\nThis requires the ProcMountType feature flag to be enabled.\nNote that this field cannot be set when spec.os.name is windows.";
+          description = "procMount denotes the type of proc mount to use for the containers.\nThe default value is Default which uses the container runtime defaults for\nreadonly paths and masked paths.\nNote that this field cannot be set when spec.os.name is windows.";
           type = (types.nullOr types.str);
         };
         "readOnlyRootFilesystem" = mkOption {
@@ -3802,7 +3840,7 @@ let
           type = (types.nullOr types.bool);
         };
         "procMount" = mkOption {
-          description = "procMount denotes the type of proc mount to use for the containers.\nThe default value is Default which uses the container runtime defaults for\nreadonly paths and masked paths.\nThis requires the ProcMountType feature flag to be enabled.\nNote that this field cannot be set when spec.os.name is windows.";
+          description = "procMount denotes the type of proc mount to use for the containers.\nThe default value is Default which uses the container runtime defaults for\nreadonly paths and masked paths.\nNote that this field cannot be set when spec.os.name is windows.";
           type = (types.nullOr types.str);
         };
         "readOnlyRootFilesystem" = mkOption {
@@ -3993,7 +4031,7 @@ let
           type = (types.nullOr types.str);
         };
         "operator" = mkOption {
-          description = "Operator represents a key's relationship to the value.\nValid operators are Exists and Equal. Defaults to Equal.\nExists is equivalent to wildcard for value, so that a pod can\ntolerate all taints of a particular category.";
+          description = "Operator represents a key's relationship to the value.\nValid operators are Exists, Equal, Lt, and Gt. Defaults to Equal.\nExists is equivalent to wildcard for value, so that a pod can\ntolerate all taints of a particular category.\nLt and Gt perform numeric comparisons (requires feature gate TaintTolerationComparisonOperators).";
           type = (types.nullOr types.str);
         };
         "tolerationSeconds" = mkOption {
@@ -4279,7 +4317,7 @@ let
         };
         "metadata" = mkOption {
           description = "Standard object's metadata. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#metadata";
-          type = (globalSubmoduleOf "io.k8s.apimachinery.pkg.apis.meta.v1.ObjectMeta");
+          type = (types.nullOr (globalSubmoduleOf "io.k8s.apimachinery.pkg.apis.meta.v1.ObjectMeta"));
         };
         "spec" = mkOption {
           description = "Spec describes the desired state of the ProxyGroupPolicy.\nMore info:\nhttps://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#spec-and-status";
@@ -4294,6 +4332,7 @@ let
       config = {
         "apiVersion" = mkOverride 1002 null;
         "kind" = mkOverride 1002 null;
+        "metadata" = mkOverride 1002 null;
         "status" = mkOverride 1002 null;
       };
 
@@ -5787,7 +5826,7 @@ let
           type = (types.nullOr types.bool);
         };
         "procMount" = mkOption {
-          description = "procMount denotes the type of proc mount to use for the containers.\nThe default value is Default which uses the container runtime defaults for\nreadonly paths and masked paths.\nThis requires the ProcMountType feature flag to be enabled.\nNote that this field cannot be set when spec.os.name is windows.";
+          description = "procMount denotes the type of proc mount to use for the containers.\nThe default value is Default which uses the container runtime defaults for\nreadonly paths and masked paths.\nNote that this field cannot be set when spec.os.name is windows.";
           type = (types.nullOr types.str);
         };
         "readOnlyRootFilesystem" = mkOption {
@@ -6007,7 +6046,7 @@ let
           type = (types.nullOr types.int);
         };
         "seLinuxChangePolicy" = mkOption {
-          description = "seLinuxChangePolicy defines how the container's SELinux label is applied to all volumes used by the Pod.\nIt has no effect on nodes that do not support SELinux or to volumes does not support SELinux.\nValid values are \"MountOption\" and \"Recursive\".\n\n\"Recursive\" means relabeling of all files on all Pod volumes by the container runtime.\nThis may be slow for large volumes, but allows mixing privileged and unprivileged Pods sharing the same volume on the same node.\n\n\"MountOption\" mounts all eligible Pod volumes with `-o context` mount option.\nThis requires all Pods that share the same volume to use the same SELinux label.\nIt is not possible to share the same volume among privileged and unprivileged Pods.\nEligible volumes are in-tree FibreChannel and iSCSI volumes, and all CSI volumes\nwhose CSI driver announces SELinux support by setting spec.seLinuxMount: true in their\nCSIDriver instance. Other volumes are always re-labelled recursively.\n\"MountOption\" value is allowed only when SELinuxMount feature gate is enabled.\n\nIf not specified and SELinuxMount feature gate is enabled, \"MountOption\" is used.\nIf not specified and SELinuxMount feature gate is disabled, \"MountOption\" is used for ReadWriteOncePod volumes\nand \"Recursive\" for all other volumes.\n\nThis field affects only Pods that have SELinux label set, either in PodSecurityContext or in SecurityContext of all containers.\n\nAll Pods that use the same volume should use the same seLinuxChangePolicy, otherwise some pods can get stuck in ContainerCreating state.\nNote that this field cannot be set when spec.os.name is windows.";
+          description = "seLinuxChangePolicy defines how the container's SELinux label is applied to all volumes used by the Pod.\nIt has no effect on nodes that do not support SELinux or to volumes does not support SELinux.\nValid values are \"MountOption\" and \"Recursive\".\n\n\"Recursive\" means relabeling of all files on all Pod volumes by the container runtime.\nThis may be slow for large volumes, but allows mixing privileged and unprivileged Pods sharing the same volume on the same node.\n\n\"MountOption\" mounts all eligible Pod volumes with `-o context` mount option.\nThis requires all Pods that share the same volume to use the same SELinux label.\nIt is not possible to share the same volume among privileged and unprivileged Pods.\nEligible volumes are in-tree FibreChannel and iSCSI volumes, and all CSI volumes\nwhose CSI driver announces SELinux support by setting spec.seLinuxMount: true in their\nCSIDriver instance. Other volumes are always re-labelled recursively.\n\nIf not specified, \"MountOption\" is used.\n\nThis field affects only Pods that have SELinux label set, either in PodSecurityContext or in SecurityContext of all containers.\n\nAll Pods that use the same volume should use the same seLinuxChangePolicy, otherwise some pods can get stuck in ContainerCreating state.\nNote that this field cannot be set when spec.os.name is windows.";
           type = (types.nullOr types.str);
         };
         "seLinuxOptions" = mkOption {
@@ -6214,7 +6253,7 @@ let
           type = (types.nullOr types.str);
         };
         "operator" = mkOption {
-          description = "Operator represents a key's relationship to the value.\nValid operators are Exists and Equal. Defaults to Equal.\nExists is equivalent to wildcard for value, so that a pod can\ntolerate all taints of a particular category.";
+          description = "Operator represents a key's relationship to the value.\nValid operators are Exists, Equal, Lt, and Gt. Defaults to Equal.\nExists is equivalent to wildcard for value, so that a pod can\ntolerate all taints of a particular category.\nLt and Gt perform numeric comparisons (requires feature gate TaintTolerationComparisonOperators).";
           type = (types.nullOr types.str);
         };
         "tolerationSeconds" = mkOption {
@@ -6399,7 +6438,7 @@ let
         };
         "metadata" = mkOption {
           description = "Standard object's metadata. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#metadata";
-          type = (globalSubmoduleOf "io.k8s.apimachinery.pkg.apis.meta.v1.ObjectMeta");
+          type = (types.nullOr (globalSubmoduleOf "io.k8s.apimachinery.pkg.apis.meta.v1.ObjectMeta"));
         };
         "spec" = mkOption {
           description = "Spec describes the desired state of the Tailnet.\nMore info:\nhttps://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#spec-and-status";
@@ -6414,6 +6453,7 @@ let
       config = {
         "apiVersion" = mkOverride 1002 null;
         "kind" = mkOverride 1002 null;
+        "metadata" = mkOverride 1002 null;
         "status" = mkOverride 1002 null;
       };
 
@@ -6520,7 +6560,7 @@ in
         default = { };
       };
       "tailscale.com"."v1alpha1"."DNSConfig" = mkOption {
-        description = "DNSConfig can be deployed to cluster to make a subset of Tailscale MagicDNS\nnames resolvable by cluster workloads. Use this if: A) you need to refer to\ntailnet services, exposed to cluster via Tailscale Kubernetes operator egress\nproxies by the MagicDNS names of those tailnet services (usually because the\nservices run over HTTPS)\nB) you have exposed a cluster workload to the tailnet using Tailscale Ingress\nand you also want to refer to the workload from within the cluster over the\nIngress's MagicDNS name (usually because you have some callback component\nthat needs to use the same URL as that used by a non-cluster client on\ntailnet).\nWhen a DNSConfig is applied to a cluster, Tailscale Kubernetes operator will\ndeploy a nameserver for ts.net DNS names and automatically populate it with records\nfor any Tailscale egress or Ingress proxies deployed to that cluster.\nCurrently you must manually update your cluster DNS configuration to add the\nIP address of the deployed nameserver as a ts.net stub nameserver.\nInstructions for how to do it:\nhttps://kubernetes.io/docs/tasks/administer-cluster/dns-custom-nameservers/#configuration-of-stub-domain-and-upstream-nameserver-using-coredns (for CoreDNS),\nhttps://cloud.google.com/kubernetes-engine/docs/how-to/kube-dns (for kube-dns).\nTailscale Kubernetes operator will write the address of a Service fronting\nthe nameserver to dsnconfig.status.nameserver.ip.\nDNSConfig is a singleton - you must not create more than one.\nNB: if you want cluster workloads to be able to refer to Tailscale Ingress\nusing its MagicDNS name, you must also annotate the Ingress resource with\ntailscale.com/experimental-forward-cluster-traffic-via-ingress annotation to\nensure that the proxy created for the Ingress listens on its Pod IP address.";
+        description = "DNSConfig can be deployed to cluster to make a subset of Tailscale MagicDNS\nnames resolvable by cluster workloads. Use this if: A) you need to refer to\ntailnet services, exposed to cluster via Tailscale Kubernetes operator egress\nproxies by the MagicDNS names of those tailnet services (usually because the\nservices run over HTTPS)\nB) you have exposed a cluster workload to the tailnet using Tailscale Ingress\nand you also want to refer to the workload from within the cluster over the\nIngress's MagicDNS name (usually because you have some callback component\nthat needs to use the same URL as that used by a non-cluster client on\ntailnet).\nWhen a DNSConfig is applied to a cluster, Tailscale Kubernetes operator will\ndeploy a nameserver for ts.net DNS names and automatically populate it with records\nfor any Tailscale egress or Ingress proxies deployed to that cluster.\nCurrently you must manually update your cluster DNS configuration to add the\nIP address of the deployed nameserver as a ts.net stub nameserver.\nInstructions for how to do it:\nhttps://kubernetes.io/docs/tasks/administer-cluster/dns-custom-nameservers/#configuration-of-stub-domain-and-upstream-nameserver-using-coredns (for CoreDNS),\nhttps://cloud.google.com/kubernetes-engine/docs/how-to/kube-dns (for kube-dns).\nTailscale Kubernetes operator will write the address of a Service fronting\nthe nameserver to dsnconfig.status.nameserver.ip.\nDNSConfig is a singleton - you must not create more than one.\nNB: if you want cluster workloads to be able to refer to Tailscale Ingress\nusing its MagicDNS name, you must also annotate the Ingress resource with\ntailscale.com/experimental-forward-cluster-traffic-via-ingress annotation to\nensure that the proxy created for the Ingress is available via its Pod IP\naddress. The annotation installs rules that DNAT traffic sent to the proxy's\nPod IP to its Tailscale IP, and allows the Serve listener on that Tailscale IP\nto accept packets arriving through the Pod interface. Traffic accepted via this\npath does not traverse the Tailscale tunnel and is not affected by tailnet\nACLs. Restrict access using Kubernetes network policy.";
         type = (
           types.attrsOf (
             submoduleForDefinition "tailscale.com.v1alpha1.DNSConfig" "dnsconfigs" "DNSConfig" "tailscale.com"
@@ -6607,7 +6647,7 @@ in
         default = { };
       };
       "dnsConfigs" = mkOption {
-        description = "DNSConfig can be deployed to cluster to make a subset of Tailscale MagicDNS\nnames resolvable by cluster workloads. Use this if: A) you need to refer to\ntailnet services, exposed to cluster via Tailscale Kubernetes operator egress\nproxies by the MagicDNS names of those tailnet services (usually because the\nservices run over HTTPS)\nB) you have exposed a cluster workload to the tailnet using Tailscale Ingress\nand you also want to refer to the workload from within the cluster over the\nIngress's MagicDNS name (usually because you have some callback component\nthat needs to use the same URL as that used by a non-cluster client on\ntailnet).\nWhen a DNSConfig is applied to a cluster, Tailscale Kubernetes operator will\ndeploy a nameserver for ts.net DNS names and automatically populate it with records\nfor any Tailscale egress or Ingress proxies deployed to that cluster.\nCurrently you must manually update your cluster DNS configuration to add the\nIP address of the deployed nameserver as a ts.net stub nameserver.\nInstructions for how to do it:\nhttps://kubernetes.io/docs/tasks/administer-cluster/dns-custom-nameservers/#configuration-of-stub-domain-and-upstream-nameserver-using-coredns (for CoreDNS),\nhttps://cloud.google.com/kubernetes-engine/docs/how-to/kube-dns (for kube-dns).\nTailscale Kubernetes operator will write the address of a Service fronting\nthe nameserver to dsnconfig.status.nameserver.ip.\nDNSConfig is a singleton - you must not create more than one.\nNB: if you want cluster workloads to be able to refer to Tailscale Ingress\nusing its MagicDNS name, you must also annotate the Ingress resource with\ntailscale.com/experimental-forward-cluster-traffic-via-ingress annotation to\nensure that the proxy created for the Ingress listens on its Pod IP address.";
+        description = "DNSConfig can be deployed to cluster to make a subset of Tailscale MagicDNS\nnames resolvable by cluster workloads. Use this if: A) you need to refer to\ntailnet services, exposed to cluster via Tailscale Kubernetes operator egress\nproxies by the MagicDNS names of those tailnet services (usually because the\nservices run over HTTPS)\nB) you have exposed a cluster workload to the tailnet using Tailscale Ingress\nand you also want to refer to the workload from within the cluster over the\nIngress's MagicDNS name (usually because you have some callback component\nthat needs to use the same URL as that used by a non-cluster client on\ntailnet).\nWhen a DNSConfig is applied to a cluster, Tailscale Kubernetes operator will\ndeploy a nameserver for ts.net DNS names and automatically populate it with records\nfor any Tailscale egress or Ingress proxies deployed to that cluster.\nCurrently you must manually update your cluster DNS configuration to add the\nIP address of the deployed nameserver as a ts.net stub nameserver.\nInstructions for how to do it:\nhttps://kubernetes.io/docs/tasks/administer-cluster/dns-custom-nameservers/#configuration-of-stub-domain-and-upstream-nameserver-using-coredns (for CoreDNS),\nhttps://cloud.google.com/kubernetes-engine/docs/how-to/kube-dns (for kube-dns).\nTailscale Kubernetes operator will write the address of a Service fronting\nthe nameserver to dsnconfig.status.nameserver.ip.\nDNSConfig is a singleton - you must not create more than one.\nNB: if you want cluster workloads to be able to refer to Tailscale Ingress\nusing its MagicDNS name, you must also annotate the Ingress resource with\ntailscale.com/experimental-forward-cluster-traffic-via-ingress annotation to\nensure that the proxy created for the Ingress is available via its Pod IP\naddress. The annotation installs rules that DNAT traffic sent to the proxy's\nPod IP to its Tailscale IP, and allows the Serve listener on that Tailscale IP\nto accept packets arriving through the Pod interface. Traffic accepted via this\npath does not traverse the Tailscale tunnel and is not affected by tailnet\nACLs. Restrict access using Kubernetes network policy.";
         type = (
           types.attrsOf (
             submoduleForDefinition "tailscale.com.v1alpha1.DNSConfig" "dnsconfigs" "DNSConfig" "tailscale.com"
