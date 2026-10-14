@@ -8,13 +8,13 @@
 }:
 stdenvNoCC.mkDerivation (finalAttrs: {
   pname = "kube-ups-taint-chart";
-  version = "0.1.0";
+  version = "0.1.1";
 
   src = fetchFromGitHub {
     owner = "josh";
     repo = "kube-ups-taint";
     tag = "v${finalAttrs.version}";
-    hash = "sha256-LCaDRoPe2BtQtCPxrc5f9I1bkgSrbRZOKVKXnpYsD0s=";
+    hash = "sha256-B72Au8F4tbJcMFZqal0KoqFv1W4hnlWHdRaWJ2wZ3dU=";
   };
 
   buildCommand = ''
