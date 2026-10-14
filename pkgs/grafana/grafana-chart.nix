@@ -2,8 +2,8 @@
 kubepkgs.fetchhelm {
   url = "https://grafana-community.github.io/helm-charts";
   chart = "grafana";
-  version = "13.5.1";
-  hash = "sha256-M6oqPliEYxRCM3okzlMMsgYKCk09qzJqrDYYyXhDdWE=";
+  version = "13.6.0";
+  hash = "sha256-AMCiXGaZgb8r/+k1X0oJnlP01KH2+e8F44FplqQMgFI=";
 
   meta = {
     description = "Helm chart for Grafana, a tool for querying and visualizing time series and metrics";
