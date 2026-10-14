@@ -8,7 +8,7 @@
 }:
 stdenvNoCC.mkDerivation (finalAttrs: {
   pname = "external-snapshotter-manifests";
-  version = "8.6.0";
+  version = "8.7.0";
 
   __structuredAttrs = true;
 
@@ -16,7 +16,7 @@ stdenvNoCC.mkDerivation (finalAttrs: {
     owner = "kubernetes-csi";
     repo = "external-snapshotter";
     tag = "v${finalAttrs.version}";
-    hash = "sha256-9WSflI44XhecRqBWGKDfeMMHqOBwyInX9w2qMLDPylA=";
+    hash = "sha256-O3GLie9MDjr56L1xD1fdqo6E0C3hAx60KE39XLFgQwE=";
   };
 
   buildCommand = ''
