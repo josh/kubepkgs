@@ -10,6 +10,7 @@
   imageName,
   lock,
   pname ? "${baseNameOf imageName}-index",
+  tagPattern ? null,
   meta ? { },
 }:
 let
@@ -25,6 +26,14 @@ let
       indexDigest
     else
       throw "${lock}: index serializes to ${indexDigest}, not ${parsed.digest}";
+
+  # builtins.match and the updater's re.fullmatch both match the whole tag, so a
+  # pattern that excludes the pinned tag would freeze updates. Fail here instead.
+  tag =
+    if tagPattern == null || builtins.match tagPattern parsed.tag != null then
+      parsed.tag
+    else
+      throw "${lock}: tag ${parsed.tag} does not match tagPattern ${tagPattern}";
 
   imageTag = builtins.substring 0 32 (
     builtins.convertHash {
@@ -43,7 +52,7 @@ let
 in
 stdenvNoCC.mkDerivation (finalAttrs: {
   inherit pname;
-  version = parsed.tag;
+  version = tag;
 
   __structuredAttrs = true;
 
@@ -87,8 +96,13 @@ stdenvNoCC.mkDerivation (finalAttrs: {
     imageDigest = digest;
     inherit (parsed) upstreamDigest;
     ociImage = {
-      inherit pname imageName;
-      inherit (parsed) tag upstreamDigest;
+      inherit
+        pname
+        imageName
+        tag
+        tagPattern
+        ;
+      inherit (parsed) upstreamDigest;
       lock = builtins.toString lock;
     };
 

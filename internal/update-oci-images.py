@@ -42,6 +42,7 @@ class Image:
     pname: str
     image_name: str
     tag: str
+    tag_pattern: str | None
     upstream_digest: str
     lock: str
 
@@ -116,6 +117,7 @@ def discover(repo_root: str) -> list[Image]:
             pname=info["pname"],
             image_name=info["imageName"],
             tag=info["tag"],
+            tag_pattern=info.get("tagPattern"),
             upstream_digest=info["upstreamDigest"],
             lock=STORE_PREFIX.sub("", info["lock"]),
         )
@@ -144,6 +146,12 @@ def resolve_latest(images: list[Image]) -> list[Result]:
         except (OSError, subprocess.CalledProcessError) as err:
             results.append(Result(image, "error", None, str(err)))
             continue
+        if image.tag_pattern:
+            # Upstreams like Jellyfin publish date-stamped nightlies alongside
+            # releases; those parse as a huge semver major, so limit the field.
+            candidates = [
+                raw for raw in candidates if re.fullmatch(image.tag_pattern, raw)
+            ]
         latest = select_version(candidates, image.tag)
         if latest is None:
             results.append(Result(image, "error", None, "no usable tag published"))
