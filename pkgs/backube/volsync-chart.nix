@@ -2,8 +2,8 @@
 kubepkgs.fetchhelm {
   url = "https://backube.github.io/helm-charts/";
   chart = "volsync";
-  version = "0.16.0";
-  hash = "sha256-AbYJiSSgTGWkDu32Lmc8vz/1SQnu1QSNaOC8PFCUXFw=";
+  version = "0.17.0";
+  hash = "sha256-mlIUJxh7EYKGpSsJFYlz9YYVaNkxTIGOU9AGFKl/0uA=";
 
   crds.file = ../../crds/volsync.nix;
 

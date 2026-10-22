@@ -389,6 +389,16 @@ let
           description = "MoverServiceAccount allows specifying the name of the service account\nthat will be used by the data mover. This should only be used by advanced\nusers who want to override the service account normally used by the mover.\nThe service account needs to exist in the same namespace as this CR.";
           type = (types.nullOr types.str);
         };
+        "moverTolerations" = mkOption {
+          description = "MoverTolerations allows specifying the tolerations that will be used by the data mover.";
+          type = (
+            types.nullOr (
+              types.listOf (
+                submoduleOf "volsync.backube.v1alpha1.ReplicationDestinationSpecRcloneMoverTolerations"
+              )
+            )
+          );
+        };
         "moverVolumes" = mkOption {
           description = "MoverVolumes are PVCs or Secrets that should additionally be mounted to the mover job pod.\nThis should only be used by advanced users.";
           type = (
@@ -431,6 +441,7 @@ let
         "moverResources" = mkOverride 1002 null;
         "moverSecurityContext" = mkOverride 1002 null;
         "moverServiceAccount" = mkOverride 1002 null;
+        "moverTolerations" = mkOverride 1002 null;
         "moverVolumes" = mkOverride 1002 null;
         "rcloneConfig" = mkOverride 1002 null;
         "rcloneConfigSection" = mkOverride 1002 null;
@@ -1659,6 +1670,40 @@ let
       };
 
     };
+    "volsync.backube.v1alpha1.ReplicationDestinationSpecRcloneMoverTolerations" = {
+
+      options = {
+        "effect" = mkOption {
+          description = "Effect indicates the taint effect to match. Empty means match all taint effects.\nWhen specified, allowed values are NoSchedule, PreferNoSchedule and NoExecute.";
+          type = (types.nullOr types.str);
+        };
+        "key" = mkOption {
+          description = "Key is the taint key that the toleration applies to. Empty means match all taint keys.\nIf the key is empty, operator must be Exists; this combination means to match all values and all keys.";
+          type = (types.nullOr types.str);
+        };
+        "operator" = mkOption {
+          description = "Operator represents a key's relationship to the value.\nValid operators are Exists, Equal, Lt, and Gt. Defaults to Equal.\nExists is equivalent to wildcard for value, so that a pod can\ntolerate all taints of a particular category.\nLt and Gt perform numeric comparisons (requires feature gate TaintTolerationComparisonOperators).";
+          type = (types.nullOr types.str);
+        };
+        "tolerationSeconds" = mkOption {
+          description = "TolerationSeconds represents the period of time the toleration (which must be\nof effect NoExecute, otherwise this field is ignored) tolerates the taint. By default,\nit is not set, which means tolerate the taint forever (do not evict). Zero and\nnegative values will be treated as 0 (evict immediately) by the system.";
+          type = (types.nullOr types.int);
+        };
+        "value" = mkOption {
+          description = "Value is the taint value the toleration matches to.\nIf the operator is Exists, the value should be empty, otherwise just a regular string.";
+          type = (types.nullOr types.str);
+        };
+      };
+
+      config = {
+        "effect" = mkOverride 1002 null;
+        "key" = mkOverride 1002 null;
+        "operator" = mkOverride 1002 null;
+        "tolerationSeconds" = mkOverride 1002 null;
+        "value" = mkOverride 1002 null;
+      };
+
+    };
     "volsync.backube.v1alpha1.ReplicationDestinationSpecRcloneMoverVolumes" = {
 
       options = {
@@ -1869,6 +1914,10 @@ let
           description = "enableFileDeletion will pass the --delete flag to the restic restore command.\nThis will remove files and directories in the pvc that do not exist in the snapshot being restored.\nDefaults to false.";
           type = (types.nullOr types.bool);
         };
+        "enableSparseRestore" = mkOption {
+          description = "enableSparseRestore will pass the --sparse flag to the restic restore command.\nFiles are restored sparse, so regions of zeros do not use disk space.\nDefaults to false.";
+          type = (types.nullOr types.bool);
+        };
         "moverAffinity" = mkOption {
           description = "MoverAffinity allows specifying the PodAffinity that will be used by the data mover";
           type = (
@@ -1896,6 +1945,16 @@ let
         "moverServiceAccount" = mkOption {
           description = "MoverServiceAccount allows specifying the name of the service account\nthat will be used by the data mover. This should only be used by advanced\nusers who want to override the service account normally used by the mover.\nThe service account needs to exist in the same namespace as this CR.";
           type = (types.nullOr types.str);
+        };
+        "moverTolerations" = mkOption {
+          description = "MoverTolerations allows specifying the tolerations that will be used by the data mover.";
+          type = (
+            types.nullOr (
+              types.listOf (
+                submoduleOf "volsync.backube.v1alpha1.ReplicationDestinationSpecResticMoverTolerations"
+              )
+            )
+          );
         };
         "moverVolumes" = mkOption {
           description = "MoverVolumes are PVCs or Secrets that should additionally be mounted to the mover job pod.\nThis should only be used by advanced users.";
@@ -1939,11 +1998,13 @@ let
         "customCA" = mkOverride 1002 null;
         "destinationPVC" = mkOverride 1002 null;
         "enableFileDeletion" = mkOverride 1002 null;
+        "enableSparseRestore" = mkOverride 1002 null;
         "moverAffinity" = mkOverride 1002 null;
         "moverPodLabels" = mkOverride 1002 null;
         "moverResources" = mkOverride 1002 null;
         "moverSecurityContext" = mkOverride 1002 null;
         "moverServiceAccount" = mkOverride 1002 null;
+        "moverTolerations" = mkOverride 1002 null;
         "moverVolumes" = mkOverride 1002 null;
         "previous" = mkOverride 1002 null;
         "repository" = mkOverride 1002 null;
@@ -3172,6 +3233,40 @@ let
       };
 
     };
+    "volsync.backube.v1alpha1.ReplicationDestinationSpecResticMoverTolerations" = {
+
+      options = {
+        "effect" = mkOption {
+          description = "Effect indicates the taint effect to match. Empty means match all taint effects.\nWhen specified, allowed values are NoSchedule, PreferNoSchedule and NoExecute.";
+          type = (types.nullOr types.str);
+        };
+        "key" = mkOption {
+          description = "Key is the taint key that the toleration applies to. Empty means match all taint keys.\nIf the key is empty, operator must be Exists; this combination means to match all values and all keys.";
+          type = (types.nullOr types.str);
+        };
+        "operator" = mkOption {
+          description = "Operator represents a key's relationship to the value.\nValid operators are Exists, Equal, Lt, and Gt. Defaults to Equal.\nExists is equivalent to wildcard for value, so that a pod can\ntolerate all taints of a particular category.\nLt and Gt perform numeric comparisons (requires feature gate TaintTolerationComparisonOperators).";
+          type = (types.nullOr types.str);
+        };
+        "tolerationSeconds" = mkOption {
+          description = "TolerationSeconds represents the period of time the toleration (which must be\nof effect NoExecute, otherwise this field is ignored) tolerates the taint. By default,\nit is not set, which means tolerate the taint forever (do not evict). Zero and\nnegative values will be treated as 0 (evict immediately) by the system.";
+          type = (types.nullOr types.int);
+        };
+        "value" = mkOption {
+          description = "Value is the taint value the toleration matches to.\nIf the operator is Exists, the value should be empty, otherwise just a regular string.";
+          type = (types.nullOr types.str);
+        };
+      };
+
+      config = {
+        "effect" = mkOverride 1002 null;
+        "key" = mkOverride 1002 null;
+        "operator" = mkOverride 1002 null;
+        "tolerationSeconds" = mkOverride 1002 null;
+        "value" = mkOverride 1002 null;
+      };
+
+    };
     "volsync.backube.v1alpha1.ReplicationDestinationSpecResticMoverVolumes" = {
 
       options = {
@@ -3552,6 +3647,16 @@ let
           description = "MoverServiceAccount allows specifying the name of the service account\nthat will be used by the data mover. This should only be used by advanced\nusers who want to override the service account normally used by the mover.\nThe service account needs to exist in the same namespace as this CR.";
           type = (types.nullOr types.str);
         };
+        "moverTolerations" = mkOption {
+          description = "MoverTolerations allows specifying the tolerations that will be used by the data mover.";
+          type = (
+            types.nullOr (
+              types.listOf (
+                submoduleOf "volsync.backube.v1alpha1.ReplicationDestinationSpecRsyncTLSMoverTolerations"
+              )
+            )
+          );
+        };
         "moverVolumes" = mkOption {
           description = "MoverVolumes are PVCs or Secrets that should additionally be mounted to the mover job pod.\nThis should only be used by advanced users.";
           type = (
@@ -3594,6 +3699,7 @@ let
         "moverResources" = mkOverride 1002 null;
         "moverSecurityContext" = mkOverride 1002 null;
         "moverServiceAccount" = mkOverride 1002 null;
+        "moverTolerations" = mkOverride 1002 null;
         "moverVolumes" = mkOverride 1002 null;
         "serviceAnnotations" = mkOverride 1002 null;
         "serviceType" = mkOverride 1002 null;
@@ -4798,6 +4904,40 @@ let
       };
 
     };
+    "volsync.backube.v1alpha1.ReplicationDestinationSpecRsyncTLSMoverTolerations" = {
+
+      options = {
+        "effect" = mkOption {
+          description = "Effect indicates the taint effect to match. Empty means match all taint effects.\nWhen specified, allowed values are NoSchedule, PreferNoSchedule and NoExecute.";
+          type = (types.nullOr types.str);
+        };
+        "key" = mkOption {
+          description = "Key is the taint key that the toleration applies to. Empty means match all taint keys.\nIf the key is empty, operator must be Exists; this combination means to match all values and all keys.";
+          type = (types.nullOr types.str);
+        };
+        "operator" = mkOption {
+          description = "Operator represents a key's relationship to the value.\nValid operators are Exists, Equal, Lt, and Gt. Defaults to Equal.\nExists is equivalent to wildcard for value, so that a pod can\ntolerate all taints of a particular category.\nLt and Gt perform numeric comparisons (requires feature gate TaintTolerationComparisonOperators).";
+          type = (types.nullOr types.str);
+        };
+        "tolerationSeconds" = mkOption {
+          description = "TolerationSeconds represents the period of time the toleration (which must be\nof effect NoExecute, otherwise this field is ignored) tolerates the taint. By default,\nit is not set, which means tolerate the taint forever (do not evict). Zero and\nnegative values will be treated as 0 (evict immediately) by the system.";
+          type = (types.nullOr types.int);
+        };
+        "value" = mkOption {
+          description = "Value is the taint value the toleration matches to.\nIf the operator is Exists, the value should be empty, otherwise just a regular string.";
+          type = (types.nullOr types.str);
+        };
+      };
+
+      config = {
+        "effect" = mkOverride 1002 null;
+        "key" = mkOverride 1002 null;
+        "operator" = mkOverride 1002 null;
+        "tolerationSeconds" = mkOverride 1002 null;
+        "value" = mkOverride 1002 null;
+      };
+
+    };
     "volsync.backube.v1alpha1.ReplicationDestinationSpecRsyncTLSMoverVolumes" = {
 
       options = {
@@ -5333,6 +5473,14 @@ let
           description = "MoverServiceAccount allows specifying the name of the service account\nthat will be used by the data mover. This should only be used by advanced\nusers who want to override the service account normally used by the mover.\nThe service account needs to exist in the same namespace as this CR.";
           type = (types.nullOr types.str);
         };
+        "moverTolerations" = mkOption {
+          description = "MoverTolerations allows specifying the tolerations that will be used by the data mover.";
+          type = (
+            types.nullOr (
+              types.listOf (submoduleOf "volsync.backube.v1alpha1.ReplicationSourceSpecRcloneMoverTolerations")
+            )
+          );
+        };
         "moverVolumes" = mkOption {
           description = "MoverVolumes are PVCs or Secrets that should additionally be mounted to the mover job pod.\nThis should only be used by advanced users.";
           type = (
@@ -5373,6 +5521,7 @@ let
         "moverResources" = mkOverride 1002 null;
         "moverSecurityContext" = mkOverride 1002 null;
         "moverServiceAccount" = mkOverride 1002 null;
+        "moverTolerations" = mkOverride 1002 null;
         "moverVolumes" = mkOverride 1002 null;
         "rcloneConfig" = mkOverride 1002 null;
         "rcloneConfigSection" = mkOverride 1002 null;
@@ -6601,6 +6750,40 @@ let
       };
 
     };
+    "volsync.backube.v1alpha1.ReplicationSourceSpecRcloneMoverTolerations" = {
+
+      options = {
+        "effect" = mkOption {
+          description = "Effect indicates the taint effect to match. Empty means match all taint effects.\nWhen specified, allowed values are NoSchedule, PreferNoSchedule and NoExecute.";
+          type = (types.nullOr types.str);
+        };
+        "key" = mkOption {
+          description = "Key is the taint key that the toleration applies to. Empty means match all taint keys.\nIf the key is empty, operator must be Exists; this combination means to match all values and all keys.";
+          type = (types.nullOr types.str);
+        };
+        "operator" = mkOption {
+          description = "Operator represents a key's relationship to the value.\nValid operators are Exists, Equal, Lt, and Gt. Defaults to Equal.\nExists is equivalent to wildcard for value, so that a pod can\ntolerate all taints of a particular category.\nLt and Gt perform numeric comparisons (requires feature gate TaintTolerationComparisonOperators).";
+          type = (types.nullOr types.str);
+        };
+        "tolerationSeconds" = mkOption {
+          description = "TolerationSeconds represents the period of time the toleration (which must be\nof effect NoExecute, otherwise this field is ignored) tolerates the taint. By default,\nit is not set, which means tolerate the taint forever (do not evict). Zero and\nnegative values will be treated as 0 (evict immediately) by the system.";
+          type = (types.nullOr types.int);
+        };
+        "value" = mkOption {
+          description = "Value is the taint value the toleration matches to.\nIf the operator is Exists, the value should be empty, otherwise just a regular string.";
+          type = (types.nullOr types.str);
+        };
+      };
+
+      config = {
+        "effect" = mkOverride 1002 null;
+        "key" = mkOverride 1002 null;
+        "operator" = mkOverride 1002 null;
+        "tolerationSeconds" = mkOverride 1002 null;
+        "value" = mkOverride 1002 null;
+      };
+
+    };
     "volsync.backube.v1alpha1.ReplicationSourceSpecRcloneMoverVolumes" = {
 
       options = {
@@ -6791,6 +6974,10 @@ let
           description = "customCA is a custom CA that will be used to verify the remote";
           type = (types.nullOr (submoduleOf "volsync.backube.v1alpha1.ReplicationSourceSpecResticCustomCA"));
         };
+        "exclude" = mkOption {
+          description = "exclude defines options for excluding files and directories from the backup.";
+          type = (types.nullOr (submoduleOf "volsync.backube.v1alpha1.ReplicationSourceSpecResticExclude"));
+        };
         "moverAffinity" = mkOption {
           description = "MoverAffinity allows specifying the PodAffinity that will be used by the data mover";
           type = (
@@ -6818,6 +7005,14 @@ let
         "moverServiceAccount" = mkOption {
           description = "MoverServiceAccount allows specifying the name of the service account\nthat will be used by the data mover. This should only be used by advanced\nusers who want to override the service account normally used by the mover.\nThe service account needs to exist in the same namespace as this CR.";
           type = (types.nullOr types.str);
+        };
+        "moverTolerations" = mkOption {
+          description = "MoverTolerations allows specifying the tolerations that will be used by the data mover.";
+          type = (
+            types.nullOr (
+              types.listOf (submoduleOf "volsync.backube.v1alpha1.ReplicationSourceSpecResticMoverTolerations")
+            )
+          );
         };
         "moverVolumes" = mkOption {
           description = "MoverVolumes are PVCs or Secrets that should additionally be mounted to the mover job pod.\nThis should only be used by advanced users.";
@@ -6861,11 +7056,13 @@ let
         "capacity" = mkOverride 1002 null;
         "copyMethod" = mkOverride 1002 null;
         "customCA" = mkOverride 1002 null;
+        "exclude" = mkOverride 1002 null;
         "moverAffinity" = mkOverride 1002 null;
         "moverPodLabels" = mkOverride 1002 null;
         "moverResources" = mkOverride 1002 null;
         "moverSecurityContext" = mkOverride 1002 null;
         "moverServiceAccount" = mkOverride 1002 null;
+        "moverTolerations" = mkOverride 1002 null;
         "moverVolumes" = mkOverride 1002 null;
         "pruneIntervalDays" = mkOverride 1002 null;
         "repository" = mkOverride 1002 null;
@@ -6897,6 +7094,20 @@ let
         "configMapName" = mkOverride 1002 null;
         "key" = mkOverride 1002 null;
         "secretName" = mkOverride 1002 null;
+      };
+
+    };
+    "volsync.backube.v1alpha1.ReplicationSourceSpecResticExclude" = {
+
+      options = {
+        "caches" = mkOption {
+          description = "caches determines whether to exclude directories tagged with a standard\nCACHEDIR.TAG file from the backup. When set to true, the restic backup\ncommand will be run with the --exclude-caches flag, which skips any\ndirectory containing a CACHEDIR.TAG file that starts with the signature\n\"Signature: 8a477f597d28d172789f06886806bc55\".\nSee https://bford.info/cachedir/ for the Cache Directory Tagging Standard.";
+          type = (types.nullOr types.bool);
+        };
+      };
+
+      config = {
+        "caches" = mkOverride 1002 null;
       };
 
     };
@@ -8095,6 +8306,40 @@ let
       };
 
     };
+    "volsync.backube.v1alpha1.ReplicationSourceSpecResticMoverTolerations" = {
+
+      options = {
+        "effect" = mkOption {
+          description = "Effect indicates the taint effect to match. Empty means match all taint effects.\nWhen specified, allowed values are NoSchedule, PreferNoSchedule and NoExecute.";
+          type = (types.nullOr types.str);
+        };
+        "key" = mkOption {
+          description = "Key is the taint key that the toleration applies to. Empty means match all taint keys.\nIf the key is empty, operator must be Exists; this combination means to match all values and all keys.";
+          type = (types.nullOr types.str);
+        };
+        "operator" = mkOption {
+          description = "Operator represents a key's relationship to the value.\nValid operators are Exists, Equal, Lt, and Gt. Defaults to Equal.\nExists is equivalent to wildcard for value, so that a pod can\ntolerate all taints of a particular category.\nLt and Gt perform numeric comparisons (requires feature gate TaintTolerationComparisonOperators).";
+          type = (types.nullOr types.str);
+        };
+        "tolerationSeconds" = mkOption {
+          description = "TolerationSeconds represents the period of time the toleration (which must be\nof effect NoExecute, otherwise this field is ignored) tolerates the taint. By default,\nit is not set, which means tolerate the taint forever (do not evict). Zero and\nnegative values will be treated as 0 (evict immediately) by the system.";
+          type = (types.nullOr types.int);
+        };
+        "value" = mkOption {
+          description = "Value is the taint value the toleration matches to.\nIf the operator is Exists, the value should be empty, otherwise just a regular string.";
+          type = (types.nullOr types.str);
+        };
+      };
+
+      config = {
+        "effect" = mkOverride 1002 null;
+        "key" = mkOverride 1002 null;
+        "operator" = mkOverride 1002 null;
+        "tolerationSeconds" = mkOverride 1002 null;
+        "value" = mkOverride 1002 null;
+      };
+
+    };
     "volsync.backube.v1alpha1.ReplicationSourceSpecResticMoverVolumes" = {
 
       options = {
@@ -8269,7 +8514,27 @@ let
           type = (types.nullOr types.int);
         };
         "within" = mkOption {
-          description = "Within defines the number of snapshots to be kept Within the given time period";
+          description = "Within defines the duration in which to keep all snapshosts";
+          type = (types.nullOr types.str);
+        };
+        "withinDaily" = mkOption {
+          description = "WithinDaily defines the duration in which to keep daily snapshots";
+          type = (types.nullOr types.str);
+        };
+        "withinHourly" = mkOption {
+          description = "WithinHourly defines the duration in which to keep hourly snapshots";
+          type = (types.nullOr types.str);
+        };
+        "withinMonthly" = mkOption {
+          description = "WithinMonthly defines the duration in which to keep monthly snapshots";
+          type = (types.nullOr types.str);
+        };
+        "withinWeekly" = mkOption {
+          description = "WithinWeekly defines the duration in which to keep weekly snapshots";
+          type = (types.nullOr types.str);
+        };
+        "withinYearly" = mkOption {
+          description = "WithinYearly defines the duration in which to keep yearly snapshots";
           type = (types.nullOr types.str);
         };
         "yearly" = mkOption {
@@ -8285,6 +8550,11 @@ let
         "monthly" = mkOverride 1002 null;
         "weekly" = mkOverride 1002 null;
         "within" = mkOverride 1002 null;
+        "withinDaily" = mkOverride 1002 null;
+        "withinHourly" = mkOverride 1002 null;
+        "withinMonthly" = mkOverride 1002 null;
+        "withinWeekly" = mkOverride 1002 null;
+        "withinYearly" = mkOverride 1002 null;
         "yearly" = mkOverride 1002 null;
       };
 
@@ -8489,6 +8759,14 @@ let
           description = "MoverServiceAccount allows specifying the name of the service account\nthat will be used by the data mover. This should only be used by advanced\nusers who want to override the service account normally used by the mover.\nThe service account needs to exist in the same namespace as this CR.";
           type = (types.nullOr types.str);
         };
+        "moverTolerations" = mkOption {
+          description = "MoverTolerations allows specifying the tolerations that will be used by the data mover.";
+          type = (
+            types.nullOr (
+              types.listOf (submoduleOf "volsync.backube.v1alpha1.ReplicationSourceSpecRsyncTLSMoverTolerations")
+            )
+          );
+        };
         "moverVolumes" = mkOption {
           description = "MoverVolumes are PVCs or Secrets that should additionally be mounted to the mover job pod.\nThis should only be used by advanced users.";
           type = (
@@ -8522,6 +8800,7 @@ let
         "moverResources" = mkOverride 1002 null;
         "moverSecurityContext" = mkOverride 1002 null;
         "moverServiceAccount" = mkOverride 1002 null;
+        "moverTolerations" = mkOverride 1002 null;
         "moverVolumes" = mkOverride 1002 null;
         "port" = mkOverride 1002 null;
         "storageClassName" = mkOverride 1002 null;
@@ -9724,6 +10003,40 @@ let
       };
 
     };
+    "volsync.backube.v1alpha1.ReplicationSourceSpecRsyncTLSMoverTolerations" = {
+
+      options = {
+        "effect" = mkOption {
+          description = "Effect indicates the taint effect to match. Empty means match all taint effects.\nWhen specified, allowed values are NoSchedule, PreferNoSchedule and NoExecute.";
+          type = (types.nullOr types.str);
+        };
+        "key" = mkOption {
+          description = "Key is the taint key that the toleration applies to. Empty means match all taint keys.\nIf the key is empty, operator must be Exists; this combination means to match all values and all keys.";
+          type = (types.nullOr types.str);
+        };
+        "operator" = mkOption {
+          description = "Operator represents a key's relationship to the value.\nValid operators are Exists, Equal, Lt, and Gt. Defaults to Equal.\nExists is equivalent to wildcard for value, so that a pod can\ntolerate all taints of a particular category.\nLt and Gt perform numeric comparisons (requires feature gate TaintTolerationComparisonOperators).";
+          type = (types.nullOr types.str);
+        };
+        "tolerationSeconds" = mkOption {
+          description = "TolerationSeconds represents the period of time the toleration (which must be\nof effect NoExecute, otherwise this field is ignored) tolerates the taint. By default,\nit is not set, which means tolerate the taint forever (do not evict). Zero and\nnegative values will be treated as 0 (evict immediately) by the system.";
+          type = (types.nullOr types.int);
+        };
+        "value" = mkOption {
+          description = "Value is the taint value the toleration matches to.\nIf the operator is Exists, the value should be empty, otherwise just a regular string.";
+          type = (types.nullOr types.str);
+        };
+      };
+
+      config = {
+        "effect" = mkOverride 1002 null;
+        "key" = mkOverride 1002 null;
+        "operator" = mkOverride 1002 null;
+        "tolerationSeconds" = mkOverride 1002 null;
+        "value" = mkOverride 1002 null;
+      };
+
+    };
     "volsync.backube.v1alpha1.ReplicationSourceSpecRsyncTLSMoverVolumes" = {
 
       options = {
@@ -9919,6 +10232,14 @@ let
           description = "MoverServiceAccount allows specifying the name of the service account\nthat will be used by the data mover. This should only be used by advanced\nusers who want to override the service account normally used by the mover.\nThe service account needs to exist in the same namespace as this CR.";
           type = (types.nullOr types.str);
         };
+        "moverTolerations" = mkOption {
+          description = "MoverTolerations allows specifying the tolerations that will be used by the data mover.";
+          type = (
+            types.nullOr (
+              types.listOf (submoduleOf "volsync.backube.v1alpha1.ReplicationSourceSpecSyncthingMoverTolerations")
+            )
+          );
+        };
         "moverVolumes" = mkOption {
           description = "MoverVolumes are PVCs or Secrets that should additionally be mounted to the mover job pod.\nThis should only be used by advanced users.";
           type = (
@@ -9950,6 +10271,7 @@ let
         "moverResources" = mkOverride 1002 null;
         "moverSecurityContext" = mkOverride 1002 null;
         "moverServiceAccount" = mkOverride 1002 null;
+        "moverTolerations" = mkOverride 1002 null;
         "moverVolumes" = mkOverride 1002 null;
         "peers" = mkOverride 1002 null;
         "serviceType" = mkOverride 1002 null;
@@ -11148,6 +11470,40 @@ let
         "gmsaCredentialSpecName" = mkOverride 1002 null;
         "hostProcess" = mkOverride 1002 null;
         "runAsUserName" = mkOverride 1002 null;
+      };
+
+    };
+    "volsync.backube.v1alpha1.ReplicationSourceSpecSyncthingMoverTolerations" = {
+
+      options = {
+        "effect" = mkOption {
+          description = "Effect indicates the taint effect to match. Empty means match all taint effects.\nWhen specified, allowed values are NoSchedule, PreferNoSchedule and NoExecute.";
+          type = (types.nullOr types.str);
+        };
+        "key" = mkOption {
+          description = "Key is the taint key that the toleration applies to. Empty means match all taint keys.\nIf the key is empty, operator must be Exists; this combination means to match all values and all keys.";
+          type = (types.nullOr types.str);
+        };
+        "operator" = mkOption {
+          description = "Operator represents a key's relationship to the value.\nValid operators are Exists, Equal, Lt, and Gt. Defaults to Equal.\nExists is equivalent to wildcard for value, so that a pod can\ntolerate all taints of a particular category.\nLt and Gt perform numeric comparisons (requires feature gate TaintTolerationComparisonOperators).";
+          type = (types.nullOr types.str);
+        };
+        "tolerationSeconds" = mkOption {
+          description = "TolerationSeconds represents the period of time the toleration (which must be\nof effect NoExecute, otherwise this field is ignored) tolerates the taint. By default,\nit is not set, which means tolerate the taint forever (do not evict). Zero and\nnegative values will be treated as 0 (evict immediately) by the system.";
+          type = (types.nullOr types.int);
+        };
+        "value" = mkOption {
+          description = "Value is the taint value the toleration matches to.\nIf the operator is Exists, the value should be empty, otherwise just a regular string.";
+          type = (types.nullOr types.str);
+        };
+      };
+
+      config = {
+        "effect" = mkOverride 1002 null;
+        "key" = mkOverride 1002 null;
+        "operator" = mkOverride 1002 null;
+        "tolerationSeconds" = mkOverride 1002 null;
+        "value" = mkOverride 1002 null;
       };
 
     };
