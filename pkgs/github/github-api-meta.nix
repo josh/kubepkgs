@@ -6,7 +6,7 @@
 }:
 stdenvNoCC.mkDerivation (finalAttrs: {
   pname = "github-api-meta";
-  version = "0-unstable-2026-10-21";
+  version = "0-unstable-2026-10-22";
 
   __structuredAttrs = true;
 
