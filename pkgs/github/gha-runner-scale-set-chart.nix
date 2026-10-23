@@ -2,8 +2,8 @@
 kubepkgs.fetchhelm {
   url = "oci://ghcr.io/actions/actions-runner-controller-charts/gha-runner-scale-set";
   chart = "gha-runner-scale-set";
-  version = "0.15.0";
-  hash = "sha256-ooeRpectFlfQjT//iVNAHc7wEIju+fTcANt8YH5qV/w=";
+  version = "0.15.1";
+  hash = "sha256-0GRr74neHHGwYe/LJ7RY8DxWopCVf3aZUaBrS0UEaEg=";
   helmTestValues = {
     controllerServiceAccount.name = "test";
     controllerServiceAccount.namespace = "default";
