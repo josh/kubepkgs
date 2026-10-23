@@ -5705,11 +5705,11 @@ let
       options = {
         "name" = mkOption {
           description = "name allows you to identify the responder responding to the Eviction.\n\nIt must be a valid domain-prefixed key (such as \"acme.io/foo\").\nDomain names *.k8s.io and *.kubernetes.io are reserved.\nThis field must be unique for each responder.\nThis field is required.";
-          type = types.str;
+          type = (types.withMinLength 1 types.str);
         };
         "priority" = mkOption {
           description = "priority for this responder. Higher priorities are selected first by the evictionrequest-controller.\nIf there are responders with the same priority, the responder whose domain name comes first in the\nalphabetical higher domain order, will be picked. This means that the top domain labels are compared\nalphabetically first, followed by the lower domain labels. The key is compared last.\n\nThe responder that is the managing controller of the pod should set the value of\nthis field to 10000 to allow both for preemption or fallback registration by other\nresponders.\n\nThe minimum value is 0 and the maximum value is 100000.\nThe interval 0-999 is reserved for responders with *.k8s.io suffix.\nThis field is required.";
-          type = types.int;
+          type = (types.withMaximum 100000 (types.withMinimum 0 types.int));
         };
       };
 
@@ -15868,11 +15868,11 @@ let
       options = {
         "name" = mkOption {
           description = "name allows you to identify the responder responding to the Eviction.\n\nIt must be a valid domain-prefixed key (such as \"acme.io/foo\").\nDomain names *.k8s.io and *.kubernetes.io are reserved.\nThis field must be unique for each responder.\nThis field is required.";
-          type = types.str;
+          type = (types.withMinLength 1 types.str);
         };
         "priority" = mkOption {
           description = "priority for this responder. Higher priorities are selected first by the evictionrequest-controller.\nIf there are responders with the same priority, the responder whose domain name comes first in the\nalphabetical higher domain order, will be picked. This means that the top domain labels are compared\nalphabetically first, followed by the lower domain labels. The key is compared last.\n\nThe responder that is the managing controller of the pod should set the value of\nthis field to 10000 to allow both for preemption or fallback registration by other\nresponders.\n\nThe minimum value is 0 and the maximum value is 100000.\nThe interval 0-999 is reserved for responders with *.k8s.io suffix.\nThis field is required.";
-          type = types.int;
+          type = (types.withMaximum 100000 (types.withMinimum 0 types.int));
         };
       };
 
@@ -25510,11 +25510,11 @@ let
       options = {
         "name" = mkOption {
           description = "name allows you to identify the responder responding to the Eviction.\n\nIt must be a valid domain-prefixed key (such as \"acme.io/foo\").\nDomain names *.k8s.io and *.kubernetes.io are reserved.\nThis field must be unique for each responder.\nThis field is required.";
-          type = types.str;
+          type = (types.withMinLength 1 types.str);
         };
         "priority" = mkOption {
           description = "priority for this responder. Higher priorities are selected first by the evictionrequest-controller.\nIf there are responders with the same priority, the responder whose domain name comes first in the\nalphabetical higher domain order, will be picked. This means that the top domain labels are compared\nalphabetically first, followed by the lower domain labels. The key is compared last.\n\nThe responder that is the managing controller of the pod should set the value of\nthis field to 10000 to allow both for preemption or fallback registration by other\nresponders.\n\nThe minimum value is 0 and the maximum value is 100000.\nThe interval 0-999 is reserved for responders with *.k8s.io suffix.\nThis field is required.";
-          type = types.int;
+          type = (types.withMaximum 100000 (types.withMinimum 0 types.int));
         };
       };
 
@@ -35570,11 +35570,11 @@ let
       options = {
         "name" = mkOption {
           description = "name allows you to identify the responder responding to the Eviction.\n\nIt must be a valid domain-prefixed key (such as \"acme.io/foo\").\nDomain names *.k8s.io and *.kubernetes.io are reserved.\nThis field must be unique for each responder.\nThis field is required.";
-          type = types.str;
+          type = (types.withMinLength 1 types.str);
         };
         "priority" = mkOption {
           description = "priority for this responder. Higher priorities are selected first by the evictionrequest-controller.\nIf there are responders with the same priority, the responder whose domain name comes first in the\nalphabetical higher domain order, will be picked. This means that the top domain labels are compared\nalphabetically first, followed by the lower domain labels. The key is compared last.\n\nThe responder that is the managing controller of the pod should set the value of\nthis field to 10000 to allow both for preemption or fallback registration by other\nresponders.\n\nThe minimum value is 0 and the maximum value is 100000.\nThe interval 0-999 is reserved for responders with *.k8s.io suffix.\nThis field is required.";
-          type = types.int;
+          type = (types.withMaximum 100000 (types.withMinimum 0 types.int));
         };
       };
 
@@ -45389,11 +45389,11 @@ let
       options = {
         "name" = mkOption {
           description = "name allows you to identify the responder responding to the Eviction.\n\nIt must be a valid domain-prefixed key (such as \"acme.io/foo\").\nDomain names *.k8s.io and *.kubernetes.io are reserved.\nThis field must be unique for each responder.\nThis field is required.";
-          type = types.str;
+          type = (types.withMinLength 1 types.str);
         };
         "priority" = mkOption {
           description = "priority for this responder. Higher priorities are selected first by the evictionrequest-controller.\nIf there are responders with the same priority, the responder whose domain name comes first in the\nalphabetical higher domain order, will be picked. This means that the top domain labels are compared\nalphabetically first, followed by the lower domain labels. The key is compared last.\n\nThe responder that is the managing controller of the pod should set the value of\nthis field to 10000 to allow both for preemption or fallback registration by other\nresponders.\n\nThe minimum value is 0 and the maximum value is 100000.\nThe interval 0-999 is reserved for responders with *.k8s.io suffix.\nThis field is required.";
-          type = types.int;
+          type = (types.withMaximum 100000 (types.withMinimum 0 types.int));
         };
       };
 
