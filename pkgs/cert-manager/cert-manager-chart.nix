@@ -2,8 +2,8 @@
 kubepkgs.fetchhelm {
   url = "oci://quay.io/jetstack/charts/cert-manager";
   chart = "cert-manager";
-  version = "1.21.2";
-  hash = "sha256-AsbUc4Q9aVfTmENGPPmjOwC6V6v3MpTN1cKIl8csi10=";
+  version = "1.21.3";
+  hash = "sha256-kjGAYWkePhiNrUUdpesTcGa9jlpFk1/gZs8sztLElRw=";
 
   crds = {
     file = ../../crds/cert-manager.nix;
