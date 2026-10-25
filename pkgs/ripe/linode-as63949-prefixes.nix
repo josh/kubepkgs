@@ -6,7 +6,7 @@
 }:
 stdenvNoCC.mkDerivation (finalAttrs: {
   pname = "linode-as63949-prefixes";
-  version = "0-unstable-2026-10-14";
+  version = "0-unstable-2026-10-25";
 
   __structuredAttrs = true;
 
