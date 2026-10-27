@@ -8,13 +8,13 @@
 }:
 stdenvNoCC.mkDerivation (finalAttrs: {
   pname = "nats-static-chart";
-  version = "0.0.7";
+  version = "0.1.0";
 
   src = fetchFromGitHub {
     owner = "josh";
     repo = "nats-static";
     tag = "v${finalAttrs.version}";
-    hash = "sha256-9nPKUIlgxR2u8qeeT06BFWexkScPabFgt66qOOqYpwM=";
+    hash = "sha256-UkIDzC+b/p13Nc3kGd+CRyXxYmAxeRG3OQIHHV0ihk4=";
   };
 
   buildCommand = ''
