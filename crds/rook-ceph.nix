@@ -392,6 +392,10 @@ let
           description = "";
           type = (types.nullOr (types.attrsOf types.str));
         };
+        "message" = mkOption {
+          description = "";
+          type = (types.nullOr (types.withMaxLength 500 (types.withMinLength 1 types.str)));
+        };
         "mirroringInfo" = mkOption {
           description = "MirroringInfoSpec is the status of the pool/radosnamespace mirroring";
           type = (
@@ -419,6 +423,7 @@ let
       config = {
         "conditions" = mkOverride 1002 null;
         "info" = mkOverride 1002 null;
+        "message" = mkOverride 1002 null;
         "mirroringInfo" = mkOverride 1002 null;
         "mirroringStatus" = mkOverride 1002 null;
         "phase" = mkOverride 1002 null;
@@ -1202,6 +1207,10 @@ let
           description = "";
           type = (types.nullOr (types.attrsOf types.str));
         };
+        "message" = mkOption {
+          description = "";
+          type = (types.nullOr (types.withMaxLength 500 (types.withMinLength 1 types.str)));
+        };
         "mirroringInfo" = mkOption {
           description = "MirroringInfoSpec is the status of the pool/radosnamespace mirroring";
           type = (types.nullOr (submoduleOf "ceph.rook.io.v1.CephBlockPoolStatusMirroringInfo"));
@@ -1232,6 +1241,7 @@ let
         "cephx" = mkOverride 1002 null;
         "conditions" = mkOverride 1002 null;
         "info" = mkOverride 1002 null;
+        "message" = mkOverride 1002 null;
         "mirroringInfo" = mkOverride 1002 null;
         "mirroringStatus" = mkOverride 1002 null;
         "observedGeneration" = mkOverride 1002 null;
@@ -5187,6 +5197,10 @@ let
           description = "Port is the prometheus server port";
           type = (types.nullOr (types.withMaximum 65535 (types.withMinimum 0 types.int)));
         };
+        "scrapeTimeoutSeconds" = mkOption {
+          description = "ScrapeTimeoutSeconds determines the timeout of a prometheus scrape, in seconds. It must\nnot be greater than the scrape interval, which defaults to 10s when unset. Defaults to the\nPrometheus global scrape timeout when unset.";
+          type = (types.nullOr (types.withMinimum 1 types.int));
+        };
       };
 
       config = {
@@ -5198,6 +5212,7 @@ let
         "metricsDisabled" = mkOverride 1002 null;
         "metricsTLS" = mkOverride 1002 null;
         "port" = mkOverride 1002 null;
+        "scrapeTimeoutSeconds" = mkOverride 1002 null;
       };
 
     };
@@ -13512,6 +13527,10 @@ let
           description = "Use only info and put mirroringStatus in it?";
           type = (types.nullOr (types.attrsOf types.str));
         };
+        "message" = mkOption {
+          description = "";
+          type = (types.nullOr (types.withMaxLength 500 (types.withMinLength 1 types.str)));
+        };
         "mirroringStatus" = mkOption {
           description = "MirroringStatus is the filesystem mirroring status";
           type = (types.nullOr (submoduleOf "ceph.rook.io.v1.CephFilesystemStatusMirroringStatus"));
@@ -13534,6 +13553,7 @@ let
         "cephx" = mkOverride 1002 null;
         "conditions" = mkOverride 1002 null;
         "info" = mkOverride 1002 null;
+        "message" = mkOverride 1002 null;
         "mirroringStatus" = mkOverride 1002 null;
         "observedGeneration" = mkOverride 1002 null;
         "phase" = mkOverride 1002 null;
@@ -14023,6 +14043,10 @@ let
           description = "";
           type = (types.nullOr (types.attrsOf types.str));
         };
+        "message" = mkOption {
+          description = "";
+          type = (types.nullOr (types.withMaxLength 500 (types.withMinLength 1 types.str)));
+        };
         "observedGeneration" = mkOption {
           description = "ObservedGeneration is the latest generation observed by the controller.";
           type = (types.nullOr types.int);
@@ -14035,6 +14059,7 @@ let
 
       config = {
         "info" = mkOverride 1002 null;
+        "message" = mkOverride 1002 null;
         "observedGeneration" = mkOverride 1002 null;
         "phase" = mkOverride 1002 null;
       };
@@ -18694,6 +18719,10 @@ let
           description = "";
           type = (types.nullOr (types.listOf (submoduleOf "ceph.rook.io.v1.CephNFSStatusConditions")));
         };
+        "message" = mkOption {
+          description = "";
+          type = (types.nullOr (types.withMaxLength 500 (types.withMinLength 1 types.str)));
+        };
         "observedGeneration" = mkOption {
           description = "ObservedGeneration is the latest generation observed by the controller.";
           type = (types.nullOr types.int);
@@ -18707,6 +18736,7 @@ let
       config = {
         "cephx" = mkOverride 1002 null;
         "conditions" = mkOverride 1002 null;
+        "message" = mkOverride 1002 null;
         "observedGeneration" = mkOverride 1002 null;
         "phase" = mkOverride 1002 null;
       };
@@ -18848,6 +18878,10 @@ let
           description = "The number of active gateway instances";
           type = (types.withMinimum 1 types.int);
         };
+        "interruptMode" = mkOption {
+          description = "InterruptMode controls whether SPDK runs in interrupt mode (true) or poll mode (false).\nIn interrupt mode, SPDK reactors only consume CPU when processing I/O, dramatically\nreducing idle CPU usage. In poll mode, reactors spin at 100% CPU per core for lowest\nlatency under heavy I/O workloads.\nIf not set, defaults to true (interrupt mode).";
+          type = (types.nullOr types.bool);
+        };
         "labels" = mkOption {
           description = "The labels-related configuration to add/set on each Pod related object.";
           type = (types.nullOr (types.attrsOf types.str));
@@ -18883,6 +18917,7 @@ let
         "configMapRef" = mkOverride 1002 null;
         "hostNetwork" = mkOverride 1002 null;
         "image" = mkOverride 1002 null;
+        "interruptMode" = mkOverride 1002 null;
         "labels" = mkOverride 1002 null;
         "livenessProbe" = mkOverride 1002 null;
         "nvmeofConfig" = mkOverride 1002 null;
@@ -20258,6 +20293,10 @@ let
             types.nullOr (types.listOf (submoduleOf "ceph.rook.io.v1.CephNVMeOFGatewayStatusConditions"))
           );
         };
+        "message" = mkOption {
+          description = "";
+          type = (types.nullOr (types.withMaxLength 500 (types.withMinLength 1 types.str)));
+        };
         "observedGeneration" = mkOption {
           description = "ObservedGeneration is the latest generation observed by the controller.";
           type = (types.nullOr types.int);
@@ -20271,6 +20310,7 @@ let
       config = {
         "cephx" = mkOverride 1002 null;
         "conditions" = mkOverride 1002 null;
+        "message" = mkOverride 1002 null;
         "observedGeneration" = mkOverride 1002 null;
         "phase" = mkOverride 1002 null;
       };
@@ -23201,11 +23241,24 @@ let
           description = "The labels-related configuration to add/set on each rgw service.";
           type = (types.nullOr (types.attrsOf types.str));
         };
+        "trafficDistribution" = mkOption {
+          description = "The trafficDistribution to set on each rgw service.";
+          type = (
+            types.nullOr (
+              types.enum [
+                "PreferClose"
+                "PreferSameZone"
+                "PreferSameNode"
+              ]
+            )
+          );
+        };
       };
 
       config = {
         "annotations" = mkOverride 1002 null;
         "labels" = mkOverride 1002 null;
+        "trafficDistribution" = mkOverride 1002 null;
       };
 
     };
@@ -24375,7 +24428,7 @@ let
         };
         "message" = mkOption {
           description = "";
-          type = (types.nullOr types.str);
+          type = (types.nullOr (types.withMaxLength 500 (types.withMinLength 1 types.str)));
         };
         "observedGeneration" = mkOption {
           description = "ObservedGeneration is the latest generation observed by the controller.";
@@ -24585,6 +24638,10 @@ let
           description = "ObjectUserQuotaSpec can be used to set quotas for the object store user to limit their usage. See the [Ceph docs](https://docs.ceph.com/en/latest/radosgw/admin/?#quota-management) for more";
           type = (types.nullOr (submoduleOf "ceph.rook.io.v1.CephObjectStoreUserSpecQuotas"));
         };
+        "secretTemplate" = mkOption {
+          description = "SecretTemplate defines labels and annotations to add to the Secret that\nholds this user's credentials, for example to opt the Secret in to a\ntool that copies Secrets into other namespaces. Anyone who can edit this\nCephObjectStoreUser can use it to hand the credentials to such a tool.\nThe labels app, user, rook_cluster and rook_object_store, which Rook\nsets on this Secret, are reserved.";
+          type = (types.nullOr (submoduleOf "ceph.rook.io.v1.CephObjectStoreUserSpecSecretTemplate"));
+        };
         "store" = mkOption {
           description = "The store the user will be created in";
           type = (types.nullOr types.str);
@@ -24601,6 +24658,7 @@ let
         "keys" = mkOverride 1002 null;
         "opMask" = mkOverride 1002 null;
         "quotas" = mkOverride 1002 null;
+        "secretTemplate" = mkOverride 1002 null;
         "store" = mkOverride 1002 null;
       };
 
@@ -24964,6 +25022,25 @@ let
         "maxBuckets" = mkOverride 1002 null;
         "maxObjects" = mkOverride 1002 null;
         "maxSize" = mkOverride 1002 null;
+      };
+
+    };
+    "ceph.rook.io.v1.CephObjectStoreUserSpecSecretTemplate" = {
+
+      options = {
+        "annotations" = mkOption {
+          description = "Annotations to add to the Secret, at most 256 KiB in total. The key\ncephx-keyring, and keys with a rook.io or *.rook.io prefix, are reserved.";
+          type = (types.nullOr (types.attrsOf (types.withMaxLength 262144 types.str)));
+        };
+        "labels" = mkOption {
+          description = "Labels to add to the Secret. The key do_not_reconcile, and keys with a\nrook.io or *.rook.io prefix, are reserved.";
+          type = (types.nullOr (types.attrsOf (types.withMaxLength 63 types.str)));
+        };
+      };
+
+      config = {
+        "annotations" = mkOverride 1002 null;
+        "labels" = mkOverride 1002 null;
       };
 
     };
