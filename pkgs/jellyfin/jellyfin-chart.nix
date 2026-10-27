@@ -2,8 +2,8 @@
 kubepkgs.fetchhelm {
   url = "https://jellyfin.github.io/jellyfin-helm";
   chart = "jellyfin";
-  version = "3.6.0";
-  hash = "sha256-Hr4xvXQyaegZl9OIRBfsI2qvHQFvqU7PcRFmzpk8r0Y=";
+  version = "3.7.0";
+  hash = "sha256-hyWX314xw0ftC5WMVDziCwqE8lr50jESXOU6DEGBKb0=";
 
   meta = {
     description = "Helm chart for Jellyfin, the free software media system";
