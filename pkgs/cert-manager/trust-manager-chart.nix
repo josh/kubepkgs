@@ -2,8 +2,8 @@
 kubepkgs.fetchhelm {
   url = "oci://quay.io/jetstack/charts/trust-manager";
   chart = "trust-manager";
-  version = "0.25.0";
-  hash = "sha256-M4XHIa8bvIF69pFYsYcR4IpRERg2BpxAfjAY00LFzbM=";
+  version = "0.26.0";
+  hash = "sha256-Su7VikmaV5FxtHebBbdyaDpmE12jOahLuIh8CKkRvtw=";
 
   crds.file = ../../crds/trust-manager.nix;
 
