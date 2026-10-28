@@ -6,7 +6,7 @@
 }:
 stdenvNoCC.mkDerivation (finalAttrs: {
   pname = "backblaze-as40401-prefixes";
-  version = "0-unstable-2026-09-26";
+  version = "0-unstable-2026-10-28";
 
   __structuredAttrs = true;
 
