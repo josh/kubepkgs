@@ -1,22 +1,22 @@
 {
-  "tag": "1.17.0",
-  "upstreamDigest": "sha256:4d1b496a256f2989bccdb04b9104a4ede97234b10fba90259e173e905ec4fb58",
-  "digest": "sha256:e0153434bf87ced0952d39e4a03dd8aba5f0e39d9809c6c6120a01afefadb1a9",
+  "tag": "1.17.1",
+  "upstreamDigest": "sha256:a5d5a5a892c98f60fcbfa81eac2a40fc19e7b3fa7719bccae10ff6111d22524a",
+  "digest": "sha256:9001a99ea31e7b6cc7c308628f1c69389bed6dce5cbf7d5fffe032d95039dd1a",
   "manifests": [
-    "sha256:a73003e3006f4e64e9da0b4362011250b09f096f9a27261435aff45bd54e2d63",
-    "sha256:9f98ed860e9ddc549159bbcdc1b15945b60876ba68d631e98db7f258e26be87a"
+    "sha256:8cffe811b97bb7db1b8aa14eff94b97f1095eb3394bdd03b3e916249c28091f5",
+    "sha256:e6c8468e9d75eedadffb294a043134ab87713de9a40365b1b09f19162c9cdaa5"
   ],
   "blobs": [
-    "sha256:abe496ffdc71367ed111b951e67566d8cf82e15278a78c8ddcb4c7b95a885f82",
-    "sha256:4fdc56a1d49fc749f4b6d53e468a046cd1a019e7b108b1e5c954a43548e3997d",
-    "sha256:ea85abb46697a3476962322431521a37c447c0a453d7447e1b1bfd3f3f2fdce3",
-    "sha256:35b935f050741b78388e7c1886042712e181eaebac8d4338fc1a0f14bb7c705f",
-    "sha256:8849370588e7f05c63a1a5b4cbaa50170be2876b00f7da05a6b9d17fe3d4f654",
-    "sha256:8c0c5c07b4a7a53f0f9bf8b13c0caabca62bac137b69874ed6adada518f86eb9",
-    "sha256:6810d3b3ec9e5bac56e042757a1261b2e40a39120d0076640b5ce0f191fe96b1",
-    "sha256:2aeeee80942943c46be80b4ac14f58ce6a0a6aa78fdcc35c32f2d1f35499583a",
-    "sha256:56b919779aafc295b77b861eb22f8a3e1c047e9a290fe240bc25a1a27959b184",
-    "sha256:2e9deaf62c9d19421e26365c39ea1c5819480e7f261c4530e53de51bd8f5aff9"
+    "sha256:ee2e0f259e55cf6b05037721ead2793b146517cb68820e0a65982c0b37ee12c2",
+    "sha256:6021ecbea249529977d20d05f3efa2fc204aedcc03b629cc741fbdbb144de677",
+    "sha256:a90a488ef907329f27fb83f3b4400e5ca10ae8b73bb3073450c2203fbfa5d12f",
+    "sha256:b31c7f8fb200e48c18f2f1f189def5cd5d972a673186cf3bee026ac9071c2d80",
+    "sha256:2d664eecf5e7d017570e58c8cec8a8a65adff55b713f5f370bfddd22a0698cb6",
+    "sha256:988186bfa9c46b84363b62dd03acb5d7c85080c088a7e32e617ece2e09bd38dd",
+    "sha256:a2d7c2c06a84e96805a9e43d1b3c0dcf57eccfe514f9e3a0636dfd2e62773c21",
+    "sha256:c5a55f5ddc56d047d0d18eeac4693bc3141669879dad61a37dd14935d574c057",
+    "sha256:f4418c3380866aceb33dbda8a45b7a32e3efab133488a57461b4d20a5bd57f8f",
+    "sha256:ecffa93be967d47d2f697c46d69322ec595201cc14f01bd1cfa5666b127ccf93"
   ],
   "index": {
     "schemaVersion": 2,
@@ -25,7 +25,7 @@
       {
         "mediaType": "application/vnd.docker.distribution.manifest.v2+json",
         "size": 918,
-        "digest": "sha256:a73003e3006f4e64e9da0b4362011250b09f096f9a27261435aff45bd54e2d63",
+        "digest": "sha256:8cffe811b97bb7db1b8aa14eff94b97f1095eb3394bdd03b3e916249c28091f5",
         "platform": {
           "architecture": "amd64",
           "os": "linux"
@@ -34,7 +34,7 @@
       {
         "mediaType": "application/vnd.docker.distribution.manifest.v2+json",
         "size": 918,
-        "digest": "sha256:9f98ed860e9ddc549159bbcdc1b15945b60876ba68d631e98db7f258e26be87a",
+        "digest": "sha256:e6c8468e9d75eedadffb294a043134ab87713de9a40365b1b09f19162c9cdaa5",
         "platform": {
           "architecture": "arm64",
           "os": "linux"
