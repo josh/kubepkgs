@@ -8,13 +8,13 @@
 }:
 stdenvNoCC.mkDerivation (finalAttrs: {
   pname = "mqtt2nats-chart";
-  version = "0.1.0";
+  version = "0.1.1";
 
   src = fetchFromGitHub {
     owner = "josh";
     repo = "mqtt2nats";
     tag = "v${finalAttrs.version}";
-    hash = "sha256-W8WvrMHoqW/H7mB1BHNiV4Z5vKgU48EPgJEwFIcheM8=";
+    hash = "sha256-CuQtqVRpY5bVDdrteT7kuN3MYpQ9wsznLkJf5sX73dY=";
   };
 
   buildCommand = ''
