@@ -2,8 +2,8 @@
 kubepkgs.fetchhelm {
   url = "oci://ghcr.io/stonith404/charts/umpteenth";
   chart = "umpteenth";
-  version = "0.4.0";
-  hash = "sha256-9ZxHbe40+4SLIBcTFUtK1YPbA+RVJG1sl2HxquPIV7Q=";
+  version = "0.5.0";
+  hash = "sha256-1xY8qc2fWLVfxSQbPoLPu5pzIg/CuerjMjr9BXdYWJA=";
 
   helmTestValues = {
     app.url = "https://umpteenth.example.com";
