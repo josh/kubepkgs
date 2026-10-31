@@ -19,7 +19,7 @@ args@{
   meta ? { },
 }:
 let
-  buildCrdModule = callPackage ./build-crd-module.nix { };
+  buildCrdModule = (callPackage ./build-crd-module.nix { }).fromChartCRD;
   update-helm-charts = callPackage ./update-helm-charts.nix { };
 in
 stdenvNoCC.mkDerivation (finalAttrs: {

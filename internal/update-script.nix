@@ -49,6 +49,15 @@ pkgs.writeShellApplication {
       echo "No commits created" >&2
       exit 0
     fi
+  ''
+  + lib.strings.optionalString ((pkg.crdModule or null) != null) ''
+
+    ${lib.meta.getExe flake.packages.${system}.update-crd-modules} --write --only ${escapeShellArg attr}
+    if ! git diff --quiet; then
+      git commit --amend --no-edit --all
+    fi
+  ''
+  + ''
 
     git push --force origin ${branch}
 

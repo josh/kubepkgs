@@ -75,6 +75,8 @@ Modules are always rendered against `kubernetes.version` from this repo's own ni
 
 Setting `crds` adds a `tests.crds` drift check, so `nix flake check` fails when the committed module no longer matches the chart. `nix run .#update-crd-modules -- --write` regenerates it, and `update-helm-charts` does the same in the same commit as a version bump.
 
+A package whose CRDs come from upstream source rather than a chart opts in the same way by hand: `passthru.crds`, `passthru.crdModule`, `passthru.crdModuleGenerated` from `kubepkgs.buildCrdModule.fromCRD`, and `tests.crds` from `kubepkgs.checkCrdModule`. `talos-manifests` is the example. The `update-script` sweep regenerates its module and amends it into the version bump commit.
+
 `ignoredVersions` holds exact upstream versions that `update-helm-charts` must never select, for releases that are published but broken. Always comment why, and delete the entry once upstream is fixed — it is a pin against a known-bad release, not a permanent ceiling.
 
 A `*-manifests.nix` wrapping `kubepkgs.renderHelmTemplate`: `pname` → `src` (the chart) → `chartName` → `helmArgs`/`helmValues` when the render needs them → `meta`. The helper supplies `version` from `src`, a `parse` test, and `meta.platforms`, so none of those are repeated at the call site.

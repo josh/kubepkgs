@@ -34,7 +34,9 @@
           callPackage = lib.customisation.callPackageWith (pkgs // { kubepkgs = pkgs' // internalPkgs; });
 
           internalPkgs = {
+            buildCrdModule = callPackage ./internal/build-crd-module.nix { };
             buildOciImage = callPackage ./internal/build-oci-image.nix { };
+            checkCrdModule = args: callPackage ./internal/check-crd-module.nix args;
             checkKubeImages = args: callPackage ./internal/check-kube-images.nix args;
             fetchhelm = callPackage ./internal/fetchhelm.nix { };
             fetchOciImage = callPackage ./internal/fetch-oci-image.nix { };
