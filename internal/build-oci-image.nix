@@ -15,6 +15,8 @@
   extraCommands ? "",
   fakeRootCommands ? "",
   fakeNss ? dockerTools.fakeNss,
+  includeNixDB ? false,
+  maxLayers ? 100,
   testScript ? null,
   meta ? { },
 }:
@@ -27,9 +29,11 @@ let
       config
       extraCommands
       fakeRootCommands
+      includeNixDB
+      maxLayers
       ;
 
-    contents = contents ++ [ fakeNss ];
+    contents = contents ++ lib.lists.optional (fakeNss != null) fakeNss;
   };
 
   image =
