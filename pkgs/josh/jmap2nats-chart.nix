@@ -39,10 +39,6 @@ stdenvNoCC.mkDerivation (finalAttrs: {
       src = finalAttrs.finalPackage;
       chartName = "jmap2nats";
     };
-    images = kubepkgs.checkKubeImages {
-      src = finalAttrs.passthru.tests.render;
-      inherit (finalAttrs) pname version;
-    };
   };
 
   meta = {

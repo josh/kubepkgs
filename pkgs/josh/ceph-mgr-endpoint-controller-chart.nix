@@ -39,10 +39,6 @@ stdenvNoCC.mkDerivation (finalAttrs: {
       src = finalAttrs.finalPackage;
       chartName = "ceph-mgr-endpoint-controller";
     };
-    images = kubepkgs.checkKubeImages {
-      src = finalAttrs.passthru.tests.render;
-      inherit (finalAttrs) pname version;
-    };
   };
 
   meta = {

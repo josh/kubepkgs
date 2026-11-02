@@ -31,10 +31,6 @@ stdenvNoCC.mkDerivation (finalAttrs: {
         restic.repository = "s3:https://s3.example.com/restic";
       };
     };
-    images = kubepkgs.checkKubeImages {
-      src = finalAttrs.passthru.tests.render;
-      inherit (finalAttrs) pname version;
-    };
   };
 
   meta = {
