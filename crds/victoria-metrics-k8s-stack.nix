@@ -996,7 +996,7 @@ let
         };
         "reason" = mkOption {
           description = "";
-          type = types.str;
+          type = (types.withMinLength 1 types.str);
         };
         "status" = mkOption {
           description = "";
@@ -2828,7 +2828,7 @@ let
           };
           "reason" = mkOption {
             description = "";
-            type = types.str;
+            type = (types.withMinLength 1 types.str);
           };
           "status" = mkOption {
             description = "";
@@ -12320,7 +12320,7 @@ let
         };
         "reason" = mkOption {
           description = "";
-          type = types.str;
+          type = (types.withMinLength 1 types.str);
         };
         "status" = mkOption {
           description = "";
@@ -13663,6 +13663,19 @@ let
           description = "";
           type = (types.nullOr (submoduleOf "operator.victoriametrics.com.v1.VMAnomalySpecReaderBearer"));
         };
+        "class" = mkOption {
+          description = "";
+          type = (
+            types.nullOr (
+              types.enum [
+                "vm"
+                "reader.vm.VmReader"
+                "vlogs"
+                "reader.vlogs.VLogsReader"
+              ]
+            )
+          );
+        };
         "dataRange" = mkOption {
           description = "";
           type = (types.nullOr (types.listOf types.str));
@@ -13744,6 +13757,7 @@ let
       config = {
         "basicAuth" = mkOverride 1002 null;
         "bearer" = mkOverride 1002 null;
+        "class" = mkOverride 1002 null;
         "dataRange" = mkOverride 1002 null;
         "extraFilters" = mkOverride 1002 null;
         "fetchTimeout" = mkOverride 1002 null;
@@ -14643,7 +14657,7 @@ let
           };
           "reason" = mkOption {
             description = "";
-            type = types.str;
+            type = (types.withMinLength 1 types.str);
           };
           "status" = mkOption {
             description = "";
@@ -16305,7 +16319,7 @@ let
         };
         "reason" = mkOption {
           description = "";
-          type = types.str;
+          type = (types.withMinLength 1 types.str);
         };
         "status" = mkOption {
           description = "";
@@ -19590,7 +19604,7 @@ let
           };
           "reason" = mkOption {
             description = "";
-            type = types.str;
+            type = (types.withMinLength 1 types.str);
           };
           "status" = mkOption {
             description = "";
@@ -28572,6 +28586,7 @@ let
               "VTCluster/vtselect"
               "VTCluster/vtstorage"
               "VTSingle"
+              "VTAgent"
               "VMAnomaly"
             ]
           );
@@ -31056,6 +31071,7 @@ let
                 "VTCluster/vtselect"
                 "VTCluster/vtstorage"
                 "VTSingle"
+                "VTAgent"
                 "VMAnomaly"
               ]
             );
@@ -32794,7 +32810,7 @@ let
           };
           "reason" = mkOption {
             description = "";
-            type = types.str;
+            type = (types.withMinLength 1 types.str);
           };
           "status" = mkOption {
             description = "";
@@ -33711,7 +33727,7 @@ let
           };
           "reason" = mkOption {
             description = "";
-            type = types.str;
+            type = (types.withMinLength 1 types.str);
           };
           "status" = mkOption {
             description = "";
@@ -34988,7 +35004,7 @@ let
           };
           "reason" = mkOption {
             description = "";
-            type = types.str;
+            type = (types.withMinLength 1 types.str);
           };
           "status" = mkOption {
             description = "";
@@ -35902,7 +35918,7 @@ let
           };
           "reason" = mkOption {
             description = "";
-            type = types.str;
+            type = (types.withMinLength 1 types.str);
           };
           "status" = mkOption {
             description = "";
@@ -37375,6 +37391,7 @@ let
               "VTCluster/vtselect"
               "VTCluster/vtstorage"
               "VTSingle"
+              "VTAgent"
               "VMAnomaly"
             ]
           );
@@ -39859,6 +39876,7 @@ let
                 "VTCluster/vtselect"
                 "VTCluster/vtstorage"
                 "VTSingle"
+                "VTAgent"
                 "VMAnomaly"
               ]
             );
@@ -41632,7 +41650,7 @@ let
           };
           "reason" = mkOption {
             description = "";
-            type = types.str;
+            type = (types.withMinLength 1 types.str);
           };
           "status" = mkOption {
             description = "";
@@ -43323,7 +43341,7 @@ let
           };
           "reason" = mkOption {
             description = "";
-            type = types.str;
+            type = (types.withMinLength 1 types.str);
           };
           "status" = mkOption {
             description = "";
@@ -44359,7 +44377,7 @@ let
           };
           "reason" = mkOption {
             description = "";
-            type = types.str;
+            type = (types.withMinLength 1 types.str);
           };
           "status" = mkOption {
             description = "";
@@ -46040,7 +46058,7 @@ let
           };
           "reason" = mkOption {
             description = "";
-            type = types.str;
+            type = (types.withMinLength 1 types.str);
           };
           "status" = mkOption {
             description = "";
@@ -48040,7 +48058,7 @@ let
           };
           "reason" = mkOption {
             description = "";
-            type = types.str;
+            type = (types.withMinLength 1 types.str);
           };
           "status" = mkOption {
             description = "";
@@ -53139,7 +53157,7 @@ let
           };
           "reason" = mkOption {
             description = "";
-            type = types.str;
+            type = (types.withMinLength 1 types.str);
           };
           "status" = mkOption {
             description = "";
@@ -64921,7 +64939,7 @@ let
           };
           "reason" = mkOption {
             description = "";
-            type = types.str;
+            type = (types.withMinLength 1 types.str);
           };
           "status" = mkOption {
             description = "";
@@ -66727,7 +66745,7 @@ let
           };
           "reason" = mkOption {
             description = "";
-            type = types.str;
+            type = (types.withMinLength 1 types.str);
           };
           "status" = mkOption {
             description = "";
@@ -68381,6 +68399,7 @@ let
               "VTCluster/vtselect"
               "VTCluster/vtstorage"
               "VTSingle"
+              "VTAgent"
               "VMAnomaly"
             ]
           );
@@ -70781,6 +70800,7 @@ let
               "VTCluster/vtselect"
               "VTCluster/vtstorage"
               "VTSingle"
+              "VTAgent"
               "VMAnomaly"
             ]
           );
@@ -75364,7 +75384,7 @@ let
           };
           "reason" = mkOption {
             description = "";
-            type = types.str;
+            type = (types.withMinLength 1 types.str);
           };
           "status" = mkOption {
             description = "";
@@ -111419,6 +111439,7 @@ let
               "VTCluster/vtselect"
               "VTCluster/vtstorage"
               "VTSingle"
+              "VTAgent"
               "VMAnomaly"
             ]
           );
