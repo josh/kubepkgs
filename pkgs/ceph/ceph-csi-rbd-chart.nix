@@ -2,8 +2,8 @@
 kubepkgs.fetchhelm {
   url = "https://ceph.github.io/csi-charts";
   chart = "ceph-csi-rbd";
-  version = "3.18.1";
-  hash = "sha256-YEsh2lYNqMgZSD8lDDAcN5sALoqLch+EkPXto3eK3l0=";
+  version = "3.18.2";
+  hash = "sha256-urlyPS0eFErBhCWIUvUk+290Tkij4P14+cWIUvKAsAw=";
 
   # 3.18.0 ships quay.io/cephcsi/cephcsi:v3.18.0, whose manifest index labels both
   # children linux/amd64 -- the arm64 build carries amd64 metadata -- so the image
