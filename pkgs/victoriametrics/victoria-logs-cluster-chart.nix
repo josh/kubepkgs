@@ -2,8 +2,8 @@
 kubepkgs.fetchhelm {
   url = "https://victoriametrics.github.io/helm-charts";
   chart = "victoria-logs-cluster";
-  version = "0.2.9";
-  hash = "sha256-kjl+Qhp4ORiuvbgDxy6jdwbi33YX2oqXE9ARLLdFhaI=";
+  version = "0.2.11";
+  hash = "sha256-Y7hY702LTl/2lT/4TSVsMTQTnpwY5kqcldd6ECrwax0=";
 
   meta = {
     description = "Helm chart for deploying a VictoriaLogs cluster database in Kubernetes";
