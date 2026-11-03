@@ -2,8 +2,8 @@
 kubepkgs.fetchhelm {
   url = "oci://ghcr.io/home-operations/charts/tuppr";
   chart = "tuppr";
-  version = "0.5.11";
-  hash = "sha256-UqTM53+dnHSGeZHIqi9uTkL6uDlXfdFufm6PmsUS4uM=";
+  version = "0.5.12";
+  hash = "sha256-OpfRcpXaGoO9tU1CyUn30TigCxSmda6uJrRmghMMD1U=";
 
   crds.file = ../../crds/tuppr.nix;
 
