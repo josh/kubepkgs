@@ -2,8 +2,8 @@
 kubepkgs.fetchhelm {
   url = "https://prometheus-community.github.io/helm-charts";
   chart = "kube-state-metrics";
-  version = "8.8.0";
-  hash = "sha256-38Xj9EJtTDwtvXNqDJLkFsg5+YkGjiT45KYVhh/MHpw=";
+  version = "9.0.0";
+  hash = "sha256-gpJFaSRtn4SCFlgRUTXYXQJZAxf3xBoQWzwywDGsEbI=";
 
   meta = {
     description = "Helm chart for kube-state-metrics, which generates and exposes cluster-level metrics";
