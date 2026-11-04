@@ -1092,6 +1092,10 @@ let
     "argoproj.io.v1alpha1.ApplicationOperationSyncSourceDirectory" = {
 
       options = {
+        "disableExtensionFilter" = mkOption {
+          description = "DisableExtensionFilter controls whether the built-in file-extension filter is skipped during\nmanifest generation. When false (the default), only files with a .yaml, .yml, .json, or\n.jsonnet extension are considered as potential manifests. Set it to true to disable the filter\nso that files with custom extensions (e.g. *.yaml.sealed) can be matched by the include/exclude\nglob patterns instead.";
+          type = (types.nullOr types.bool);
+        };
         "exclude" = mkOption {
           description = "Exclude contains a glob pattern to match paths against that should be explicitly excluded from being used during manifest generation";
           type = (types.nullOr types.str);
@@ -1113,6 +1117,7 @@ let
       };
 
       config = {
+        "disableExtensionFilter" = mkOverride 1002 null;
         "exclude" = mkOverride 1002 null;
         "include" = mkOverride 1002 null;
         "jsonnet" = mkOverride 1002 null;
@@ -1701,6 +1706,10 @@ let
     "argoproj.io.v1alpha1.ApplicationOperationSyncSourcesDirectory" = {
 
       options = {
+        "disableExtensionFilter" = mkOption {
+          description = "DisableExtensionFilter controls whether the built-in file-extension filter is skipped during\nmanifest generation. When false (the default), only files with a .yaml, .yml, .json, or\n.jsonnet extension are considered as potential manifests. Set it to true to disable the filter\nso that files with custom extensions (e.g. *.yaml.sealed) can be matched by the include/exclude\nglob patterns instead.";
+          type = (types.nullOr types.bool);
+        };
         "exclude" = mkOption {
           description = "Exclude contains a glob pattern to match paths against that should be explicitly excluded from being used during manifest generation";
           type = (types.nullOr types.str);
@@ -1722,6 +1731,7 @@ let
       };
 
       config = {
+        "disableExtensionFilter" = mkOverride 1002 null;
         "exclude" = mkOverride 1002 null;
         "include" = mkOverride 1002 null;
         "jsonnet" = mkOverride 1002 null;
@@ -2421,6 +2431,10 @@ let
           description = "";
           type = (types.nullOr (submoduleOf "argoproj.io.v1alpha1.ApplicationSetSpecGeneratorsMerge"));
         };
+        "oci" = mkOption {
+          description = "";
+          type = (types.nullOr (submoduleOf "argoproj.io.v1alpha1.ApplicationSetSpecGeneratorsOci"));
+        };
         "plugin" = mkOption {
           description = "";
           type = (types.nullOr (submoduleOf "argoproj.io.v1alpha1.ApplicationSetSpecGeneratorsPlugin"));
@@ -2446,6 +2460,7 @@ let
         "list" = mkOverride 1002 null;
         "matrix" = mkOverride 1002 null;
         "merge" = mkOverride 1002 null;
+        "oci" = mkOverride 1002 null;
         "plugin" = mkOverride 1002 null;
         "pullRequest" = mkOverride 1002 null;
         "scmProvider" = mkOverride 1002 null;
@@ -2859,6 +2874,10 @@ let
       {
 
         options = {
+          "disableExtensionFilter" = mkOption {
+            description = "";
+            type = (types.nullOr types.bool);
+          };
           "exclude" = mkOption {
             description = "";
             type = (types.nullOr types.str);
@@ -2882,6 +2901,7 @@ let
         };
 
         config = {
+          "disableExtensionFilter" = mkOverride 1002 null;
           "exclude" = mkOverride 1002 null;
           "include" = mkOverride 1002 null;
           "jsonnet" = mkOverride 1002 null;
@@ -3214,6 +3234,10 @@ let
       {
 
         options = {
+          "disableExtensionFilter" = mkOption {
+            description = "";
+            type = (types.nullOr types.bool);
+          };
           "exclude" = mkOption {
             description = "";
             type = (types.nullOr types.str);
@@ -3237,6 +3261,7 @@ let
         };
 
         config = {
+          "disableExtensionFilter" = mkOverride 1002 null;
           "exclude" = mkOverride 1002 null;
           "include" = mkOverride 1002 null;
           "jsonnet" = mkOverride 1002 null;
@@ -4192,6 +4217,10 @@ let
       {
 
         options = {
+          "disableExtensionFilter" = mkOption {
+            description = "";
+            type = (types.nullOr types.bool);
+          };
           "exclude" = mkOption {
             description = "";
             type = (types.nullOr types.str);
@@ -4215,6 +4244,7 @@ let
         };
 
         config = {
+          "disableExtensionFilter" = mkOverride 1002 null;
           "exclude" = mkOverride 1002 null;
           "include" = mkOverride 1002 null;
           "jsonnet" = mkOverride 1002 null;
@@ -5283,6 +5313,10 @@ let
     "argoproj.io.v1alpha1.ApplicationSetSpecGeneratorsClustersTemplateSpecSourceDirectory" = {
 
       options = {
+        "disableExtensionFilter" = mkOption {
+          description = "";
+          type = (types.nullOr types.bool);
+        };
         "exclude" = mkOption {
           description = "";
           type = (types.nullOr types.str);
@@ -5306,6 +5340,7 @@ let
       };
 
       config = {
+        "disableExtensionFilter" = mkOverride 1002 null;
         "exclude" = mkOverride 1002 null;
         "include" = mkOverride 1002 null;
         "jsonnet" = mkOverride 1002 null;
@@ -5633,6 +5668,10 @@ let
       {
 
         options = {
+          "disableExtensionFilter" = mkOption {
+            description = "";
+            type = (types.nullOr types.bool);
+          };
           "exclude" = mkOption {
             description = "";
             type = (types.nullOr types.str);
@@ -5656,6 +5695,7 @@ let
         };
 
         config = {
+          "disableExtensionFilter" = mkOverride 1002 null;
           "exclude" = mkOverride 1002 null;
           "include" = mkOverride 1002 null;
           "jsonnet" = mkOverride 1002 null;
@@ -6602,6 +6642,10 @@ let
     "argoproj.io.v1alpha1.ApplicationSetSpecGeneratorsClustersTemplateSpecSourcesDirectory" = {
 
       options = {
+        "disableExtensionFilter" = mkOption {
+          description = "";
+          type = (types.nullOr types.bool);
+        };
         "exclude" = mkOption {
           description = "";
           type = (types.nullOr types.str);
@@ -6625,6 +6669,7 @@ let
       };
 
       config = {
+        "disableExtensionFilter" = mkOverride 1002 null;
         "exclude" = mkOverride 1002 null;
         "include" = mkOverride 1002 null;
         "jsonnet" = mkOverride 1002 null;
@@ -7687,6 +7732,10 @@ let
     "argoproj.io.v1alpha1.ApplicationSetSpecGeneratorsGitTemplateSpecSourceDirectory" = {
 
       options = {
+        "disableExtensionFilter" = mkOption {
+          description = "";
+          type = (types.nullOr types.bool);
+        };
         "exclude" = mkOption {
           description = "";
           type = (types.nullOr types.str);
@@ -7710,6 +7759,7 @@ let
       };
 
       config = {
+        "disableExtensionFilter" = mkOverride 1002 null;
         "exclude" = mkOverride 1002 null;
         "include" = mkOverride 1002 null;
         "jsonnet" = mkOverride 1002 null;
@@ -8035,6 +8085,10 @@ let
       {
 
         options = {
+          "disableExtensionFilter" = mkOption {
+            description = "";
+            type = (types.nullOr types.bool);
+          };
           "exclude" = mkOption {
             description = "";
             type = (types.nullOr types.str);
@@ -8058,6 +8112,7 @@ let
         };
 
         config = {
+          "disableExtensionFilter" = mkOverride 1002 null;
           "exclude" = mkOverride 1002 null;
           "include" = mkOverride 1002 null;
           "jsonnet" = mkOverride 1002 null;
@@ -9001,6 +9056,10 @@ let
     "argoproj.io.v1alpha1.ApplicationSetSpecGeneratorsGitTemplateSpecSourcesDirectory" = {
 
       options = {
+        "disableExtensionFilter" = mkOption {
+          description = "";
+          type = (types.nullOr types.bool);
+        };
         "exclude" = mkOption {
           description = "";
           type = (types.nullOr types.str);
@@ -9024,6 +9083,7 @@ let
       };
 
       config = {
+        "disableExtensionFilter" = mkOverride 1002 null;
         "exclude" = mkOverride 1002 null;
         "include" = mkOverride 1002 null;
         "jsonnet" = mkOverride 1002 null;
@@ -10016,6 +10076,10 @@ let
     "argoproj.io.v1alpha1.ApplicationSetSpecGeneratorsListTemplateSpecSourceDirectory" = {
 
       options = {
+        "disableExtensionFilter" = mkOption {
+          description = "";
+          type = (types.nullOr types.bool);
+        };
         "exclude" = mkOption {
           description = "";
           type = (types.nullOr types.str);
@@ -10039,6 +10103,7 @@ let
       };
 
       config = {
+        "disableExtensionFilter" = mkOverride 1002 null;
         "exclude" = mkOverride 1002 null;
         "include" = mkOverride 1002 null;
         "jsonnet" = mkOverride 1002 null;
@@ -10364,6 +10429,10 @@ let
       {
 
         options = {
+          "disableExtensionFilter" = mkOption {
+            description = "";
+            type = (types.nullOr types.bool);
+          };
           "exclude" = mkOption {
             description = "";
             type = (types.nullOr types.str);
@@ -10387,6 +10456,7 @@ let
         };
 
         config = {
+          "disableExtensionFilter" = mkOverride 1002 null;
           "exclude" = mkOverride 1002 null;
           "include" = mkOverride 1002 null;
           "jsonnet" = mkOverride 1002 null;
@@ -11330,6 +11400,10 @@ let
     "argoproj.io.v1alpha1.ApplicationSetSpecGeneratorsListTemplateSpecSourcesDirectory" = {
 
       options = {
+        "disableExtensionFilter" = mkOption {
+          description = "";
+          type = (types.nullOr types.bool);
+        };
         "exclude" = mkOption {
           description = "";
           type = (types.nullOr types.str);
@@ -11353,6 +11427,7 @@ let
       };
 
       config = {
+        "disableExtensionFilter" = mkOverride 1002 null;
         "exclude" = mkOverride 1002 null;
         "include" = mkOverride 1002 null;
         "jsonnet" = mkOverride 1002 null;
@@ -12082,6 +12157,12 @@ let
           description = "";
           type = (types.nullOr types.unspecified);
         };
+        "oci" = mkOption {
+          description = "";
+          type = (
+            types.nullOr (submoduleOf "argoproj.io.v1alpha1.ApplicationSetSpecGeneratorsMatrixGeneratorsOci")
+          );
+        };
         "plugin" = mkOption {
           description = "";
           type = (
@@ -12121,6 +12202,7 @@ let
         "list" = mkOverride 1002 null;
         "matrix" = mkOverride 1002 null;
         "merge" = mkOverride 1002 null;
+        "oci" = mkOverride 1002 null;
         "plugin" = mkOverride 1002 null;
         "pullRequest" = mkOverride 1002 null;
         "scmProvider" = mkOverride 1002 null;
@@ -12540,6 +12622,10 @@ let
       {
 
         options = {
+          "disableExtensionFilter" = mkOption {
+            description = "";
+            type = (types.nullOr types.bool);
+          };
           "exclude" = mkOption {
             description = "";
             type = (types.nullOr types.str);
@@ -12563,6 +12649,7 @@ let
         };
 
         config = {
+          "disableExtensionFilter" = mkOverride 1002 null;
           "exclude" = mkOverride 1002 null;
           "include" = mkOverride 1002 null;
           "jsonnet" = mkOverride 1002 null;
@@ -12896,6 +12983,10 @@ let
       {
 
         options = {
+          "disableExtensionFilter" = mkOption {
+            description = "";
+            type = (types.nullOr types.bool);
+          };
           "exclude" = mkOption {
             description = "";
             type = (types.nullOr types.str);
@@ -12919,6 +13010,7 @@ let
         };
 
         config = {
+          "disableExtensionFilter" = mkOverride 1002 null;
           "exclude" = mkOverride 1002 null;
           "include" = mkOverride 1002 null;
           "jsonnet" = mkOverride 1002 null;
@@ -13875,6 +13967,10 @@ let
       {
 
         options = {
+          "disableExtensionFilter" = mkOption {
+            description = "";
+            type = (types.nullOr types.bool);
+          };
           "exclude" = mkOption {
             description = "";
             type = (types.nullOr types.str);
@@ -13898,6 +13994,7 @@ let
         };
 
         config = {
+          "disableExtensionFilter" = mkOverride 1002 null;
           "exclude" = mkOverride 1002 null;
           "include" = mkOverride 1002 null;
           "jsonnet" = mkOverride 1002 null;
@@ -14979,6 +15076,10 @@ let
       {
 
         options = {
+          "disableExtensionFilter" = mkOption {
+            description = "";
+            type = (types.nullOr types.bool);
+          };
           "exclude" = mkOption {
             description = "";
             type = (types.nullOr types.str);
@@ -15002,6 +15103,7 @@ let
         };
 
         config = {
+          "disableExtensionFilter" = mkOverride 1002 null;
           "exclude" = mkOverride 1002 null;
           "include" = mkOverride 1002 null;
           "jsonnet" = mkOverride 1002 null;
@@ -15335,6 +15437,10 @@ let
       {
 
         options = {
+          "disableExtensionFilter" = mkOption {
+            description = "";
+            type = (types.nullOr types.bool);
+          };
           "exclude" = mkOption {
             description = "";
             type = (types.nullOr types.str);
@@ -15358,6 +15464,7 @@ let
         };
 
         config = {
+          "disableExtensionFilter" = mkOverride 1002 null;
           "exclude" = mkOverride 1002 null;
           "include" = mkOverride 1002 null;
           "jsonnet" = mkOverride 1002 null;
@@ -16313,6 +16420,10 @@ let
       {
 
         options = {
+          "disableExtensionFilter" = mkOption {
+            description = "";
+            type = (types.nullOr types.bool);
+          };
           "exclude" = mkOption {
             description = "";
             type = (types.nullOr types.str);
@@ -16336,6 +16447,7 @@ let
         };
 
         config = {
+          "disableExtensionFilter" = mkOverride 1002 null;
           "exclude" = mkOverride 1002 null;
           "include" = mkOverride 1002 null;
           "jsonnet" = mkOverride 1002 null;
@@ -17430,6 +17542,10 @@ let
       {
 
         options = {
+          "disableExtensionFilter" = mkOption {
+            description = "";
+            type = (types.nullOr types.bool);
+          };
           "exclude" = mkOption {
             description = "";
             type = (types.nullOr types.str);
@@ -17453,6 +17569,7 @@ let
         };
 
         config = {
+          "disableExtensionFilter" = mkOverride 1002 null;
           "exclude" = mkOverride 1002 null;
           "include" = mkOverride 1002 null;
           "jsonnet" = mkOverride 1002 null;
@@ -17784,6 +17901,10 @@ let
       {
 
         options = {
+          "disableExtensionFilter" = mkOption {
+            description = "";
+            type = (types.nullOr types.bool);
+          };
           "exclude" = mkOption {
             description = "";
             type = (types.nullOr types.str);
@@ -17807,6 +17928,7 @@ let
         };
 
         config = {
+          "disableExtensionFilter" = mkOverride 1002 null;
           "exclude" = mkOverride 1002 null;
           "include" = mkOverride 1002 null;
           "jsonnet" = mkOverride 1002 null;
@@ -18761,6 +18883,10 @@ let
       {
 
         options = {
+          "disableExtensionFilter" = mkOption {
+            description = "";
+            type = (types.nullOr types.bool);
+          };
           "exclude" = mkOption {
             description = "";
             type = (types.nullOr types.str);
@@ -18784,6 +18910,7 @@ let
         };
 
         config = {
+          "disableExtensionFilter" = mkOverride 1002 null;
           "exclude" = mkOverride 1002 null;
           "include" = mkOverride 1002 null;
           "jsonnet" = mkOverride 1002 null;
@@ -19804,6 +19931,10 @@ let
       {
 
         options = {
+          "disableExtensionFilter" = mkOption {
+            description = "";
+            type = (types.nullOr types.bool);
+          };
           "exclude" = mkOption {
             description = "";
             type = (types.nullOr types.str);
@@ -19827,6 +19958,7 @@ let
         };
 
         config = {
+          "disableExtensionFilter" = mkOverride 1002 null;
           "exclude" = mkOverride 1002 null;
           "include" = mkOverride 1002 null;
           "jsonnet" = mkOverride 1002 null;
@@ -20159,6 +20291,10 @@ let
       {
 
         options = {
+          "disableExtensionFilter" = mkOption {
+            description = "";
+            type = (types.nullOr types.bool);
+          };
           "exclude" = mkOption {
             description = "";
             type = (types.nullOr types.str);
@@ -20182,6 +20318,7 @@ let
         };
 
         config = {
+          "disableExtensionFilter" = mkOverride 1002 null;
           "exclude" = mkOverride 1002 null;
           "include" = mkOverride 1002 null;
           "jsonnet" = mkOverride 1002 null;
@@ -21136,6 +21273,10 @@ let
       {
 
         options = {
+          "disableExtensionFilter" = mkOption {
+            description = "";
+            type = (types.nullOr types.bool);
+          };
           "exclude" = mkOption {
             description = "";
             type = (types.nullOr types.str);
@@ -21159,6 +21300,7 @@ let
         };
 
         config = {
+          "disableExtensionFilter" = mkOverride 1002 null;
           "exclude" = mkOverride 1002 null;
           "include" = mkOverride 1002 null;
           "jsonnet" = mkOverride 1002 null;
@@ -21840,6 +21982,2466 @@ let
         };
 
       };
+    "argoproj.io.v1alpha1.ApplicationSetSpecGeneratorsMatrixGeneratorsOci" = {
+
+      options = {
+        "directories" = mkOption {
+          description = "";
+          type = (
+            types.nullOr (
+              types.listOf (
+                submoduleOf "argoproj.io.v1alpha1.ApplicationSetSpecGeneratorsMatrixGeneratorsOciDirectories"
+              )
+            )
+          );
+        };
+        "files" = mkOption {
+          description = "";
+          type = (
+            types.nullOr (
+              types.listOf (
+                submoduleOf "argoproj.io.v1alpha1.ApplicationSetSpecGeneratorsMatrixGeneratorsOciFiles"
+              )
+            )
+          );
+        };
+        "pathParamPrefix" = mkOption {
+          description = "";
+          type = (types.nullOr types.str);
+        };
+        "repoURL" = mkOption {
+          description = "";
+          type = types.str;
+        };
+        "requeueAfterSeconds" = mkOption {
+          description = "";
+          type = (types.nullOr types.int);
+        };
+        "revision" = mkOption {
+          description = "";
+          type = types.str;
+        };
+        "template" = mkOption {
+          description = "";
+          type = (
+            types.nullOr (
+              submoduleOf "argoproj.io.v1alpha1.ApplicationSetSpecGeneratorsMatrixGeneratorsOciTemplate"
+            )
+          );
+        };
+        "values" = mkOption {
+          description = "";
+          type = (types.nullOr (types.attrsOf types.str));
+        };
+      };
+
+      config = {
+        "directories" = mkOverride 1002 null;
+        "files" = mkOverride 1002 null;
+        "pathParamPrefix" = mkOverride 1002 null;
+        "requeueAfterSeconds" = mkOverride 1002 null;
+        "template" = mkOverride 1002 null;
+        "values" = mkOverride 1002 null;
+      };
+
+    };
+    "argoproj.io.v1alpha1.ApplicationSetSpecGeneratorsMatrixGeneratorsOciDirectories" = {
+
+      options = {
+        "exclude" = mkOption {
+          description = "";
+          type = (types.nullOr types.bool);
+        };
+        "path" = mkOption {
+          description = "";
+          type = types.str;
+        };
+      };
+
+      config = {
+        "exclude" = mkOverride 1002 null;
+      };
+
+    };
+    "argoproj.io.v1alpha1.ApplicationSetSpecGeneratorsMatrixGeneratorsOciFiles" = {
+
+      options = {
+        "exclude" = mkOption {
+          description = "";
+          type = (types.nullOr types.bool);
+        };
+        "path" = mkOption {
+          description = "";
+          type = types.str;
+        };
+      };
+
+      config = {
+        "exclude" = mkOverride 1002 null;
+      };
+
+    };
+    "argoproj.io.v1alpha1.ApplicationSetSpecGeneratorsMatrixGeneratorsOciTemplate" = {
+
+      options = {
+        "metadata" = mkOption {
+          description = "";
+          type = (
+            submoduleOf "argoproj.io.v1alpha1.ApplicationSetSpecGeneratorsMatrixGeneratorsOciTemplateMetadata"
+          );
+        };
+        "spec" = mkOption {
+          description = "";
+          type = (
+            submoduleOf "argoproj.io.v1alpha1.ApplicationSetSpecGeneratorsMatrixGeneratorsOciTemplateSpec"
+          );
+        };
+      };
+
+      config = { };
+
+    };
+    "argoproj.io.v1alpha1.ApplicationSetSpecGeneratorsMatrixGeneratorsOciTemplateMetadata" = {
+
+      options = {
+        "annotations" = mkOption {
+          description = "";
+          type = (types.nullOr (types.attrsOf types.str));
+        };
+        "finalizers" = mkOption {
+          description = "";
+          type = (types.nullOr (types.listOf types.str));
+        };
+        "labels" = mkOption {
+          description = "";
+          type = (types.nullOr (types.attrsOf types.str));
+        };
+        "name" = mkOption {
+          description = "";
+          type = (types.nullOr types.str);
+        };
+        "namespace" = mkOption {
+          description = "";
+          type = (types.nullOr types.str);
+        };
+      };
+
+      config = {
+        "annotations" = mkOverride 1002 null;
+        "finalizers" = mkOverride 1002 null;
+        "labels" = mkOverride 1002 null;
+        "name" = mkOverride 1002 null;
+        "namespace" = mkOverride 1002 null;
+      };
+
+    };
+    "argoproj.io.v1alpha1.ApplicationSetSpecGeneratorsMatrixGeneratorsOciTemplateSpec" = {
+
+      options = {
+        "destination" = mkOption {
+          description = "";
+          type = (
+            submoduleOf "argoproj.io.v1alpha1.ApplicationSetSpecGeneratorsMatrixGeneratorsOciTemplateSpecDestination"
+          );
+        };
+        "ignoreDifferences" = mkOption {
+          description = "";
+          type = (
+            types.nullOr (
+              coerceAttrsOfSubmodulesToListByKey
+                "argoproj.io.v1alpha1.ApplicationSetSpecGeneratorsMatrixGeneratorsOciTemplateSpecIgnoreDifferences"
+                "name"
+                [ ]
+            )
+          );
+          apply = attrsToList;
+        };
+        "info" = mkOption {
+          description = "";
+          type = (
+            types.nullOr (
+              coerceAttrsOfSubmodulesToListByKey
+                "argoproj.io.v1alpha1.ApplicationSetSpecGeneratorsMatrixGeneratorsOciTemplateSpecInfo"
+                "name"
+                [ ]
+            )
+          );
+          apply = attrsToList;
+        };
+        "project" = mkOption {
+          description = "";
+          type = types.str;
+        };
+        "revisionHistoryLimit" = mkOption {
+          description = "";
+          type = (types.nullOr types.int);
+        };
+        "source" = mkOption {
+          description = "";
+          type = (
+            types.nullOr (
+              submoduleOf "argoproj.io.v1alpha1.ApplicationSetSpecGeneratorsMatrixGeneratorsOciTemplateSpecSource"
+            )
+          );
+        };
+        "sourceHydrator" = mkOption {
+          description = "";
+          type = (
+            types.nullOr (
+              submoduleOf "argoproj.io.v1alpha1.ApplicationSetSpecGeneratorsMatrixGeneratorsOciTemplateSpecSourceHydrator"
+            )
+          );
+        };
+        "sources" = mkOption {
+          description = "";
+          type = (
+            types.nullOr (
+              coerceAttrsOfSubmodulesToListByKey
+                "argoproj.io.v1alpha1.ApplicationSetSpecGeneratorsMatrixGeneratorsOciTemplateSpecSources"
+                "name"
+                [ ]
+            )
+          );
+          apply = attrsToList;
+        };
+        "syncPolicy" = mkOption {
+          description = "";
+          type = (
+            types.nullOr (
+              submoduleOf "argoproj.io.v1alpha1.ApplicationSetSpecGeneratorsMatrixGeneratorsOciTemplateSpecSyncPolicy"
+            )
+          );
+        };
+      };
+
+      config = {
+        "ignoreDifferences" = mkOverride 1002 null;
+        "info" = mkOverride 1002 null;
+        "revisionHistoryLimit" = mkOverride 1002 null;
+        "source" = mkOverride 1002 null;
+        "sourceHydrator" = mkOverride 1002 null;
+        "sources" = mkOverride 1002 null;
+        "syncPolicy" = mkOverride 1002 null;
+      };
+
+    };
+    "argoproj.io.v1alpha1.ApplicationSetSpecGeneratorsMatrixGeneratorsOciTemplateSpecDestination" = {
+
+      options = {
+        "name" = mkOption {
+          description = "";
+          type = (types.nullOr types.str);
+        };
+        "namespace" = mkOption {
+          description = "";
+          type = (types.nullOr types.str);
+        };
+        "server" = mkOption {
+          description = "";
+          type = (types.nullOr types.str);
+        };
+      };
+
+      config = {
+        "name" = mkOverride 1002 null;
+        "namespace" = mkOverride 1002 null;
+        "server" = mkOverride 1002 null;
+      };
+
+    };
+    "argoproj.io.v1alpha1.ApplicationSetSpecGeneratorsMatrixGeneratorsOciTemplateSpecIgnoreDifferences" =
+      {
+
+        options = {
+          "group" = mkOption {
+            description = "";
+            type = (types.nullOr types.str);
+          };
+          "jqPathExpressions" = mkOption {
+            description = "";
+            type = (types.nullOr (types.listOf types.str));
+          };
+          "jsonPointers" = mkOption {
+            description = "";
+            type = (types.nullOr (types.listOf types.str));
+          };
+          "kind" = mkOption {
+            description = "";
+            type = types.str;
+          };
+          "managedFieldsManagers" = mkOption {
+            description = "";
+            type = (types.nullOr (types.listOf types.str));
+          };
+          "name" = mkOption {
+            description = "";
+            type = (types.nullOr types.str);
+          };
+          "namespace" = mkOption {
+            description = "";
+            type = (types.nullOr types.str);
+          };
+        };
+
+        config = {
+          "group" = mkOverride 1002 null;
+          "jqPathExpressions" = mkOverride 1002 null;
+          "jsonPointers" = mkOverride 1002 null;
+          "managedFieldsManagers" = mkOverride 1002 null;
+          "name" = mkOverride 1002 null;
+          "namespace" = mkOverride 1002 null;
+        };
+
+      };
+    "argoproj.io.v1alpha1.ApplicationSetSpecGeneratorsMatrixGeneratorsOciTemplateSpecInfo" = {
+
+      options = {
+        "name" = mkOption {
+          description = "";
+          type = types.str;
+        };
+        "value" = mkOption {
+          description = "";
+          type = types.str;
+        };
+      };
+
+      config = { };
+
+    };
+    "argoproj.io.v1alpha1.ApplicationSetSpecGeneratorsMatrixGeneratorsOciTemplateSpecSource" = {
+
+      options = {
+        "chart" = mkOption {
+          description = "";
+          type = (types.nullOr types.str);
+        };
+        "directory" = mkOption {
+          description = "";
+          type = (
+            types.nullOr (
+              submoduleOf "argoproj.io.v1alpha1.ApplicationSetSpecGeneratorsMatrixGeneratorsOciTemplateSpecSourceDirectory"
+            )
+          );
+        };
+        "helm" = mkOption {
+          description = "";
+          type = (
+            types.nullOr (
+              submoduleOf "argoproj.io.v1alpha1.ApplicationSetSpecGeneratorsMatrixGeneratorsOciTemplateSpecSourceHelm"
+            )
+          );
+        };
+        "kustomize" = mkOption {
+          description = "";
+          type = (
+            types.nullOr (
+              submoduleOf "argoproj.io.v1alpha1.ApplicationSetSpecGeneratorsMatrixGeneratorsOciTemplateSpecSourceKustomize"
+            )
+          );
+        };
+        "name" = mkOption {
+          description = "";
+          type = (types.nullOr types.str);
+        };
+        "path" = mkOption {
+          description = "";
+          type = (types.nullOr types.str);
+        };
+        "plugin" = mkOption {
+          description = "";
+          type = (
+            types.nullOr (
+              submoduleOf "argoproj.io.v1alpha1.ApplicationSetSpecGeneratorsMatrixGeneratorsOciTemplateSpecSourcePlugin"
+            )
+          );
+        };
+        "ref" = mkOption {
+          description = "";
+          type = (types.nullOr types.str);
+        };
+        "repoURL" = mkOption {
+          description = "";
+          type = types.str;
+        };
+        "tagPrefix" = mkOption {
+          description = "";
+          type = (types.nullOr types.str);
+        };
+        "targetRevision" = mkOption {
+          description = "";
+          type = (types.nullOr types.str);
+        };
+      };
+
+      config = {
+        "chart" = mkOverride 1002 null;
+        "directory" = mkOverride 1002 null;
+        "helm" = mkOverride 1002 null;
+        "kustomize" = mkOverride 1002 null;
+        "name" = mkOverride 1002 null;
+        "path" = mkOverride 1002 null;
+        "plugin" = mkOverride 1002 null;
+        "ref" = mkOverride 1002 null;
+        "tagPrefix" = mkOverride 1002 null;
+        "targetRevision" = mkOverride 1002 null;
+      };
+
+    };
+    "argoproj.io.v1alpha1.ApplicationSetSpecGeneratorsMatrixGeneratorsOciTemplateSpecSourceDirectory" =
+      {
+
+        options = {
+          "disableExtensionFilter" = mkOption {
+            description = "";
+            type = (types.nullOr types.bool);
+          };
+          "exclude" = mkOption {
+            description = "";
+            type = (types.nullOr types.str);
+          };
+          "include" = mkOption {
+            description = "";
+            type = (types.nullOr types.str);
+          };
+          "jsonnet" = mkOption {
+            description = "";
+            type = (
+              types.nullOr (
+                submoduleOf "argoproj.io.v1alpha1.ApplicationSetSpecGeneratorsMatrixGeneratorsOciTemplateSpecSourceDirectoryJsonnet"
+              )
+            );
+          };
+          "recurse" = mkOption {
+            description = "";
+            type = (types.nullOr types.bool);
+          };
+        };
+
+        config = {
+          "disableExtensionFilter" = mkOverride 1002 null;
+          "exclude" = mkOverride 1002 null;
+          "include" = mkOverride 1002 null;
+          "jsonnet" = mkOverride 1002 null;
+          "recurse" = mkOverride 1002 null;
+        };
+
+      };
+    "argoproj.io.v1alpha1.ApplicationSetSpecGeneratorsMatrixGeneratorsOciTemplateSpecSourceDirectoryJsonnet" =
+      {
+
+        options = {
+          "extVars" = mkOption {
+            description = "";
+            type = (
+              types.nullOr (
+                coerceAttrsOfSubmodulesToListByKey
+                  "argoproj.io.v1alpha1.ApplicationSetSpecGeneratorsMatrixGeneratorsOciTemplateSpecSourceDirectoryJsonnetExtVars"
+                  "name"
+                  [ ]
+              )
+            );
+            apply = attrsToList;
+          };
+          "libs" = mkOption {
+            description = "";
+            type = (types.nullOr (types.listOf types.str));
+          };
+          "tlas" = mkOption {
+            description = "";
+            type = (
+              types.nullOr (
+                coerceAttrsOfSubmodulesToListByKey
+                  "argoproj.io.v1alpha1.ApplicationSetSpecGeneratorsMatrixGeneratorsOciTemplateSpecSourceDirectoryJsonnetTlas"
+                  "name"
+                  [ ]
+              )
+            );
+            apply = attrsToList;
+          };
+        };
+
+        config = {
+          "extVars" = mkOverride 1002 null;
+          "libs" = mkOverride 1002 null;
+          "tlas" = mkOverride 1002 null;
+        };
+
+      };
+    "argoproj.io.v1alpha1.ApplicationSetSpecGeneratorsMatrixGeneratorsOciTemplateSpecSourceDirectoryJsonnetExtVars" =
+      {
+
+        options = {
+          "code" = mkOption {
+            description = "";
+            type = (types.nullOr types.bool);
+          };
+          "name" = mkOption {
+            description = "";
+            type = types.str;
+          };
+          "value" = mkOption {
+            description = "";
+            type = types.str;
+          };
+        };
+
+        config = {
+          "code" = mkOverride 1002 null;
+        };
+
+      };
+    "argoproj.io.v1alpha1.ApplicationSetSpecGeneratorsMatrixGeneratorsOciTemplateSpecSourceDirectoryJsonnetTlas" =
+      {
+
+        options = {
+          "code" = mkOption {
+            description = "";
+            type = (types.nullOr types.bool);
+          };
+          "name" = mkOption {
+            description = "";
+            type = types.str;
+          };
+          "value" = mkOption {
+            description = "";
+            type = types.str;
+          };
+        };
+
+        config = {
+          "code" = mkOverride 1002 null;
+        };
+
+      };
+    "argoproj.io.v1alpha1.ApplicationSetSpecGeneratorsMatrixGeneratorsOciTemplateSpecSourceHelm" = {
+
+      options = {
+        "apiVersions" = mkOption {
+          description = "";
+          type = (types.nullOr (types.listOf types.str));
+        };
+        "fileParameters" = mkOption {
+          description = "";
+          type = (
+            types.nullOr (
+              coerceAttrsOfSubmodulesToListByKey
+                "argoproj.io.v1alpha1.ApplicationSetSpecGeneratorsMatrixGeneratorsOciTemplateSpecSourceHelmFileParameters"
+                "name"
+                [ ]
+            )
+          );
+          apply = attrsToList;
+        };
+        "ignoreMissingValueFiles" = mkOption {
+          description = "";
+          type = (types.nullOr types.bool);
+        };
+        "kubeVersion" = mkOption {
+          description = "";
+          type = (types.nullOr types.str);
+        };
+        "namespace" = mkOption {
+          description = "";
+          type = (types.nullOr types.str);
+        };
+        "parameters" = mkOption {
+          description = "";
+          type = (
+            types.nullOr (
+              coerceAttrsOfSubmodulesToListByKey
+                "argoproj.io.v1alpha1.ApplicationSetSpecGeneratorsMatrixGeneratorsOciTemplateSpecSourceHelmParameters"
+                "name"
+                [ ]
+            )
+          );
+          apply = attrsToList;
+        };
+        "passCredentials" = mkOption {
+          description = "";
+          type = (types.nullOr types.bool);
+        };
+        "releaseName" = mkOption {
+          description = "";
+          type = (types.nullOr types.str);
+        };
+        "skipCrds" = mkOption {
+          description = "";
+          type = (types.nullOr types.bool);
+        };
+        "skipSchemaValidation" = mkOption {
+          description = "";
+          type = (types.nullOr types.bool);
+        };
+        "skipTests" = mkOption {
+          description = "";
+          type = (types.nullOr types.bool);
+        };
+        "valueFiles" = mkOption {
+          description = "";
+          type = (types.nullOr (types.listOf types.str));
+        };
+        "values" = mkOption {
+          description = "";
+          type = (types.nullOr types.str);
+        };
+        "valuesObject" = mkOption {
+          description = "";
+          type = (types.nullOr types.attrs);
+        };
+        "version" = mkOption {
+          description = "";
+          type = (types.nullOr types.str);
+        };
+      };
+
+      config = {
+        "apiVersions" = mkOverride 1002 null;
+        "fileParameters" = mkOverride 1002 null;
+        "ignoreMissingValueFiles" = mkOverride 1002 null;
+        "kubeVersion" = mkOverride 1002 null;
+        "namespace" = mkOverride 1002 null;
+        "parameters" = mkOverride 1002 null;
+        "passCredentials" = mkOverride 1002 null;
+        "releaseName" = mkOverride 1002 null;
+        "skipCrds" = mkOverride 1002 null;
+        "skipSchemaValidation" = mkOverride 1002 null;
+        "skipTests" = mkOverride 1002 null;
+        "valueFiles" = mkOverride 1002 null;
+        "values" = mkOverride 1002 null;
+        "valuesObject" = mkOverride 1002 null;
+        "version" = mkOverride 1002 null;
+      };
+
+    };
+    "argoproj.io.v1alpha1.ApplicationSetSpecGeneratorsMatrixGeneratorsOciTemplateSpecSourceHelmFileParameters" =
+      {
+
+        options = {
+          "name" = mkOption {
+            description = "";
+            type = (types.nullOr types.str);
+          };
+          "path" = mkOption {
+            description = "";
+            type = (types.nullOr types.str);
+          };
+        };
+
+        config = {
+          "name" = mkOverride 1002 null;
+          "path" = mkOverride 1002 null;
+        };
+
+      };
+    "argoproj.io.v1alpha1.ApplicationSetSpecGeneratorsMatrixGeneratorsOciTemplateSpecSourceHelmParameters" =
+      {
+
+        options = {
+          "forceString" = mkOption {
+            description = "";
+            type = (types.nullOr types.bool);
+          };
+          "name" = mkOption {
+            description = "";
+            type = (types.nullOr types.str);
+          };
+          "value" = mkOption {
+            description = "";
+            type = (types.nullOr types.str);
+          };
+        };
+
+        config = {
+          "forceString" = mkOverride 1002 null;
+          "name" = mkOverride 1002 null;
+          "value" = mkOverride 1002 null;
+        };
+
+      };
+    "argoproj.io.v1alpha1.ApplicationSetSpecGeneratorsMatrixGeneratorsOciTemplateSpecSourceHydrator" = {
+
+      options = {
+        "drySource" = mkOption {
+          description = "";
+          type = (
+            submoduleOf "argoproj.io.v1alpha1.ApplicationSetSpecGeneratorsMatrixGeneratorsOciTemplateSpecSourceHydratorDrySource"
+          );
+        };
+        "hydrateTo" = mkOption {
+          description = "";
+          type = (
+            types.nullOr (
+              submoduleOf "argoproj.io.v1alpha1.ApplicationSetSpecGeneratorsMatrixGeneratorsOciTemplateSpecSourceHydratorHydrateTo"
+            )
+          );
+        };
+        "syncSource" = mkOption {
+          description = "";
+          type = (
+            submoduleOf "argoproj.io.v1alpha1.ApplicationSetSpecGeneratorsMatrixGeneratorsOciTemplateSpecSourceHydratorSyncSource"
+          );
+        };
+      };
+
+      config = {
+        "hydrateTo" = mkOverride 1002 null;
+      };
+
+    };
+    "argoproj.io.v1alpha1.ApplicationSetSpecGeneratorsMatrixGeneratorsOciTemplateSpecSourceHydratorDrySource" =
+      {
+
+        options = {
+          "directory" = mkOption {
+            description = "";
+            type = (
+              types.nullOr (
+                submoduleOf "argoproj.io.v1alpha1.ApplicationSetSpecGeneratorsMatrixGeneratorsOciTemplateSpecSourceHydratorDrySourceDirectory"
+              )
+            );
+          };
+          "helm" = mkOption {
+            description = "";
+            type = (
+              types.nullOr (
+                submoduleOf "argoproj.io.v1alpha1.ApplicationSetSpecGeneratorsMatrixGeneratorsOciTemplateSpecSourceHydratorDrySourceHelm"
+              )
+            );
+          };
+          "kustomize" = mkOption {
+            description = "";
+            type = (
+              types.nullOr (
+                submoduleOf "argoproj.io.v1alpha1.ApplicationSetSpecGeneratorsMatrixGeneratorsOciTemplateSpecSourceHydratorDrySourceKustomize"
+              )
+            );
+          };
+          "path" = mkOption {
+            description = "";
+            type = types.str;
+          };
+          "plugin" = mkOption {
+            description = "";
+            type = (
+              types.nullOr (
+                submoduleOf "argoproj.io.v1alpha1.ApplicationSetSpecGeneratorsMatrixGeneratorsOciTemplateSpecSourceHydratorDrySourcePlugin"
+              )
+            );
+          };
+          "repoURL" = mkOption {
+            description = "";
+            type = types.str;
+          };
+          "targetRevision" = mkOption {
+            description = "";
+            type = types.str;
+          };
+        };
+
+        config = {
+          "directory" = mkOverride 1002 null;
+          "helm" = mkOverride 1002 null;
+          "kustomize" = mkOverride 1002 null;
+          "plugin" = mkOverride 1002 null;
+        };
+
+      };
+    "argoproj.io.v1alpha1.ApplicationSetSpecGeneratorsMatrixGeneratorsOciTemplateSpecSourceHydratorDrySourceDirectory" =
+      {
+
+        options = {
+          "disableExtensionFilter" = mkOption {
+            description = "";
+            type = (types.nullOr types.bool);
+          };
+          "exclude" = mkOption {
+            description = "";
+            type = (types.nullOr types.str);
+          };
+          "include" = mkOption {
+            description = "";
+            type = (types.nullOr types.str);
+          };
+          "jsonnet" = mkOption {
+            description = "";
+            type = (
+              types.nullOr (
+                submoduleOf "argoproj.io.v1alpha1.ApplicationSetSpecGeneratorsMatrixGeneratorsOciTemplateSpecSourceHydratorDrySourceDirectoryJsonnet"
+              )
+            );
+          };
+          "recurse" = mkOption {
+            description = "";
+            type = (types.nullOr types.bool);
+          };
+        };
+
+        config = {
+          "disableExtensionFilter" = mkOverride 1002 null;
+          "exclude" = mkOverride 1002 null;
+          "include" = mkOverride 1002 null;
+          "jsonnet" = mkOverride 1002 null;
+          "recurse" = mkOverride 1002 null;
+        };
+
+      };
+    "argoproj.io.v1alpha1.ApplicationSetSpecGeneratorsMatrixGeneratorsOciTemplateSpecSourceHydratorDrySourceDirectoryJsonnet" =
+      {
+
+        options = {
+          "extVars" = mkOption {
+            description = "";
+            type = (
+              types.nullOr (
+                coerceAttrsOfSubmodulesToListByKey
+                  "argoproj.io.v1alpha1.ApplicationSetSpecGeneratorsMatrixGeneratorsOciTemplateSpecSourceHydratorDrySourceDirectoryJsonnetExtVars"
+                  "name"
+                  [ ]
+              )
+            );
+            apply = attrsToList;
+          };
+          "libs" = mkOption {
+            description = "";
+            type = (types.nullOr (types.listOf types.str));
+          };
+          "tlas" = mkOption {
+            description = "";
+            type = (
+              types.nullOr (
+                coerceAttrsOfSubmodulesToListByKey
+                  "argoproj.io.v1alpha1.ApplicationSetSpecGeneratorsMatrixGeneratorsOciTemplateSpecSourceHydratorDrySourceDirectoryJsonnetTlas"
+                  "name"
+                  [ ]
+              )
+            );
+            apply = attrsToList;
+          };
+        };
+
+        config = {
+          "extVars" = mkOverride 1002 null;
+          "libs" = mkOverride 1002 null;
+          "tlas" = mkOverride 1002 null;
+        };
+
+      };
+    "argoproj.io.v1alpha1.ApplicationSetSpecGeneratorsMatrixGeneratorsOciTemplateSpecSourceHydratorDrySourceDirectoryJsonnetExtVars" =
+      {
+
+        options = {
+          "code" = mkOption {
+            description = "";
+            type = (types.nullOr types.bool);
+          };
+          "name" = mkOption {
+            description = "";
+            type = types.str;
+          };
+          "value" = mkOption {
+            description = "";
+            type = types.str;
+          };
+        };
+
+        config = {
+          "code" = mkOverride 1002 null;
+        };
+
+      };
+    "argoproj.io.v1alpha1.ApplicationSetSpecGeneratorsMatrixGeneratorsOciTemplateSpecSourceHydratorDrySourceDirectoryJsonnetTlas" =
+      {
+
+        options = {
+          "code" = mkOption {
+            description = "";
+            type = (types.nullOr types.bool);
+          };
+          "name" = mkOption {
+            description = "";
+            type = types.str;
+          };
+          "value" = mkOption {
+            description = "";
+            type = types.str;
+          };
+        };
+
+        config = {
+          "code" = mkOverride 1002 null;
+        };
+
+      };
+    "argoproj.io.v1alpha1.ApplicationSetSpecGeneratorsMatrixGeneratorsOciTemplateSpecSourceHydratorDrySourceHelm" =
+      {
+
+        options = {
+          "apiVersions" = mkOption {
+            description = "";
+            type = (types.nullOr (types.listOf types.str));
+          };
+          "fileParameters" = mkOption {
+            description = "";
+            type = (
+              types.nullOr (
+                coerceAttrsOfSubmodulesToListByKey
+                  "argoproj.io.v1alpha1.ApplicationSetSpecGeneratorsMatrixGeneratorsOciTemplateSpecSourceHydratorDrySourceHelmFileParameters"
+                  "name"
+                  [ ]
+              )
+            );
+            apply = attrsToList;
+          };
+          "ignoreMissingValueFiles" = mkOption {
+            description = "";
+            type = (types.nullOr types.bool);
+          };
+          "kubeVersion" = mkOption {
+            description = "";
+            type = (types.nullOr types.str);
+          };
+          "namespace" = mkOption {
+            description = "";
+            type = (types.nullOr types.str);
+          };
+          "parameters" = mkOption {
+            description = "";
+            type = (
+              types.nullOr (
+                coerceAttrsOfSubmodulesToListByKey
+                  "argoproj.io.v1alpha1.ApplicationSetSpecGeneratorsMatrixGeneratorsOciTemplateSpecSourceHydratorDrySourceHelmParameters"
+                  "name"
+                  [ ]
+              )
+            );
+            apply = attrsToList;
+          };
+          "passCredentials" = mkOption {
+            description = "";
+            type = (types.nullOr types.bool);
+          };
+          "releaseName" = mkOption {
+            description = "";
+            type = (types.nullOr types.str);
+          };
+          "skipCrds" = mkOption {
+            description = "";
+            type = (types.nullOr types.bool);
+          };
+          "skipSchemaValidation" = mkOption {
+            description = "";
+            type = (types.nullOr types.bool);
+          };
+          "skipTests" = mkOption {
+            description = "";
+            type = (types.nullOr types.bool);
+          };
+          "valueFiles" = mkOption {
+            description = "";
+            type = (types.nullOr (types.listOf types.str));
+          };
+          "values" = mkOption {
+            description = "";
+            type = (types.nullOr types.str);
+          };
+          "valuesObject" = mkOption {
+            description = "";
+            type = (types.nullOr types.attrs);
+          };
+          "version" = mkOption {
+            description = "";
+            type = (types.nullOr types.str);
+          };
+        };
+
+        config = {
+          "apiVersions" = mkOverride 1002 null;
+          "fileParameters" = mkOverride 1002 null;
+          "ignoreMissingValueFiles" = mkOverride 1002 null;
+          "kubeVersion" = mkOverride 1002 null;
+          "namespace" = mkOverride 1002 null;
+          "parameters" = mkOverride 1002 null;
+          "passCredentials" = mkOverride 1002 null;
+          "releaseName" = mkOverride 1002 null;
+          "skipCrds" = mkOverride 1002 null;
+          "skipSchemaValidation" = mkOverride 1002 null;
+          "skipTests" = mkOverride 1002 null;
+          "valueFiles" = mkOverride 1002 null;
+          "values" = mkOverride 1002 null;
+          "valuesObject" = mkOverride 1002 null;
+          "version" = mkOverride 1002 null;
+        };
+
+      };
+    "argoproj.io.v1alpha1.ApplicationSetSpecGeneratorsMatrixGeneratorsOciTemplateSpecSourceHydratorDrySourceHelmFileParameters" =
+      {
+
+        options = {
+          "name" = mkOption {
+            description = "";
+            type = (types.nullOr types.str);
+          };
+          "path" = mkOption {
+            description = "";
+            type = (types.nullOr types.str);
+          };
+        };
+
+        config = {
+          "name" = mkOverride 1002 null;
+          "path" = mkOverride 1002 null;
+        };
+
+      };
+    "argoproj.io.v1alpha1.ApplicationSetSpecGeneratorsMatrixGeneratorsOciTemplateSpecSourceHydratorDrySourceHelmParameters" =
+      {
+
+        options = {
+          "forceString" = mkOption {
+            description = "";
+            type = (types.nullOr types.bool);
+          };
+          "name" = mkOption {
+            description = "";
+            type = (types.nullOr types.str);
+          };
+          "value" = mkOption {
+            description = "";
+            type = (types.nullOr types.str);
+          };
+        };
+
+        config = {
+          "forceString" = mkOverride 1002 null;
+          "name" = mkOverride 1002 null;
+          "value" = mkOverride 1002 null;
+        };
+
+      };
+    "argoproj.io.v1alpha1.ApplicationSetSpecGeneratorsMatrixGeneratorsOciTemplateSpecSourceHydratorDrySourceKustomize" =
+      {
+
+        options = {
+          "apiVersions" = mkOption {
+            description = "";
+            type = (types.nullOr (types.listOf types.str));
+          };
+          "commonAnnotations" = mkOption {
+            description = "";
+            type = (types.nullOr (types.attrsOf types.str));
+          };
+          "commonAnnotationsEnvsubst" = mkOption {
+            description = "";
+            type = (types.nullOr types.bool);
+          };
+          "commonLabels" = mkOption {
+            description = "";
+            type = (types.nullOr (types.attrsOf types.str));
+          };
+          "components" = mkOption {
+            description = "";
+            type = (types.nullOr (types.listOf types.str));
+          };
+          "forceCommonAnnotations" = mkOption {
+            description = "";
+            type = (types.nullOr types.bool);
+          };
+          "forceCommonLabels" = mkOption {
+            description = "";
+            type = (types.nullOr types.bool);
+          };
+          "ignoreMissingComponents" = mkOption {
+            description = "";
+            type = (types.nullOr types.bool);
+          };
+          "images" = mkOption {
+            description = "";
+            type = (types.nullOr (types.listOf types.str));
+          };
+          "kubeVersion" = mkOption {
+            description = "";
+            type = (types.nullOr types.str);
+          };
+          "labelIncludeTemplates" = mkOption {
+            description = "";
+            type = (types.nullOr types.bool);
+          };
+          "labelWithoutSelector" = mkOption {
+            description = "";
+            type = (types.nullOr types.bool);
+          };
+          "namePrefix" = mkOption {
+            description = "";
+            type = (types.nullOr types.str);
+          };
+          "nameSuffix" = mkOption {
+            description = "";
+            type = (types.nullOr types.str);
+          };
+          "namespace" = mkOption {
+            description = "";
+            type = (types.nullOr types.str);
+          };
+          "patches" = mkOption {
+            description = "";
+            type = (
+              types.nullOr (
+                types.listOf (
+                  submoduleOf "argoproj.io.v1alpha1.ApplicationSetSpecGeneratorsMatrixGeneratorsOciTemplateSpecSourceHydratorDrySourceKustomizePatches"
+                )
+              )
+            );
+          };
+          "replicas" = mkOption {
+            description = "";
+            type = (
+              types.nullOr (
+                coerceAttrsOfSubmodulesToListByKey
+                  "argoproj.io.v1alpha1.ApplicationSetSpecGeneratorsMatrixGeneratorsOciTemplateSpecSourceHydratorDrySourceKustomizeReplicas"
+                  "name"
+                  [ ]
+              )
+            );
+            apply = attrsToList;
+          };
+          "version" = mkOption {
+            description = "";
+            type = (types.nullOr types.str);
+          };
+        };
+
+        config = {
+          "apiVersions" = mkOverride 1002 null;
+          "commonAnnotations" = mkOverride 1002 null;
+          "commonAnnotationsEnvsubst" = mkOverride 1002 null;
+          "commonLabels" = mkOverride 1002 null;
+          "components" = mkOverride 1002 null;
+          "forceCommonAnnotations" = mkOverride 1002 null;
+          "forceCommonLabels" = mkOverride 1002 null;
+          "ignoreMissingComponents" = mkOverride 1002 null;
+          "images" = mkOverride 1002 null;
+          "kubeVersion" = mkOverride 1002 null;
+          "labelIncludeTemplates" = mkOverride 1002 null;
+          "labelWithoutSelector" = mkOverride 1002 null;
+          "namePrefix" = mkOverride 1002 null;
+          "nameSuffix" = mkOverride 1002 null;
+          "namespace" = mkOverride 1002 null;
+          "patches" = mkOverride 1002 null;
+          "replicas" = mkOverride 1002 null;
+          "version" = mkOverride 1002 null;
+        };
+
+      };
+    "argoproj.io.v1alpha1.ApplicationSetSpecGeneratorsMatrixGeneratorsOciTemplateSpecSourceHydratorDrySourceKustomizePatches" =
+      {
+
+        options = {
+          "options" = mkOption {
+            description = "";
+            type = (types.nullOr (types.attrsOf types.bool));
+          };
+          "patch" = mkOption {
+            description = "";
+            type = (types.nullOr types.str);
+          };
+          "path" = mkOption {
+            description = "";
+            type = (types.nullOr types.str);
+          };
+          "target" = mkOption {
+            description = "";
+            type = (
+              types.nullOr (
+                submoduleOf "argoproj.io.v1alpha1.ApplicationSetSpecGeneratorsMatrixGeneratorsOciTemplateSpecSourceHydratorDrySourceKustomizePatchesTarget"
+              )
+            );
+          };
+        };
+
+        config = {
+          "options" = mkOverride 1002 null;
+          "patch" = mkOverride 1002 null;
+          "path" = mkOverride 1002 null;
+          "target" = mkOverride 1002 null;
+        };
+
+      };
+    "argoproj.io.v1alpha1.ApplicationSetSpecGeneratorsMatrixGeneratorsOciTemplateSpecSourceHydratorDrySourceKustomizePatchesTarget" =
+      {
+
+        options = {
+          "annotationSelector" = mkOption {
+            description = "";
+            type = (types.nullOr types.str);
+          };
+          "group" = mkOption {
+            description = "";
+            type = (types.nullOr types.str);
+          };
+          "kind" = mkOption {
+            description = "";
+            type = (types.nullOr types.str);
+          };
+          "labelSelector" = mkOption {
+            description = "";
+            type = (types.nullOr types.str);
+          };
+          "name" = mkOption {
+            description = "";
+            type = (types.nullOr types.str);
+          };
+          "namespace" = mkOption {
+            description = "";
+            type = (types.nullOr types.str);
+          };
+          "version" = mkOption {
+            description = "";
+            type = (types.nullOr types.str);
+          };
+        };
+
+        config = {
+          "annotationSelector" = mkOverride 1002 null;
+          "group" = mkOverride 1002 null;
+          "kind" = mkOverride 1002 null;
+          "labelSelector" = mkOverride 1002 null;
+          "name" = mkOverride 1002 null;
+          "namespace" = mkOverride 1002 null;
+          "version" = mkOverride 1002 null;
+        };
+
+      };
+    "argoproj.io.v1alpha1.ApplicationSetSpecGeneratorsMatrixGeneratorsOciTemplateSpecSourceHydratorDrySourceKustomizeReplicas" =
+      {
+
+        options = {
+          "count" = mkOption {
+            description = "";
+            type = (types.either types.int types.str);
+          };
+          "name" = mkOption {
+            description = "";
+            type = types.str;
+          };
+        };
+
+        config = { };
+
+      };
+    "argoproj.io.v1alpha1.ApplicationSetSpecGeneratorsMatrixGeneratorsOciTemplateSpecSourceHydratorDrySourcePlugin" =
+      {
+
+        options = {
+          "env" = mkOption {
+            description = "";
+            type = (
+              types.nullOr (
+                coerceAttrsOfSubmodulesToListByKey
+                  "argoproj.io.v1alpha1.ApplicationSetSpecGeneratorsMatrixGeneratorsOciTemplateSpecSourceHydratorDrySourcePluginEnv"
+                  "name"
+                  [ ]
+              )
+            );
+            apply = attrsToList;
+          };
+          "name" = mkOption {
+            description = "";
+            type = (types.nullOr types.str);
+          };
+          "parameters" = mkOption {
+            description = "";
+            type = (
+              types.nullOr (
+                coerceAttrsOfSubmodulesToListByKey
+                  "argoproj.io.v1alpha1.ApplicationSetSpecGeneratorsMatrixGeneratorsOciTemplateSpecSourceHydratorDrySourcePluginParameters"
+                  "name"
+                  [ ]
+              )
+            );
+            apply = attrsToList;
+          };
+        };
+
+        config = {
+          "env" = mkOverride 1002 null;
+          "name" = mkOverride 1002 null;
+          "parameters" = mkOverride 1002 null;
+        };
+
+      };
+    "argoproj.io.v1alpha1.ApplicationSetSpecGeneratorsMatrixGeneratorsOciTemplateSpecSourceHydratorDrySourcePluginEnv" =
+      {
+
+        options = {
+          "name" = mkOption {
+            description = "";
+            type = types.str;
+          };
+          "value" = mkOption {
+            description = "";
+            type = types.str;
+          };
+        };
+
+        config = { };
+
+      };
+    "argoproj.io.v1alpha1.ApplicationSetSpecGeneratorsMatrixGeneratorsOciTemplateSpecSourceHydratorDrySourcePluginParameters" =
+      {
+
+        options = {
+          "array" = mkOption {
+            description = "";
+            type = (types.nullOr (types.listOf types.str));
+          };
+          "map" = mkOption {
+            description = "";
+            type = (types.nullOr (types.attrsOf types.str));
+          };
+          "name" = mkOption {
+            description = "";
+            type = (types.nullOr types.str);
+          };
+          "string" = mkOption {
+            description = "";
+            type = (types.nullOr types.str);
+          };
+        };
+
+        config = {
+          "array" = mkOverride 1002 null;
+          "map" = mkOverride 1002 null;
+          "name" = mkOverride 1002 null;
+          "string" = mkOverride 1002 null;
+        };
+
+      };
+    "argoproj.io.v1alpha1.ApplicationSetSpecGeneratorsMatrixGeneratorsOciTemplateSpecSourceHydratorHydrateTo" =
+      {
+
+        options = {
+          "targetBranch" = mkOption {
+            description = "";
+            type = types.str;
+          };
+        };
+
+        config = { };
+
+      };
+    "argoproj.io.v1alpha1.ApplicationSetSpecGeneratorsMatrixGeneratorsOciTemplateSpecSourceHydratorSyncSource" =
+      {
+
+        options = {
+          "path" = mkOption {
+            description = "";
+            type = (types.withMinLength 1 types.str);
+          };
+          "repoURL" = mkOption {
+            description = "";
+            type = (types.nullOr types.str);
+          };
+          "targetBranch" = mkOption {
+            description = "";
+            type = types.str;
+          };
+        };
+
+        config = {
+          "repoURL" = mkOverride 1002 null;
+        };
+
+      };
+    "argoproj.io.v1alpha1.ApplicationSetSpecGeneratorsMatrixGeneratorsOciTemplateSpecSourceKustomize" =
+      {
+
+        options = {
+          "apiVersions" = mkOption {
+            description = "";
+            type = (types.nullOr (types.listOf types.str));
+          };
+          "commonAnnotations" = mkOption {
+            description = "";
+            type = (types.nullOr (types.attrsOf types.str));
+          };
+          "commonAnnotationsEnvsubst" = mkOption {
+            description = "";
+            type = (types.nullOr types.bool);
+          };
+          "commonLabels" = mkOption {
+            description = "";
+            type = (types.nullOr (types.attrsOf types.str));
+          };
+          "components" = mkOption {
+            description = "";
+            type = (types.nullOr (types.listOf types.str));
+          };
+          "forceCommonAnnotations" = mkOption {
+            description = "";
+            type = (types.nullOr types.bool);
+          };
+          "forceCommonLabels" = mkOption {
+            description = "";
+            type = (types.nullOr types.bool);
+          };
+          "ignoreMissingComponents" = mkOption {
+            description = "";
+            type = (types.nullOr types.bool);
+          };
+          "images" = mkOption {
+            description = "";
+            type = (types.nullOr (types.listOf types.str));
+          };
+          "kubeVersion" = mkOption {
+            description = "";
+            type = (types.nullOr types.str);
+          };
+          "labelIncludeTemplates" = mkOption {
+            description = "";
+            type = (types.nullOr types.bool);
+          };
+          "labelWithoutSelector" = mkOption {
+            description = "";
+            type = (types.nullOr types.bool);
+          };
+          "namePrefix" = mkOption {
+            description = "";
+            type = (types.nullOr types.str);
+          };
+          "nameSuffix" = mkOption {
+            description = "";
+            type = (types.nullOr types.str);
+          };
+          "namespace" = mkOption {
+            description = "";
+            type = (types.nullOr types.str);
+          };
+          "patches" = mkOption {
+            description = "";
+            type = (
+              types.nullOr (
+                types.listOf (
+                  submoduleOf "argoproj.io.v1alpha1.ApplicationSetSpecGeneratorsMatrixGeneratorsOciTemplateSpecSourceKustomizePatches"
+                )
+              )
+            );
+          };
+          "replicas" = mkOption {
+            description = "";
+            type = (
+              types.nullOr (
+                coerceAttrsOfSubmodulesToListByKey
+                  "argoproj.io.v1alpha1.ApplicationSetSpecGeneratorsMatrixGeneratorsOciTemplateSpecSourceKustomizeReplicas"
+                  "name"
+                  [ ]
+              )
+            );
+            apply = attrsToList;
+          };
+          "version" = mkOption {
+            description = "";
+            type = (types.nullOr types.str);
+          };
+        };
+
+        config = {
+          "apiVersions" = mkOverride 1002 null;
+          "commonAnnotations" = mkOverride 1002 null;
+          "commonAnnotationsEnvsubst" = mkOverride 1002 null;
+          "commonLabels" = mkOverride 1002 null;
+          "components" = mkOverride 1002 null;
+          "forceCommonAnnotations" = mkOverride 1002 null;
+          "forceCommonLabels" = mkOverride 1002 null;
+          "ignoreMissingComponents" = mkOverride 1002 null;
+          "images" = mkOverride 1002 null;
+          "kubeVersion" = mkOverride 1002 null;
+          "labelIncludeTemplates" = mkOverride 1002 null;
+          "labelWithoutSelector" = mkOverride 1002 null;
+          "namePrefix" = mkOverride 1002 null;
+          "nameSuffix" = mkOverride 1002 null;
+          "namespace" = mkOverride 1002 null;
+          "patches" = mkOverride 1002 null;
+          "replicas" = mkOverride 1002 null;
+          "version" = mkOverride 1002 null;
+        };
+
+      };
+    "argoproj.io.v1alpha1.ApplicationSetSpecGeneratorsMatrixGeneratorsOciTemplateSpecSourceKustomizePatches" =
+      {
+
+        options = {
+          "options" = mkOption {
+            description = "";
+            type = (types.nullOr (types.attrsOf types.bool));
+          };
+          "patch" = mkOption {
+            description = "";
+            type = (types.nullOr types.str);
+          };
+          "path" = mkOption {
+            description = "";
+            type = (types.nullOr types.str);
+          };
+          "target" = mkOption {
+            description = "";
+            type = (
+              types.nullOr (
+                submoduleOf "argoproj.io.v1alpha1.ApplicationSetSpecGeneratorsMatrixGeneratorsOciTemplateSpecSourceKustomizePatchesTarget"
+              )
+            );
+          };
+        };
+
+        config = {
+          "options" = mkOverride 1002 null;
+          "patch" = mkOverride 1002 null;
+          "path" = mkOverride 1002 null;
+          "target" = mkOverride 1002 null;
+        };
+
+      };
+    "argoproj.io.v1alpha1.ApplicationSetSpecGeneratorsMatrixGeneratorsOciTemplateSpecSourceKustomizePatchesTarget" =
+      {
+
+        options = {
+          "annotationSelector" = mkOption {
+            description = "";
+            type = (types.nullOr types.str);
+          };
+          "group" = mkOption {
+            description = "";
+            type = (types.nullOr types.str);
+          };
+          "kind" = mkOption {
+            description = "";
+            type = (types.nullOr types.str);
+          };
+          "labelSelector" = mkOption {
+            description = "";
+            type = (types.nullOr types.str);
+          };
+          "name" = mkOption {
+            description = "";
+            type = (types.nullOr types.str);
+          };
+          "namespace" = mkOption {
+            description = "";
+            type = (types.nullOr types.str);
+          };
+          "version" = mkOption {
+            description = "";
+            type = (types.nullOr types.str);
+          };
+        };
+
+        config = {
+          "annotationSelector" = mkOverride 1002 null;
+          "group" = mkOverride 1002 null;
+          "kind" = mkOverride 1002 null;
+          "labelSelector" = mkOverride 1002 null;
+          "name" = mkOverride 1002 null;
+          "namespace" = mkOverride 1002 null;
+          "version" = mkOverride 1002 null;
+        };
+
+      };
+    "argoproj.io.v1alpha1.ApplicationSetSpecGeneratorsMatrixGeneratorsOciTemplateSpecSourceKustomizeReplicas" =
+      {
+
+        options = {
+          "count" = mkOption {
+            description = "";
+            type = (types.either types.int types.str);
+          };
+          "name" = mkOption {
+            description = "";
+            type = types.str;
+          };
+        };
+
+        config = { };
+
+      };
+    "argoproj.io.v1alpha1.ApplicationSetSpecGeneratorsMatrixGeneratorsOciTemplateSpecSourcePlugin" = {
+
+      options = {
+        "env" = mkOption {
+          description = "";
+          type = (
+            types.nullOr (
+              coerceAttrsOfSubmodulesToListByKey
+                "argoproj.io.v1alpha1.ApplicationSetSpecGeneratorsMatrixGeneratorsOciTemplateSpecSourcePluginEnv"
+                "name"
+                [ ]
+            )
+          );
+          apply = attrsToList;
+        };
+        "name" = mkOption {
+          description = "";
+          type = (types.nullOr types.str);
+        };
+        "parameters" = mkOption {
+          description = "";
+          type = (
+            types.nullOr (
+              coerceAttrsOfSubmodulesToListByKey
+                "argoproj.io.v1alpha1.ApplicationSetSpecGeneratorsMatrixGeneratorsOciTemplateSpecSourcePluginParameters"
+                "name"
+                [ ]
+            )
+          );
+          apply = attrsToList;
+        };
+      };
+
+      config = {
+        "env" = mkOverride 1002 null;
+        "name" = mkOverride 1002 null;
+        "parameters" = mkOverride 1002 null;
+      };
+
+    };
+    "argoproj.io.v1alpha1.ApplicationSetSpecGeneratorsMatrixGeneratorsOciTemplateSpecSourcePluginEnv" =
+      {
+
+        options = {
+          "name" = mkOption {
+            description = "";
+            type = types.str;
+          };
+          "value" = mkOption {
+            description = "";
+            type = types.str;
+          };
+        };
+
+        config = { };
+
+      };
+    "argoproj.io.v1alpha1.ApplicationSetSpecGeneratorsMatrixGeneratorsOciTemplateSpecSourcePluginParameters" =
+      {
+
+        options = {
+          "array" = mkOption {
+            description = "";
+            type = (types.nullOr (types.listOf types.str));
+          };
+          "map" = mkOption {
+            description = "";
+            type = (types.nullOr (types.attrsOf types.str));
+          };
+          "name" = mkOption {
+            description = "";
+            type = (types.nullOr types.str);
+          };
+          "string" = mkOption {
+            description = "";
+            type = (types.nullOr types.str);
+          };
+        };
+
+        config = {
+          "array" = mkOverride 1002 null;
+          "map" = mkOverride 1002 null;
+          "name" = mkOverride 1002 null;
+          "string" = mkOverride 1002 null;
+        };
+
+      };
+    "argoproj.io.v1alpha1.ApplicationSetSpecGeneratorsMatrixGeneratorsOciTemplateSpecSources" = {
+
+      options = {
+        "chart" = mkOption {
+          description = "";
+          type = (types.nullOr types.str);
+        };
+        "directory" = mkOption {
+          description = "";
+          type = (
+            types.nullOr (
+              submoduleOf "argoproj.io.v1alpha1.ApplicationSetSpecGeneratorsMatrixGeneratorsOciTemplateSpecSourcesDirectory"
+            )
+          );
+        };
+        "helm" = mkOption {
+          description = "";
+          type = (
+            types.nullOr (
+              submoduleOf "argoproj.io.v1alpha1.ApplicationSetSpecGeneratorsMatrixGeneratorsOciTemplateSpecSourcesHelm"
+            )
+          );
+        };
+        "kustomize" = mkOption {
+          description = "";
+          type = (
+            types.nullOr (
+              submoduleOf "argoproj.io.v1alpha1.ApplicationSetSpecGeneratorsMatrixGeneratorsOciTemplateSpecSourcesKustomize"
+            )
+          );
+        };
+        "name" = mkOption {
+          description = "";
+          type = (types.nullOr types.str);
+        };
+        "path" = mkOption {
+          description = "";
+          type = (types.nullOr types.str);
+        };
+        "plugin" = mkOption {
+          description = "";
+          type = (
+            types.nullOr (
+              submoduleOf "argoproj.io.v1alpha1.ApplicationSetSpecGeneratorsMatrixGeneratorsOciTemplateSpecSourcesPlugin"
+            )
+          );
+        };
+        "ref" = mkOption {
+          description = "";
+          type = (types.nullOr types.str);
+        };
+        "repoURL" = mkOption {
+          description = "";
+          type = types.str;
+        };
+        "tagPrefix" = mkOption {
+          description = "";
+          type = (types.nullOr types.str);
+        };
+        "targetRevision" = mkOption {
+          description = "";
+          type = (types.nullOr types.str);
+        };
+      };
+
+      config = {
+        "chart" = mkOverride 1002 null;
+        "directory" = mkOverride 1002 null;
+        "helm" = mkOverride 1002 null;
+        "kustomize" = mkOverride 1002 null;
+        "name" = mkOverride 1002 null;
+        "path" = mkOverride 1002 null;
+        "plugin" = mkOverride 1002 null;
+        "ref" = mkOverride 1002 null;
+        "tagPrefix" = mkOverride 1002 null;
+        "targetRevision" = mkOverride 1002 null;
+      };
+
+    };
+    "argoproj.io.v1alpha1.ApplicationSetSpecGeneratorsMatrixGeneratorsOciTemplateSpecSourcesDirectory" =
+      {
+
+        options = {
+          "disableExtensionFilter" = mkOption {
+            description = "";
+            type = (types.nullOr types.bool);
+          };
+          "exclude" = mkOption {
+            description = "";
+            type = (types.nullOr types.str);
+          };
+          "include" = mkOption {
+            description = "";
+            type = (types.nullOr types.str);
+          };
+          "jsonnet" = mkOption {
+            description = "";
+            type = (
+              types.nullOr (
+                submoduleOf "argoproj.io.v1alpha1.ApplicationSetSpecGeneratorsMatrixGeneratorsOciTemplateSpecSourcesDirectoryJsonnet"
+              )
+            );
+          };
+          "recurse" = mkOption {
+            description = "";
+            type = (types.nullOr types.bool);
+          };
+        };
+
+        config = {
+          "disableExtensionFilter" = mkOverride 1002 null;
+          "exclude" = mkOverride 1002 null;
+          "include" = mkOverride 1002 null;
+          "jsonnet" = mkOverride 1002 null;
+          "recurse" = mkOverride 1002 null;
+        };
+
+      };
+    "argoproj.io.v1alpha1.ApplicationSetSpecGeneratorsMatrixGeneratorsOciTemplateSpecSourcesDirectoryJsonnet" =
+      {
+
+        options = {
+          "extVars" = mkOption {
+            description = "";
+            type = (
+              types.nullOr (
+                coerceAttrsOfSubmodulesToListByKey
+                  "argoproj.io.v1alpha1.ApplicationSetSpecGeneratorsMatrixGeneratorsOciTemplateSpecSourcesDirectoryJsonnetExtVars"
+                  "name"
+                  [ ]
+              )
+            );
+            apply = attrsToList;
+          };
+          "libs" = mkOption {
+            description = "";
+            type = (types.nullOr (types.listOf types.str));
+          };
+          "tlas" = mkOption {
+            description = "";
+            type = (
+              types.nullOr (
+                coerceAttrsOfSubmodulesToListByKey
+                  "argoproj.io.v1alpha1.ApplicationSetSpecGeneratorsMatrixGeneratorsOciTemplateSpecSourcesDirectoryJsonnetTlas"
+                  "name"
+                  [ ]
+              )
+            );
+            apply = attrsToList;
+          };
+        };
+
+        config = {
+          "extVars" = mkOverride 1002 null;
+          "libs" = mkOverride 1002 null;
+          "tlas" = mkOverride 1002 null;
+        };
+
+      };
+    "argoproj.io.v1alpha1.ApplicationSetSpecGeneratorsMatrixGeneratorsOciTemplateSpecSourcesDirectoryJsonnetExtVars" =
+      {
+
+        options = {
+          "code" = mkOption {
+            description = "";
+            type = (types.nullOr types.bool);
+          };
+          "name" = mkOption {
+            description = "";
+            type = types.str;
+          };
+          "value" = mkOption {
+            description = "";
+            type = types.str;
+          };
+        };
+
+        config = {
+          "code" = mkOverride 1002 null;
+        };
+
+      };
+    "argoproj.io.v1alpha1.ApplicationSetSpecGeneratorsMatrixGeneratorsOciTemplateSpecSourcesDirectoryJsonnetTlas" =
+      {
+
+        options = {
+          "code" = mkOption {
+            description = "";
+            type = (types.nullOr types.bool);
+          };
+          "name" = mkOption {
+            description = "";
+            type = types.str;
+          };
+          "value" = mkOption {
+            description = "";
+            type = types.str;
+          };
+        };
+
+        config = {
+          "code" = mkOverride 1002 null;
+        };
+
+      };
+    "argoproj.io.v1alpha1.ApplicationSetSpecGeneratorsMatrixGeneratorsOciTemplateSpecSourcesHelm" = {
+
+      options = {
+        "apiVersions" = mkOption {
+          description = "";
+          type = (types.nullOr (types.listOf types.str));
+        };
+        "fileParameters" = mkOption {
+          description = "";
+          type = (
+            types.nullOr (
+              coerceAttrsOfSubmodulesToListByKey
+                "argoproj.io.v1alpha1.ApplicationSetSpecGeneratorsMatrixGeneratorsOciTemplateSpecSourcesHelmFileParameters"
+                "name"
+                [ ]
+            )
+          );
+          apply = attrsToList;
+        };
+        "ignoreMissingValueFiles" = mkOption {
+          description = "";
+          type = (types.nullOr types.bool);
+        };
+        "kubeVersion" = mkOption {
+          description = "";
+          type = (types.nullOr types.str);
+        };
+        "namespace" = mkOption {
+          description = "";
+          type = (types.nullOr types.str);
+        };
+        "parameters" = mkOption {
+          description = "";
+          type = (
+            types.nullOr (
+              coerceAttrsOfSubmodulesToListByKey
+                "argoproj.io.v1alpha1.ApplicationSetSpecGeneratorsMatrixGeneratorsOciTemplateSpecSourcesHelmParameters"
+                "name"
+                [ ]
+            )
+          );
+          apply = attrsToList;
+        };
+        "passCredentials" = mkOption {
+          description = "";
+          type = (types.nullOr types.bool);
+        };
+        "releaseName" = mkOption {
+          description = "";
+          type = (types.nullOr types.str);
+        };
+        "skipCrds" = mkOption {
+          description = "";
+          type = (types.nullOr types.bool);
+        };
+        "skipSchemaValidation" = mkOption {
+          description = "";
+          type = (types.nullOr types.bool);
+        };
+        "skipTests" = mkOption {
+          description = "";
+          type = (types.nullOr types.bool);
+        };
+        "valueFiles" = mkOption {
+          description = "";
+          type = (types.nullOr (types.listOf types.str));
+        };
+        "values" = mkOption {
+          description = "";
+          type = (types.nullOr types.str);
+        };
+        "valuesObject" = mkOption {
+          description = "";
+          type = (types.nullOr types.attrs);
+        };
+        "version" = mkOption {
+          description = "";
+          type = (types.nullOr types.str);
+        };
+      };
+
+      config = {
+        "apiVersions" = mkOverride 1002 null;
+        "fileParameters" = mkOverride 1002 null;
+        "ignoreMissingValueFiles" = mkOverride 1002 null;
+        "kubeVersion" = mkOverride 1002 null;
+        "namespace" = mkOverride 1002 null;
+        "parameters" = mkOverride 1002 null;
+        "passCredentials" = mkOverride 1002 null;
+        "releaseName" = mkOverride 1002 null;
+        "skipCrds" = mkOverride 1002 null;
+        "skipSchemaValidation" = mkOverride 1002 null;
+        "skipTests" = mkOverride 1002 null;
+        "valueFiles" = mkOverride 1002 null;
+        "values" = mkOverride 1002 null;
+        "valuesObject" = mkOverride 1002 null;
+        "version" = mkOverride 1002 null;
+      };
+
+    };
+    "argoproj.io.v1alpha1.ApplicationSetSpecGeneratorsMatrixGeneratorsOciTemplateSpecSourcesHelmFileParameters" =
+      {
+
+        options = {
+          "name" = mkOption {
+            description = "";
+            type = (types.nullOr types.str);
+          };
+          "path" = mkOption {
+            description = "";
+            type = (types.nullOr types.str);
+          };
+        };
+
+        config = {
+          "name" = mkOverride 1002 null;
+          "path" = mkOverride 1002 null;
+        };
+
+      };
+    "argoproj.io.v1alpha1.ApplicationSetSpecGeneratorsMatrixGeneratorsOciTemplateSpecSourcesHelmParameters" =
+      {
+
+        options = {
+          "forceString" = mkOption {
+            description = "";
+            type = (types.nullOr types.bool);
+          };
+          "name" = mkOption {
+            description = "";
+            type = (types.nullOr types.str);
+          };
+          "value" = mkOption {
+            description = "";
+            type = (types.nullOr types.str);
+          };
+        };
+
+        config = {
+          "forceString" = mkOverride 1002 null;
+          "name" = mkOverride 1002 null;
+          "value" = mkOverride 1002 null;
+        };
+
+      };
+    "argoproj.io.v1alpha1.ApplicationSetSpecGeneratorsMatrixGeneratorsOciTemplateSpecSourcesKustomize" =
+      {
+
+        options = {
+          "apiVersions" = mkOption {
+            description = "";
+            type = (types.nullOr (types.listOf types.str));
+          };
+          "commonAnnotations" = mkOption {
+            description = "";
+            type = (types.nullOr (types.attrsOf types.str));
+          };
+          "commonAnnotationsEnvsubst" = mkOption {
+            description = "";
+            type = (types.nullOr types.bool);
+          };
+          "commonLabels" = mkOption {
+            description = "";
+            type = (types.nullOr (types.attrsOf types.str));
+          };
+          "components" = mkOption {
+            description = "";
+            type = (types.nullOr (types.listOf types.str));
+          };
+          "forceCommonAnnotations" = mkOption {
+            description = "";
+            type = (types.nullOr types.bool);
+          };
+          "forceCommonLabels" = mkOption {
+            description = "";
+            type = (types.nullOr types.bool);
+          };
+          "ignoreMissingComponents" = mkOption {
+            description = "";
+            type = (types.nullOr types.bool);
+          };
+          "images" = mkOption {
+            description = "";
+            type = (types.nullOr (types.listOf types.str));
+          };
+          "kubeVersion" = mkOption {
+            description = "";
+            type = (types.nullOr types.str);
+          };
+          "labelIncludeTemplates" = mkOption {
+            description = "";
+            type = (types.nullOr types.bool);
+          };
+          "labelWithoutSelector" = mkOption {
+            description = "";
+            type = (types.nullOr types.bool);
+          };
+          "namePrefix" = mkOption {
+            description = "";
+            type = (types.nullOr types.str);
+          };
+          "nameSuffix" = mkOption {
+            description = "";
+            type = (types.nullOr types.str);
+          };
+          "namespace" = mkOption {
+            description = "";
+            type = (types.nullOr types.str);
+          };
+          "patches" = mkOption {
+            description = "";
+            type = (
+              types.nullOr (
+                types.listOf (
+                  submoduleOf "argoproj.io.v1alpha1.ApplicationSetSpecGeneratorsMatrixGeneratorsOciTemplateSpecSourcesKustomizePatches"
+                )
+              )
+            );
+          };
+          "replicas" = mkOption {
+            description = "";
+            type = (
+              types.nullOr (
+                coerceAttrsOfSubmodulesToListByKey
+                  "argoproj.io.v1alpha1.ApplicationSetSpecGeneratorsMatrixGeneratorsOciTemplateSpecSourcesKustomizeReplicas"
+                  "name"
+                  [ ]
+              )
+            );
+            apply = attrsToList;
+          };
+          "version" = mkOption {
+            description = "";
+            type = (types.nullOr types.str);
+          };
+        };
+
+        config = {
+          "apiVersions" = mkOverride 1002 null;
+          "commonAnnotations" = mkOverride 1002 null;
+          "commonAnnotationsEnvsubst" = mkOverride 1002 null;
+          "commonLabels" = mkOverride 1002 null;
+          "components" = mkOverride 1002 null;
+          "forceCommonAnnotations" = mkOverride 1002 null;
+          "forceCommonLabels" = mkOverride 1002 null;
+          "ignoreMissingComponents" = mkOverride 1002 null;
+          "images" = mkOverride 1002 null;
+          "kubeVersion" = mkOverride 1002 null;
+          "labelIncludeTemplates" = mkOverride 1002 null;
+          "labelWithoutSelector" = mkOverride 1002 null;
+          "namePrefix" = mkOverride 1002 null;
+          "nameSuffix" = mkOverride 1002 null;
+          "namespace" = mkOverride 1002 null;
+          "patches" = mkOverride 1002 null;
+          "replicas" = mkOverride 1002 null;
+          "version" = mkOverride 1002 null;
+        };
+
+      };
+    "argoproj.io.v1alpha1.ApplicationSetSpecGeneratorsMatrixGeneratorsOciTemplateSpecSourcesKustomizePatches" =
+      {
+
+        options = {
+          "options" = mkOption {
+            description = "";
+            type = (types.nullOr (types.attrsOf types.bool));
+          };
+          "patch" = mkOption {
+            description = "";
+            type = (types.nullOr types.str);
+          };
+          "path" = mkOption {
+            description = "";
+            type = (types.nullOr types.str);
+          };
+          "target" = mkOption {
+            description = "";
+            type = (
+              types.nullOr (
+                submoduleOf "argoproj.io.v1alpha1.ApplicationSetSpecGeneratorsMatrixGeneratorsOciTemplateSpecSourcesKustomizePatchesTarget"
+              )
+            );
+          };
+        };
+
+        config = {
+          "options" = mkOverride 1002 null;
+          "patch" = mkOverride 1002 null;
+          "path" = mkOverride 1002 null;
+          "target" = mkOverride 1002 null;
+        };
+
+      };
+    "argoproj.io.v1alpha1.ApplicationSetSpecGeneratorsMatrixGeneratorsOciTemplateSpecSourcesKustomizePatchesTarget" =
+      {
+
+        options = {
+          "annotationSelector" = mkOption {
+            description = "";
+            type = (types.nullOr types.str);
+          };
+          "group" = mkOption {
+            description = "";
+            type = (types.nullOr types.str);
+          };
+          "kind" = mkOption {
+            description = "";
+            type = (types.nullOr types.str);
+          };
+          "labelSelector" = mkOption {
+            description = "";
+            type = (types.nullOr types.str);
+          };
+          "name" = mkOption {
+            description = "";
+            type = (types.nullOr types.str);
+          };
+          "namespace" = mkOption {
+            description = "";
+            type = (types.nullOr types.str);
+          };
+          "version" = mkOption {
+            description = "";
+            type = (types.nullOr types.str);
+          };
+        };
+
+        config = {
+          "annotationSelector" = mkOverride 1002 null;
+          "group" = mkOverride 1002 null;
+          "kind" = mkOverride 1002 null;
+          "labelSelector" = mkOverride 1002 null;
+          "name" = mkOverride 1002 null;
+          "namespace" = mkOverride 1002 null;
+          "version" = mkOverride 1002 null;
+        };
+
+      };
+    "argoproj.io.v1alpha1.ApplicationSetSpecGeneratorsMatrixGeneratorsOciTemplateSpecSourcesKustomizeReplicas" =
+      {
+
+        options = {
+          "count" = mkOption {
+            description = "";
+            type = (types.either types.int types.str);
+          };
+          "name" = mkOption {
+            description = "";
+            type = types.str;
+          };
+        };
+
+        config = { };
+
+      };
+    "argoproj.io.v1alpha1.ApplicationSetSpecGeneratorsMatrixGeneratorsOciTemplateSpecSourcesPlugin" = {
+
+      options = {
+        "env" = mkOption {
+          description = "";
+          type = (
+            types.nullOr (
+              coerceAttrsOfSubmodulesToListByKey
+                "argoproj.io.v1alpha1.ApplicationSetSpecGeneratorsMatrixGeneratorsOciTemplateSpecSourcesPluginEnv"
+                "name"
+                [ ]
+            )
+          );
+          apply = attrsToList;
+        };
+        "name" = mkOption {
+          description = "";
+          type = (types.nullOr types.str);
+        };
+        "parameters" = mkOption {
+          description = "";
+          type = (
+            types.nullOr (
+              coerceAttrsOfSubmodulesToListByKey
+                "argoproj.io.v1alpha1.ApplicationSetSpecGeneratorsMatrixGeneratorsOciTemplateSpecSourcesPluginParameters"
+                "name"
+                [ ]
+            )
+          );
+          apply = attrsToList;
+        };
+      };
+
+      config = {
+        "env" = mkOverride 1002 null;
+        "name" = mkOverride 1002 null;
+        "parameters" = mkOverride 1002 null;
+      };
+
+    };
+    "argoproj.io.v1alpha1.ApplicationSetSpecGeneratorsMatrixGeneratorsOciTemplateSpecSourcesPluginEnv" =
+      {
+
+        options = {
+          "name" = mkOption {
+            description = "";
+            type = types.str;
+          };
+          "value" = mkOption {
+            description = "";
+            type = types.str;
+          };
+        };
+
+        config = { };
+
+      };
+    "argoproj.io.v1alpha1.ApplicationSetSpecGeneratorsMatrixGeneratorsOciTemplateSpecSourcesPluginParameters" =
+      {
+
+        options = {
+          "array" = mkOption {
+            description = "";
+            type = (types.nullOr (types.listOf types.str));
+          };
+          "map" = mkOption {
+            description = "";
+            type = (types.nullOr (types.attrsOf types.str));
+          };
+          "name" = mkOption {
+            description = "";
+            type = (types.nullOr types.str);
+          };
+          "string" = mkOption {
+            description = "";
+            type = (types.nullOr types.str);
+          };
+        };
+
+        config = {
+          "array" = mkOverride 1002 null;
+          "map" = mkOverride 1002 null;
+          "name" = mkOverride 1002 null;
+          "string" = mkOverride 1002 null;
+        };
+
+      };
+    "argoproj.io.v1alpha1.ApplicationSetSpecGeneratorsMatrixGeneratorsOciTemplateSpecSyncPolicy" = {
+
+      options = {
+        "automated" = mkOption {
+          description = "";
+          type = (
+            types.nullOr (
+              submoduleOf "argoproj.io.v1alpha1.ApplicationSetSpecGeneratorsMatrixGeneratorsOciTemplateSpecSyncPolicyAutomated"
+            )
+          );
+        };
+        "managedNamespaceMetadata" = mkOption {
+          description = "";
+          type = (
+            types.nullOr (
+              submoduleOf "argoproj.io.v1alpha1.ApplicationSetSpecGeneratorsMatrixGeneratorsOciTemplateSpecSyncPolicyManagedNamespaceMetadata"
+            )
+          );
+        };
+        "retry" = mkOption {
+          description = "";
+          type = (
+            types.nullOr (
+              submoduleOf "argoproj.io.v1alpha1.ApplicationSetSpecGeneratorsMatrixGeneratorsOciTemplateSpecSyncPolicyRetry"
+            )
+          );
+        };
+        "syncOptions" = mkOption {
+          description = "";
+          type = (types.nullOr (types.listOf types.str));
+        };
+      };
+
+      config = {
+        "automated" = mkOverride 1002 null;
+        "managedNamespaceMetadata" = mkOverride 1002 null;
+        "retry" = mkOverride 1002 null;
+        "syncOptions" = mkOverride 1002 null;
+      };
+
+    };
+    "argoproj.io.v1alpha1.ApplicationSetSpecGeneratorsMatrixGeneratorsOciTemplateSpecSyncPolicyAutomated" =
+      {
+
+        options = {
+          "allowEmpty" = mkOption {
+            description = "";
+            type = (types.nullOr types.bool);
+          };
+          "enabled" = mkOption {
+            description = "";
+            type = (types.nullOr types.bool);
+          };
+          "prune" = mkOption {
+            description = "";
+            type = (types.nullOr types.bool);
+          };
+          "selfHeal" = mkOption {
+            description = "";
+            type = (types.nullOr types.bool);
+          };
+        };
+
+        config = {
+          "allowEmpty" = mkOverride 1002 null;
+          "enabled" = mkOverride 1002 null;
+          "prune" = mkOverride 1002 null;
+          "selfHeal" = mkOverride 1002 null;
+        };
+
+      };
+    "argoproj.io.v1alpha1.ApplicationSetSpecGeneratorsMatrixGeneratorsOciTemplateSpecSyncPolicyManagedNamespaceMetadata" =
+      {
+
+        options = {
+          "annotations" = mkOption {
+            description = "";
+            type = (types.nullOr (types.attrsOf types.str));
+          };
+          "labels" = mkOption {
+            description = "";
+            type = (types.nullOr (types.attrsOf types.str));
+          };
+        };
+
+        config = {
+          "annotations" = mkOverride 1002 null;
+          "labels" = mkOverride 1002 null;
+        };
+
+      };
+    "argoproj.io.v1alpha1.ApplicationSetSpecGeneratorsMatrixGeneratorsOciTemplateSpecSyncPolicyRetry" =
+      {
+
+        options = {
+          "backoff" = mkOption {
+            description = "";
+            type = (
+              types.nullOr (
+                submoduleOf "argoproj.io.v1alpha1.ApplicationSetSpecGeneratorsMatrixGeneratorsOciTemplateSpecSyncPolicyRetryBackoff"
+              )
+            );
+          };
+          "limit" = mkOption {
+            description = "";
+            type = (types.nullOr types.int);
+          };
+          "refresh" = mkOption {
+            description = "";
+            type = (types.nullOr types.bool);
+          };
+        };
+
+        config = {
+          "backoff" = mkOverride 1002 null;
+          "limit" = mkOverride 1002 null;
+          "refresh" = mkOverride 1002 null;
+        };
+
+      };
+    "argoproj.io.v1alpha1.ApplicationSetSpecGeneratorsMatrixGeneratorsOciTemplateSpecSyncPolicyRetryBackoff" =
+      {
+
+        options = {
+          "duration" = mkOption {
+            description = "";
+            type = (types.nullOr types.str);
+          };
+          "factor" = mkOption {
+            description = "";
+            type = (types.nullOr types.int);
+          };
+          "maxDuration" = mkOption {
+            description = "";
+            type = (types.nullOr types.str);
+          };
+        };
+
+        config = {
+          "duration" = mkOverride 1002 null;
+          "factor" = mkOverride 1002 null;
+          "maxDuration" = mkOverride 1002 null;
+        };
+
+      };
     "argoproj.io.v1alpha1.ApplicationSetSpecGeneratorsMatrixGeneratorsPlugin" = {
 
       options = {
@@ -22220,6 +24822,10 @@ let
       {
 
         options = {
+          "disableExtensionFilter" = mkOption {
+            description = "";
+            type = (types.nullOr types.bool);
+          };
           "exclude" = mkOption {
             description = "";
             type = (types.nullOr types.str);
@@ -22243,6 +24849,7 @@ let
         };
 
         config = {
+          "disableExtensionFilter" = mkOverride 1002 null;
           "exclude" = mkOverride 1002 null;
           "include" = mkOverride 1002 null;
           "jsonnet" = mkOverride 1002 null;
@@ -22575,6 +25182,10 @@ let
       {
 
         options = {
+          "disableExtensionFilter" = mkOption {
+            description = "";
+            type = (types.nullOr types.bool);
+          };
           "exclude" = mkOption {
             description = "";
             type = (types.nullOr types.str);
@@ -22598,6 +25209,7 @@ let
         };
 
         config = {
+          "disableExtensionFilter" = mkOverride 1002 null;
           "exclude" = mkOverride 1002 null;
           "include" = mkOverride 1002 null;
           "jsonnet" = mkOverride 1002 null;
@@ -23553,6 +26165,10 @@ let
       {
 
         options = {
+          "disableExtensionFilter" = mkOption {
+            description = "";
+            type = (types.nullOr types.bool);
+          };
           "exclude" = mkOption {
             description = "";
             type = (types.nullOr types.str);
@@ -23576,6 +26192,7 @@ let
         };
 
         config = {
+          "disableExtensionFilter" = mkOverride 1002 null;
           "exclude" = mkOverride 1002 null;
           "include" = mkOverride 1002 null;
           "jsonnet" = mkOverride 1002 null;
@@ -25190,6 +27807,10 @@ let
       {
 
         options = {
+          "disableExtensionFilter" = mkOption {
+            description = "";
+            type = (types.nullOr types.bool);
+          };
           "exclude" = mkOption {
             description = "";
             type = (types.nullOr types.str);
@@ -25213,6 +27834,7 @@ let
         };
 
         config = {
+          "disableExtensionFilter" = mkOverride 1002 null;
           "exclude" = mkOverride 1002 null;
           "include" = mkOverride 1002 null;
           "jsonnet" = mkOverride 1002 null;
@@ -25546,6 +28168,10 @@ let
       {
 
         options = {
+          "disableExtensionFilter" = mkOption {
+            description = "";
+            type = (types.nullOr types.bool);
+          };
           "exclude" = mkOption {
             description = "";
             type = (types.nullOr types.str);
@@ -25569,6 +28195,7 @@ let
         };
 
         config = {
+          "disableExtensionFilter" = mkOverride 1002 null;
           "exclude" = mkOverride 1002 null;
           "include" = mkOverride 1002 null;
           "jsonnet" = mkOverride 1002 null;
@@ -26525,6 +29152,10 @@ let
       {
 
         options = {
+          "disableExtensionFilter" = mkOption {
+            description = "";
+            type = (types.nullOr types.bool);
+          };
           "exclude" = mkOption {
             description = "";
             type = (types.nullOr types.str);
@@ -26548,6 +29179,7 @@ let
         };
 
         config = {
+          "disableExtensionFilter" = mkOverride 1002 null;
           "exclude" = mkOverride 1002 null;
           "include" = mkOverride 1002 null;
           "jsonnet" = mkOverride 1002 null;
@@ -28186,6 +30818,10 @@ let
       {
 
         options = {
+          "disableExtensionFilter" = mkOption {
+            description = "";
+            type = (types.nullOr types.bool);
+          };
           "exclude" = mkOption {
             description = "";
             type = (types.nullOr types.str);
@@ -28209,6 +30845,7 @@ let
         };
 
         config = {
+          "disableExtensionFilter" = mkOverride 1002 null;
           "exclude" = mkOverride 1002 null;
           "include" = mkOverride 1002 null;
           "jsonnet" = mkOverride 1002 null;
@@ -28542,6 +31179,10 @@ let
       {
 
         options = {
+          "disableExtensionFilter" = mkOption {
+            description = "";
+            type = (types.nullOr types.bool);
+          };
           "exclude" = mkOption {
             description = "";
             type = (types.nullOr types.str);
@@ -28565,6 +31206,7 @@ let
         };
 
         config = {
+          "disableExtensionFilter" = mkOverride 1002 null;
           "exclude" = mkOverride 1002 null;
           "include" = mkOverride 1002 null;
           "jsonnet" = mkOverride 1002 null;
@@ -29521,6 +32163,10 @@ let
       {
 
         options = {
+          "disableExtensionFilter" = mkOption {
+            description = "";
+            type = (types.nullOr types.bool);
+          };
           "exclude" = mkOption {
             description = "";
             type = (types.nullOr types.str);
@@ -29544,6 +32190,7 @@ let
         };
 
         config = {
+          "disableExtensionFilter" = mkOverride 1002 null;
           "exclude" = mkOverride 1002 null;
           "include" = mkOverride 1002 null;
           "jsonnet" = mkOverride 1002 null;
@@ -30580,6 +33227,10 @@ let
     "argoproj.io.v1alpha1.ApplicationSetSpecGeneratorsMatrixTemplateSpecSourceDirectory" = {
 
       options = {
+        "disableExtensionFilter" = mkOption {
+          description = "";
+          type = (types.nullOr types.bool);
+        };
         "exclude" = mkOption {
           description = "";
           type = (types.nullOr types.str);
@@ -30603,6 +33254,7 @@ let
       };
 
       config = {
+        "disableExtensionFilter" = mkOverride 1002 null;
         "exclude" = mkOverride 1002 null;
         "include" = mkOverride 1002 null;
         "jsonnet" = mkOverride 1002 null;
@@ -30929,6 +33581,10 @@ let
       {
 
         options = {
+          "disableExtensionFilter" = mkOption {
+            description = "";
+            type = (types.nullOr types.bool);
+          };
           "exclude" = mkOption {
             description = "";
             type = (types.nullOr types.str);
@@ -30952,6 +33608,7 @@ let
         };
 
         config = {
+          "disableExtensionFilter" = mkOverride 1002 null;
           "exclude" = mkOverride 1002 null;
           "include" = mkOverride 1002 null;
           "jsonnet" = mkOverride 1002 null;
@@ -31897,6 +34554,10 @@ let
     "argoproj.io.v1alpha1.ApplicationSetSpecGeneratorsMatrixTemplateSpecSourcesDirectory" = {
 
       options = {
+        "disableExtensionFilter" = mkOption {
+          description = "";
+          type = (types.nullOr types.bool);
+        };
         "exclude" = mkOption {
           description = "";
           type = (types.nullOr types.str);
@@ -31920,6 +34581,7 @@ let
       };
 
       config = {
+        "disableExtensionFilter" = mkOverride 1002 null;
         "exclude" = mkOverride 1002 null;
         "include" = mkOverride 1002 null;
         "jsonnet" = mkOverride 1002 null;
@@ -32654,6 +35316,12 @@ let
           description = "";
           type = (types.nullOr types.unspecified);
         };
+        "oci" = mkOption {
+          description = "";
+          type = (
+            types.nullOr (submoduleOf "argoproj.io.v1alpha1.ApplicationSetSpecGeneratorsMergeGeneratorsOci")
+          );
+        };
         "plugin" = mkOption {
           description = "";
           type = (
@@ -32693,6 +35361,7 @@ let
         "list" = mkOverride 1002 null;
         "matrix" = mkOverride 1002 null;
         "merge" = mkOverride 1002 null;
+        "oci" = mkOverride 1002 null;
         "plugin" = mkOverride 1002 null;
         "pullRequest" = mkOverride 1002 null;
         "scmProvider" = mkOverride 1002 null;
@@ -33112,6 +35781,10 @@ let
       {
 
         options = {
+          "disableExtensionFilter" = mkOption {
+            description = "";
+            type = (types.nullOr types.bool);
+          };
           "exclude" = mkOption {
             description = "";
             type = (types.nullOr types.str);
@@ -33135,6 +35808,7 @@ let
         };
 
         config = {
+          "disableExtensionFilter" = mkOverride 1002 null;
           "exclude" = mkOverride 1002 null;
           "include" = mkOverride 1002 null;
           "jsonnet" = mkOverride 1002 null;
@@ -33468,6 +36142,10 @@ let
       {
 
         options = {
+          "disableExtensionFilter" = mkOption {
+            description = "";
+            type = (types.nullOr types.bool);
+          };
           "exclude" = mkOption {
             description = "";
             type = (types.nullOr types.str);
@@ -33491,6 +36169,7 @@ let
         };
 
         config = {
+          "disableExtensionFilter" = mkOverride 1002 null;
           "exclude" = mkOverride 1002 null;
           "include" = mkOverride 1002 null;
           "jsonnet" = mkOverride 1002 null;
@@ -34447,6 +37126,10 @@ let
       {
 
         options = {
+          "disableExtensionFilter" = mkOption {
+            description = "";
+            type = (types.nullOr types.bool);
+          };
           "exclude" = mkOption {
             description = "";
             type = (types.nullOr types.str);
@@ -34470,6 +37153,7 @@ let
         };
 
         config = {
+          "disableExtensionFilter" = mkOverride 1002 null;
           "exclude" = mkOverride 1002 null;
           "include" = mkOverride 1002 null;
           "jsonnet" = mkOverride 1002 null;
@@ -35551,6 +38235,10 @@ let
       {
 
         options = {
+          "disableExtensionFilter" = mkOption {
+            description = "";
+            type = (types.nullOr types.bool);
+          };
           "exclude" = mkOption {
             description = "";
             type = (types.nullOr types.str);
@@ -35574,6 +38262,7 @@ let
         };
 
         config = {
+          "disableExtensionFilter" = mkOverride 1002 null;
           "exclude" = mkOverride 1002 null;
           "include" = mkOverride 1002 null;
           "jsonnet" = mkOverride 1002 null;
@@ -35906,6 +38595,10 @@ let
       {
 
         options = {
+          "disableExtensionFilter" = mkOption {
+            description = "";
+            type = (types.nullOr types.bool);
+          };
           "exclude" = mkOption {
             description = "";
             type = (types.nullOr types.str);
@@ -35929,6 +38622,7 @@ let
         };
 
         config = {
+          "disableExtensionFilter" = mkOverride 1002 null;
           "exclude" = mkOverride 1002 null;
           "include" = mkOverride 1002 null;
           "jsonnet" = mkOverride 1002 null;
@@ -36884,6 +39578,10 @@ let
       {
 
         options = {
+          "disableExtensionFilter" = mkOption {
+            description = "";
+            type = (types.nullOr types.bool);
+          };
           "exclude" = mkOption {
             description = "";
             type = (types.nullOr types.str);
@@ -36907,6 +39605,7 @@ let
         };
 
         config = {
+          "disableExtensionFilter" = mkOverride 1002 null;
           "exclude" = mkOverride 1002 null;
           "include" = mkOverride 1002 null;
           "jsonnet" = mkOverride 1002 null;
@@ -37999,6 +40698,10 @@ let
     "argoproj.io.v1alpha1.ApplicationSetSpecGeneratorsMergeGeneratorsGitTemplateSpecSourceDirectory" = {
 
       options = {
+        "disableExtensionFilter" = mkOption {
+          description = "";
+          type = (types.nullOr types.bool);
+        };
         "exclude" = mkOption {
           description = "";
           type = (types.nullOr types.str);
@@ -38022,6 +40725,7 @@ let
       };
 
       config = {
+        "disableExtensionFilter" = mkOverride 1002 null;
         "exclude" = mkOverride 1002 null;
         "include" = mkOverride 1002 null;
         "jsonnet" = mkOverride 1002 null;
@@ -38353,6 +41057,10 @@ let
       {
 
         options = {
+          "disableExtensionFilter" = mkOption {
+            description = "";
+            type = (types.nullOr types.bool);
+          };
           "exclude" = mkOption {
             description = "";
             type = (types.nullOr types.str);
@@ -38376,6 +41084,7 @@ let
         };
 
         config = {
+          "disableExtensionFilter" = mkOverride 1002 null;
           "exclude" = mkOverride 1002 null;
           "include" = mkOverride 1002 null;
           "jsonnet" = mkOverride 1002 null;
@@ -39328,6 +42037,10 @@ let
       {
 
         options = {
+          "disableExtensionFilter" = mkOption {
+            description = "";
+            type = (types.nullOr types.bool);
+          };
           "exclude" = mkOption {
             description = "";
             type = (types.nullOr types.str);
@@ -39351,6 +42064,7 @@ let
         };
 
         config = {
+          "disableExtensionFilter" = mkOverride 1002 null;
           "exclude" = mkOverride 1002 null;
           "include" = mkOverride 1002 null;
           "jsonnet" = mkOverride 1002 null;
@@ -40370,6 +43084,10 @@ let
       {
 
         options = {
+          "disableExtensionFilter" = mkOption {
+            description = "";
+            type = (types.nullOr types.bool);
+          };
           "exclude" = mkOption {
             description = "";
             type = (types.nullOr types.str);
@@ -40393,6 +43111,7 @@ let
         };
 
         config = {
+          "disableExtensionFilter" = mkOverride 1002 null;
           "exclude" = mkOverride 1002 null;
           "include" = mkOverride 1002 null;
           "jsonnet" = mkOverride 1002 null;
@@ -40724,6 +43443,10 @@ let
       {
 
         options = {
+          "disableExtensionFilter" = mkOption {
+            description = "";
+            type = (types.nullOr types.bool);
+          };
           "exclude" = mkOption {
             description = "";
             type = (types.nullOr types.str);
@@ -40747,6 +43470,7 @@ let
         };
 
         config = {
+          "disableExtensionFilter" = mkOverride 1002 null;
           "exclude" = mkOverride 1002 null;
           "include" = mkOverride 1002 null;
           "jsonnet" = mkOverride 1002 null;
@@ -41701,6 +44425,10 @@ let
       {
 
         options = {
+          "disableExtensionFilter" = mkOption {
+            description = "";
+            type = (types.nullOr types.bool);
+          };
           "exclude" = mkOption {
             description = "";
             type = (types.nullOr types.str);
@@ -41724,6 +44452,7 @@ let
         };
 
         config = {
+          "disableExtensionFilter" = mkOverride 1002 null;
           "exclude" = mkOverride 1002 null;
           "include" = mkOverride 1002 null;
           "jsonnet" = mkOverride 1002 null;
@@ -42405,6 +45134,2462 @@ let
         };
 
       };
+    "argoproj.io.v1alpha1.ApplicationSetSpecGeneratorsMergeGeneratorsOci" = {
+
+      options = {
+        "directories" = mkOption {
+          description = "";
+          type = (
+            types.nullOr (
+              types.listOf (
+                submoduleOf "argoproj.io.v1alpha1.ApplicationSetSpecGeneratorsMergeGeneratorsOciDirectories"
+              )
+            )
+          );
+        };
+        "files" = mkOption {
+          description = "";
+          type = (
+            types.nullOr (
+              types.listOf (
+                submoduleOf "argoproj.io.v1alpha1.ApplicationSetSpecGeneratorsMergeGeneratorsOciFiles"
+              )
+            )
+          );
+        };
+        "pathParamPrefix" = mkOption {
+          description = "";
+          type = (types.nullOr types.str);
+        };
+        "repoURL" = mkOption {
+          description = "";
+          type = types.str;
+        };
+        "requeueAfterSeconds" = mkOption {
+          description = "";
+          type = (types.nullOr types.int);
+        };
+        "revision" = mkOption {
+          description = "";
+          type = types.str;
+        };
+        "template" = mkOption {
+          description = "";
+          type = (
+            types.nullOr (
+              submoduleOf "argoproj.io.v1alpha1.ApplicationSetSpecGeneratorsMergeGeneratorsOciTemplate"
+            )
+          );
+        };
+        "values" = mkOption {
+          description = "";
+          type = (types.nullOr (types.attrsOf types.str));
+        };
+      };
+
+      config = {
+        "directories" = mkOverride 1002 null;
+        "files" = mkOverride 1002 null;
+        "pathParamPrefix" = mkOverride 1002 null;
+        "requeueAfterSeconds" = mkOverride 1002 null;
+        "template" = mkOverride 1002 null;
+        "values" = mkOverride 1002 null;
+      };
+
+    };
+    "argoproj.io.v1alpha1.ApplicationSetSpecGeneratorsMergeGeneratorsOciDirectories" = {
+
+      options = {
+        "exclude" = mkOption {
+          description = "";
+          type = (types.nullOr types.bool);
+        };
+        "path" = mkOption {
+          description = "";
+          type = types.str;
+        };
+      };
+
+      config = {
+        "exclude" = mkOverride 1002 null;
+      };
+
+    };
+    "argoproj.io.v1alpha1.ApplicationSetSpecGeneratorsMergeGeneratorsOciFiles" = {
+
+      options = {
+        "exclude" = mkOption {
+          description = "";
+          type = (types.nullOr types.bool);
+        };
+        "path" = mkOption {
+          description = "";
+          type = types.str;
+        };
+      };
+
+      config = {
+        "exclude" = mkOverride 1002 null;
+      };
+
+    };
+    "argoproj.io.v1alpha1.ApplicationSetSpecGeneratorsMergeGeneratorsOciTemplate" = {
+
+      options = {
+        "metadata" = mkOption {
+          description = "";
+          type = (
+            submoduleOf "argoproj.io.v1alpha1.ApplicationSetSpecGeneratorsMergeGeneratorsOciTemplateMetadata"
+          );
+        };
+        "spec" = mkOption {
+          description = "";
+          type = (
+            submoduleOf "argoproj.io.v1alpha1.ApplicationSetSpecGeneratorsMergeGeneratorsOciTemplateSpec"
+          );
+        };
+      };
+
+      config = { };
+
+    };
+    "argoproj.io.v1alpha1.ApplicationSetSpecGeneratorsMergeGeneratorsOciTemplateMetadata" = {
+
+      options = {
+        "annotations" = mkOption {
+          description = "";
+          type = (types.nullOr (types.attrsOf types.str));
+        };
+        "finalizers" = mkOption {
+          description = "";
+          type = (types.nullOr (types.listOf types.str));
+        };
+        "labels" = mkOption {
+          description = "";
+          type = (types.nullOr (types.attrsOf types.str));
+        };
+        "name" = mkOption {
+          description = "";
+          type = (types.nullOr types.str);
+        };
+        "namespace" = mkOption {
+          description = "";
+          type = (types.nullOr types.str);
+        };
+      };
+
+      config = {
+        "annotations" = mkOverride 1002 null;
+        "finalizers" = mkOverride 1002 null;
+        "labels" = mkOverride 1002 null;
+        "name" = mkOverride 1002 null;
+        "namespace" = mkOverride 1002 null;
+      };
+
+    };
+    "argoproj.io.v1alpha1.ApplicationSetSpecGeneratorsMergeGeneratorsOciTemplateSpec" = {
+
+      options = {
+        "destination" = mkOption {
+          description = "";
+          type = (
+            submoduleOf "argoproj.io.v1alpha1.ApplicationSetSpecGeneratorsMergeGeneratorsOciTemplateSpecDestination"
+          );
+        };
+        "ignoreDifferences" = mkOption {
+          description = "";
+          type = (
+            types.nullOr (
+              coerceAttrsOfSubmodulesToListByKey
+                "argoproj.io.v1alpha1.ApplicationSetSpecGeneratorsMergeGeneratorsOciTemplateSpecIgnoreDifferences"
+                "name"
+                [ ]
+            )
+          );
+          apply = attrsToList;
+        };
+        "info" = mkOption {
+          description = "";
+          type = (
+            types.nullOr (
+              coerceAttrsOfSubmodulesToListByKey
+                "argoproj.io.v1alpha1.ApplicationSetSpecGeneratorsMergeGeneratorsOciTemplateSpecInfo"
+                "name"
+                [ ]
+            )
+          );
+          apply = attrsToList;
+        };
+        "project" = mkOption {
+          description = "";
+          type = types.str;
+        };
+        "revisionHistoryLimit" = mkOption {
+          description = "";
+          type = (types.nullOr types.int);
+        };
+        "source" = mkOption {
+          description = "";
+          type = (
+            types.nullOr (
+              submoduleOf "argoproj.io.v1alpha1.ApplicationSetSpecGeneratorsMergeGeneratorsOciTemplateSpecSource"
+            )
+          );
+        };
+        "sourceHydrator" = mkOption {
+          description = "";
+          type = (
+            types.nullOr (
+              submoduleOf "argoproj.io.v1alpha1.ApplicationSetSpecGeneratorsMergeGeneratorsOciTemplateSpecSourceHydrator"
+            )
+          );
+        };
+        "sources" = mkOption {
+          description = "";
+          type = (
+            types.nullOr (
+              coerceAttrsOfSubmodulesToListByKey
+                "argoproj.io.v1alpha1.ApplicationSetSpecGeneratorsMergeGeneratorsOciTemplateSpecSources"
+                "name"
+                [ ]
+            )
+          );
+          apply = attrsToList;
+        };
+        "syncPolicy" = mkOption {
+          description = "";
+          type = (
+            types.nullOr (
+              submoduleOf "argoproj.io.v1alpha1.ApplicationSetSpecGeneratorsMergeGeneratorsOciTemplateSpecSyncPolicy"
+            )
+          );
+        };
+      };
+
+      config = {
+        "ignoreDifferences" = mkOverride 1002 null;
+        "info" = mkOverride 1002 null;
+        "revisionHistoryLimit" = mkOverride 1002 null;
+        "source" = mkOverride 1002 null;
+        "sourceHydrator" = mkOverride 1002 null;
+        "sources" = mkOverride 1002 null;
+        "syncPolicy" = mkOverride 1002 null;
+      };
+
+    };
+    "argoproj.io.v1alpha1.ApplicationSetSpecGeneratorsMergeGeneratorsOciTemplateSpecDestination" = {
+
+      options = {
+        "name" = mkOption {
+          description = "";
+          type = (types.nullOr types.str);
+        };
+        "namespace" = mkOption {
+          description = "";
+          type = (types.nullOr types.str);
+        };
+        "server" = mkOption {
+          description = "";
+          type = (types.nullOr types.str);
+        };
+      };
+
+      config = {
+        "name" = mkOverride 1002 null;
+        "namespace" = mkOverride 1002 null;
+        "server" = mkOverride 1002 null;
+      };
+
+    };
+    "argoproj.io.v1alpha1.ApplicationSetSpecGeneratorsMergeGeneratorsOciTemplateSpecIgnoreDifferences" =
+      {
+
+        options = {
+          "group" = mkOption {
+            description = "";
+            type = (types.nullOr types.str);
+          };
+          "jqPathExpressions" = mkOption {
+            description = "";
+            type = (types.nullOr (types.listOf types.str));
+          };
+          "jsonPointers" = mkOption {
+            description = "";
+            type = (types.nullOr (types.listOf types.str));
+          };
+          "kind" = mkOption {
+            description = "";
+            type = types.str;
+          };
+          "managedFieldsManagers" = mkOption {
+            description = "";
+            type = (types.nullOr (types.listOf types.str));
+          };
+          "name" = mkOption {
+            description = "";
+            type = (types.nullOr types.str);
+          };
+          "namespace" = mkOption {
+            description = "";
+            type = (types.nullOr types.str);
+          };
+        };
+
+        config = {
+          "group" = mkOverride 1002 null;
+          "jqPathExpressions" = mkOverride 1002 null;
+          "jsonPointers" = mkOverride 1002 null;
+          "managedFieldsManagers" = mkOverride 1002 null;
+          "name" = mkOverride 1002 null;
+          "namespace" = mkOverride 1002 null;
+        };
+
+      };
+    "argoproj.io.v1alpha1.ApplicationSetSpecGeneratorsMergeGeneratorsOciTemplateSpecInfo" = {
+
+      options = {
+        "name" = mkOption {
+          description = "";
+          type = types.str;
+        };
+        "value" = mkOption {
+          description = "";
+          type = types.str;
+        };
+      };
+
+      config = { };
+
+    };
+    "argoproj.io.v1alpha1.ApplicationSetSpecGeneratorsMergeGeneratorsOciTemplateSpecSource" = {
+
+      options = {
+        "chart" = mkOption {
+          description = "";
+          type = (types.nullOr types.str);
+        };
+        "directory" = mkOption {
+          description = "";
+          type = (
+            types.nullOr (
+              submoduleOf "argoproj.io.v1alpha1.ApplicationSetSpecGeneratorsMergeGeneratorsOciTemplateSpecSourceDirectory"
+            )
+          );
+        };
+        "helm" = mkOption {
+          description = "";
+          type = (
+            types.nullOr (
+              submoduleOf "argoproj.io.v1alpha1.ApplicationSetSpecGeneratorsMergeGeneratorsOciTemplateSpecSourceHelm"
+            )
+          );
+        };
+        "kustomize" = mkOption {
+          description = "";
+          type = (
+            types.nullOr (
+              submoduleOf "argoproj.io.v1alpha1.ApplicationSetSpecGeneratorsMergeGeneratorsOciTemplateSpecSourceKustomize"
+            )
+          );
+        };
+        "name" = mkOption {
+          description = "";
+          type = (types.nullOr types.str);
+        };
+        "path" = mkOption {
+          description = "";
+          type = (types.nullOr types.str);
+        };
+        "plugin" = mkOption {
+          description = "";
+          type = (
+            types.nullOr (
+              submoduleOf "argoproj.io.v1alpha1.ApplicationSetSpecGeneratorsMergeGeneratorsOciTemplateSpecSourcePlugin"
+            )
+          );
+        };
+        "ref" = mkOption {
+          description = "";
+          type = (types.nullOr types.str);
+        };
+        "repoURL" = mkOption {
+          description = "";
+          type = types.str;
+        };
+        "tagPrefix" = mkOption {
+          description = "";
+          type = (types.nullOr types.str);
+        };
+        "targetRevision" = mkOption {
+          description = "";
+          type = (types.nullOr types.str);
+        };
+      };
+
+      config = {
+        "chart" = mkOverride 1002 null;
+        "directory" = mkOverride 1002 null;
+        "helm" = mkOverride 1002 null;
+        "kustomize" = mkOverride 1002 null;
+        "name" = mkOverride 1002 null;
+        "path" = mkOverride 1002 null;
+        "plugin" = mkOverride 1002 null;
+        "ref" = mkOverride 1002 null;
+        "tagPrefix" = mkOverride 1002 null;
+        "targetRevision" = mkOverride 1002 null;
+      };
+
+    };
+    "argoproj.io.v1alpha1.ApplicationSetSpecGeneratorsMergeGeneratorsOciTemplateSpecSourceDirectory" = {
+
+      options = {
+        "disableExtensionFilter" = mkOption {
+          description = "";
+          type = (types.nullOr types.bool);
+        };
+        "exclude" = mkOption {
+          description = "";
+          type = (types.nullOr types.str);
+        };
+        "include" = mkOption {
+          description = "";
+          type = (types.nullOr types.str);
+        };
+        "jsonnet" = mkOption {
+          description = "";
+          type = (
+            types.nullOr (
+              submoduleOf "argoproj.io.v1alpha1.ApplicationSetSpecGeneratorsMergeGeneratorsOciTemplateSpecSourceDirectoryJsonnet"
+            )
+          );
+        };
+        "recurse" = mkOption {
+          description = "";
+          type = (types.nullOr types.bool);
+        };
+      };
+
+      config = {
+        "disableExtensionFilter" = mkOverride 1002 null;
+        "exclude" = mkOverride 1002 null;
+        "include" = mkOverride 1002 null;
+        "jsonnet" = mkOverride 1002 null;
+        "recurse" = mkOverride 1002 null;
+      };
+
+    };
+    "argoproj.io.v1alpha1.ApplicationSetSpecGeneratorsMergeGeneratorsOciTemplateSpecSourceDirectoryJsonnet" =
+      {
+
+        options = {
+          "extVars" = mkOption {
+            description = "";
+            type = (
+              types.nullOr (
+                coerceAttrsOfSubmodulesToListByKey
+                  "argoproj.io.v1alpha1.ApplicationSetSpecGeneratorsMergeGeneratorsOciTemplateSpecSourceDirectoryJsonnetExtVars"
+                  "name"
+                  [ ]
+              )
+            );
+            apply = attrsToList;
+          };
+          "libs" = mkOption {
+            description = "";
+            type = (types.nullOr (types.listOf types.str));
+          };
+          "tlas" = mkOption {
+            description = "";
+            type = (
+              types.nullOr (
+                coerceAttrsOfSubmodulesToListByKey
+                  "argoproj.io.v1alpha1.ApplicationSetSpecGeneratorsMergeGeneratorsOciTemplateSpecSourceDirectoryJsonnetTlas"
+                  "name"
+                  [ ]
+              )
+            );
+            apply = attrsToList;
+          };
+        };
+
+        config = {
+          "extVars" = mkOverride 1002 null;
+          "libs" = mkOverride 1002 null;
+          "tlas" = mkOverride 1002 null;
+        };
+
+      };
+    "argoproj.io.v1alpha1.ApplicationSetSpecGeneratorsMergeGeneratorsOciTemplateSpecSourceDirectoryJsonnetExtVars" =
+      {
+
+        options = {
+          "code" = mkOption {
+            description = "";
+            type = (types.nullOr types.bool);
+          };
+          "name" = mkOption {
+            description = "";
+            type = types.str;
+          };
+          "value" = mkOption {
+            description = "";
+            type = types.str;
+          };
+        };
+
+        config = {
+          "code" = mkOverride 1002 null;
+        };
+
+      };
+    "argoproj.io.v1alpha1.ApplicationSetSpecGeneratorsMergeGeneratorsOciTemplateSpecSourceDirectoryJsonnetTlas" =
+      {
+
+        options = {
+          "code" = mkOption {
+            description = "";
+            type = (types.nullOr types.bool);
+          };
+          "name" = mkOption {
+            description = "";
+            type = types.str;
+          };
+          "value" = mkOption {
+            description = "";
+            type = types.str;
+          };
+        };
+
+        config = {
+          "code" = mkOverride 1002 null;
+        };
+
+      };
+    "argoproj.io.v1alpha1.ApplicationSetSpecGeneratorsMergeGeneratorsOciTemplateSpecSourceHelm" = {
+
+      options = {
+        "apiVersions" = mkOption {
+          description = "";
+          type = (types.nullOr (types.listOf types.str));
+        };
+        "fileParameters" = mkOption {
+          description = "";
+          type = (
+            types.nullOr (
+              coerceAttrsOfSubmodulesToListByKey
+                "argoproj.io.v1alpha1.ApplicationSetSpecGeneratorsMergeGeneratorsOciTemplateSpecSourceHelmFileParameters"
+                "name"
+                [ ]
+            )
+          );
+          apply = attrsToList;
+        };
+        "ignoreMissingValueFiles" = mkOption {
+          description = "";
+          type = (types.nullOr types.bool);
+        };
+        "kubeVersion" = mkOption {
+          description = "";
+          type = (types.nullOr types.str);
+        };
+        "namespace" = mkOption {
+          description = "";
+          type = (types.nullOr types.str);
+        };
+        "parameters" = mkOption {
+          description = "";
+          type = (
+            types.nullOr (
+              coerceAttrsOfSubmodulesToListByKey
+                "argoproj.io.v1alpha1.ApplicationSetSpecGeneratorsMergeGeneratorsOciTemplateSpecSourceHelmParameters"
+                "name"
+                [ ]
+            )
+          );
+          apply = attrsToList;
+        };
+        "passCredentials" = mkOption {
+          description = "";
+          type = (types.nullOr types.bool);
+        };
+        "releaseName" = mkOption {
+          description = "";
+          type = (types.nullOr types.str);
+        };
+        "skipCrds" = mkOption {
+          description = "";
+          type = (types.nullOr types.bool);
+        };
+        "skipSchemaValidation" = mkOption {
+          description = "";
+          type = (types.nullOr types.bool);
+        };
+        "skipTests" = mkOption {
+          description = "";
+          type = (types.nullOr types.bool);
+        };
+        "valueFiles" = mkOption {
+          description = "";
+          type = (types.nullOr (types.listOf types.str));
+        };
+        "values" = mkOption {
+          description = "";
+          type = (types.nullOr types.str);
+        };
+        "valuesObject" = mkOption {
+          description = "";
+          type = (types.nullOr types.attrs);
+        };
+        "version" = mkOption {
+          description = "";
+          type = (types.nullOr types.str);
+        };
+      };
+
+      config = {
+        "apiVersions" = mkOverride 1002 null;
+        "fileParameters" = mkOverride 1002 null;
+        "ignoreMissingValueFiles" = mkOverride 1002 null;
+        "kubeVersion" = mkOverride 1002 null;
+        "namespace" = mkOverride 1002 null;
+        "parameters" = mkOverride 1002 null;
+        "passCredentials" = mkOverride 1002 null;
+        "releaseName" = mkOverride 1002 null;
+        "skipCrds" = mkOverride 1002 null;
+        "skipSchemaValidation" = mkOverride 1002 null;
+        "skipTests" = mkOverride 1002 null;
+        "valueFiles" = mkOverride 1002 null;
+        "values" = mkOverride 1002 null;
+        "valuesObject" = mkOverride 1002 null;
+        "version" = mkOverride 1002 null;
+      };
+
+    };
+    "argoproj.io.v1alpha1.ApplicationSetSpecGeneratorsMergeGeneratorsOciTemplateSpecSourceHelmFileParameters" =
+      {
+
+        options = {
+          "name" = mkOption {
+            description = "";
+            type = (types.nullOr types.str);
+          };
+          "path" = mkOption {
+            description = "";
+            type = (types.nullOr types.str);
+          };
+        };
+
+        config = {
+          "name" = mkOverride 1002 null;
+          "path" = mkOverride 1002 null;
+        };
+
+      };
+    "argoproj.io.v1alpha1.ApplicationSetSpecGeneratorsMergeGeneratorsOciTemplateSpecSourceHelmParameters" =
+      {
+
+        options = {
+          "forceString" = mkOption {
+            description = "";
+            type = (types.nullOr types.bool);
+          };
+          "name" = mkOption {
+            description = "";
+            type = (types.nullOr types.str);
+          };
+          "value" = mkOption {
+            description = "";
+            type = (types.nullOr types.str);
+          };
+        };
+
+        config = {
+          "forceString" = mkOverride 1002 null;
+          "name" = mkOverride 1002 null;
+          "value" = mkOverride 1002 null;
+        };
+
+      };
+    "argoproj.io.v1alpha1.ApplicationSetSpecGeneratorsMergeGeneratorsOciTemplateSpecSourceHydrator" = {
+
+      options = {
+        "drySource" = mkOption {
+          description = "";
+          type = (
+            submoduleOf "argoproj.io.v1alpha1.ApplicationSetSpecGeneratorsMergeGeneratorsOciTemplateSpecSourceHydratorDrySource"
+          );
+        };
+        "hydrateTo" = mkOption {
+          description = "";
+          type = (
+            types.nullOr (
+              submoduleOf "argoproj.io.v1alpha1.ApplicationSetSpecGeneratorsMergeGeneratorsOciTemplateSpecSourceHydratorHydrateTo"
+            )
+          );
+        };
+        "syncSource" = mkOption {
+          description = "";
+          type = (
+            submoduleOf "argoproj.io.v1alpha1.ApplicationSetSpecGeneratorsMergeGeneratorsOciTemplateSpecSourceHydratorSyncSource"
+          );
+        };
+      };
+
+      config = {
+        "hydrateTo" = mkOverride 1002 null;
+      };
+
+    };
+    "argoproj.io.v1alpha1.ApplicationSetSpecGeneratorsMergeGeneratorsOciTemplateSpecSourceHydratorDrySource" =
+      {
+
+        options = {
+          "directory" = mkOption {
+            description = "";
+            type = (
+              types.nullOr (
+                submoduleOf "argoproj.io.v1alpha1.ApplicationSetSpecGeneratorsMergeGeneratorsOciTemplateSpecSourceHydratorDrySourceDirectory"
+              )
+            );
+          };
+          "helm" = mkOption {
+            description = "";
+            type = (
+              types.nullOr (
+                submoduleOf "argoproj.io.v1alpha1.ApplicationSetSpecGeneratorsMergeGeneratorsOciTemplateSpecSourceHydratorDrySourceHelm"
+              )
+            );
+          };
+          "kustomize" = mkOption {
+            description = "";
+            type = (
+              types.nullOr (
+                submoduleOf "argoproj.io.v1alpha1.ApplicationSetSpecGeneratorsMergeGeneratorsOciTemplateSpecSourceHydratorDrySourceKustomize"
+              )
+            );
+          };
+          "path" = mkOption {
+            description = "";
+            type = types.str;
+          };
+          "plugin" = mkOption {
+            description = "";
+            type = (
+              types.nullOr (
+                submoduleOf "argoproj.io.v1alpha1.ApplicationSetSpecGeneratorsMergeGeneratorsOciTemplateSpecSourceHydratorDrySourcePlugin"
+              )
+            );
+          };
+          "repoURL" = mkOption {
+            description = "";
+            type = types.str;
+          };
+          "targetRevision" = mkOption {
+            description = "";
+            type = types.str;
+          };
+        };
+
+        config = {
+          "directory" = mkOverride 1002 null;
+          "helm" = mkOverride 1002 null;
+          "kustomize" = mkOverride 1002 null;
+          "plugin" = mkOverride 1002 null;
+        };
+
+      };
+    "argoproj.io.v1alpha1.ApplicationSetSpecGeneratorsMergeGeneratorsOciTemplateSpecSourceHydratorDrySourceDirectory" =
+      {
+
+        options = {
+          "disableExtensionFilter" = mkOption {
+            description = "";
+            type = (types.nullOr types.bool);
+          };
+          "exclude" = mkOption {
+            description = "";
+            type = (types.nullOr types.str);
+          };
+          "include" = mkOption {
+            description = "";
+            type = (types.nullOr types.str);
+          };
+          "jsonnet" = mkOption {
+            description = "";
+            type = (
+              types.nullOr (
+                submoduleOf "argoproj.io.v1alpha1.ApplicationSetSpecGeneratorsMergeGeneratorsOciTemplateSpecSourceHydratorDrySourceDirectoryJsonnet"
+              )
+            );
+          };
+          "recurse" = mkOption {
+            description = "";
+            type = (types.nullOr types.bool);
+          };
+        };
+
+        config = {
+          "disableExtensionFilter" = mkOverride 1002 null;
+          "exclude" = mkOverride 1002 null;
+          "include" = mkOverride 1002 null;
+          "jsonnet" = mkOverride 1002 null;
+          "recurse" = mkOverride 1002 null;
+        };
+
+      };
+    "argoproj.io.v1alpha1.ApplicationSetSpecGeneratorsMergeGeneratorsOciTemplateSpecSourceHydratorDrySourceDirectoryJsonnet" =
+      {
+
+        options = {
+          "extVars" = mkOption {
+            description = "";
+            type = (
+              types.nullOr (
+                coerceAttrsOfSubmodulesToListByKey
+                  "argoproj.io.v1alpha1.ApplicationSetSpecGeneratorsMergeGeneratorsOciTemplateSpecSourceHydratorDrySourceDirectoryJsonnetExtVars"
+                  "name"
+                  [ ]
+              )
+            );
+            apply = attrsToList;
+          };
+          "libs" = mkOption {
+            description = "";
+            type = (types.nullOr (types.listOf types.str));
+          };
+          "tlas" = mkOption {
+            description = "";
+            type = (
+              types.nullOr (
+                coerceAttrsOfSubmodulesToListByKey
+                  "argoproj.io.v1alpha1.ApplicationSetSpecGeneratorsMergeGeneratorsOciTemplateSpecSourceHydratorDrySourceDirectoryJsonnetTlas"
+                  "name"
+                  [ ]
+              )
+            );
+            apply = attrsToList;
+          };
+        };
+
+        config = {
+          "extVars" = mkOverride 1002 null;
+          "libs" = mkOverride 1002 null;
+          "tlas" = mkOverride 1002 null;
+        };
+
+      };
+    "argoproj.io.v1alpha1.ApplicationSetSpecGeneratorsMergeGeneratorsOciTemplateSpecSourceHydratorDrySourceDirectoryJsonnetExtVars" =
+      {
+
+        options = {
+          "code" = mkOption {
+            description = "";
+            type = (types.nullOr types.bool);
+          };
+          "name" = mkOption {
+            description = "";
+            type = types.str;
+          };
+          "value" = mkOption {
+            description = "";
+            type = types.str;
+          };
+        };
+
+        config = {
+          "code" = mkOverride 1002 null;
+        };
+
+      };
+    "argoproj.io.v1alpha1.ApplicationSetSpecGeneratorsMergeGeneratorsOciTemplateSpecSourceHydratorDrySourceDirectoryJsonnetTlas" =
+      {
+
+        options = {
+          "code" = mkOption {
+            description = "";
+            type = (types.nullOr types.bool);
+          };
+          "name" = mkOption {
+            description = "";
+            type = types.str;
+          };
+          "value" = mkOption {
+            description = "";
+            type = types.str;
+          };
+        };
+
+        config = {
+          "code" = mkOverride 1002 null;
+        };
+
+      };
+    "argoproj.io.v1alpha1.ApplicationSetSpecGeneratorsMergeGeneratorsOciTemplateSpecSourceHydratorDrySourceHelm" =
+      {
+
+        options = {
+          "apiVersions" = mkOption {
+            description = "";
+            type = (types.nullOr (types.listOf types.str));
+          };
+          "fileParameters" = mkOption {
+            description = "";
+            type = (
+              types.nullOr (
+                coerceAttrsOfSubmodulesToListByKey
+                  "argoproj.io.v1alpha1.ApplicationSetSpecGeneratorsMergeGeneratorsOciTemplateSpecSourceHydratorDrySourceHelmFileParameters"
+                  "name"
+                  [ ]
+              )
+            );
+            apply = attrsToList;
+          };
+          "ignoreMissingValueFiles" = mkOption {
+            description = "";
+            type = (types.nullOr types.bool);
+          };
+          "kubeVersion" = mkOption {
+            description = "";
+            type = (types.nullOr types.str);
+          };
+          "namespace" = mkOption {
+            description = "";
+            type = (types.nullOr types.str);
+          };
+          "parameters" = mkOption {
+            description = "";
+            type = (
+              types.nullOr (
+                coerceAttrsOfSubmodulesToListByKey
+                  "argoproj.io.v1alpha1.ApplicationSetSpecGeneratorsMergeGeneratorsOciTemplateSpecSourceHydratorDrySourceHelmParameters"
+                  "name"
+                  [ ]
+              )
+            );
+            apply = attrsToList;
+          };
+          "passCredentials" = mkOption {
+            description = "";
+            type = (types.nullOr types.bool);
+          };
+          "releaseName" = mkOption {
+            description = "";
+            type = (types.nullOr types.str);
+          };
+          "skipCrds" = mkOption {
+            description = "";
+            type = (types.nullOr types.bool);
+          };
+          "skipSchemaValidation" = mkOption {
+            description = "";
+            type = (types.nullOr types.bool);
+          };
+          "skipTests" = mkOption {
+            description = "";
+            type = (types.nullOr types.bool);
+          };
+          "valueFiles" = mkOption {
+            description = "";
+            type = (types.nullOr (types.listOf types.str));
+          };
+          "values" = mkOption {
+            description = "";
+            type = (types.nullOr types.str);
+          };
+          "valuesObject" = mkOption {
+            description = "";
+            type = (types.nullOr types.attrs);
+          };
+          "version" = mkOption {
+            description = "";
+            type = (types.nullOr types.str);
+          };
+        };
+
+        config = {
+          "apiVersions" = mkOverride 1002 null;
+          "fileParameters" = mkOverride 1002 null;
+          "ignoreMissingValueFiles" = mkOverride 1002 null;
+          "kubeVersion" = mkOverride 1002 null;
+          "namespace" = mkOverride 1002 null;
+          "parameters" = mkOverride 1002 null;
+          "passCredentials" = mkOverride 1002 null;
+          "releaseName" = mkOverride 1002 null;
+          "skipCrds" = mkOverride 1002 null;
+          "skipSchemaValidation" = mkOverride 1002 null;
+          "skipTests" = mkOverride 1002 null;
+          "valueFiles" = mkOverride 1002 null;
+          "values" = mkOverride 1002 null;
+          "valuesObject" = mkOverride 1002 null;
+          "version" = mkOverride 1002 null;
+        };
+
+      };
+    "argoproj.io.v1alpha1.ApplicationSetSpecGeneratorsMergeGeneratorsOciTemplateSpecSourceHydratorDrySourceHelmFileParameters" =
+      {
+
+        options = {
+          "name" = mkOption {
+            description = "";
+            type = (types.nullOr types.str);
+          };
+          "path" = mkOption {
+            description = "";
+            type = (types.nullOr types.str);
+          };
+        };
+
+        config = {
+          "name" = mkOverride 1002 null;
+          "path" = mkOverride 1002 null;
+        };
+
+      };
+    "argoproj.io.v1alpha1.ApplicationSetSpecGeneratorsMergeGeneratorsOciTemplateSpecSourceHydratorDrySourceHelmParameters" =
+      {
+
+        options = {
+          "forceString" = mkOption {
+            description = "";
+            type = (types.nullOr types.bool);
+          };
+          "name" = mkOption {
+            description = "";
+            type = (types.nullOr types.str);
+          };
+          "value" = mkOption {
+            description = "";
+            type = (types.nullOr types.str);
+          };
+        };
+
+        config = {
+          "forceString" = mkOverride 1002 null;
+          "name" = mkOverride 1002 null;
+          "value" = mkOverride 1002 null;
+        };
+
+      };
+    "argoproj.io.v1alpha1.ApplicationSetSpecGeneratorsMergeGeneratorsOciTemplateSpecSourceHydratorDrySourceKustomize" =
+      {
+
+        options = {
+          "apiVersions" = mkOption {
+            description = "";
+            type = (types.nullOr (types.listOf types.str));
+          };
+          "commonAnnotations" = mkOption {
+            description = "";
+            type = (types.nullOr (types.attrsOf types.str));
+          };
+          "commonAnnotationsEnvsubst" = mkOption {
+            description = "";
+            type = (types.nullOr types.bool);
+          };
+          "commonLabels" = mkOption {
+            description = "";
+            type = (types.nullOr (types.attrsOf types.str));
+          };
+          "components" = mkOption {
+            description = "";
+            type = (types.nullOr (types.listOf types.str));
+          };
+          "forceCommonAnnotations" = mkOption {
+            description = "";
+            type = (types.nullOr types.bool);
+          };
+          "forceCommonLabels" = mkOption {
+            description = "";
+            type = (types.nullOr types.bool);
+          };
+          "ignoreMissingComponents" = mkOption {
+            description = "";
+            type = (types.nullOr types.bool);
+          };
+          "images" = mkOption {
+            description = "";
+            type = (types.nullOr (types.listOf types.str));
+          };
+          "kubeVersion" = mkOption {
+            description = "";
+            type = (types.nullOr types.str);
+          };
+          "labelIncludeTemplates" = mkOption {
+            description = "";
+            type = (types.nullOr types.bool);
+          };
+          "labelWithoutSelector" = mkOption {
+            description = "";
+            type = (types.nullOr types.bool);
+          };
+          "namePrefix" = mkOption {
+            description = "";
+            type = (types.nullOr types.str);
+          };
+          "nameSuffix" = mkOption {
+            description = "";
+            type = (types.nullOr types.str);
+          };
+          "namespace" = mkOption {
+            description = "";
+            type = (types.nullOr types.str);
+          };
+          "patches" = mkOption {
+            description = "";
+            type = (
+              types.nullOr (
+                types.listOf (
+                  submoduleOf "argoproj.io.v1alpha1.ApplicationSetSpecGeneratorsMergeGeneratorsOciTemplateSpecSourceHydratorDrySourceKustomizePatches"
+                )
+              )
+            );
+          };
+          "replicas" = mkOption {
+            description = "";
+            type = (
+              types.nullOr (
+                coerceAttrsOfSubmodulesToListByKey
+                  "argoproj.io.v1alpha1.ApplicationSetSpecGeneratorsMergeGeneratorsOciTemplateSpecSourceHydratorDrySourceKustomizeReplicas"
+                  "name"
+                  [ ]
+              )
+            );
+            apply = attrsToList;
+          };
+          "version" = mkOption {
+            description = "";
+            type = (types.nullOr types.str);
+          };
+        };
+
+        config = {
+          "apiVersions" = mkOverride 1002 null;
+          "commonAnnotations" = mkOverride 1002 null;
+          "commonAnnotationsEnvsubst" = mkOverride 1002 null;
+          "commonLabels" = mkOverride 1002 null;
+          "components" = mkOverride 1002 null;
+          "forceCommonAnnotations" = mkOverride 1002 null;
+          "forceCommonLabels" = mkOverride 1002 null;
+          "ignoreMissingComponents" = mkOverride 1002 null;
+          "images" = mkOverride 1002 null;
+          "kubeVersion" = mkOverride 1002 null;
+          "labelIncludeTemplates" = mkOverride 1002 null;
+          "labelWithoutSelector" = mkOverride 1002 null;
+          "namePrefix" = mkOverride 1002 null;
+          "nameSuffix" = mkOverride 1002 null;
+          "namespace" = mkOverride 1002 null;
+          "patches" = mkOverride 1002 null;
+          "replicas" = mkOverride 1002 null;
+          "version" = mkOverride 1002 null;
+        };
+
+      };
+    "argoproj.io.v1alpha1.ApplicationSetSpecGeneratorsMergeGeneratorsOciTemplateSpecSourceHydratorDrySourceKustomizePatches" =
+      {
+
+        options = {
+          "options" = mkOption {
+            description = "";
+            type = (types.nullOr (types.attrsOf types.bool));
+          };
+          "patch" = mkOption {
+            description = "";
+            type = (types.nullOr types.str);
+          };
+          "path" = mkOption {
+            description = "";
+            type = (types.nullOr types.str);
+          };
+          "target" = mkOption {
+            description = "";
+            type = (
+              types.nullOr (
+                submoduleOf "argoproj.io.v1alpha1.ApplicationSetSpecGeneratorsMergeGeneratorsOciTemplateSpecSourceHydratorDrySourceKustomizePatchesTarget"
+              )
+            );
+          };
+        };
+
+        config = {
+          "options" = mkOverride 1002 null;
+          "patch" = mkOverride 1002 null;
+          "path" = mkOverride 1002 null;
+          "target" = mkOverride 1002 null;
+        };
+
+      };
+    "argoproj.io.v1alpha1.ApplicationSetSpecGeneratorsMergeGeneratorsOciTemplateSpecSourceHydratorDrySourceKustomizePatchesTarget" =
+      {
+
+        options = {
+          "annotationSelector" = mkOption {
+            description = "";
+            type = (types.nullOr types.str);
+          };
+          "group" = mkOption {
+            description = "";
+            type = (types.nullOr types.str);
+          };
+          "kind" = mkOption {
+            description = "";
+            type = (types.nullOr types.str);
+          };
+          "labelSelector" = mkOption {
+            description = "";
+            type = (types.nullOr types.str);
+          };
+          "name" = mkOption {
+            description = "";
+            type = (types.nullOr types.str);
+          };
+          "namespace" = mkOption {
+            description = "";
+            type = (types.nullOr types.str);
+          };
+          "version" = mkOption {
+            description = "";
+            type = (types.nullOr types.str);
+          };
+        };
+
+        config = {
+          "annotationSelector" = mkOverride 1002 null;
+          "group" = mkOverride 1002 null;
+          "kind" = mkOverride 1002 null;
+          "labelSelector" = mkOverride 1002 null;
+          "name" = mkOverride 1002 null;
+          "namespace" = mkOverride 1002 null;
+          "version" = mkOverride 1002 null;
+        };
+
+      };
+    "argoproj.io.v1alpha1.ApplicationSetSpecGeneratorsMergeGeneratorsOciTemplateSpecSourceHydratorDrySourceKustomizeReplicas" =
+      {
+
+        options = {
+          "count" = mkOption {
+            description = "";
+            type = (types.either types.int types.str);
+          };
+          "name" = mkOption {
+            description = "";
+            type = types.str;
+          };
+        };
+
+        config = { };
+
+      };
+    "argoproj.io.v1alpha1.ApplicationSetSpecGeneratorsMergeGeneratorsOciTemplateSpecSourceHydratorDrySourcePlugin" =
+      {
+
+        options = {
+          "env" = mkOption {
+            description = "";
+            type = (
+              types.nullOr (
+                coerceAttrsOfSubmodulesToListByKey
+                  "argoproj.io.v1alpha1.ApplicationSetSpecGeneratorsMergeGeneratorsOciTemplateSpecSourceHydratorDrySourcePluginEnv"
+                  "name"
+                  [ ]
+              )
+            );
+            apply = attrsToList;
+          };
+          "name" = mkOption {
+            description = "";
+            type = (types.nullOr types.str);
+          };
+          "parameters" = mkOption {
+            description = "";
+            type = (
+              types.nullOr (
+                coerceAttrsOfSubmodulesToListByKey
+                  "argoproj.io.v1alpha1.ApplicationSetSpecGeneratorsMergeGeneratorsOciTemplateSpecSourceHydratorDrySourcePluginParameters"
+                  "name"
+                  [ ]
+              )
+            );
+            apply = attrsToList;
+          };
+        };
+
+        config = {
+          "env" = mkOverride 1002 null;
+          "name" = mkOverride 1002 null;
+          "parameters" = mkOverride 1002 null;
+        };
+
+      };
+    "argoproj.io.v1alpha1.ApplicationSetSpecGeneratorsMergeGeneratorsOciTemplateSpecSourceHydratorDrySourcePluginEnv" =
+      {
+
+        options = {
+          "name" = mkOption {
+            description = "";
+            type = types.str;
+          };
+          "value" = mkOption {
+            description = "";
+            type = types.str;
+          };
+        };
+
+        config = { };
+
+      };
+    "argoproj.io.v1alpha1.ApplicationSetSpecGeneratorsMergeGeneratorsOciTemplateSpecSourceHydratorDrySourcePluginParameters" =
+      {
+
+        options = {
+          "array" = mkOption {
+            description = "";
+            type = (types.nullOr (types.listOf types.str));
+          };
+          "map" = mkOption {
+            description = "";
+            type = (types.nullOr (types.attrsOf types.str));
+          };
+          "name" = mkOption {
+            description = "";
+            type = (types.nullOr types.str);
+          };
+          "string" = mkOption {
+            description = "";
+            type = (types.nullOr types.str);
+          };
+        };
+
+        config = {
+          "array" = mkOverride 1002 null;
+          "map" = mkOverride 1002 null;
+          "name" = mkOverride 1002 null;
+          "string" = mkOverride 1002 null;
+        };
+
+      };
+    "argoproj.io.v1alpha1.ApplicationSetSpecGeneratorsMergeGeneratorsOciTemplateSpecSourceHydratorHydrateTo" =
+      {
+
+        options = {
+          "targetBranch" = mkOption {
+            description = "";
+            type = types.str;
+          };
+        };
+
+        config = { };
+
+      };
+    "argoproj.io.v1alpha1.ApplicationSetSpecGeneratorsMergeGeneratorsOciTemplateSpecSourceHydratorSyncSource" =
+      {
+
+        options = {
+          "path" = mkOption {
+            description = "";
+            type = (types.withMinLength 1 types.str);
+          };
+          "repoURL" = mkOption {
+            description = "";
+            type = (types.nullOr types.str);
+          };
+          "targetBranch" = mkOption {
+            description = "";
+            type = types.str;
+          };
+        };
+
+        config = {
+          "repoURL" = mkOverride 1002 null;
+        };
+
+      };
+    "argoproj.io.v1alpha1.ApplicationSetSpecGeneratorsMergeGeneratorsOciTemplateSpecSourceKustomize" = {
+
+      options = {
+        "apiVersions" = mkOption {
+          description = "";
+          type = (types.nullOr (types.listOf types.str));
+        };
+        "commonAnnotations" = mkOption {
+          description = "";
+          type = (types.nullOr (types.attrsOf types.str));
+        };
+        "commonAnnotationsEnvsubst" = mkOption {
+          description = "";
+          type = (types.nullOr types.bool);
+        };
+        "commonLabels" = mkOption {
+          description = "";
+          type = (types.nullOr (types.attrsOf types.str));
+        };
+        "components" = mkOption {
+          description = "";
+          type = (types.nullOr (types.listOf types.str));
+        };
+        "forceCommonAnnotations" = mkOption {
+          description = "";
+          type = (types.nullOr types.bool);
+        };
+        "forceCommonLabels" = mkOption {
+          description = "";
+          type = (types.nullOr types.bool);
+        };
+        "ignoreMissingComponents" = mkOption {
+          description = "";
+          type = (types.nullOr types.bool);
+        };
+        "images" = mkOption {
+          description = "";
+          type = (types.nullOr (types.listOf types.str));
+        };
+        "kubeVersion" = mkOption {
+          description = "";
+          type = (types.nullOr types.str);
+        };
+        "labelIncludeTemplates" = mkOption {
+          description = "";
+          type = (types.nullOr types.bool);
+        };
+        "labelWithoutSelector" = mkOption {
+          description = "";
+          type = (types.nullOr types.bool);
+        };
+        "namePrefix" = mkOption {
+          description = "";
+          type = (types.nullOr types.str);
+        };
+        "nameSuffix" = mkOption {
+          description = "";
+          type = (types.nullOr types.str);
+        };
+        "namespace" = mkOption {
+          description = "";
+          type = (types.nullOr types.str);
+        };
+        "patches" = mkOption {
+          description = "";
+          type = (
+            types.nullOr (
+              types.listOf (
+                submoduleOf "argoproj.io.v1alpha1.ApplicationSetSpecGeneratorsMergeGeneratorsOciTemplateSpecSourceKustomizePatches"
+              )
+            )
+          );
+        };
+        "replicas" = mkOption {
+          description = "";
+          type = (
+            types.nullOr (
+              coerceAttrsOfSubmodulesToListByKey
+                "argoproj.io.v1alpha1.ApplicationSetSpecGeneratorsMergeGeneratorsOciTemplateSpecSourceKustomizeReplicas"
+                "name"
+                [ ]
+            )
+          );
+          apply = attrsToList;
+        };
+        "version" = mkOption {
+          description = "";
+          type = (types.nullOr types.str);
+        };
+      };
+
+      config = {
+        "apiVersions" = mkOverride 1002 null;
+        "commonAnnotations" = mkOverride 1002 null;
+        "commonAnnotationsEnvsubst" = mkOverride 1002 null;
+        "commonLabels" = mkOverride 1002 null;
+        "components" = mkOverride 1002 null;
+        "forceCommonAnnotations" = mkOverride 1002 null;
+        "forceCommonLabels" = mkOverride 1002 null;
+        "ignoreMissingComponents" = mkOverride 1002 null;
+        "images" = mkOverride 1002 null;
+        "kubeVersion" = mkOverride 1002 null;
+        "labelIncludeTemplates" = mkOverride 1002 null;
+        "labelWithoutSelector" = mkOverride 1002 null;
+        "namePrefix" = mkOverride 1002 null;
+        "nameSuffix" = mkOverride 1002 null;
+        "namespace" = mkOverride 1002 null;
+        "patches" = mkOverride 1002 null;
+        "replicas" = mkOverride 1002 null;
+        "version" = mkOverride 1002 null;
+      };
+
+    };
+    "argoproj.io.v1alpha1.ApplicationSetSpecGeneratorsMergeGeneratorsOciTemplateSpecSourceKustomizePatches" =
+      {
+
+        options = {
+          "options" = mkOption {
+            description = "";
+            type = (types.nullOr (types.attrsOf types.bool));
+          };
+          "patch" = mkOption {
+            description = "";
+            type = (types.nullOr types.str);
+          };
+          "path" = mkOption {
+            description = "";
+            type = (types.nullOr types.str);
+          };
+          "target" = mkOption {
+            description = "";
+            type = (
+              types.nullOr (
+                submoduleOf "argoproj.io.v1alpha1.ApplicationSetSpecGeneratorsMergeGeneratorsOciTemplateSpecSourceKustomizePatchesTarget"
+              )
+            );
+          };
+        };
+
+        config = {
+          "options" = mkOverride 1002 null;
+          "patch" = mkOverride 1002 null;
+          "path" = mkOverride 1002 null;
+          "target" = mkOverride 1002 null;
+        };
+
+      };
+    "argoproj.io.v1alpha1.ApplicationSetSpecGeneratorsMergeGeneratorsOciTemplateSpecSourceKustomizePatchesTarget" =
+      {
+
+        options = {
+          "annotationSelector" = mkOption {
+            description = "";
+            type = (types.nullOr types.str);
+          };
+          "group" = mkOption {
+            description = "";
+            type = (types.nullOr types.str);
+          };
+          "kind" = mkOption {
+            description = "";
+            type = (types.nullOr types.str);
+          };
+          "labelSelector" = mkOption {
+            description = "";
+            type = (types.nullOr types.str);
+          };
+          "name" = mkOption {
+            description = "";
+            type = (types.nullOr types.str);
+          };
+          "namespace" = mkOption {
+            description = "";
+            type = (types.nullOr types.str);
+          };
+          "version" = mkOption {
+            description = "";
+            type = (types.nullOr types.str);
+          };
+        };
+
+        config = {
+          "annotationSelector" = mkOverride 1002 null;
+          "group" = mkOverride 1002 null;
+          "kind" = mkOverride 1002 null;
+          "labelSelector" = mkOverride 1002 null;
+          "name" = mkOverride 1002 null;
+          "namespace" = mkOverride 1002 null;
+          "version" = mkOverride 1002 null;
+        };
+
+      };
+    "argoproj.io.v1alpha1.ApplicationSetSpecGeneratorsMergeGeneratorsOciTemplateSpecSourceKustomizeReplicas" =
+      {
+
+        options = {
+          "count" = mkOption {
+            description = "";
+            type = (types.either types.int types.str);
+          };
+          "name" = mkOption {
+            description = "";
+            type = types.str;
+          };
+        };
+
+        config = { };
+
+      };
+    "argoproj.io.v1alpha1.ApplicationSetSpecGeneratorsMergeGeneratorsOciTemplateSpecSourcePlugin" = {
+
+      options = {
+        "env" = mkOption {
+          description = "";
+          type = (
+            types.nullOr (
+              coerceAttrsOfSubmodulesToListByKey
+                "argoproj.io.v1alpha1.ApplicationSetSpecGeneratorsMergeGeneratorsOciTemplateSpecSourcePluginEnv"
+                "name"
+                [ ]
+            )
+          );
+          apply = attrsToList;
+        };
+        "name" = mkOption {
+          description = "";
+          type = (types.nullOr types.str);
+        };
+        "parameters" = mkOption {
+          description = "";
+          type = (
+            types.nullOr (
+              coerceAttrsOfSubmodulesToListByKey
+                "argoproj.io.v1alpha1.ApplicationSetSpecGeneratorsMergeGeneratorsOciTemplateSpecSourcePluginParameters"
+                "name"
+                [ ]
+            )
+          );
+          apply = attrsToList;
+        };
+      };
+
+      config = {
+        "env" = mkOverride 1002 null;
+        "name" = mkOverride 1002 null;
+        "parameters" = mkOverride 1002 null;
+      };
+
+    };
+    "argoproj.io.v1alpha1.ApplicationSetSpecGeneratorsMergeGeneratorsOciTemplateSpecSourcePluginEnv" = {
+
+      options = {
+        "name" = mkOption {
+          description = "";
+          type = types.str;
+        };
+        "value" = mkOption {
+          description = "";
+          type = types.str;
+        };
+      };
+
+      config = { };
+
+    };
+    "argoproj.io.v1alpha1.ApplicationSetSpecGeneratorsMergeGeneratorsOciTemplateSpecSourcePluginParameters" =
+      {
+
+        options = {
+          "array" = mkOption {
+            description = "";
+            type = (types.nullOr (types.listOf types.str));
+          };
+          "map" = mkOption {
+            description = "";
+            type = (types.nullOr (types.attrsOf types.str));
+          };
+          "name" = mkOption {
+            description = "";
+            type = (types.nullOr types.str);
+          };
+          "string" = mkOption {
+            description = "";
+            type = (types.nullOr types.str);
+          };
+        };
+
+        config = {
+          "array" = mkOverride 1002 null;
+          "map" = mkOverride 1002 null;
+          "name" = mkOverride 1002 null;
+          "string" = mkOverride 1002 null;
+        };
+
+      };
+    "argoproj.io.v1alpha1.ApplicationSetSpecGeneratorsMergeGeneratorsOciTemplateSpecSources" = {
+
+      options = {
+        "chart" = mkOption {
+          description = "";
+          type = (types.nullOr types.str);
+        };
+        "directory" = mkOption {
+          description = "";
+          type = (
+            types.nullOr (
+              submoduleOf "argoproj.io.v1alpha1.ApplicationSetSpecGeneratorsMergeGeneratorsOciTemplateSpecSourcesDirectory"
+            )
+          );
+        };
+        "helm" = mkOption {
+          description = "";
+          type = (
+            types.nullOr (
+              submoduleOf "argoproj.io.v1alpha1.ApplicationSetSpecGeneratorsMergeGeneratorsOciTemplateSpecSourcesHelm"
+            )
+          );
+        };
+        "kustomize" = mkOption {
+          description = "";
+          type = (
+            types.nullOr (
+              submoduleOf "argoproj.io.v1alpha1.ApplicationSetSpecGeneratorsMergeGeneratorsOciTemplateSpecSourcesKustomize"
+            )
+          );
+        };
+        "name" = mkOption {
+          description = "";
+          type = (types.nullOr types.str);
+        };
+        "path" = mkOption {
+          description = "";
+          type = (types.nullOr types.str);
+        };
+        "plugin" = mkOption {
+          description = "";
+          type = (
+            types.nullOr (
+              submoduleOf "argoproj.io.v1alpha1.ApplicationSetSpecGeneratorsMergeGeneratorsOciTemplateSpecSourcesPlugin"
+            )
+          );
+        };
+        "ref" = mkOption {
+          description = "";
+          type = (types.nullOr types.str);
+        };
+        "repoURL" = mkOption {
+          description = "";
+          type = types.str;
+        };
+        "tagPrefix" = mkOption {
+          description = "";
+          type = (types.nullOr types.str);
+        };
+        "targetRevision" = mkOption {
+          description = "";
+          type = (types.nullOr types.str);
+        };
+      };
+
+      config = {
+        "chart" = mkOverride 1002 null;
+        "directory" = mkOverride 1002 null;
+        "helm" = mkOverride 1002 null;
+        "kustomize" = mkOverride 1002 null;
+        "name" = mkOverride 1002 null;
+        "path" = mkOverride 1002 null;
+        "plugin" = mkOverride 1002 null;
+        "ref" = mkOverride 1002 null;
+        "tagPrefix" = mkOverride 1002 null;
+        "targetRevision" = mkOverride 1002 null;
+      };
+
+    };
+    "argoproj.io.v1alpha1.ApplicationSetSpecGeneratorsMergeGeneratorsOciTemplateSpecSourcesDirectory" =
+      {
+
+        options = {
+          "disableExtensionFilter" = mkOption {
+            description = "";
+            type = (types.nullOr types.bool);
+          };
+          "exclude" = mkOption {
+            description = "";
+            type = (types.nullOr types.str);
+          };
+          "include" = mkOption {
+            description = "";
+            type = (types.nullOr types.str);
+          };
+          "jsonnet" = mkOption {
+            description = "";
+            type = (
+              types.nullOr (
+                submoduleOf "argoproj.io.v1alpha1.ApplicationSetSpecGeneratorsMergeGeneratorsOciTemplateSpecSourcesDirectoryJsonnet"
+              )
+            );
+          };
+          "recurse" = mkOption {
+            description = "";
+            type = (types.nullOr types.bool);
+          };
+        };
+
+        config = {
+          "disableExtensionFilter" = mkOverride 1002 null;
+          "exclude" = mkOverride 1002 null;
+          "include" = mkOverride 1002 null;
+          "jsonnet" = mkOverride 1002 null;
+          "recurse" = mkOverride 1002 null;
+        };
+
+      };
+    "argoproj.io.v1alpha1.ApplicationSetSpecGeneratorsMergeGeneratorsOciTemplateSpecSourcesDirectoryJsonnet" =
+      {
+
+        options = {
+          "extVars" = mkOption {
+            description = "";
+            type = (
+              types.nullOr (
+                coerceAttrsOfSubmodulesToListByKey
+                  "argoproj.io.v1alpha1.ApplicationSetSpecGeneratorsMergeGeneratorsOciTemplateSpecSourcesDirectoryJsonnetExtVars"
+                  "name"
+                  [ ]
+              )
+            );
+            apply = attrsToList;
+          };
+          "libs" = mkOption {
+            description = "";
+            type = (types.nullOr (types.listOf types.str));
+          };
+          "tlas" = mkOption {
+            description = "";
+            type = (
+              types.nullOr (
+                coerceAttrsOfSubmodulesToListByKey
+                  "argoproj.io.v1alpha1.ApplicationSetSpecGeneratorsMergeGeneratorsOciTemplateSpecSourcesDirectoryJsonnetTlas"
+                  "name"
+                  [ ]
+              )
+            );
+            apply = attrsToList;
+          };
+        };
+
+        config = {
+          "extVars" = mkOverride 1002 null;
+          "libs" = mkOverride 1002 null;
+          "tlas" = mkOverride 1002 null;
+        };
+
+      };
+    "argoproj.io.v1alpha1.ApplicationSetSpecGeneratorsMergeGeneratorsOciTemplateSpecSourcesDirectoryJsonnetExtVars" =
+      {
+
+        options = {
+          "code" = mkOption {
+            description = "";
+            type = (types.nullOr types.bool);
+          };
+          "name" = mkOption {
+            description = "";
+            type = types.str;
+          };
+          "value" = mkOption {
+            description = "";
+            type = types.str;
+          };
+        };
+
+        config = {
+          "code" = mkOverride 1002 null;
+        };
+
+      };
+    "argoproj.io.v1alpha1.ApplicationSetSpecGeneratorsMergeGeneratorsOciTemplateSpecSourcesDirectoryJsonnetTlas" =
+      {
+
+        options = {
+          "code" = mkOption {
+            description = "";
+            type = (types.nullOr types.bool);
+          };
+          "name" = mkOption {
+            description = "";
+            type = types.str;
+          };
+          "value" = mkOption {
+            description = "";
+            type = types.str;
+          };
+        };
+
+        config = {
+          "code" = mkOverride 1002 null;
+        };
+
+      };
+    "argoproj.io.v1alpha1.ApplicationSetSpecGeneratorsMergeGeneratorsOciTemplateSpecSourcesHelm" = {
+
+      options = {
+        "apiVersions" = mkOption {
+          description = "";
+          type = (types.nullOr (types.listOf types.str));
+        };
+        "fileParameters" = mkOption {
+          description = "";
+          type = (
+            types.nullOr (
+              coerceAttrsOfSubmodulesToListByKey
+                "argoproj.io.v1alpha1.ApplicationSetSpecGeneratorsMergeGeneratorsOciTemplateSpecSourcesHelmFileParameters"
+                "name"
+                [ ]
+            )
+          );
+          apply = attrsToList;
+        };
+        "ignoreMissingValueFiles" = mkOption {
+          description = "";
+          type = (types.nullOr types.bool);
+        };
+        "kubeVersion" = mkOption {
+          description = "";
+          type = (types.nullOr types.str);
+        };
+        "namespace" = mkOption {
+          description = "";
+          type = (types.nullOr types.str);
+        };
+        "parameters" = mkOption {
+          description = "";
+          type = (
+            types.nullOr (
+              coerceAttrsOfSubmodulesToListByKey
+                "argoproj.io.v1alpha1.ApplicationSetSpecGeneratorsMergeGeneratorsOciTemplateSpecSourcesHelmParameters"
+                "name"
+                [ ]
+            )
+          );
+          apply = attrsToList;
+        };
+        "passCredentials" = mkOption {
+          description = "";
+          type = (types.nullOr types.bool);
+        };
+        "releaseName" = mkOption {
+          description = "";
+          type = (types.nullOr types.str);
+        };
+        "skipCrds" = mkOption {
+          description = "";
+          type = (types.nullOr types.bool);
+        };
+        "skipSchemaValidation" = mkOption {
+          description = "";
+          type = (types.nullOr types.bool);
+        };
+        "skipTests" = mkOption {
+          description = "";
+          type = (types.nullOr types.bool);
+        };
+        "valueFiles" = mkOption {
+          description = "";
+          type = (types.nullOr (types.listOf types.str));
+        };
+        "values" = mkOption {
+          description = "";
+          type = (types.nullOr types.str);
+        };
+        "valuesObject" = mkOption {
+          description = "";
+          type = (types.nullOr types.attrs);
+        };
+        "version" = mkOption {
+          description = "";
+          type = (types.nullOr types.str);
+        };
+      };
+
+      config = {
+        "apiVersions" = mkOverride 1002 null;
+        "fileParameters" = mkOverride 1002 null;
+        "ignoreMissingValueFiles" = mkOverride 1002 null;
+        "kubeVersion" = mkOverride 1002 null;
+        "namespace" = mkOverride 1002 null;
+        "parameters" = mkOverride 1002 null;
+        "passCredentials" = mkOverride 1002 null;
+        "releaseName" = mkOverride 1002 null;
+        "skipCrds" = mkOverride 1002 null;
+        "skipSchemaValidation" = mkOverride 1002 null;
+        "skipTests" = mkOverride 1002 null;
+        "valueFiles" = mkOverride 1002 null;
+        "values" = mkOverride 1002 null;
+        "valuesObject" = mkOverride 1002 null;
+        "version" = mkOverride 1002 null;
+      };
+
+    };
+    "argoproj.io.v1alpha1.ApplicationSetSpecGeneratorsMergeGeneratorsOciTemplateSpecSourcesHelmFileParameters" =
+      {
+
+        options = {
+          "name" = mkOption {
+            description = "";
+            type = (types.nullOr types.str);
+          };
+          "path" = mkOption {
+            description = "";
+            type = (types.nullOr types.str);
+          };
+        };
+
+        config = {
+          "name" = mkOverride 1002 null;
+          "path" = mkOverride 1002 null;
+        };
+
+      };
+    "argoproj.io.v1alpha1.ApplicationSetSpecGeneratorsMergeGeneratorsOciTemplateSpecSourcesHelmParameters" =
+      {
+
+        options = {
+          "forceString" = mkOption {
+            description = "";
+            type = (types.nullOr types.bool);
+          };
+          "name" = mkOption {
+            description = "";
+            type = (types.nullOr types.str);
+          };
+          "value" = mkOption {
+            description = "";
+            type = (types.nullOr types.str);
+          };
+        };
+
+        config = {
+          "forceString" = mkOverride 1002 null;
+          "name" = mkOverride 1002 null;
+          "value" = mkOverride 1002 null;
+        };
+
+      };
+    "argoproj.io.v1alpha1.ApplicationSetSpecGeneratorsMergeGeneratorsOciTemplateSpecSourcesKustomize" =
+      {
+
+        options = {
+          "apiVersions" = mkOption {
+            description = "";
+            type = (types.nullOr (types.listOf types.str));
+          };
+          "commonAnnotations" = mkOption {
+            description = "";
+            type = (types.nullOr (types.attrsOf types.str));
+          };
+          "commonAnnotationsEnvsubst" = mkOption {
+            description = "";
+            type = (types.nullOr types.bool);
+          };
+          "commonLabels" = mkOption {
+            description = "";
+            type = (types.nullOr (types.attrsOf types.str));
+          };
+          "components" = mkOption {
+            description = "";
+            type = (types.nullOr (types.listOf types.str));
+          };
+          "forceCommonAnnotations" = mkOption {
+            description = "";
+            type = (types.nullOr types.bool);
+          };
+          "forceCommonLabels" = mkOption {
+            description = "";
+            type = (types.nullOr types.bool);
+          };
+          "ignoreMissingComponents" = mkOption {
+            description = "";
+            type = (types.nullOr types.bool);
+          };
+          "images" = mkOption {
+            description = "";
+            type = (types.nullOr (types.listOf types.str));
+          };
+          "kubeVersion" = mkOption {
+            description = "";
+            type = (types.nullOr types.str);
+          };
+          "labelIncludeTemplates" = mkOption {
+            description = "";
+            type = (types.nullOr types.bool);
+          };
+          "labelWithoutSelector" = mkOption {
+            description = "";
+            type = (types.nullOr types.bool);
+          };
+          "namePrefix" = mkOption {
+            description = "";
+            type = (types.nullOr types.str);
+          };
+          "nameSuffix" = mkOption {
+            description = "";
+            type = (types.nullOr types.str);
+          };
+          "namespace" = mkOption {
+            description = "";
+            type = (types.nullOr types.str);
+          };
+          "patches" = mkOption {
+            description = "";
+            type = (
+              types.nullOr (
+                types.listOf (
+                  submoduleOf "argoproj.io.v1alpha1.ApplicationSetSpecGeneratorsMergeGeneratorsOciTemplateSpecSourcesKustomizePatches"
+                )
+              )
+            );
+          };
+          "replicas" = mkOption {
+            description = "";
+            type = (
+              types.nullOr (
+                coerceAttrsOfSubmodulesToListByKey
+                  "argoproj.io.v1alpha1.ApplicationSetSpecGeneratorsMergeGeneratorsOciTemplateSpecSourcesKustomizeReplicas"
+                  "name"
+                  [ ]
+              )
+            );
+            apply = attrsToList;
+          };
+          "version" = mkOption {
+            description = "";
+            type = (types.nullOr types.str);
+          };
+        };
+
+        config = {
+          "apiVersions" = mkOverride 1002 null;
+          "commonAnnotations" = mkOverride 1002 null;
+          "commonAnnotationsEnvsubst" = mkOverride 1002 null;
+          "commonLabels" = mkOverride 1002 null;
+          "components" = mkOverride 1002 null;
+          "forceCommonAnnotations" = mkOverride 1002 null;
+          "forceCommonLabels" = mkOverride 1002 null;
+          "ignoreMissingComponents" = mkOverride 1002 null;
+          "images" = mkOverride 1002 null;
+          "kubeVersion" = mkOverride 1002 null;
+          "labelIncludeTemplates" = mkOverride 1002 null;
+          "labelWithoutSelector" = mkOverride 1002 null;
+          "namePrefix" = mkOverride 1002 null;
+          "nameSuffix" = mkOverride 1002 null;
+          "namespace" = mkOverride 1002 null;
+          "patches" = mkOverride 1002 null;
+          "replicas" = mkOverride 1002 null;
+          "version" = mkOverride 1002 null;
+        };
+
+      };
+    "argoproj.io.v1alpha1.ApplicationSetSpecGeneratorsMergeGeneratorsOciTemplateSpecSourcesKustomizePatches" =
+      {
+
+        options = {
+          "options" = mkOption {
+            description = "";
+            type = (types.nullOr (types.attrsOf types.bool));
+          };
+          "patch" = mkOption {
+            description = "";
+            type = (types.nullOr types.str);
+          };
+          "path" = mkOption {
+            description = "";
+            type = (types.nullOr types.str);
+          };
+          "target" = mkOption {
+            description = "";
+            type = (
+              types.nullOr (
+                submoduleOf "argoproj.io.v1alpha1.ApplicationSetSpecGeneratorsMergeGeneratorsOciTemplateSpecSourcesKustomizePatchesTarget"
+              )
+            );
+          };
+        };
+
+        config = {
+          "options" = mkOverride 1002 null;
+          "patch" = mkOverride 1002 null;
+          "path" = mkOverride 1002 null;
+          "target" = mkOverride 1002 null;
+        };
+
+      };
+    "argoproj.io.v1alpha1.ApplicationSetSpecGeneratorsMergeGeneratorsOciTemplateSpecSourcesKustomizePatchesTarget" =
+      {
+
+        options = {
+          "annotationSelector" = mkOption {
+            description = "";
+            type = (types.nullOr types.str);
+          };
+          "group" = mkOption {
+            description = "";
+            type = (types.nullOr types.str);
+          };
+          "kind" = mkOption {
+            description = "";
+            type = (types.nullOr types.str);
+          };
+          "labelSelector" = mkOption {
+            description = "";
+            type = (types.nullOr types.str);
+          };
+          "name" = mkOption {
+            description = "";
+            type = (types.nullOr types.str);
+          };
+          "namespace" = mkOption {
+            description = "";
+            type = (types.nullOr types.str);
+          };
+          "version" = mkOption {
+            description = "";
+            type = (types.nullOr types.str);
+          };
+        };
+
+        config = {
+          "annotationSelector" = mkOverride 1002 null;
+          "group" = mkOverride 1002 null;
+          "kind" = mkOverride 1002 null;
+          "labelSelector" = mkOverride 1002 null;
+          "name" = mkOverride 1002 null;
+          "namespace" = mkOverride 1002 null;
+          "version" = mkOverride 1002 null;
+        };
+
+      };
+    "argoproj.io.v1alpha1.ApplicationSetSpecGeneratorsMergeGeneratorsOciTemplateSpecSourcesKustomizeReplicas" =
+      {
+
+        options = {
+          "count" = mkOption {
+            description = "";
+            type = (types.either types.int types.str);
+          };
+          "name" = mkOption {
+            description = "";
+            type = types.str;
+          };
+        };
+
+        config = { };
+
+      };
+    "argoproj.io.v1alpha1.ApplicationSetSpecGeneratorsMergeGeneratorsOciTemplateSpecSourcesPlugin" = {
+
+      options = {
+        "env" = mkOption {
+          description = "";
+          type = (
+            types.nullOr (
+              coerceAttrsOfSubmodulesToListByKey
+                "argoproj.io.v1alpha1.ApplicationSetSpecGeneratorsMergeGeneratorsOciTemplateSpecSourcesPluginEnv"
+                "name"
+                [ ]
+            )
+          );
+          apply = attrsToList;
+        };
+        "name" = mkOption {
+          description = "";
+          type = (types.nullOr types.str);
+        };
+        "parameters" = mkOption {
+          description = "";
+          type = (
+            types.nullOr (
+              coerceAttrsOfSubmodulesToListByKey
+                "argoproj.io.v1alpha1.ApplicationSetSpecGeneratorsMergeGeneratorsOciTemplateSpecSourcesPluginParameters"
+                "name"
+                [ ]
+            )
+          );
+          apply = attrsToList;
+        };
+      };
+
+      config = {
+        "env" = mkOverride 1002 null;
+        "name" = mkOverride 1002 null;
+        "parameters" = mkOverride 1002 null;
+      };
+
+    };
+    "argoproj.io.v1alpha1.ApplicationSetSpecGeneratorsMergeGeneratorsOciTemplateSpecSourcesPluginEnv" =
+      {
+
+        options = {
+          "name" = mkOption {
+            description = "";
+            type = types.str;
+          };
+          "value" = mkOption {
+            description = "";
+            type = types.str;
+          };
+        };
+
+        config = { };
+
+      };
+    "argoproj.io.v1alpha1.ApplicationSetSpecGeneratorsMergeGeneratorsOciTemplateSpecSourcesPluginParameters" =
+      {
+
+        options = {
+          "array" = mkOption {
+            description = "";
+            type = (types.nullOr (types.listOf types.str));
+          };
+          "map" = mkOption {
+            description = "";
+            type = (types.nullOr (types.attrsOf types.str));
+          };
+          "name" = mkOption {
+            description = "";
+            type = (types.nullOr types.str);
+          };
+          "string" = mkOption {
+            description = "";
+            type = (types.nullOr types.str);
+          };
+        };
+
+        config = {
+          "array" = mkOverride 1002 null;
+          "map" = mkOverride 1002 null;
+          "name" = mkOverride 1002 null;
+          "string" = mkOverride 1002 null;
+        };
+
+      };
+    "argoproj.io.v1alpha1.ApplicationSetSpecGeneratorsMergeGeneratorsOciTemplateSpecSyncPolicy" = {
+
+      options = {
+        "automated" = mkOption {
+          description = "";
+          type = (
+            types.nullOr (
+              submoduleOf "argoproj.io.v1alpha1.ApplicationSetSpecGeneratorsMergeGeneratorsOciTemplateSpecSyncPolicyAutomated"
+            )
+          );
+        };
+        "managedNamespaceMetadata" = mkOption {
+          description = "";
+          type = (
+            types.nullOr (
+              submoduleOf "argoproj.io.v1alpha1.ApplicationSetSpecGeneratorsMergeGeneratorsOciTemplateSpecSyncPolicyManagedNamespaceMetadata"
+            )
+          );
+        };
+        "retry" = mkOption {
+          description = "";
+          type = (
+            types.nullOr (
+              submoduleOf "argoproj.io.v1alpha1.ApplicationSetSpecGeneratorsMergeGeneratorsOciTemplateSpecSyncPolicyRetry"
+            )
+          );
+        };
+        "syncOptions" = mkOption {
+          description = "";
+          type = (types.nullOr (types.listOf types.str));
+        };
+      };
+
+      config = {
+        "automated" = mkOverride 1002 null;
+        "managedNamespaceMetadata" = mkOverride 1002 null;
+        "retry" = mkOverride 1002 null;
+        "syncOptions" = mkOverride 1002 null;
+      };
+
+    };
+    "argoproj.io.v1alpha1.ApplicationSetSpecGeneratorsMergeGeneratorsOciTemplateSpecSyncPolicyAutomated" =
+      {
+
+        options = {
+          "allowEmpty" = mkOption {
+            description = "";
+            type = (types.nullOr types.bool);
+          };
+          "enabled" = mkOption {
+            description = "";
+            type = (types.nullOr types.bool);
+          };
+          "prune" = mkOption {
+            description = "";
+            type = (types.nullOr types.bool);
+          };
+          "selfHeal" = mkOption {
+            description = "";
+            type = (types.nullOr types.bool);
+          };
+        };
+
+        config = {
+          "allowEmpty" = mkOverride 1002 null;
+          "enabled" = mkOverride 1002 null;
+          "prune" = mkOverride 1002 null;
+          "selfHeal" = mkOverride 1002 null;
+        };
+
+      };
+    "argoproj.io.v1alpha1.ApplicationSetSpecGeneratorsMergeGeneratorsOciTemplateSpecSyncPolicyManagedNamespaceMetadata" =
+      {
+
+        options = {
+          "annotations" = mkOption {
+            description = "";
+            type = (types.nullOr (types.attrsOf types.str));
+          };
+          "labels" = mkOption {
+            description = "";
+            type = (types.nullOr (types.attrsOf types.str));
+          };
+        };
+
+        config = {
+          "annotations" = mkOverride 1002 null;
+          "labels" = mkOverride 1002 null;
+        };
+
+      };
+    "argoproj.io.v1alpha1.ApplicationSetSpecGeneratorsMergeGeneratorsOciTemplateSpecSyncPolicyRetry" = {
+
+      options = {
+        "backoff" = mkOption {
+          description = "";
+          type = (
+            types.nullOr (
+              submoduleOf "argoproj.io.v1alpha1.ApplicationSetSpecGeneratorsMergeGeneratorsOciTemplateSpecSyncPolicyRetryBackoff"
+            )
+          );
+        };
+        "limit" = mkOption {
+          description = "";
+          type = (types.nullOr types.int);
+        };
+        "refresh" = mkOption {
+          description = "";
+          type = (types.nullOr types.bool);
+        };
+      };
+
+      config = {
+        "backoff" = mkOverride 1002 null;
+        "limit" = mkOverride 1002 null;
+        "refresh" = mkOverride 1002 null;
+      };
+
+    };
+    "argoproj.io.v1alpha1.ApplicationSetSpecGeneratorsMergeGeneratorsOciTemplateSpecSyncPolicyRetryBackoff" =
+      {
+
+        options = {
+          "duration" = mkOption {
+            description = "";
+            type = (types.nullOr types.str);
+          };
+          "factor" = mkOption {
+            description = "";
+            type = (types.nullOr types.int);
+          };
+          "maxDuration" = mkOption {
+            description = "";
+            type = (types.nullOr types.str);
+          };
+        };
+
+        config = {
+          "duration" = mkOverride 1002 null;
+          "factor" = mkOverride 1002 null;
+          "maxDuration" = mkOverride 1002 null;
+        };
+
+      };
     "argoproj.io.v1alpha1.ApplicationSetSpecGeneratorsMergeGeneratorsPlugin" = {
 
       options = {
@@ -42785,6 +47970,10 @@ let
       {
 
         options = {
+          "disableExtensionFilter" = mkOption {
+            description = "";
+            type = (types.nullOr types.bool);
+          };
           "exclude" = mkOption {
             description = "";
             type = (types.nullOr types.str);
@@ -42808,6 +47997,7 @@ let
         };
 
         config = {
+          "disableExtensionFilter" = mkOverride 1002 null;
           "exclude" = mkOverride 1002 null;
           "include" = mkOverride 1002 null;
           "jsonnet" = mkOverride 1002 null;
@@ -43140,6 +48330,10 @@ let
       {
 
         options = {
+          "disableExtensionFilter" = mkOption {
+            description = "";
+            type = (types.nullOr types.bool);
+          };
           "exclude" = mkOption {
             description = "";
             type = (types.nullOr types.str);
@@ -43163,6 +48357,7 @@ let
         };
 
         config = {
+          "disableExtensionFilter" = mkOverride 1002 null;
           "exclude" = mkOverride 1002 null;
           "include" = mkOverride 1002 null;
           "jsonnet" = mkOverride 1002 null;
@@ -44117,6 +49312,10 @@ let
       {
 
         options = {
+          "disableExtensionFilter" = mkOption {
+            description = "";
+            type = (types.nullOr types.bool);
+          };
           "exclude" = mkOption {
             description = "";
             type = (types.nullOr types.str);
@@ -44140,6 +49339,7 @@ let
         };
 
         config = {
+          "disableExtensionFilter" = mkOverride 1002 null;
           "exclude" = mkOverride 1002 null;
           "include" = mkOverride 1002 null;
           "jsonnet" = mkOverride 1002 null;
@@ -45753,6 +50953,10 @@ let
       {
 
         options = {
+          "disableExtensionFilter" = mkOption {
+            description = "";
+            type = (types.nullOr types.bool);
+          };
           "exclude" = mkOption {
             description = "";
             type = (types.nullOr types.str);
@@ -45776,6 +50980,7 @@ let
         };
 
         config = {
+          "disableExtensionFilter" = mkOverride 1002 null;
           "exclude" = mkOverride 1002 null;
           "include" = mkOverride 1002 null;
           "jsonnet" = mkOverride 1002 null;
@@ -46109,6 +51314,10 @@ let
       {
 
         options = {
+          "disableExtensionFilter" = mkOption {
+            description = "";
+            type = (types.nullOr types.bool);
+          };
           "exclude" = mkOption {
             description = "";
             type = (types.nullOr types.str);
@@ -46132,6 +51341,7 @@ let
         };
 
         config = {
+          "disableExtensionFilter" = mkOverride 1002 null;
           "exclude" = mkOverride 1002 null;
           "include" = mkOverride 1002 null;
           "jsonnet" = mkOverride 1002 null;
@@ -47087,6 +52297,10 @@ let
       {
 
         options = {
+          "disableExtensionFilter" = mkOption {
+            description = "";
+            type = (types.nullOr types.bool);
+          };
           "exclude" = mkOption {
             description = "";
             type = (types.nullOr types.str);
@@ -47110,6 +52324,7 @@ let
         };
 
         config = {
+          "disableExtensionFilter" = mkOverride 1002 null;
           "exclude" = mkOverride 1002 null;
           "include" = mkOverride 1002 null;
           "jsonnet" = mkOverride 1002 null;
@@ -48748,6 +53963,10 @@ let
       {
 
         options = {
+          "disableExtensionFilter" = mkOption {
+            description = "";
+            type = (types.nullOr types.bool);
+          };
           "exclude" = mkOption {
             description = "";
             type = (types.nullOr types.str);
@@ -48771,6 +53990,7 @@ let
         };
 
         config = {
+          "disableExtensionFilter" = mkOverride 1002 null;
           "exclude" = mkOverride 1002 null;
           "include" = mkOverride 1002 null;
           "jsonnet" = mkOverride 1002 null;
@@ -49104,6 +54324,10 @@ let
       {
 
         options = {
+          "disableExtensionFilter" = mkOption {
+            description = "";
+            type = (types.nullOr types.bool);
+          };
           "exclude" = mkOption {
             description = "";
             type = (types.nullOr types.str);
@@ -49127,6 +54351,7 @@ let
         };
 
         config = {
+          "disableExtensionFilter" = mkOverride 1002 null;
           "exclude" = mkOverride 1002 null;
           "include" = mkOverride 1002 null;
           "jsonnet" = mkOverride 1002 null;
@@ -50082,6 +55307,10 @@ let
       {
 
         options = {
+          "disableExtensionFilter" = mkOption {
+            description = "";
+            type = (types.nullOr types.bool);
+          };
           "exclude" = mkOption {
             description = "";
             type = (types.nullOr types.str);
@@ -50105,6 +55334,7 @@ let
         };
 
         config = {
+          "disableExtensionFilter" = mkOverride 1002 null;
           "exclude" = mkOverride 1002 null;
           "include" = mkOverride 1002 null;
           "jsonnet" = mkOverride 1002 null;
@@ -51141,6 +56371,10 @@ let
     "argoproj.io.v1alpha1.ApplicationSetSpecGeneratorsMergeTemplateSpecSourceDirectory" = {
 
       options = {
+        "disableExtensionFilter" = mkOption {
+          description = "";
+          type = (types.nullOr types.bool);
+        };
         "exclude" = mkOption {
           description = "";
           type = (types.nullOr types.str);
@@ -51164,6 +56398,7 @@ let
       };
 
       config = {
+        "disableExtensionFilter" = mkOverride 1002 null;
         "exclude" = mkOverride 1002 null;
         "include" = mkOverride 1002 null;
         "jsonnet" = mkOverride 1002 null;
@@ -51490,6 +56725,10 @@ let
       {
 
         options = {
+          "disableExtensionFilter" = mkOption {
+            description = "";
+            type = (types.nullOr types.bool);
+          };
           "exclude" = mkOption {
             description = "";
             type = (types.nullOr types.str);
@@ -51513,6 +56752,7 @@ let
         };
 
         config = {
+          "disableExtensionFilter" = mkOverride 1002 null;
           "exclude" = mkOverride 1002 null;
           "include" = mkOverride 1002 null;
           "jsonnet" = mkOverride 1002 null;
@@ -52457,6 +57697,10 @@ let
     "argoproj.io.v1alpha1.ApplicationSetSpecGeneratorsMergeTemplateSpecSourcesDirectory" = {
 
       options = {
+        "disableExtensionFilter" = mkOption {
+          description = "";
+          type = (types.nullOr types.bool);
+        };
         "exclude" = mkOption {
           description = "";
           type = (types.nullOr types.str);
@@ -52480,6 +57724,7 @@ let
       };
 
       config = {
+        "disableExtensionFilter" = mkOverride 1002 null;
         "exclude" = mkOverride 1002 null;
         "include" = mkOverride 1002 null;
         "jsonnet" = mkOverride 1002 null;
@@ -53149,6 +58394,2417 @@ let
       };
 
     };
+    "argoproj.io.v1alpha1.ApplicationSetSpecGeneratorsOci" = {
+
+      options = {
+        "directories" = mkOption {
+          description = "";
+          type = (
+            types.nullOr (
+              types.listOf (submoduleOf "argoproj.io.v1alpha1.ApplicationSetSpecGeneratorsOciDirectories")
+            )
+          );
+        };
+        "files" = mkOption {
+          description = "";
+          type = (
+            types.nullOr (
+              types.listOf (submoduleOf "argoproj.io.v1alpha1.ApplicationSetSpecGeneratorsOciFiles")
+            )
+          );
+        };
+        "pathParamPrefix" = mkOption {
+          description = "";
+          type = (types.nullOr types.str);
+        };
+        "repoURL" = mkOption {
+          description = "";
+          type = types.str;
+        };
+        "requeueAfterSeconds" = mkOption {
+          description = "";
+          type = (types.nullOr types.int);
+        };
+        "revision" = mkOption {
+          description = "";
+          type = types.str;
+        };
+        "template" = mkOption {
+          description = "";
+          type = (types.nullOr (submoduleOf "argoproj.io.v1alpha1.ApplicationSetSpecGeneratorsOciTemplate"));
+        };
+        "values" = mkOption {
+          description = "";
+          type = (types.nullOr (types.attrsOf types.str));
+        };
+      };
+
+      config = {
+        "directories" = mkOverride 1002 null;
+        "files" = mkOverride 1002 null;
+        "pathParamPrefix" = mkOverride 1002 null;
+        "requeueAfterSeconds" = mkOverride 1002 null;
+        "template" = mkOverride 1002 null;
+        "values" = mkOverride 1002 null;
+      };
+
+    };
+    "argoproj.io.v1alpha1.ApplicationSetSpecGeneratorsOciDirectories" = {
+
+      options = {
+        "exclude" = mkOption {
+          description = "";
+          type = (types.nullOr types.bool);
+        };
+        "path" = mkOption {
+          description = "";
+          type = types.str;
+        };
+      };
+
+      config = {
+        "exclude" = mkOverride 1002 null;
+      };
+
+    };
+    "argoproj.io.v1alpha1.ApplicationSetSpecGeneratorsOciFiles" = {
+
+      options = {
+        "exclude" = mkOption {
+          description = "";
+          type = (types.nullOr types.bool);
+        };
+        "path" = mkOption {
+          description = "";
+          type = types.str;
+        };
+      };
+
+      config = {
+        "exclude" = mkOverride 1002 null;
+      };
+
+    };
+    "argoproj.io.v1alpha1.ApplicationSetSpecGeneratorsOciTemplate" = {
+
+      options = {
+        "metadata" = mkOption {
+          description = "";
+          type = (submoduleOf "argoproj.io.v1alpha1.ApplicationSetSpecGeneratorsOciTemplateMetadata");
+        };
+        "spec" = mkOption {
+          description = "";
+          type = (submoduleOf "argoproj.io.v1alpha1.ApplicationSetSpecGeneratorsOciTemplateSpec");
+        };
+      };
+
+      config = { };
+
+    };
+    "argoproj.io.v1alpha1.ApplicationSetSpecGeneratorsOciTemplateMetadata" = {
+
+      options = {
+        "annotations" = mkOption {
+          description = "";
+          type = (types.nullOr (types.attrsOf types.str));
+        };
+        "finalizers" = mkOption {
+          description = "";
+          type = (types.nullOr (types.listOf types.str));
+        };
+        "labels" = mkOption {
+          description = "";
+          type = (types.nullOr (types.attrsOf types.str));
+        };
+        "name" = mkOption {
+          description = "";
+          type = (types.nullOr types.str);
+        };
+        "namespace" = mkOption {
+          description = "";
+          type = (types.nullOr types.str);
+        };
+      };
+
+      config = {
+        "annotations" = mkOverride 1002 null;
+        "finalizers" = mkOverride 1002 null;
+        "labels" = mkOverride 1002 null;
+        "name" = mkOverride 1002 null;
+        "namespace" = mkOverride 1002 null;
+      };
+
+    };
+    "argoproj.io.v1alpha1.ApplicationSetSpecGeneratorsOciTemplateSpec" = {
+
+      options = {
+        "destination" = mkOption {
+          description = "";
+          type = (submoduleOf "argoproj.io.v1alpha1.ApplicationSetSpecGeneratorsOciTemplateSpecDestination");
+        };
+        "ignoreDifferences" = mkOption {
+          description = "";
+          type = (
+            types.nullOr (
+              coerceAttrsOfSubmodulesToListByKey
+                "argoproj.io.v1alpha1.ApplicationSetSpecGeneratorsOciTemplateSpecIgnoreDifferences"
+                "name"
+                [ ]
+            )
+          );
+          apply = attrsToList;
+        };
+        "info" = mkOption {
+          description = "";
+          type = (
+            types.nullOr (
+              coerceAttrsOfSubmodulesToListByKey
+                "argoproj.io.v1alpha1.ApplicationSetSpecGeneratorsOciTemplateSpecInfo"
+                "name"
+                [ ]
+            )
+          );
+          apply = attrsToList;
+        };
+        "project" = mkOption {
+          description = "";
+          type = types.str;
+        };
+        "revisionHistoryLimit" = mkOption {
+          description = "";
+          type = (types.nullOr types.int);
+        };
+        "source" = mkOption {
+          description = "";
+          type = (
+            types.nullOr (submoduleOf "argoproj.io.v1alpha1.ApplicationSetSpecGeneratorsOciTemplateSpecSource")
+          );
+        };
+        "sourceHydrator" = mkOption {
+          description = "";
+          type = (
+            types.nullOr (
+              submoduleOf "argoproj.io.v1alpha1.ApplicationSetSpecGeneratorsOciTemplateSpecSourceHydrator"
+            )
+          );
+        };
+        "sources" = mkOption {
+          description = "";
+          type = (
+            types.nullOr (
+              coerceAttrsOfSubmodulesToListByKey
+                "argoproj.io.v1alpha1.ApplicationSetSpecGeneratorsOciTemplateSpecSources"
+                "name"
+                [ ]
+            )
+          );
+          apply = attrsToList;
+        };
+        "syncPolicy" = mkOption {
+          description = "";
+          type = (
+            types.nullOr (
+              submoduleOf "argoproj.io.v1alpha1.ApplicationSetSpecGeneratorsOciTemplateSpecSyncPolicy"
+            )
+          );
+        };
+      };
+
+      config = {
+        "ignoreDifferences" = mkOverride 1002 null;
+        "info" = mkOverride 1002 null;
+        "revisionHistoryLimit" = mkOverride 1002 null;
+        "source" = mkOverride 1002 null;
+        "sourceHydrator" = mkOverride 1002 null;
+        "sources" = mkOverride 1002 null;
+        "syncPolicy" = mkOverride 1002 null;
+      };
+
+    };
+    "argoproj.io.v1alpha1.ApplicationSetSpecGeneratorsOciTemplateSpecDestination" = {
+
+      options = {
+        "name" = mkOption {
+          description = "";
+          type = (types.nullOr types.str);
+        };
+        "namespace" = mkOption {
+          description = "";
+          type = (types.nullOr types.str);
+        };
+        "server" = mkOption {
+          description = "";
+          type = (types.nullOr types.str);
+        };
+      };
+
+      config = {
+        "name" = mkOverride 1002 null;
+        "namespace" = mkOverride 1002 null;
+        "server" = mkOverride 1002 null;
+      };
+
+    };
+    "argoproj.io.v1alpha1.ApplicationSetSpecGeneratorsOciTemplateSpecIgnoreDifferences" = {
+
+      options = {
+        "group" = mkOption {
+          description = "";
+          type = (types.nullOr types.str);
+        };
+        "jqPathExpressions" = mkOption {
+          description = "";
+          type = (types.nullOr (types.listOf types.str));
+        };
+        "jsonPointers" = mkOption {
+          description = "";
+          type = (types.nullOr (types.listOf types.str));
+        };
+        "kind" = mkOption {
+          description = "";
+          type = types.str;
+        };
+        "managedFieldsManagers" = mkOption {
+          description = "";
+          type = (types.nullOr (types.listOf types.str));
+        };
+        "name" = mkOption {
+          description = "";
+          type = (types.nullOr types.str);
+        };
+        "namespace" = mkOption {
+          description = "";
+          type = (types.nullOr types.str);
+        };
+      };
+
+      config = {
+        "group" = mkOverride 1002 null;
+        "jqPathExpressions" = mkOverride 1002 null;
+        "jsonPointers" = mkOverride 1002 null;
+        "managedFieldsManagers" = mkOverride 1002 null;
+        "name" = mkOverride 1002 null;
+        "namespace" = mkOverride 1002 null;
+      };
+
+    };
+    "argoproj.io.v1alpha1.ApplicationSetSpecGeneratorsOciTemplateSpecInfo" = {
+
+      options = {
+        "name" = mkOption {
+          description = "";
+          type = types.str;
+        };
+        "value" = mkOption {
+          description = "";
+          type = types.str;
+        };
+      };
+
+      config = { };
+
+    };
+    "argoproj.io.v1alpha1.ApplicationSetSpecGeneratorsOciTemplateSpecSource" = {
+
+      options = {
+        "chart" = mkOption {
+          description = "";
+          type = (types.nullOr types.str);
+        };
+        "directory" = mkOption {
+          description = "";
+          type = (
+            types.nullOr (
+              submoduleOf "argoproj.io.v1alpha1.ApplicationSetSpecGeneratorsOciTemplateSpecSourceDirectory"
+            )
+          );
+        };
+        "helm" = mkOption {
+          description = "";
+          type = (
+            types.nullOr (
+              submoduleOf "argoproj.io.v1alpha1.ApplicationSetSpecGeneratorsOciTemplateSpecSourceHelm"
+            )
+          );
+        };
+        "kustomize" = mkOption {
+          description = "";
+          type = (
+            types.nullOr (
+              submoduleOf "argoproj.io.v1alpha1.ApplicationSetSpecGeneratorsOciTemplateSpecSourceKustomize"
+            )
+          );
+        };
+        "name" = mkOption {
+          description = "";
+          type = (types.nullOr types.str);
+        };
+        "path" = mkOption {
+          description = "";
+          type = (types.nullOr types.str);
+        };
+        "plugin" = mkOption {
+          description = "";
+          type = (
+            types.nullOr (
+              submoduleOf "argoproj.io.v1alpha1.ApplicationSetSpecGeneratorsOciTemplateSpecSourcePlugin"
+            )
+          );
+        };
+        "ref" = mkOption {
+          description = "";
+          type = (types.nullOr types.str);
+        };
+        "repoURL" = mkOption {
+          description = "";
+          type = types.str;
+        };
+        "tagPrefix" = mkOption {
+          description = "";
+          type = (types.nullOr types.str);
+        };
+        "targetRevision" = mkOption {
+          description = "";
+          type = (types.nullOr types.str);
+        };
+      };
+
+      config = {
+        "chart" = mkOverride 1002 null;
+        "directory" = mkOverride 1002 null;
+        "helm" = mkOverride 1002 null;
+        "kustomize" = mkOverride 1002 null;
+        "name" = mkOverride 1002 null;
+        "path" = mkOverride 1002 null;
+        "plugin" = mkOverride 1002 null;
+        "ref" = mkOverride 1002 null;
+        "tagPrefix" = mkOverride 1002 null;
+        "targetRevision" = mkOverride 1002 null;
+      };
+
+    };
+    "argoproj.io.v1alpha1.ApplicationSetSpecGeneratorsOciTemplateSpecSourceDirectory" = {
+
+      options = {
+        "disableExtensionFilter" = mkOption {
+          description = "";
+          type = (types.nullOr types.bool);
+        };
+        "exclude" = mkOption {
+          description = "";
+          type = (types.nullOr types.str);
+        };
+        "include" = mkOption {
+          description = "";
+          type = (types.nullOr types.str);
+        };
+        "jsonnet" = mkOption {
+          description = "";
+          type = (
+            types.nullOr (
+              submoduleOf "argoproj.io.v1alpha1.ApplicationSetSpecGeneratorsOciTemplateSpecSourceDirectoryJsonnet"
+            )
+          );
+        };
+        "recurse" = mkOption {
+          description = "";
+          type = (types.nullOr types.bool);
+        };
+      };
+
+      config = {
+        "disableExtensionFilter" = mkOverride 1002 null;
+        "exclude" = mkOverride 1002 null;
+        "include" = mkOverride 1002 null;
+        "jsonnet" = mkOverride 1002 null;
+        "recurse" = mkOverride 1002 null;
+      };
+
+    };
+    "argoproj.io.v1alpha1.ApplicationSetSpecGeneratorsOciTemplateSpecSourceDirectoryJsonnet" = {
+
+      options = {
+        "extVars" = mkOption {
+          description = "";
+          type = (
+            types.nullOr (
+              coerceAttrsOfSubmodulesToListByKey
+                "argoproj.io.v1alpha1.ApplicationSetSpecGeneratorsOciTemplateSpecSourceDirectoryJsonnetExtVars"
+                "name"
+                [ ]
+            )
+          );
+          apply = attrsToList;
+        };
+        "libs" = mkOption {
+          description = "";
+          type = (types.nullOr (types.listOf types.str));
+        };
+        "tlas" = mkOption {
+          description = "";
+          type = (
+            types.nullOr (
+              coerceAttrsOfSubmodulesToListByKey
+                "argoproj.io.v1alpha1.ApplicationSetSpecGeneratorsOciTemplateSpecSourceDirectoryJsonnetTlas"
+                "name"
+                [ ]
+            )
+          );
+          apply = attrsToList;
+        };
+      };
+
+      config = {
+        "extVars" = mkOverride 1002 null;
+        "libs" = mkOverride 1002 null;
+        "tlas" = mkOverride 1002 null;
+      };
+
+    };
+    "argoproj.io.v1alpha1.ApplicationSetSpecGeneratorsOciTemplateSpecSourceDirectoryJsonnetExtVars" = {
+
+      options = {
+        "code" = mkOption {
+          description = "";
+          type = (types.nullOr types.bool);
+        };
+        "name" = mkOption {
+          description = "";
+          type = types.str;
+        };
+        "value" = mkOption {
+          description = "";
+          type = types.str;
+        };
+      };
+
+      config = {
+        "code" = mkOverride 1002 null;
+      };
+
+    };
+    "argoproj.io.v1alpha1.ApplicationSetSpecGeneratorsOciTemplateSpecSourceDirectoryJsonnetTlas" = {
+
+      options = {
+        "code" = mkOption {
+          description = "";
+          type = (types.nullOr types.bool);
+        };
+        "name" = mkOption {
+          description = "";
+          type = types.str;
+        };
+        "value" = mkOption {
+          description = "";
+          type = types.str;
+        };
+      };
+
+      config = {
+        "code" = mkOverride 1002 null;
+      };
+
+    };
+    "argoproj.io.v1alpha1.ApplicationSetSpecGeneratorsOciTemplateSpecSourceHelm" = {
+
+      options = {
+        "apiVersions" = mkOption {
+          description = "";
+          type = (types.nullOr (types.listOf types.str));
+        };
+        "fileParameters" = mkOption {
+          description = "";
+          type = (
+            types.nullOr (
+              coerceAttrsOfSubmodulesToListByKey
+                "argoproj.io.v1alpha1.ApplicationSetSpecGeneratorsOciTemplateSpecSourceHelmFileParameters"
+                "name"
+                [ ]
+            )
+          );
+          apply = attrsToList;
+        };
+        "ignoreMissingValueFiles" = mkOption {
+          description = "";
+          type = (types.nullOr types.bool);
+        };
+        "kubeVersion" = mkOption {
+          description = "";
+          type = (types.nullOr types.str);
+        };
+        "namespace" = mkOption {
+          description = "";
+          type = (types.nullOr types.str);
+        };
+        "parameters" = mkOption {
+          description = "";
+          type = (
+            types.nullOr (
+              coerceAttrsOfSubmodulesToListByKey
+                "argoproj.io.v1alpha1.ApplicationSetSpecGeneratorsOciTemplateSpecSourceHelmParameters"
+                "name"
+                [ ]
+            )
+          );
+          apply = attrsToList;
+        };
+        "passCredentials" = mkOption {
+          description = "";
+          type = (types.nullOr types.bool);
+        };
+        "releaseName" = mkOption {
+          description = "";
+          type = (types.nullOr types.str);
+        };
+        "skipCrds" = mkOption {
+          description = "";
+          type = (types.nullOr types.bool);
+        };
+        "skipSchemaValidation" = mkOption {
+          description = "";
+          type = (types.nullOr types.bool);
+        };
+        "skipTests" = mkOption {
+          description = "";
+          type = (types.nullOr types.bool);
+        };
+        "valueFiles" = mkOption {
+          description = "";
+          type = (types.nullOr (types.listOf types.str));
+        };
+        "values" = mkOption {
+          description = "";
+          type = (types.nullOr types.str);
+        };
+        "valuesObject" = mkOption {
+          description = "";
+          type = (types.nullOr types.attrs);
+        };
+        "version" = mkOption {
+          description = "";
+          type = (types.nullOr types.str);
+        };
+      };
+
+      config = {
+        "apiVersions" = mkOverride 1002 null;
+        "fileParameters" = mkOverride 1002 null;
+        "ignoreMissingValueFiles" = mkOverride 1002 null;
+        "kubeVersion" = mkOverride 1002 null;
+        "namespace" = mkOverride 1002 null;
+        "parameters" = mkOverride 1002 null;
+        "passCredentials" = mkOverride 1002 null;
+        "releaseName" = mkOverride 1002 null;
+        "skipCrds" = mkOverride 1002 null;
+        "skipSchemaValidation" = mkOverride 1002 null;
+        "skipTests" = mkOverride 1002 null;
+        "valueFiles" = mkOverride 1002 null;
+        "values" = mkOverride 1002 null;
+        "valuesObject" = mkOverride 1002 null;
+        "version" = mkOverride 1002 null;
+      };
+
+    };
+    "argoproj.io.v1alpha1.ApplicationSetSpecGeneratorsOciTemplateSpecSourceHelmFileParameters" = {
+
+      options = {
+        "name" = mkOption {
+          description = "";
+          type = (types.nullOr types.str);
+        };
+        "path" = mkOption {
+          description = "";
+          type = (types.nullOr types.str);
+        };
+      };
+
+      config = {
+        "name" = mkOverride 1002 null;
+        "path" = mkOverride 1002 null;
+      };
+
+    };
+    "argoproj.io.v1alpha1.ApplicationSetSpecGeneratorsOciTemplateSpecSourceHelmParameters" = {
+
+      options = {
+        "forceString" = mkOption {
+          description = "";
+          type = (types.nullOr types.bool);
+        };
+        "name" = mkOption {
+          description = "";
+          type = (types.nullOr types.str);
+        };
+        "value" = mkOption {
+          description = "";
+          type = (types.nullOr types.str);
+        };
+      };
+
+      config = {
+        "forceString" = mkOverride 1002 null;
+        "name" = mkOverride 1002 null;
+        "value" = mkOverride 1002 null;
+      };
+
+    };
+    "argoproj.io.v1alpha1.ApplicationSetSpecGeneratorsOciTemplateSpecSourceHydrator" = {
+
+      options = {
+        "drySource" = mkOption {
+          description = "";
+          type = (
+            submoduleOf "argoproj.io.v1alpha1.ApplicationSetSpecGeneratorsOciTemplateSpecSourceHydratorDrySource"
+          );
+        };
+        "hydrateTo" = mkOption {
+          description = "";
+          type = (
+            types.nullOr (
+              submoduleOf "argoproj.io.v1alpha1.ApplicationSetSpecGeneratorsOciTemplateSpecSourceHydratorHydrateTo"
+            )
+          );
+        };
+        "syncSource" = mkOption {
+          description = "";
+          type = (
+            submoduleOf "argoproj.io.v1alpha1.ApplicationSetSpecGeneratorsOciTemplateSpecSourceHydratorSyncSource"
+          );
+        };
+      };
+
+      config = {
+        "hydrateTo" = mkOverride 1002 null;
+      };
+
+    };
+    "argoproj.io.v1alpha1.ApplicationSetSpecGeneratorsOciTemplateSpecSourceHydratorDrySource" = {
+
+      options = {
+        "directory" = mkOption {
+          description = "";
+          type = (
+            types.nullOr (
+              submoduleOf "argoproj.io.v1alpha1.ApplicationSetSpecGeneratorsOciTemplateSpecSourceHydratorDrySourceDirectory"
+            )
+          );
+        };
+        "helm" = mkOption {
+          description = "";
+          type = (
+            types.nullOr (
+              submoduleOf "argoproj.io.v1alpha1.ApplicationSetSpecGeneratorsOciTemplateSpecSourceHydratorDrySourceHelm"
+            )
+          );
+        };
+        "kustomize" = mkOption {
+          description = "";
+          type = (
+            types.nullOr (
+              submoduleOf "argoproj.io.v1alpha1.ApplicationSetSpecGeneratorsOciTemplateSpecSourceHydratorDrySourceKustomize"
+            )
+          );
+        };
+        "path" = mkOption {
+          description = "";
+          type = types.str;
+        };
+        "plugin" = mkOption {
+          description = "";
+          type = (
+            types.nullOr (
+              submoduleOf "argoproj.io.v1alpha1.ApplicationSetSpecGeneratorsOciTemplateSpecSourceHydratorDrySourcePlugin"
+            )
+          );
+        };
+        "repoURL" = mkOption {
+          description = "";
+          type = types.str;
+        };
+        "targetRevision" = mkOption {
+          description = "";
+          type = types.str;
+        };
+      };
+
+      config = {
+        "directory" = mkOverride 1002 null;
+        "helm" = mkOverride 1002 null;
+        "kustomize" = mkOverride 1002 null;
+        "plugin" = mkOverride 1002 null;
+      };
+
+    };
+    "argoproj.io.v1alpha1.ApplicationSetSpecGeneratorsOciTemplateSpecSourceHydratorDrySourceDirectory" =
+      {
+
+        options = {
+          "disableExtensionFilter" = mkOption {
+            description = "";
+            type = (types.nullOr types.bool);
+          };
+          "exclude" = mkOption {
+            description = "";
+            type = (types.nullOr types.str);
+          };
+          "include" = mkOption {
+            description = "";
+            type = (types.nullOr types.str);
+          };
+          "jsonnet" = mkOption {
+            description = "";
+            type = (
+              types.nullOr (
+                submoduleOf "argoproj.io.v1alpha1.ApplicationSetSpecGeneratorsOciTemplateSpecSourceHydratorDrySourceDirectoryJsonnet"
+              )
+            );
+          };
+          "recurse" = mkOption {
+            description = "";
+            type = (types.nullOr types.bool);
+          };
+        };
+
+        config = {
+          "disableExtensionFilter" = mkOverride 1002 null;
+          "exclude" = mkOverride 1002 null;
+          "include" = mkOverride 1002 null;
+          "jsonnet" = mkOverride 1002 null;
+          "recurse" = mkOverride 1002 null;
+        };
+
+      };
+    "argoproj.io.v1alpha1.ApplicationSetSpecGeneratorsOciTemplateSpecSourceHydratorDrySourceDirectoryJsonnet" =
+      {
+
+        options = {
+          "extVars" = mkOption {
+            description = "";
+            type = (
+              types.nullOr (
+                coerceAttrsOfSubmodulesToListByKey
+                  "argoproj.io.v1alpha1.ApplicationSetSpecGeneratorsOciTemplateSpecSourceHydratorDrySourceDirectoryJsonnetExtVars"
+                  "name"
+                  [ ]
+              )
+            );
+            apply = attrsToList;
+          };
+          "libs" = mkOption {
+            description = "";
+            type = (types.nullOr (types.listOf types.str));
+          };
+          "tlas" = mkOption {
+            description = "";
+            type = (
+              types.nullOr (
+                coerceAttrsOfSubmodulesToListByKey
+                  "argoproj.io.v1alpha1.ApplicationSetSpecGeneratorsOciTemplateSpecSourceHydratorDrySourceDirectoryJsonnetTlas"
+                  "name"
+                  [ ]
+              )
+            );
+            apply = attrsToList;
+          };
+        };
+
+        config = {
+          "extVars" = mkOverride 1002 null;
+          "libs" = mkOverride 1002 null;
+          "tlas" = mkOverride 1002 null;
+        };
+
+      };
+    "argoproj.io.v1alpha1.ApplicationSetSpecGeneratorsOciTemplateSpecSourceHydratorDrySourceDirectoryJsonnetExtVars" =
+      {
+
+        options = {
+          "code" = mkOption {
+            description = "";
+            type = (types.nullOr types.bool);
+          };
+          "name" = mkOption {
+            description = "";
+            type = types.str;
+          };
+          "value" = mkOption {
+            description = "";
+            type = types.str;
+          };
+        };
+
+        config = {
+          "code" = mkOverride 1002 null;
+        };
+
+      };
+    "argoproj.io.v1alpha1.ApplicationSetSpecGeneratorsOciTemplateSpecSourceHydratorDrySourceDirectoryJsonnetTlas" =
+      {
+
+        options = {
+          "code" = mkOption {
+            description = "";
+            type = (types.nullOr types.bool);
+          };
+          "name" = mkOption {
+            description = "";
+            type = types.str;
+          };
+          "value" = mkOption {
+            description = "";
+            type = types.str;
+          };
+        };
+
+        config = {
+          "code" = mkOverride 1002 null;
+        };
+
+      };
+    "argoproj.io.v1alpha1.ApplicationSetSpecGeneratorsOciTemplateSpecSourceHydratorDrySourceHelm" = {
+
+      options = {
+        "apiVersions" = mkOption {
+          description = "";
+          type = (types.nullOr (types.listOf types.str));
+        };
+        "fileParameters" = mkOption {
+          description = "";
+          type = (
+            types.nullOr (
+              coerceAttrsOfSubmodulesToListByKey
+                "argoproj.io.v1alpha1.ApplicationSetSpecGeneratorsOciTemplateSpecSourceHydratorDrySourceHelmFileParameters"
+                "name"
+                [ ]
+            )
+          );
+          apply = attrsToList;
+        };
+        "ignoreMissingValueFiles" = mkOption {
+          description = "";
+          type = (types.nullOr types.bool);
+        };
+        "kubeVersion" = mkOption {
+          description = "";
+          type = (types.nullOr types.str);
+        };
+        "namespace" = mkOption {
+          description = "";
+          type = (types.nullOr types.str);
+        };
+        "parameters" = mkOption {
+          description = "";
+          type = (
+            types.nullOr (
+              coerceAttrsOfSubmodulesToListByKey
+                "argoproj.io.v1alpha1.ApplicationSetSpecGeneratorsOciTemplateSpecSourceHydratorDrySourceHelmParameters"
+                "name"
+                [ ]
+            )
+          );
+          apply = attrsToList;
+        };
+        "passCredentials" = mkOption {
+          description = "";
+          type = (types.nullOr types.bool);
+        };
+        "releaseName" = mkOption {
+          description = "";
+          type = (types.nullOr types.str);
+        };
+        "skipCrds" = mkOption {
+          description = "";
+          type = (types.nullOr types.bool);
+        };
+        "skipSchemaValidation" = mkOption {
+          description = "";
+          type = (types.nullOr types.bool);
+        };
+        "skipTests" = mkOption {
+          description = "";
+          type = (types.nullOr types.bool);
+        };
+        "valueFiles" = mkOption {
+          description = "";
+          type = (types.nullOr (types.listOf types.str));
+        };
+        "values" = mkOption {
+          description = "";
+          type = (types.nullOr types.str);
+        };
+        "valuesObject" = mkOption {
+          description = "";
+          type = (types.nullOr types.attrs);
+        };
+        "version" = mkOption {
+          description = "";
+          type = (types.nullOr types.str);
+        };
+      };
+
+      config = {
+        "apiVersions" = mkOverride 1002 null;
+        "fileParameters" = mkOverride 1002 null;
+        "ignoreMissingValueFiles" = mkOverride 1002 null;
+        "kubeVersion" = mkOverride 1002 null;
+        "namespace" = mkOverride 1002 null;
+        "parameters" = mkOverride 1002 null;
+        "passCredentials" = mkOverride 1002 null;
+        "releaseName" = mkOverride 1002 null;
+        "skipCrds" = mkOverride 1002 null;
+        "skipSchemaValidation" = mkOverride 1002 null;
+        "skipTests" = mkOverride 1002 null;
+        "valueFiles" = mkOverride 1002 null;
+        "values" = mkOverride 1002 null;
+        "valuesObject" = mkOverride 1002 null;
+        "version" = mkOverride 1002 null;
+      };
+
+    };
+    "argoproj.io.v1alpha1.ApplicationSetSpecGeneratorsOciTemplateSpecSourceHydratorDrySourceHelmFileParameters" =
+      {
+
+        options = {
+          "name" = mkOption {
+            description = "";
+            type = (types.nullOr types.str);
+          };
+          "path" = mkOption {
+            description = "";
+            type = (types.nullOr types.str);
+          };
+        };
+
+        config = {
+          "name" = mkOverride 1002 null;
+          "path" = mkOverride 1002 null;
+        };
+
+      };
+    "argoproj.io.v1alpha1.ApplicationSetSpecGeneratorsOciTemplateSpecSourceHydratorDrySourceHelmParameters" =
+      {
+
+        options = {
+          "forceString" = mkOption {
+            description = "";
+            type = (types.nullOr types.bool);
+          };
+          "name" = mkOption {
+            description = "";
+            type = (types.nullOr types.str);
+          };
+          "value" = mkOption {
+            description = "";
+            type = (types.nullOr types.str);
+          };
+        };
+
+        config = {
+          "forceString" = mkOverride 1002 null;
+          "name" = mkOverride 1002 null;
+          "value" = mkOverride 1002 null;
+        };
+
+      };
+    "argoproj.io.v1alpha1.ApplicationSetSpecGeneratorsOciTemplateSpecSourceHydratorDrySourceKustomize" =
+      {
+
+        options = {
+          "apiVersions" = mkOption {
+            description = "";
+            type = (types.nullOr (types.listOf types.str));
+          };
+          "commonAnnotations" = mkOption {
+            description = "";
+            type = (types.nullOr (types.attrsOf types.str));
+          };
+          "commonAnnotationsEnvsubst" = mkOption {
+            description = "";
+            type = (types.nullOr types.bool);
+          };
+          "commonLabels" = mkOption {
+            description = "";
+            type = (types.nullOr (types.attrsOf types.str));
+          };
+          "components" = mkOption {
+            description = "";
+            type = (types.nullOr (types.listOf types.str));
+          };
+          "forceCommonAnnotations" = mkOption {
+            description = "";
+            type = (types.nullOr types.bool);
+          };
+          "forceCommonLabels" = mkOption {
+            description = "";
+            type = (types.nullOr types.bool);
+          };
+          "ignoreMissingComponents" = mkOption {
+            description = "";
+            type = (types.nullOr types.bool);
+          };
+          "images" = mkOption {
+            description = "";
+            type = (types.nullOr (types.listOf types.str));
+          };
+          "kubeVersion" = mkOption {
+            description = "";
+            type = (types.nullOr types.str);
+          };
+          "labelIncludeTemplates" = mkOption {
+            description = "";
+            type = (types.nullOr types.bool);
+          };
+          "labelWithoutSelector" = mkOption {
+            description = "";
+            type = (types.nullOr types.bool);
+          };
+          "namePrefix" = mkOption {
+            description = "";
+            type = (types.nullOr types.str);
+          };
+          "nameSuffix" = mkOption {
+            description = "";
+            type = (types.nullOr types.str);
+          };
+          "namespace" = mkOption {
+            description = "";
+            type = (types.nullOr types.str);
+          };
+          "patches" = mkOption {
+            description = "";
+            type = (
+              types.nullOr (
+                types.listOf (
+                  submoduleOf "argoproj.io.v1alpha1.ApplicationSetSpecGeneratorsOciTemplateSpecSourceHydratorDrySourceKustomizePatches"
+                )
+              )
+            );
+          };
+          "replicas" = mkOption {
+            description = "";
+            type = (
+              types.nullOr (
+                coerceAttrsOfSubmodulesToListByKey
+                  "argoproj.io.v1alpha1.ApplicationSetSpecGeneratorsOciTemplateSpecSourceHydratorDrySourceKustomizeReplicas"
+                  "name"
+                  [ ]
+              )
+            );
+            apply = attrsToList;
+          };
+          "version" = mkOption {
+            description = "";
+            type = (types.nullOr types.str);
+          };
+        };
+
+        config = {
+          "apiVersions" = mkOverride 1002 null;
+          "commonAnnotations" = mkOverride 1002 null;
+          "commonAnnotationsEnvsubst" = mkOverride 1002 null;
+          "commonLabels" = mkOverride 1002 null;
+          "components" = mkOverride 1002 null;
+          "forceCommonAnnotations" = mkOverride 1002 null;
+          "forceCommonLabels" = mkOverride 1002 null;
+          "ignoreMissingComponents" = mkOverride 1002 null;
+          "images" = mkOverride 1002 null;
+          "kubeVersion" = mkOverride 1002 null;
+          "labelIncludeTemplates" = mkOverride 1002 null;
+          "labelWithoutSelector" = mkOverride 1002 null;
+          "namePrefix" = mkOverride 1002 null;
+          "nameSuffix" = mkOverride 1002 null;
+          "namespace" = mkOverride 1002 null;
+          "patches" = mkOverride 1002 null;
+          "replicas" = mkOverride 1002 null;
+          "version" = mkOverride 1002 null;
+        };
+
+      };
+    "argoproj.io.v1alpha1.ApplicationSetSpecGeneratorsOciTemplateSpecSourceHydratorDrySourceKustomizePatches" =
+      {
+
+        options = {
+          "options" = mkOption {
+            description = "";
+            type = (types.nullOr (types.attrsOf types.bool));
+          };
+          "patch" = mkOption {
+            description = "";
+            type = (types.nullOr types.str);
+          };
+          "path" = mkOption {
+            description = "";
+            type = (types.nullOr types.str);
+          };
+          "target" = mkOption {
+            description = "";
+            type = (
+              types.nullOr (
+                submoduleOf "argoproj.io.v1alpha1.ApplicationSetSpecGeneratorsOciTemplateSpecSourceHydratorDrySourceKustomizePatchesTarget"
+              )
+            );
+          };
+        };
+
+        config = {
+          "options" = mkOverride 1002 null;
+          "patch" = mkOverride 1002 null;
+          "path" = mkOverride 1002 null;
+          "target" = mkOverride 1002 null;
+        };
+
+      };
+    "argoproj.io.v1alpha1.ApplicationSetSpecGeneratorsOciTemplateSpecSourceHydratorDrySourceKustomizePatchesTarget" =
+      {
+
+        options = {
+          "annotationSelector" = mkOption {
+            description = "";
+            type = (types.nullOr types.str);
+          };
+          "group" = mkOption {
+            description = "";
+            type = (types.nullOr types.str);
+          };
+          "kind" = mkOption {
+            description = "";
+            type = (types.nullOr types.str);
+          };
+          "labelSelector" = mkOption {
+            description = "";
+            type = (types.nullOr types.str);
+          };
+          "name" = mkOption {
+            description = "";
+            type = (types.nullOr types.str);
+          };
+          "namespace" = mkOption {
+            description = "";
+            type = (types.nullOr types.str);
+          };
+          "version" = mkOption {
+            description = "";
+            type = (types.nullOr types.str);
+          };
+        };
+
+        config = {
+          "annotationSelector" = mkOverride 1002 null;
+          "group" = mkOverride 1002 null;
+          "kind" = mkOverride 1002 null;
+          "labelSelector" = mkOverride 1002 null;
+          "name" = mkOverride 1002 null;
+          "namespace" = mkOverride 1002 null;
+          "version" = mkOverride 1002 null;
+        };
+
+      };
+    "argoproj.io.v1alpha1.ApplicationSetSpecGeneratorsOciTemplateSpecSourceHydratorDrySourceKustomizeReplicas" =
+      {
+
+        options = {
+          "count" = mkOption {
+            description = "";
+            type = (types.either types.int types.str);
+          };
+          "name" = mkOption {
+            description = "";
+            type = types.str;
+          };
+        };
+
+        config = { };
+
+      };
+    "argoproj.io.v1alpha1.ApplicationSetSpecGeneratorsOciTemplateSpecSourceHydratorDrySourcePlugin" = {
+
+      options = {
+        "env" = mkOption {
+          description = "";
+          type = (
+            types.nullOr (
+              coerceAttrsOfSubmodulesToListByKey
+                "argoproj.io.v1alpha1.ApplicationSetSpecGeneratorsOciTemplateSpecSourceHydratorDrySourcePluginEnv"
+                "name"
+                [ ]
+            )
+          );
+          apply = attrsToList;
+        };
+        "name" = mkOption {
+          description = "";
+          type = (types.nullOr types.str);
+        };
+        "parameters" = mkOption {
+          description = "";
+          type = (
+            types.nullOr (
+              coerceAttrsOfSubmodulesToListByKey
+                "argoproj.io.v1alpha1.ApplicationSetSpecGeneratorsOciTemplateSpecSourceHydratorDrySourcePluginParameters"
+                "name"
+                [ ]
+            )
+          );
+          apply = attrsToList;
+        };
+      };
+
+      config = {
+        "env" = mkOverride 1002 null;
+        "name" = mkOverride 1002 null;
+        "parameters" = mkOverride 1002 null;
+      };
+
+    };
+    "argoproj.io.v1alpha1.ApplicationSetSpecGeneratorsOciTemplateSpecSourceHydratorDrySourcePluginEnv" =
+      {
+
+        options = {
+          "name" = mkOption {
+            description = "";
+            type = types.str;
+          };
+          "value" = mkOption {
+            description = "";
+            type = types.str;
+          };
+        };
+
+        config = { };
+
+      };
+    "argoproj.io.v1alpha1.ApplicationSetSpecGeneratorsOciTemplateSpecSourceHydratorDrySourcePluginParameters" =
+      {
+
+        options = {
+          "array" = mkOption {
+            description = "";
+            type = (types.nullOr (types.listOf types.str));
+          };
+          "map" = mkOption {
+            description = "";
+            type = (types.nullOr (types.attrsOf types.str));
+          };
+          "name" = mkOption {
+            description = "";
+            type = (types.nullOr types.str);
+          };
+          "string" = mkOption {
+            description = "";
+            type = (types.nullOr types.str);
+          };
+        };
+
+        config = {
+          "array" = mkOverride 1002 null;
+          "map" = mkOverride 1002 null;
+          "name" = mkOverride 1002 null;
+          "string" = mkOverride 1002 null;
+        };
+
+      };
+    "argoproj.io.v1alpha1.ApplicationSetSpecGeneratorsOciTemplateSpecSourceHydratorHydrateTo" = {
+
+      options = {
+        "targetBranch" = mkOption {
+          description = "";
+          type = types.str;
+        };
+      };
+
+      config = { };
+
+    };
+    "argoproj.io.v1alpha1.ApplicationSetSpecGeneratorsOciTemplateSpecSourceHydratorSyncSource" = {
+
+      options = {
+        "path" = mkOption {
+          description = "";
+          type = (types.withMinLength 1 types.str);
+        };
+        "repoURL" = mkOption {
+          description = "";
+          type = (types.nullOr types.str);
+        };
+        "targetBranch" = mkOption {
+          description = "";
+          type = types.str;
+        };
+      };
+
+      config = {
+        "repoURL" = mkOverride 1002 null;
+      };
+
+    };
+    "argoproj.io.v1alpha1.ApplicationSetSpecGeneratorsOciTemplateSpecSourceKustomize" = {
+
+      options = {
+        "apiVersions" = mkOption {
+          description = "";
+          type = (types.nullOr (types.listOf types.str));
+        };
+        "commonAnnotations" = mkOption {
+          description = "";
+          type = (types.nullOr (types.attrsOf types.str));
+        };
+        "commonAnnotationsEnvsubst" = mkOption {
+          description = "";
+          type = (types.nullOr types.bool);
+        };
+        "commonLabels" = mkOption {
+          description = "";
+          type = (types.nullOr (types.attrsOf types.str));
+        };
+        "components" = mkOption {
+          description = "";
+          type = (types.nullOr (types.listOf types.str));
+        };
+        "forceCommonAnnotations" = mkOption {
+          description = "";
+          type = (types.nullOr types.bool);
+        };
+        "forceCommonLabels" = mkOption {
+          description = "";
+          type = (types.nullOr types.bool);
+        };
+        "ignoreMissingComponents" = mkOption {
+          description = "";
+          type = (types.nullOr types.bool);
+        };
+        "images" = mkOption {
+          description = "";
+          type = (types.nullOr (types.listOf types.str));
+        };
+        "kubeVersion" = mkOption {
+          description = "";
+          type = (types.nullOr types.str);
+        };
+        "labelIncludeTemplates" = mkOption {
+          description = "";
+          type = (types.nullOr types.bool);
+        };
+        "labelWithoutSelector" = mkOption {
+          description = "";
+          type = (types.nullOr types.bool);
+        };
+        "namePrefix" = mkOption {
+          description = "";
+          type = (types.nullOr types.str);
+        };
+        "nameSuffix" = mkOption {
+          description = "";
+          type = (types.nullOr types.str);
+        };
+        "namespace" = mkOption {
+          description = "";
+          type = (types.nullOr types.str);
+        };
+        "patches" = mkOption {
+          description = "";
+          type = (
+            types.nullOr (
+              types.listOf (
+                submoduleOf "argoproj.io.v1alpha1.ApplicationSetSpecGeneratorsOciTemplateSpecSourceKustomizePatches"
+              )
+            )
+          );
+        };
+        "replicas" = mkOption {
+          description = "";
+          type = (
+            types.nullOr (
+              coerceAttrsOfSubmodulesToListByKey
+                "argoproj.io.v1alpha1.ApplicationSetSpecGeneratorsOciTemplateSpecSourceKustomizeReplicas"
+                "name"
+                [ ]
+            )
+          );
+          apply = attrsToList;
+        };
+        "version" = mkOption {
+          description = "";
+          type = (types.nullOr types.str);
+        };
+      };
+
+      config = {
+        "apiVersions" = mkOverride 1002 null;
+        "commonAnnotations" = mkOverride 1002 null;
+        "commonAnnotationsEnvsubst" = mkOverride 1002 null;
+        "commonLabels" = mkOverride 1002 null;
+        "components" = mkOverride 1002 null;
+        "forceCommonAnnotations" = mkOverride 1002 null;
+        "forceCommonLabels" = mkOverride 1002 null;
+        "ignoreMissingComponents" = mkOverride 1002 null;
+        "images" = mkOverride 1002 null;
+        "kubeVersion" = mkOverride 1002 null;
+        "labelIncludeTemplates" = mkOverride 1002 null;
+        "labelWithoutSelector" = mkOverride 1002 null;
+        "namePrefix" = mkOverride 1002 null;
+        "nameSuffix" = mkOverride 1002 null;
+        "namespace" = mkOverride 1002 null;
+        "patches" = mkOverride 1002 null;
+        "replicas" = mkOverride 1002 null;
+        "version" = mkOverride 1002 null;
+      };
+
+    };
+    "argoproj.io.v1alpha1.ApplicationSetSpecGeneratorsOciTemplateSpecSourceKustomizePatches" = {
+
+      options = {
+        "options" = mkOption {
+          description = "";
+          type = (types.nullOr (types.attrsOf types.bool));
+        };
+        "patch" = mkOption {
+          description = "";
+          type = (types.nullOr types.str);
+        };
+        "path" = mkOption {
+          description = "";
+          type = (types.nullOr types.str);
+        };
+        "target" = mkOption {
+          description = "";
+          type = (
+            types.nullOr (
+              submoduleOf "argoproj.io.v1alpha1.ApplicationSetSpecGeneratorsOciTemplateSpecSourceKustomizePatchesTarget"
+            )
+          );
+        };
+      };
+
+      config = {
+        "options" = mkOverride 1002 null;
+        "patch" = mkOverride 1002 null;
+        "path" = mkOverride 1002 null;
+        "target" = mkOverride 1002 null;
+      };
+
+    };
+    "argoproj.io.v1alpha1.ApplicationSetSpecGeneratorsOciTemplateSpecSourceKustomizePatchesTarget" = {
+
+      options = {
+        "annotationSelector" = mkOption {
+          description = "";
+          type = (types.nullOr types.str);
+        };
+        "group" = mkOption {
+          description = "";
+          type = (types.nullOr types.str);
+        };
+        "kind" = mkOption {
+          description = "";
+          type = (types.nullOr types.str);
+        };
+        "labelSelector" = mkOption {
+          description = "";
+          type = (types.nullOr types.str);
+        };
+        "name" = mkOption {
+          description = "";
+          type = (types.nullOr types.str);
+        };
+        "namespace" = mkOption {
+          description = "";
+          type = (types.nullOr types.str);
+        };
+        "version" = mkOption {
+          description = "";
+          type = (types.nullOr types.str);
+        };
+      };
+
+      config = {
+        "annotationSelector" = mkOverride 1002 null;
+        "group" = mkOverride 1002 null;
+        "kind" = mkOverride 1002 null;
+        "labelSelector" = mkOverride 1002 null;
+        "name" = mkOverride 1002 null;
+        "namespace" = mkOverride 1002 null;
+        "version" = mkOverride 1002 null;
+      };
+
+    };
+    "argoproj.io.v1alpha1.ApplicationSetSpecGeneratorsOciTemplateSpecSourceKustomizeReplicas" = {
+
+      options = {
+        "count" = mkOption {
+          description = "";
+          type = (types.either types.int types.str);
+        };
+        "name" = mkOption {
+          description = "";
+          type = types.str;
+        };
+      };
+
+      config = { };
+
+    };
+    "argoproj.io.v1alpha1.ApplicationSetSpecGeneratorsOciTemplateSpecSourcePlugin" = {
+
+      options = {
+        "env" = mkOption {
+          description = "";
+          type = (
+            types.nullOr (
+              coerceAttrsOfSubmodulesToListByKey
+                "argoproj.io.v1alpha1.ApplicationSetSpecGeneratorsOciTemplateSpecSourcePluginEnv"
+                "name"
+                [ ]
+            )
+          );
+          apply = attrsToList;
+        };
+        "name" = mkOption {
+          description = "";
+          type = (types.nullOr types.str);
+        };
+        "parameters" = mkOption {
+          description = "";
+          type = (
+            types.nullOr (
+              coerceAttrsOfSubmodulesToListByKey
+                "argoproj.io.v1alpha1.ApplicationSetSpecGeneratorsOciTemplateSpecSourcePluginParameters"
+                "name"
+                [ ]
+            )
+          );
+          apply = attrsToList;
+        };
+      };
+
+      config = {
+        "env" = mkOverride 1002 null;
+        "name" = mkOverride 1002 null;
+        "parameters" = mkOverride 1002 null;
+      };
+
+    };
+    "argoproj.io.v1alpha1.ApplicationSetSpecGeneratorsOciTemplateSpecSourcePluginEnv" = {
+
+      options = {
+        "name" = mkOption {
+          description = "";
+          type = types.str;
+        };
+        "value" = mkOption {
+          description = "";
+          type = types.str;
+        };
+      };
+
+      config = { };
+
+    };
+    "argoproj.io.v1alpha1.ApplicationSetSpecGeneratorsOciTemplateSpecSourcePluginParameters" = {
+
+      options = {
+        "array" = mkOption {
+          description = "";
+          type = (types.nullOr (types.listOf types.str));
+        };
+        "map" = mkOption {
+          description = "";
+          type = (types.nullOr (types.attrsOf types.str));
+        };
+        "name" = mkOption {
+          description = "";
+          type = (types.nullOr types.str);
+        };
+        "string" = mkOption {
+          description = "";
+          type = (types.nullOr types.str);
+        };
+      };
+
+      config = {
+        "array" = mkOverride 1002 null;
+        "map" = mkOverride 1002 null;
+        "name" = mkOverride 1002 null;
+        "string" = mkOverride 1002 null;
+      };
+
+    };
+    "argoproj.io.v1alpha1.ApplicationSetSpecGeneratorsOciTemplateSpecSources" = {
+
+      options = {
+        "chart" = mkOption {
+          description = "";
+          type = (types.nullOr types.str);
+        };
+        "directory" = mkOption {
+          description = "";
+          type = (
+            types.nullOr (
+              submoduleOf "argoproj.io.v1alpha1.ApplicationSetSpecGeneratorsOciTemplateSpecSourcesDirectory"
+            )
+          );
+        };
+        "helm" = mkOption {
+          description = "";
+          type = (
+            types.nullOr (
+              submoduleOf "argoproj.io.v1alpha1.ApplicationSetSpecGeneratorsOciTemplateSpecSourcesHelm"
+            )
+          );
+        };
+        "kustomize" = mkOption {
+          description = "";
+          type = (
+            types.nullOr (
+              submoduleOf "argoproj.io.v1alpha1.ApplicationSetSpecGeneratorsOciTemplateSpecSourcesKustomize"
+            )
+          );
+        };
+        "name" = mkOption {
+          description = "";
+          type = (types.nullOr types.str);
+        };
+        "path" = mkOption {
+          description = "";
+          type = (types.nullOr types.str);
+        };
+        "plugin" = mkOption {
+          description = "";
+          type = (
+            types.nullOr (
+              submoduleOf "argoproj.io.v1alpha1.ApplicationSetSpecGeneratorsOciTemplateSpecSourcesPlugin"
+            )
+          );
+        };
+        "ref" = mkOption {
+          description = "";
+          type = (types.nullOr types.str);
+        };
+        "repoURL" = mkOption {
+          description = "";
+          type = types.str;
+        };
+        "tagPrefix" = mkOption {
+          description = "";
+          type = (types.nullOr types.str);
+        };
+        "targetRevision" = mkOption {
+          description = "";
+          type = (types.nullOr types.str);
+        };
+      };
+
+      config = {
+        "chart" = mkOverride 1002 null;
+        "directory" = mkOverride 1002 null;
+        "helm" = mkOverride 1002 null;
+        "kustomize" = mkOverride 1002 null;
+        "name" = mkOverride 1002 null;
+        "path" = mkOverride 1002 null;
+        "plugin" = mkOverride 1002 null;
+        "ref" = mkOverride 1002 null;
+        "tagPrefix" = mkOverride 1002 null;
+        "targetRevision" = mkOverride 1002 null;
+      };
+
+    };
+    "argoproj.io.v1alpha1.ApplicationSetSpecGeneratorsOciTemplateSpecSourcesDirectory" = {
+
+      options = {
+        "disableExtensionFilter" = mkOption {
+          description = "";
+          type = (types.nullOr types.bool);
+        };
+        "exclude" = mkOption {
+          description = "";
+          type = (types.nullOr types.str);
+        };
+        "include" = mkOption {
+          description = "";
+          type = (types.nullOr types.str);
+        };
+        "jsonnet" = mkOption {
+          description = "";
+          type = (
+            types.nullOr (
+              submoduleOf "argoproj.io.v1alpha1.ApplicationSetSpecGeneratorsOciTemplateSpecSourcesDirectoryJsonnet"
+            )
+          );
+        };
+        "recurse" = mkOption {
+          description = "";
+          type = (types.nullOr types.bool);
+        };
+      };
+
+      config = {
+        "disableExtensionFilter" = mkOverride 1002 null;
+        "exclude" = mkOverride 1002 null;
+        "include" = mkOverride 1002 null;
+        "jsonnet" = mkOverride 1002 null;
+        "recurse" = mkOverride 1002 null;
+      };
+
+    };
+    "argoproj.io.v1alpha1.ApplicationSetSpecGeneratorsOciTemplateSpecSourcesDirectoryJsonnet" = {
+
+      options = {
+        "extVars" = mkOption {
+          description = "";
+          type = (
+            types.nullOr (
+              coerceAttrsOfSubmodulesToListByKey
+                "argoproj.io.v1alpha1.ApplicationSetSpecGeneratorsOciTemplateSpecSourcesDirectoryJsonnetExtVars"
+                "name"
+                [ ]
+            )
+          );
+          apply = attrsToList;
+        };
+        "libs" = mkOption {
+          description = "";
+          type = (types.nullOr (types.listOf types.str));
+        };
+        "tlas" = mkOption {
+          description = "";
+          type = (
+            types.nullOr (
+              coerceAttrsOfSubmodulesToListByKey
+                "argoproj.io.v1alpha1.ApplicationSetSpecGeneratorsOciTemplateSpecSourcesDirectoryJsonnetTlas"
+                "name"
+                [ ]
+            )
+          );
+          apply = attrsToList;
+        };
+      };
+
+      config = {
+        "extVars" = mkOverride 1002 null;
+        "libs" = mkOverride 1002 null;
+        "tlas" = mkOverride 1002 null;
+      };
+
+    };
+    "argoproj.io.v1alpha1.ApplicationSetSpecGeneratorsOciTemplateSpecSourcesDirectoryJsonnetExtVars" = {
+
+      options = {
+        "code" = mkOption {
+          description = "";
+          type = (types.nullOr types.bool);
+        };
+        "name" = mkOption {
+          description = "";
+          type = types.str;
+        };
+        "value" = mkOption {
+          description = "";
+          type = types.str;
+        };
+      };
+
+      config = {
+        "code" = mkOverride 1002 null;
+      };
+
+    };
+    "argoproj.io.v1alpha1.ApplicationSetSpecGeneratorsOciTemplateSpecSourcesDirectoryJsonnetTlas" = {
+
+      options = {
+        "code" = mkOption {
+          description = "";
+          type = (types.nullOr types.bool);
+        };
+        "name" = mkOption {
+          description = "";
+          type = types.str;
+        };
+        "value" = mkOption {
+          description = "";
+          type = types.str;
+        };
+      };
+
+      config = {
+        "code" = mkOverride 1002 null;
+      };
+
+    };
+    "argoproj.io.v1alpha1.ApplicationSetSpecGeneratorsOciTemplateSpecSourcesHelm" = {
+
+      options = {
+        "apiVersions" = mkOption {
+          description = "";
+          type = (types.nullOr (types.listOf types.str));
+        };
+        "fileParameters" = mkOption {
+          description = "";
+          type = (
+            types.nullOr (
+              coerceAttrsOfSubmodulesToListByKey
+                "argoproj.io.v1alpha1.ApplicationSetSpecGeneratorsOciTemplateSpecSourcesHelmFileParameters"
+                "name"
+                [ ]
+            )
+          );
+          apply = attrsToList;
+        };
+        "ignoreMissingValueFiles" = mkOption {
+          description = "";
+          type = (types.nullOr types.bool);
+        };
+        "kubeVersion" = mkOption {
+          description = "";
+          type = (types.nullOr types.str);
+        };
+        "namespace" = mkOption {
+          description = "";
+          type = (types.nullOr types.str);
+        };
+        "parameters" = mkOption {
+          description = "";
+          type = (
+            types.nullOr (
+              coerceAttrsOfSubmodulesToListByKey
+                "argoproj.io.v1alpha1.ApplicationSetSpecGeneratorsOciTemplateSpecSourcesHelmParameters"
+                "name"
+                [ ]
+            )
+          );
+          apply = attrsToList;
+        };
+        "passCredentials" = mkOption {
+          description = "";
+          type = (types.nullOr types.bool);
+        };
+        "releaseName" = mkOption {
+          description = "";
+          type = (types.nullOr types.str);
+        };
+        "skipCrds" = mkOption {
+          description = "";
+          type = (types.nullOr types.bool);
+        };
+        "skipSchemaValidation" = mkOption {
+          description = "";
+          type = (types.nullOr types.bool);
+        };
+        "skipTests" = mkOption {
+          description = "";
+          type = (types.nullOr types.bool);
+        };
+        "valueFiles" = mkOption {
+          description = "";
+          type = (types.nullOr (types.listOf types.str));
+        };
+        "values" = mkOption {
+          description = "";
+          type = (types.nullOr types.str);
+        };
+        "valuesObject" = mkOption {
+          description = "";
+          type = (types.nullOr types.attrs);
+        };
+        "version" = mkOption {
+          description = "";
+          type = (types.nullOr types.str);
+        };
+      };
+
+      config = {
+        "apiVersions" = mkOverride 1002 null;
+        "fileParameters" = mkOverride 1002 null;
+        "ignoreMissingValueFiles" = mkOverride 1002 null;
+        "kubeVersion" = mkOverride 1002 null;
+        "namespace" = mkOverride 1002 null;
+        "parameters" = mkOverride 1002 null;
+        "passCredentials" = mkOverride 1002 null;
+        "releaseName" = mkOverride 1002 null;
+        "skipCrds" = mkOverride 1002 null;
+        "skipSchemaValidation" = mkOverride 1002 null;
+        "skipTests" = mkOverride 1002 null;
+        "valueFiles" = mkOverride 1002 null;
+        "values" = mkOverride 1002 null;
+        "valuesObject" = mkOverride 1002 null;
+        "version" = mkOverride 1002 null;
+      };
+
+    };
+    "argoproj.io.v1alpha1.ApplicationSetSpecGeneratorsOciTemplateSpecSourcesHelmFileParameters" = {
+
+      options = {
+        "name" = mkOption {
+          description = "";
+          type = (types.nullOr types.str);
+        };
+        "path" = mkOption {
+          description = "";
+          type = (types.nullOr types.str);
+        };
+      };
+
+      config = {
+        "name" = mkOverride 1002 null;
+        "path" = mkOverride 1002 null;
+      };
+
+    };
+    "argoproj.io.v1alpha1.ApplicationSetSpecGeneratorsOciTemplateSpecSourcesHelmParameters" = {
+
+      options = {
+        "forceString" = mkOption {
+          description = "";
+          type = (types.nullOr types.bool);
+        };
+        "name" = mkOption {
+          description = "";
+          type = (types.nullOr types.str);
+        };
+        "value" = mkOption {
+          description = "";
+          type = (types.nullOr types.str);
+        };
+      };
+
+      config = {
+        "forceString" = mkOverride 1002 null;
+        "name" = mkOverride 1002 null;
+        "value" = mkOverride 1002 null;
+      };
+
+    };
+    "argoproj.io.v1alpha1.ApplicationSetSpecGeneratorsOciTemplateSpecSourcesKustomize" = {
+
+      options = {
+        "apiVersions" = mkOption {
+          description = "";
+          type = (types.nullOr (types.listOf types.str));
+        };
+        "commonAnnotations" = mkOption {
+          description = "";
+          type = (types.nullOr (types.attrsOf types.str));
+        };
+        "commonAnnotationsEnvsubst" = mkOption {
+          description = "";
+          type = (types.nullOr types.bool);
+        };
+        "commonLabels" = mkOption {
+          description = "";
+          type = (types.nullOr (types.attrsOf types.str));
+        };
+        "components" = mkOption {
+          description = "";
+          type = (types.nullOr (types.listOf types.str));
+        };
+        "forceCommonAnnotations" = mkOption {
+          description = "";
+          type = (types.nullOr types.bool);
+        };
+        "forceCommonLabels" = mkOption {
+          description = "";
+          type = (types.nullOr types.bool);
+        };
+        "ignoreMissingComponents" = mkOption {
+          description = "";
+          type = (types.nullOr types.bool);
+        };
+        "images" = mkOption {
+          description = "";
+          type = (types.nullOr (types.listOf types.str));
+        };
+        "kubeVersion" = mkOption {
+          description = "";
+          type = (types.nullOr types.str);
+        };
+        "labelIncludeTemplates" = mkOption {
+          description = "";
+          type = (types.nullOr types.bool);
+        };
+        "labelWithoutSelector" = mkOption {
+          description = "";
+          type = (types.nullOr types.bool);
+        };
+        "namePrefix" = mkOption {
+          description = "";
+          type = (types.nullOr types.str);
+        };
+        "nameSuffix" = mkOption {
+          description = "";
+          type = (types.nullOr types.str);
+        };
+        "namespace" = mkOption {
+          description = "";
+          type = (types.nullOr types.str);
+        };
+        "patches" = mkOption {
+          description = "";
+          type = (
+            types.nullOr (
+              types.listOf (
+                submoduleOf "argoproj.io.v1alpha1.ApplicationSetSpecGeneratorsOciTemplateSpecSourcesKustomizePatches"
+              )
+            )
+          );
+        };
+        "replicas" = mkOption {
+          description = "";
+          type = (
+            types.nullOr (
+              coerceAttrsOfSubmodulesToListByKey
+                "argoproj.io.v1alpha1.ApplicationSetSpecGeneratorsOciTemplateSpecSourcesKustomizeReplicas"
+                "name"
+                [ ]
+            )
+          );
+          apply = attrsToList;
+        };
+        "version" = mkOption {
+          description = "";
+          type = (types.nullOr types.str);
+        };
+      };
+
+      config = {
+        "apiVersions" = mkOverride 1002 null;
+        "commonAnnotations" = mkOverride 1002 null;
+        "commonAnnotationsEnvsubst" = mkOverride 1002 null;
+        "commonLabels" = mkOverride 1002 null;
+        "components" = mkOverride 1002 null;
+        "forceCommonAnnotations" = mkOverride 1002 null;
+        "forceCommonLabels" = mkOverride 1002 null;
+        "ignoreMissingComponents" = mkOverride 1002 null;
+        "images" = mkOverride 1002 null;
+        "kubeVersion" = mkOverride 1002 null;
+        "labelIncludeTemplates" = mkOverride 1002 null;
+        "labelWithoutSelector" = mkOverride 1002 null;
+        "namePrefix" = mkOverride 1002 null;
+        "nameSuffix" = mkOverride 1002 null;
+        "namespace" = mkOverride 1002 null;
+        "patches" = mkOverride 1002 null;
+        "replicas" = mkOverride 1002 null;
+        "version" = mkOverride 1002 null;
+      };
+
+    };
+    "argoproj.io.v1alpha1.ApplicationSetSpecGeneratorsOciTemplateSpecSourcesKustomizePatches" = {
+
+      options = {
+        "options" = mkOption {
+          description = "";
+          type = (types.nullOr (types.attrsOf types.bool));
+        };
+        "patch" = mkOption {
+          description = "";
+          type = (types.nullOr types.str);
+        };
+        "path" = mkOption {
+          description = "";
+          type = (types.nullOr types.str);
+        };
+        "target" = mkOption {
+          description = "";
+          type = (
+            types.nullOr (
+              submoduleOf "argoproj.io.v1alpha1.ApplicationSetSpecGeneratorsOciTemplateSpecSourcesKustomizePatchesTarget"
+            )
+          );
+        };
+      };
+
+      config = {
+        "options" = mkOverride 1002 null;
+        "patch" = mkOverride 1002 null;
+        "path" = mkOverride 1002 null;
+        "target" = mkOverride 1002 null;
+      };
+
+    };
+    "argoproj.io.v1alpha1.ApplicationSetSpecGeneratorsOciTemplateSpecSourcesKustomizePatchesTarget" = {
+
+      options = {
+        "annotationSelector" = mkOption {
+          description = "";
+          type = (types.nullOr types.str);
+        };
+        "group" = mkOption {
+          description = "";
+          type = (types.nullOr types.str);
+        };
+        "kind" = mkOption {
+          description = "";
+          type = (types.nullOr types.str);
+        };
+        "labelSelector" = mkOption {
+          description = "";
+          type = (types.nullOr types.str);
+        };
+        "name" = mkOption {
+          description = "";
+          type = (types.nullOr types.str);
+        };
+        "namespace" = mkOption {
+          description = "";
+          type = (types.nullOr types.str);
+        };
+        "version" = mkOption {
+          description = "";
+          type = (types.nullOr types.str);
+        };
+      };
+
+      config = {
+        "annotationSelector" = mkOverride 1002 null;
+        "group" = mkOverride 1002 null;
+        "kind" = mkOverride 1002 null;
+        "labelSelector" = mkOverride 1002 null;
+        "name" = mkOverride 1002 null;
+        "namespace" = mkOverride 1002 null;
+        "version" = mkOverride 1002 null;
+      };
+
+    };
+    "argoproj.io.v1alpha1.ApplicationSetSpecGeneratorsOciTemplateSpecSourcesKustomizeReplicas" = {
+
+      options = {
+        "count" = mkOption {
+          description = "";
+          type = (types.either types.int types.str);
+        };
+        "name" = mkOption {
+          description = "";
+          type = types.str;
+        };
+      };
+
+      config = { };
+
+    };
+    "argoproj.io.v1alpha1.ApplicationSetSpecGeneratorsOciTemplateSpecSourcesPlugin" = {
+
+      options = {
+        "env" = mkOption {
+          description = "";
+          type = (
+            types.nullOr (
+              coerceAttrsOfSubmodulesToListByKey
+                "argoproj.io.v1alpha1.ApplicationSetSpecGeneratorsOciTemplateSpecSourcesPluginEnv"
+                "name"
+                [ ]
+            )
+          );
+          apply = attrsToList;
+        };
+        "name" = mkOption {
+          description = "";
+          type = (types.nullOr types.str);
+        };
+        "parameters" = mkOption {
+          description = "";
+          type = (
+            types.nullOr (
+              coerceAttrsOfSubmodulesToListByKey
+                "argoproj.io.v1alpha1.ApplicationSetSpecGeneratorsOciTemplateSpecSourcesPluginParameters"
+                "name"
+                [ ]
+            )
+          );
+          apply = attrsToList;
+        };
+      };
+
+      config = {
+        "env" = mkOverride 1002 null;
+        "name" = mkOverride 1002 null;
+        "parameters" = mkOverride 1002 null;
+      };
+
+    };
+    "argoproj.io.v1alpha1.ApplicationSetSpecGeneratorsOciTemplateSpecSourcesPluginEnv" = {
+
+      options = {
+        "name" = mkOption {
+          description = "";
+          type = types.str;
+        };
+        "value" = mkOption {
+          description = "";
+          type = types.str;
+        };
+      };
+
+      config = { };
+
+    };
+    "argoproj.io.v1alpha1.ApplicationSetSpecGeneratorsOciTemplateSpecSourcesPluginParameters" = {
+
+      options = {
+        "array" = mkOption {
+          description = "";
+          type = (types.nullOr (types.listOf types.str));
+        };
+        "map" = mkOption {
+          description = "";
+          type = (types.nullOr (types.attrsOf types.str));
+        };
+        "name" = mkOption {
+          description = "";
+          type = (types.nullOr types.str);
+        };
+        "string" = mkOption {
+          description = "";
+          type = (types.nullOr types.str);
+        };
+      };
+
+      config = {
+        "array" = mkOverride 1002 null;
+        "map" = mkOverride 1002 null;
+        "name" = mkOverride 1002 null;
+        "string" = mkOverride 1002 null;
+      };
+
+    };
+    "argoproj.io.v1alpha1.ApplicationSetSpecGeneratorsOciTemplateSpecSyncPolicy" = {
+
+      options = {
+        "automated" = mkOption {
+          description = "";
+          type = (
+            types.nullOr (
+              submoduleOf "argoproj.io.v1alpha1.ApplicationSetSpecGeneratorsOciTemplateSpecSyncPolicyAutomated"
+            )
+          );
+        };
+        "managedNamespaceMetadata" = mkOption {
+          description = "";
+          type = (
+            types.nullOr (
+              submoduleOf "argoproj.io.v1alpha1.ApplicationSetSpecGeneratorsOciTemplateSpecSyncPolicyManagedNamespaceMetadata"
+            )
+          );
+        };
+        "retry" = mkOption {
+          description = "";
+          type = (
+            types.nullOr (
+              submoduleOf "argoproj.io.v1alpha1.ApplicationSetSpecGeneratorsOciTemplateSpecSyncPolicyRetry"
+            )
+          );
+        };
+        "syncOptions" = mkOption {
+          description = "";
+          type = (types.nullOr (types.listOf types.str));
+        };
+      };
+
+      config = {
+        "automated" = mkOverride 1002 null;
+        "managedNamespaceMetadata" = mkOverride 1002 null;
+        "retry" = mkOverride 1002 null;
+        "syncOptions" = mkOverride 1002 null;
+      };
+
+    };
+    "argoproj.io.v1alpha1.ApplicationSetSpecGeneratorsOciTemplateSpecSyncPolicyAutomated" = {
+
+      options = {
+        "allowEmpty" = mkOption {
+          description = "";
+          type = (types.nullOr types.bool);
+        };
+        "enabled" = mkOption {
+          description = "";
+          type = (types.nullOr types.bool);
+        };
+        "prune" = mkOption {
+          description = "";
+          type = (types.nullOr types.bool);
+        };
+        "selfHeal" = mkOption {
+          description = "";
+          type = (types.nullOr types.bool);
+        };
+      };
+
+      config = {
+        "allowEmpty" = mkOverride 1002 null;
+        "enabled" = mkOverride 1002 null;
+        "prune" = mkOverride 1002 null;
+        "selfHeal" = mkOverride 1002 null;
+      };
+
+    };
+    "argoproj.io.v1alpha1.ApplicationSetSpecGeneratorsOciTemplateSpecSyncPolicyManagedNamespaceMetadata" =
+      {
+
+        options = {
+          "annotations" = mkOption {
+            description = "";
+            type = (types.nullOr (types.attrsOf types.str));
+          };
+          "labels" = mkOption {
+            description = "";
+            type = (types.nullOr (types.attrsOf types.str));
+          };
+        };
+
+        config = {
+          "annotations" = mkOverride 1002 null;
+          "labels" = mkOverride 1002 null;
+        };
+
+      };
+    "argoproj.io.v1alpha1.ApplicationSetSpecGeneratorsOciTemplateSpecSyncPolicyRetry" = {
+
+      options = {
+        "backoff" = mkOption {
+          description = "";
+          type = (
+            types.nullOr (
+              submoduleOf "argoproj.io.v1alpha1.ApplicationSetSpecGeneratorsOciTemplateSpecSyncPolicyRetryBackoff"
+            )
+          );
+        };
+        "limit" = mkOption {
+          description = "";
+          type = (types.nullOr types.int);
+        };
+        "refresh" = mkOption {
+          description = "";
+          type = (types.nullOr types.bool);
+        };
+      };
+
+      config = {
+        "backoff" = mkOverride 1002 null;
+        "limit" = mkOverride 1002 null;
+        "refresh" = mkOverride 1002 null;
+      };
+
+    };
+    "argoproj.io.v1alpha1.ApplicationSetSpecGeneratorsOciTemplateSpecSyncPolicyRetryBackoff" = {
+
+      options = {
+        "duration" = mkOption {
+          description = "";
+          type = (types.nullOr types.str);
+        };
+        "factor" = mkOption {
+          description = "";
+          type = (types.nullOr types.int);
+        };
+        "maxDuration" = mkOption {
+          description = "";
+          type = (types.nullOr types.str);
+        };
+      };
+
+      config = {
+        "duration" = mkOverride 1002 null;
+        "factor" = mkOverride 1002 null;
+        "maxDuration" = mkOverride 1002 null;
+      };
+
+    };
     "argoproj.io.v1alpha1.ApplicationSetSpecGeneratorsPlugin" = {
 
       options = {
@@ -53515,6 +61171,10 @@ let
     "argoproj.io.v1alpha1.ApplicationSetSpecGeneratorsPluginTemplateSpecSourceDirectory" = {
 
       options = {
+        "disableExtensionFilter" = mkOption {
+          description = "";
+          type = (types.nullOr types.bool);
+        };
         "exclude" = mkOption {
           description = "";
           type = (types.nullOr types.str);
@@ -53538,6 +61198,7 @@ let
       };
 
       config = {
+        "disableExtensionFilter" = mkOverride 1002 null;
         "exclude" = mkOverride 1002 null;
         "include" = mkOverride 1002 null;
         "jsonnet" = mkOverride 1002 null;
@@ -53864,6 +61525,10 @@ let
       {
 
         options = {
+          "disableExtensionFilter" = mkOption {
+            description = "";
+            type = (types.nullOr types.bool);
+          };
           "exclude" = mkOption {
             description = "";
             type = (types.nullOr types.str);
@@ -53887,6 +61552,7 @@ let
         };
 
         config = {
+          "disableExtensionFilter" = mkOverride 1002 null;
           "exclude" = mkOverride 1002 null;
           "include" = mkOverride 1002 null;
           "jsonnet" = mkOverride 1002 null;
@@ -54832,6 +62498,10 @@ let
     "argoproj.io.v1alpha1.ApplicationSetSpecGeneratorsPluginTemplateSpecSourcesDirectory" = {
 
       options = {
+        "disableExtensionFilter" = mkOption {
+          description = "";
+          type = (types.nullOr types.bool);
+        };
         "exclude" = mkOption {
           description = "";
           type = (types.nullOr types.str);
@@ -54855,6 +62525,7 @@ let
       };
 
       config = {
+        "disableExtensionFilter" = mkOverride 1002 null;
         "exclude" = mkOverride 1002 null;
         "include" = mkOverride 1002 null;
         "jsonnet" = mkOverride 1002 null;
@@ -56425,6 +64096,10 @@ let
     "argoproj.io.v1alpha1.ApplicationSetSpecGeneratorsPullRequestTemplateSpecSourceDirectory" = {
 
       options = {
+        "disableExtensionFilter" = mkOption {
+          description = "";
+          type = (types.nullOr types.bool);
+        };
         "exclude" = mkOption {
           description = "";
           type = (types.nullOr types.str);
@@ -56448,6 +64123,7 @@ let
       };
 
       config = {
+        "disableExtensionFilter" = mkOverride 1002 null;
         "exclude" = mkOverride 1002 null;
         "include" = mkOverride 1002 null;
         "jsonnet" = mkOverride 1002 null;
@@ -56777,6 +64453,10 @@ let
       {
 
         options = {
+          "disableExtensionFilter" = mkOption {
+            description = "";
+            type = (types.nullOr types.bool);
+          };
           "exclude" = mkOption {
             description = "";
             type = (types.nullOr types.str);
@@ -56800,6 +64480,7 @@ let
         };
 
         config = {
+          "disableExtensionFilter" = mkOverride 1002 null;
           "exclude" = mkOverride 1002 null;
           "include" = mkOverride 1002 null;
           "jsonnet" = mkOverride 1002 null;
@@ -57749,6 +65430,10 @@ let
     "argoproj.io.v1alpha1.ApplicationSetSpecGeneratorsPullRequestTemplateSpecSourcesDirectory" = {
 
       options = {
+        "disableExtensionFilter" = mkOption {
+          description = "";
+          type = (types.nullOr types.bool);
+        };
         "exclude" = mkOption {
           description = "";
           type = (types.nullOr types.str);
@@ -57772,6 +65457,7 @@ let
       };
 
       config = {
+        "disableExtensionFilter" = mkOverride 1002 null;
         "exclude" = mkOverride 1002 null;
         "include" = mkOverride 1002 null;
         "jsonnet" = mkOverride 1002 null;
@@ -59371,6 +67057,10 @@ let
     "argoproj.io.v1alpha1.ApplicationSetSpecGeneratorsScmProviderTemplateSpecSourceDirectory" = {
 
       options = {
+        "disableExtensionFilter" = mkOption {
+          description = "";
+          type = (types.nullOr types.bool);
+        };
         "exclude" = mkOption {
           description = "";
           type = (types.nullOr types.str);
@@ -59394,6 +67084,7 @@ let
       };
 
       config = {
+        "disableExtensionFilter" = mkOverride 1002 null;
         "exclude" = mkOverride 1002 null;
         "include" = mkOverride 1002 null;
         "jsonnet" = mkOverride 1002 null;
@@ -59723,6 +67414,10 @@ let
       {
 
         options = {
+          "disableExtensionFilter" = mkOption {
+            description = "";
+            type = (types.nullOr types.bool);
+          };
           "exclude" = mkOption {
             description = "";
             type = (types.nullOr types.str);
@@ -59746,6 +67441,7 @@ let
         };
 
         config = {
+          "disableExtensionFilter" = mkOverride 1002 null;
           "exclude" = mkOverride 1002 null;
           "include" = mkOverride 1002 null;
           "jsonnet" = mkOverride 1002 null;
@@ -60695,6 +68391,10 @@ let
     "argoproj.io.v1alpha1.ApplicationSetSpecGeneratorsScmProviderTemplateSpecSourcesDirectory" = {
 
       options = {
+        "disableExtensionFilter" = mkOption {
+          description = "";
+          type = (types.nullOr types.bool);
+        };
         "exclude" = mkOption {
           description = "";
           type = (types.nullOr types.str);
@@ -60718,6 +68418,7 @@ let
       };
 
       config = {
+        "disableExtensionFilter" = mkOverride 1002 null;
         "exclude" = mkOverride 1002 null;
         "include" = mkOverride 1002 null;
         "jsonnet" = mkOverride 1002 null;
@@ -61882,6 +69583,10 @@ let
     "argoproj.io.v1alpha1.ApplicationSetSpecTemplateSpecSourceDirectory" = {
 
       options = {
+        "disableExtensionFilter" = mkOption {
+          description = "";
+          type = (types.nullOr types.bool);
+        };
         "exclude" = mkOption {
           description = "";
           type = (types.nullOr types.str);
@@ -61905,6 +69610,7 @@ let
       };
 
       config = {
+        "disableExtensionFilter" = mkOverride 1002 null;
         "exclude" = mkOverride 1002 null;
         "include" = mkOverride 1002 null;
         "jsonnet" = mkOverride 1002 null;
@@ -62225,6 +69931,10 @@ let
     "argoproj.io.v1alpha1.ApplicationSetSpecTemplateSpecSourceHydratorDrySourceDirectory" = {
 
       options = {
+        "disableExtensionFilter" = mkOption {
+          description = "";
+          type = (types.nullOr types.bool);
+        };
         "exclude" = mkOption {
           description = "";
           type = (types.nullOr types.str);
@@ -62248,6 +69958,7 @@ let
       };
 
       config = {
+        "disableExtensionFilter" = mkOverride 1002 null;
         "exclude" = mkOverride 1002 null;
         "include" = mkOverride 1002 null;
         "jsonnet" = mkOverride 1002 null;
@@ -63174,6 +70885,10 @@ let
     "argoproj.io.v1alpha1.ApplicationSetSpecTemplateSpecSourcesDirectory" = {
 
       options = {
+        "disableExtensionFilter" = mkOption {
+          description = "";
+          type = (types.nullOr types.bool);
+        };
         "exclude" = mkOption {
           description = "";
           type = (types.nullOr types.str);
@@ -63197,6 +70912,7 @@ let
       };
 
       config = {
+        "disableExtensionFilter" = mkOverride 1002 null;
         "exclude" = mkOverride 1002 null;
         "include" = mkOverride 1002 null;
         "jsonnet" = mkOverride 1002 null;
@@ -64297,6 +72013,10 @@ let
     "argoproj.io.v1alpha1.ApplicationSpecSourceDirectory" = {
 
       options = {
+        "disableExtensionFilter" = mkOption {
+          description = "DisableExtensionFilter controls whether the built-in file-extension filter is skipped during\nmanifest generation. When false (the default), only files with a .yaml, .yml, .json, or\n.jsonnet extension are considered as potential manifests. Set it to true to disable the filter\nso that files with custom extensions (e.g. *.yaml.sealed) can be matched by the include/exclude\nglob patterns instead.";
+          type = (types.nullOr types.bool);
+        };
         "exclude" = mkOption {
           description = "Exclude contains a glob pattern to match paths against that should be explicitly excluded from being used during manifest generation";
           type = (types.nullOr types.str);
@@ -64316,6 +72036,7 @@ let
       };
 
       config = {
+        "disableExtensionFilter" = mkOverride 1002 null;
         "exclude" = mkOverride 1002 null;
         "include" = mkOverride 1002 null;
         "jsonnet" = mkOverride 1002 null;
@@ -64620,6 +72341,10 @@ let
     "argoproj.io.v1alpha1.ApplicationSpecSourceHydratorDrySourceDirectory" = {
 
       options = {
+        "disableExtensionFilter" = mkOption {
+          description = "DisableExtensionFilter controls whether the built-in file-extension filter is skipped during\nmanifest generation. When false (the default), only files with a .yaml, .yml, .json, or\n.jsonnet extension are considered as potential manifests. Set it to true to disable the filter\nso that files with custom extensions (e.g. *.yaml.sealed) can be matched by the include/exclude\nglob patterns instead.";
+          type = (types.nullOr types.bool);
+        };
         "exclude" = mkOption {
           description = "Exclude contains a glob pattern to match paths against that should be explicitly excluded from being used during manifest generation";
           type = (types.nullOr types.str);
@@ -64643,6 +72368,7 @@ let
       };
 
       config = {
+        "disableExtensionFilter" = mkOverride 1002 null;
         "exclude" = mkOverride 1002 null;
         "include" = mkOverride 1002 null;
         "jsonnet" = mkOverride 1002 null;
@@ -65550,6 +73276,10 @@ let
     "argoproj.io.v1alpha1.ApplicationSpecSourcesDirectory" = {
 
       options = {
+        "disableExtensionFilter" = mkOption {
+          description = "DisableExtensionFilter controls whether the built-in file-extension filter is skipped during\nmanifest generation. When false (the default), only files with a .yaml, .yml, .json, or\n.jsonnet extension are considered as potential manifests. Set it to true to disable the filter\nso that files with custom extensions (e.g. *.yaml.sealed) can be matched by the include/exclude\nglob patterns instead.";
+          type = (types.nullOr types.bool);
+        };
         "exclude" = mkOption {
           description = "Exclude contains a glob pattern to match paths against that should be explicitly excluded from being used during manifest generation";
           type = (types.nullOr types.str);
@@ -65569,6 +73299,7 @@ let
       };
 
       config = {
+        "disableExtensionFilter" = mkOverride 1002 null;
         "exclude" = mkOverride 1002 null;
         "include" = mkOverride 1002 null;
         "jsonnet" = mkOverride 1002 null;
@@ -66325,7 +74056,7 @@ let
           type = (types.nullOr types.str);
         };
         "message" = mkOption {
-          description = "Message is a human-readable informational message describing the health status\n\nDeprecated: this field is not used and will be removed in a future release.";
+          description = "Message is a human-readable informational message describing the health status";
           type = (types.nullOr types.str);
         };
         "status" = mkOption {
@@ -66478,6 +74209,10 @@ let
     "argoproj.io.v1alpha1.ApplicationStatusHistorySourceDirectory" = {
 
       options = {
+        "disableExtensionFilter" = mkOption {
+          description = "DisableExtensionFilter controls whether the built-in file-extension filter is skipped during\nmanifest generation. When false (the default), only files with a .yaml, .yml, .json, or\n.jsonnet extension are considered as potential manifests. Set it to true to disable the filter\nso that files with custom extensions (e.g. *.yaml.sealed) can be matched by the include/exclude\nglob patterns instead.";
+          type = (types.nullOr types.bool);
+        };
         "exclude" = mkOption {
           description = "Exclude contains a glob pattern to match paths against that should be explicitly excluded from being used during manifest generation";
           type = (types.nullOr types.str);
@@ -66499,6 +74234,7 @@ let
       };
 
       config = {
+        "disableExtensionFilter" = mkOverride 1002 null;
         "exclude" = mkOverride 1002 null;
         "include" = mkOverride 1002 null;
         "jsonnet" = mkOverride 1002 null;
@@ -67087,6 +74823,10 @@ let
     "argoproj.io.v1alpha1.ApplicationStatusHistorySourcesDirectory" = {
 
       options = {
+        "disableExtensionFilter" = mkOption {
+          description = "DisableExtensionFilter controls whether the built-in file-extension filter is skipped during\nmanifest generation. When false (the default), only files with a .yaml, .yml, .json, or\n.jsonnet extension are considered as potential manifests. Set it to true to disable the filter\nso that files with custom extensions (e.g. *.yaml.sealed) can be matched by the include/exclude\nglob patterns instead.";
+          type = (types.nullOr types.bool);
+        };
         "exclude" = mkOption {
           description = "Exclude contains a glob pattern to match paths against that should be explicitly excluded from being used during manifest generation";
           type = (types.nullOr types.str);
@@ -67108,6 +74848,7 @@ let
       };
 
       config = {
+        "disableExtensionFilter" = mkOverride 1002 null;
         "exclude" = mkOverride 1002 null;
         "include" = mkOverride 1002 null;
         "jsonnet" = mkOverride 1002 null;
@@ -68000,6 +75741,10 @@ let
     "argoproj.io.v1alpha1.ApplicationStatusOperationStateOperationSyncSourceDirectory" = {
 
       options = {
+        "disableExtensionFilter" = mkOption {
+          description = "DisableExtensionFilter controls whether the built-in file-extension filter is skipped during\nmanifest generation. When false (the default), only files with a .yaml, .yml, .json, or\n.jsonnet extension are considered as potential manifests. Set it to true to disable the filter\nso that files with custom extensions (e.g. *.yaml.sealed) can be matched by the include/exclude\nglob patterns instead.";
+          type = (types.nullOr types.bool);
+        };
         "exclude" = mkOption {
           description = "Exclude contains a glob pattern to match paths against that should be explicitly excluded from being used during manifest generation";
           type = (types.nullOr types.str);
@@ -68023,6 +75768,7 @@ let
       };
 
       config = {
+        "disableExtensionFilter" = mkOverride 1002 null;
         "exclude" = mkOverride 1002 null;
         "include" = mkOverride 1002 null;
         "jsonnet" = mkOverride 1002 null;
@@ -68630,6 +76376,10 @@ let
     "argoproj.io.v1alpha1.ApplicationStatusOperationStateOperationSyncSourcesDirectory" = {
 
       options = {
+        "disableExtensionFilter" = mkOption {
+          description = "DisableExtensionFilter controls whether the built-in file-extension filter is skipped during\nmanifest generation. When false (the default), only files with a .yaml, .yml, .json, or\n.jsonnet extension are considered as potential manifests. Set it to true to disable the filter\nso that files with custom extensions (e.g. *.yaml.sealed) can be matched by the include/exclude\nglob patterns instead.";
+          type = (types.nullOr types.bool);
+        };
         "exclude" = mkOption {
           description = "Exclude contains a glob pattern to match paths against that should be explicitly excluded from being used during manifest generation";
           type = (types.nullOr types.str);
@@ -68653,6 +76403,7 @@ let
       };
 
       config = {
+        "disableExtensionFilter" = mkOverride 1002 null;
         "exclude" = mkOverride 1002 null;
         "include" = mkOverride 1002 null;
         "jsonnet" = mkOverride 1002 null;
@@ -69454,6 +77205,10 @@ let
     "argoproj.io.v1alpha1.ApplicationStatusOperationStateSyncResultSourceDirectory" = {
 
       options = {
+        "disableExtensionFilter" = mkOption {
+          description = "DisableExtensionFilter controls whether the built-in file-extension filter is skipped during\nmanifest generation. When false (the default), only files with a .yaml, .yml, .json, or\n.jsonnet extension are considered as potential manifests. Set it to true to disable the filter\nso that files with custom extensions (e.g. *.yaml.sealed) can be matched by the include/exclude\nglob patterns instead.";
+          type = (types.nullOr types.bool);
+        };
         "exclude" = mkOption {
           description = "Exclude contains a glob pattern to match paths against that should be explicitly excluded from being used during manifest generation";
           type = (types.nullOr types.str);
@@ -69477,6 +77232,7 @@ let
       };
 
       config = {
+        "disableExtensionFilter" = mkOverride 1002 null;
         "exclude" = mkOverride 1002 null;
         "include" = mkOverride 1002 null;
         "jsonnet" = mkOverride 1002 null;
@@ -70084,6 +77840,10 @@ let
     "argoproj.io.v1alpha1.ApplicationStatusOperationStateSyncResultSourcesDirectory" = {
 
       options = {
+        "disableExtensionFilter" = mkOption {
+          description = "DisableExtensionFilter controls whether the built-in file-extension filter is skipped during\nmanifest generation. When false (the default), only files with a .yaml, .yml, .json, or\n.jsonnet extension are considered as potential manifests. Set it to true to disable the filter\nso that files with custom extensions (e.g. *.yaml.sealed) can be matched by the include/exclude\nglob patterns instead.";
+          type = (types.nullOr types.bool);
+        };
         "exclude" = mkOption {
           description = "Exclude contains a glob pattern to match paths against that should be explicitly excluded from being used during manifest generation";
           type = (types.nullOr types.str);
@@ -70107,6 +77867,7 @@ let
       };
 
       config = {
+        "disableExtensionFilter" = mkOverride 1002 null;
         "exclude" = mkOverride 1002 null;
         "include" = mkOverride 1002 null;
         "jsonnet" = mkOverride 1002 null;
@@ -70893,6 +78654,10 @@ let
       {
 
         options = {
+          "disableExtensionFilter" = mkOption {
+            description = "DisableExtensionFilter controls whether the built-in file-extension filter is skipped during\nmanifest generation. When false (the default), only files with a .yaml, .yml, .json, or\n.jsonnet extension are considered as potential manifests. Set it to true to disable the filter\nso that files with custom extensions (e.g. *.yaml.sealed) can be matched by the include/exclude\nglob patterns instead.";
+            type = (types.nullOr types.bool);
+          };
           "exclude" = mkOption {
             description = "Exclude contains a glob pattern to match paths against that should be explicitly excluded from being used during manifest generation";
             type = (types.nullOr types.str);
@@ -70916,6 +78681,7 @@ let
         };
 
         config = {
+          "disableExtensionFilter" = mkOverride 1002 null;
           "exclude" = mkOverride 1002 null;
           "include" = mkOverride 1002 null;
           "jsonnet" = mkOverride 1002 null;
@@ -71608,6 +79374,10 @@ let
       {
 
         options = {
+          "disableExtensionFilter" = mkOption {
+            description = "DisableExtensionFilter controls whether the built-in file-extension filter is skipped during\nmanifest generation. When false (the default), only files with a .yaml, .yml, .json, or\n.jsonnet extension are considered as potential manifests. Set it to true to disable the filter\nso that files with custom extensions (e.g. *.yaml.sealed) can be matched by the include/exclude\nglob patterns instead.";
+            type = (types.nullOr types.bool);
+          };
           "exclude" = mkOption {
             description = "Exclude contains a glob pattern to match paths against that should be explicitly excluded from being used during manifest generation";
             type = (types.nullOr types.str);
@@ -71631,6 +79401,7 @@ let
         };
 
         config = {
+          "disableExtensionFilter" = mkOverride 1002 null;
           "exclude" = mkOverride 1002 null;
           "include" = mkOverride 1002 null;
           "jsonnet" = mkOverride 1002 null;
@@ -72441,6 +80212,10 @@ let
     "argoproj.io.v1alpha1.ApplicationStatusSyncComparedToSourceDirectory" = {
 
       options = {
+        "disableExtensionFilter" = mkOption {
+          description = "DisableExtensionFilter controls whether the built-in file-extension filter is skipped during\nmanifest generation. When false (the default), only files with a .yaml, .yml, .json, or\n.jsonnet extension are considered as potential manifests. Set it to true to disable the filter\nso that files with custom extensions (e.g. *.yaml.sealed) can be matched by the include/exclude\nglob patterns instead.";
+          type = (types.nullOr types.bool);
+        };
         "exclude" = mkOption {
           description = "Exclude contains a glob pattern to match paths against that should be explicitly excluded from being used during manifest generation";
           type = (types.nullOr types.str);
@@ -72464,6 +80239,7 @@ let
       };
 
       config = {
+        "disableExtensionFilter" = mkOverride 1002 null;
         "exclude" = mkOverride 1002 null;
         "include" = mkOverride 1002 null;
         "jsonnet" = mkOverride 1002 null;
@@ -73063,6 +80839,10 @@ let
     "argoproj.io.v1alpha1.ApplicationStatusSyncComparedToSourcesDirectory" = {
 
       options = {
+        "disableExtensionFilter" = mkOption {
+          description = "DisableExtensionFilter controls whether the built-in file-extension filter is skipped during\nmanifest generation. When false (the default), only files with a .yaml, .yml, .json, or\n.jsonnet extension are considered as potential manifests. Set it to true to disable the filter\nso that files with custom extensions (e.g. *.yaml.sealed) can be matched by the include/exclude\nglob patterns instead.";
+          type = (types.nullOr types.bool);
+        };
         "exclude" = mkOption {
           description = "Exclude contains a glob pattern to match paths against that should be explicitly excluded from being used during manifest generation";
           type = (types.nullOr types.str);
@@ -73086,6 +80866,7 @@ let
       };
 
       config = {
+        "disableExtensionFilter" = mkOverride 1002 null;
         "exclude" = mkOverride 1002 null;
         "include" = mkOverride 1002 null;
         "jsonnet" = mkOverride 1002 null;
