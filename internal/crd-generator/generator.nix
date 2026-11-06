@@ -5,6 +5,7 @@
   runCommand,
   lib,
   schema,
+  specialMapKeys ? { },
 }:
 with lib;
 let
@@ -37,6 +38,7 @@ let
       listOf = val: "(types.listOf ${val})";
       either = val1: val2: "(types.either ${val1} ${val2})";
       loaOf = type: "(types.loaOf ${type})";
+      oneOf = ts: "(types.oneOf [${concatStringsSep " " ts}])";
 
       # Validators: take the scalar bound(s) and an already-rendered base type
       # string, and render the application as source. The names resolve to the
@@ -91,6 +93,7 @@ let
   hasTypeMapping =
     def:
     (def ? enum && all (v: isBool v || isString v || isInt v || isFloat v) def.enum)
+    || (def ? oneOf && any hasTypeMapping def.oneOf)
     || (
       def ? type
       && elem def.type [
@@ -164,6 +167,8 @@ let
     # straight onto Nix's native `types.enum`.
     if def ? enum then
       b.types.enum def.enum
+    else if def ? oneOf then
+      b.types.oneOf (map mapType (filter hasTypeMapping def.oneOf))
     else if def ? type then
       if def.type == "string" then
         if def ? format && def.format == "int-or-string" then
@@ -246,7 +251,7 @@ let
                     {
                       type = requiredOrNot (
                         b.coerceAttrsOfSubmodulesToListByKey (refDefinition property.items) "name" (
-                          property."x-kubernetes-list-map-keys" or [ ]
+                          specialMapKeys.${_name}.${propName} or property."x-kubernetes-list-map-keys" or [ ]
                         )
                       );
                       apply = b.attrsToList;

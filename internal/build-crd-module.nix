@@ -30,6 +30,20 @@ in
 {
   inherit fromCRD;
 
+  fromK8s =
+    { name, src }:
+    import ./crd-generator/generator.nix (
+      {
+        inherit
+          lib
+          name
+          nixfmt
+          runCommand
+          ;
+      }
+      // import ./crd-generator/sources/k8s.nix { inherit lib; } src
+    );
+
   fromChartCRD =
     {
       name,
