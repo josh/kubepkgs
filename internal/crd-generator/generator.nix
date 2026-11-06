@@ -1,8 +1,5 @@
 # Based on kubenix's generator: https://github.com/hall/kubenix/blob/main/pkgs/generators/k8s/default.nix
 {
-  name,
-  nixfmt,
-  runCommand,
   lib,
   schema,
   specialMapKeys ? { },
@@ -584,15 +581,4 @@ let
     }
   '';
 in
-runCommand "k8s-${name}-gen.nix"
-  {
-    buildInputs = [ nixfmt ];
-  }
-  ''
-    cat << 'GENERATED' > ./raw.nix
-    ${generated}
-    GENERATED
-
-    nixfmt ./raw.nix
-    cp ./raw.nix $out
-  ''
+generated

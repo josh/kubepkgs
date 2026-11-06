@@ -1,48 +1,48 @@
 {
   lib,
+  path,
   kubernetes-helm,
+  nix,
   nixfmt,
   python3,
   runCommand,
 }:
 let
+  generate =
+    name: expr:
+    runCommand "k8s-${name}-gen.nix"
+      {
+        nativeBuildInputs = [
+          nix
+          nixfmt
+        ];
+      }
+      ''
+        export HOME=$TMPDIR NIX_STATE_DIR=$TMPDIR/state NIX_LOG_DIR=$TMPDIR/log NIX_CONF_DIR=$TMPDIR
+        nix --extra-experimental-features nix-command eval --store dummy:// --impure --raw --expr ${lib.escapeShellArg "let lib = import ${path}/lib; in ${expr}"} > raw.nix
+        nixfmt raw.nix
+        cp raw.nix $out
+      '';
+
   fromCRD =
     {
       name,
       crdFiles,
       attrNameOverrides ? { },
     }:
-    import ./crd-generator/generator.nix {
-      inherit
-        lib
-        name
-        nixfmt
-        runCommand
-        ;
-      schema = lib.importJSON (
-        runCommand "${name}-jsonschema.json" { } ''
-          ${python3.withPackages (ps: [ ps.pyyaml ])}/bin/python ${./crd-generator/crd2jsonschema.py} \
-            ${lib.escapeShellArg (builtins.toJSON attrNameOverrides)} ${lib.concatStringsSep " " crdFiles} > $out
-        ''
-      );
-    };
+    generate name "import ${./crd-generator/generator.nix} { inherit lib; schema = lib.importJSON ${
+      runCommand "${name}-jsonschema.json" { } ''
+        ${python3.withPackages (ps: [ ps.pyyaml ])}/bin/python ${./crd-generator/crd2jsonschema.py} \
+          ${lib.escapeShellArg (builtins.toJSON attrNameOverrides)} ${lib.concatStringsSep " " crdFiles} > $out
+      ''
+    }; }";
 in
 {
   inherit fromCRD;
 
   fromK8s =
     { name, src }:
-    import ./crd-generator/generator.nix (
-      {
-        inherit
-          lib
-          name
-          nixfmt
-          runCommand
-          ;
-      }
-      // import ./crd-generator/sources/k8s.nix { inherit lib; } src
-    );
+    generate name "import ${./crd-generator/generator.nix} ({ inherit lib; } // import ${./crd-generator/sources/k8s.nix} { inherit lib; } \"${src}\")";
 
   fromChartCRD =
     {
