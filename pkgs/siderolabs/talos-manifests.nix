@@ -34,8 +34,7 @@ stdenvNoCC.mkDerivation (finalAttrs: {
 
   passthru.crdModuleGenerated = kubepkgs.buildCrdModule.fromCRD {
     name = "talos";
-    src = finalAttrs.finalPackage;
-    crdFiles = [ "talos-service-account-crd.yaml" ];
+    crdFiles = [ "${finalAttrs.finalPackage}/talos-service-account-crd.yaml" ];
     attrNameOverrides."serviceaccounts.talos.dev" = "talosServiceAccounts";
   };
 

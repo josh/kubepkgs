@@ -152,8 +152,7 @@ let
   submoduleOf =
     ref:
     types.submodule (
-      { name, ... }:
-      {
+      { name, ... }: {
         options = definitions."${ref}".options or { };
         config = definitions."${ref}".config or { };
       }
@@ -162,8 +161,7 @@ let
   globalSubmoduleOf =
     ref:
     types.submodule (
-      { name, ... }:
-      {
+      { name, ... }: {
         options = config.definitions."${ref}".options or { };
         config = config.definitions."${ref}".config or { };
       }
@@ -201,8 +199,7 @@ let
       apiVersion = if group == "core" then version else "${group}/${version}";
     in
     types.submodule (
-      { name, ... }:
-      {
+      { name, ... }: {
         inherit (definitions."${ref}") options;
 
         imports = getDefaults resource group version kind;
