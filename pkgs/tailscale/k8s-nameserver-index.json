@@ -1,0 +1,57 @@
+{
+  "tag": "v1.104.4",
+  "upstreamDigest": "sha256:60bbcf62cc652a44b3020f306487089df7d814f3adcf7d1ab7f1e51992cfd949",
+  "digest": "sha256:ba3100abafd3d397e477022411474a1ae504fe48e82cd1fc949ebf7934c2be0b",
+  "manifests": [
+    "sha256:2ceebc1f34134ba6a007ff7833ae966ab7f4125434b41d7a6280b83251bf0fbf",
+    "sha256:7a976e47ffecc4cb4c3b4d84f213979d8ce6f039f4192ab872c1c4194ac51b64"
+  ],
+  "blobs": [
+    "sha256:e113743220f13ed436986bfd3109372e058444ba1c73c08225a876b894f6772c",
+    "sha256:281d5a96263b1ebc7051f11d9b9a4ca111ed1c711d5e209682310fc62c4b8bef",
+    "sha256:ed514798a9bfa47617441b418072e3b270e1509628b69dc86047b2a3984ee0da",
+    "sha256:3918db986505bc8f5af3a597d7bcab481df44db4d6616c7b5a10d13f23adbacf",
+    "sha256:c6a6dd12f1802219a96d1a0a542b19422d135109dd1d3c189f308e87ac612ebf",
+    "sha256:1ac2e571f49aaa9330d36bde733d92b6391e85b6a027228361d13d3a443c8703",
+    "sha256:26d235c30304d992a8ed0f12e4a80a4a35cc7a8d8654a60fdc96f99d958a5a21",
+    "sha256:63e7e49699e8f5b93162e14c630db8294f87799bfec4376677160876bd6840dc",
+    "sha256:cce01f8894fe287f4f7c39118279cfced580045ee3abb34c8763f80b28c1cf8f",
+    "sha256:f7d4473a76f7d4cf488a9fd977e7807e593b22612eb2fdff672b0acd26568620",
+    "sha256:5824ea8b1206f99a2e112b7f9d0725ddeab8f679f7a236b147ccf386b81461de",
+    "sha256:daf60c84da707a4c8765b32d25552be4280671277c992c0d47ca09510b2833e2"
+  ],
+  "index": {
+    "schemaVersion": 2,
+    "mediaType": "application/vnd.oci.image.index.v1+json",
+    "manifests": [
+      {
+        "mediaType": "application/vnd.oci.image.manifest.v1+json",
+        "size": 1502,
+        "digest": "sha256:2ceebc1f34134ba6a007ff7833ae966ab7f4125434b41d7a6280b83251bf0fbf",
+        "platform": {
+          "architecture": "arm64",
+          "os": "linux"
+        },
+        "artifactType": "application/vnd.oci.image.config.v1+json"
+      },
+      {
+        "mediaType": "application/vnd.oci.image.manifest.v1+json",
+        "size": 1502,
+        "digest": "sha256:7a976e47ffecc4cb4c3b4d84f213979d8ce6f039f4192ab872c1c4194ac51b64",
+        "platform": {
+          "architecture": "amd64",
+          "os": "linux"
+        },
+        "artifactType": "application/vnd.oci.image.config.v1+json"
+      }
+    ],
+    "annotations": {
+      "org.opencontainers.image.authors": "Tailscale https://tailscale.com/",
+      "org.opencontainers.image.revision": "27047635f237d1f3e0b08c0f487674757f30d2f7",
+      "org.opencontainers.image.source": "https://github.com/tailscale/tailscale/blob/main/build_docker.sh",
+      "org.opencontainers.image.url": "https://tailscale.com/docs/kubernetes-operator/egress/enable-magicdns-resolution",
+      "org.opencontainers.image.vendor": "Tailscale",
+      "org.opencontainers.image.version": "1.104.4"
+    }
+  }
+}
