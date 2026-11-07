@@ -1,0 +1,54 @@
+{
+  "tag": "v4.13.0",
+  "upstreamDigest": "sha256:d1a26170efed45491074ca4545c81844eee2b9043fb885ac01fb4aed6f8b72d2",
+  "digest": "sha256:5b52f2dca243eb56ec00eb6aa8c51c3c837f8bfe233f7d2c42598b5ebd30cf61",
+  "manifests": [
+    "sha256:3998c70f02511068e879b2222d7d4943db86fe044dd311f7bbb90812f778ad82",
+    "sha256:2995d2d499d06e77e7363b5a910332e12acb4b6c1050de84beaf08e56d56c242"
+  ],
+  "blobs": [
+    "sha256:484d2276fc5bbb0409e4fe579ed7be9265b9d0bde1910919a045791670e458e1",
+    "sha256:1eed391ea893e6015bf4ce4ed366909975d2acdbe907670919236a8d18ea6b07",
+    "sha256:c172f21841dff4c8cf45cde46589c1c2616cefe7e819965e92e6d3475c428aa0",
+    "sha256:99515e7b4d35e0652d3b0fde571b6ec269222ecacc506f026e1758d6261e9109",
+    "sha256:99ba982a9142213c751a1709dcf088e63d8601f03b3f211bae037be698fef270",
+    "sha256:d6b1b89eccacc15c2420b2776d72c1dae334a00805ed9af54bf2f71e4d536f28",
+    "sha256:2780920e5dbfbe103d03a583ed75345306e572ec5a48cb10361f046767d9f29a",
+    "sha256:7c12895b777bcaa8ccae0605b4de635b68fc32d60fa08f421dc3818bf55ee212",
+    "sha256:3214acf345c0cc6bbdb56b698a41ccdefc624a09d6beb0d38b5de0b2303ecaf4",
+    "sha256:52630fc75a18675c530ed9eba5f55eca09b03e91bd5bc15307918bbc1a7e7296",
+    "sha256:dd64bf2dd177757451a98fcdc999a339c35dee5d9872d8f4dc69c8f3c4dd0112",
+    "sha256:b839dfae01f66e15c6a8b63520557ed315bdfe036342fa7a0c537259f10d7a9a",
+    "sha256:ebddc55facdc6b1f7e0f30816a5fc7cc62f38abdf76c0a8b0a0ce52085754795",
+    "sha256:c4bc6f35ff5e25aa1afe7a148a0b6f10a760f54e298f86a4a4d44b91f1afbfab",
+    "sha256:6086dc2121104a713ac5e600fccc0292c52bfb434190225c947d285da74a727d",
+    "sha256:69a5c7e06074a22a6a22bd8d971ce3096dad0499a12ebca79ba44228c554d209",
+    "sha256:7e92c448ce8a15b2a7ca2f4abe26bfc62bd92ec29916a52e28fbbe9a739f5c04",
+    "sha256:6ed1ef0cb1159b9c93a24ceb88b987c6b3a8adff7160940c7c5e6bfc001f1766",
+    "sha256:0ed48bba7c5e11dbf5b7f2a10de404b18668b8f15b1daa904f112488f5926f4e"
+  ],
+  "index": {
+    "schemaVersion": 2,
+    "mediaType": "application/vnd.docker.distribution.manifest.list.v2+json",
+    "manifests": [
+      {
+        "mediaType": "application/vnd.docker.distribution.manifest.v2+json",
+        "size": 3233,
+        "digest": "sha256:3998c70f02511068e879b2222d7d4943db86fe044dd311f7bbb90812f778ad82",
+        "platform": {
+          "architecture": "amd64",
+          "os": "linux"
+        }
+      },
+      {
+        "mediaType": "application/vnd.docker.distribution.manifest.v2+json",
+        "size": 3233,
+        "digest": "sha256:2995d2d499d06e77e7363b5a910332e12acb4b6c1050de84beaf08e56d56c242",
+        "platform": {
+          "architecture": "arm64",
+          "os": "linux"
+        }
+      }
+    ]
+  }
+}
