@@ -1,0 +1,26 @@
+{
+  "tag": "v2.15.4",
+  "upstreamDigest": "sha256:dc0cb388a6445c69c8a0c406679290d2991c9698833d9e6e86a23bdfaf2f83c3",
+  "digest": "sha256:dc0cb388a6445c69c8a0c406679290d2991c9698833d9e6e86a23bdfaf2f83c3",
+  "manifests": [
+    "sha256:dc0cb388a6445c69c8a0c406679290d2991c9698833d9e6e86a23bdfaf2f83c3"
+  ],
+  "blobs": [
+    "sha256:4eb1fa1ba200b34738668e6e6ecfde987ffa8216951865fe5c917a72bc5111a1",
+    "sha256:f32f037feefe20936642c5e340e8c64d93058451336cb65f19d013394bb72823",
+    "sha256:2da7dcbe327984d188a70d36d76c2750c41da6150e9b8b0c13a1a7c197d7f150",
+    "sha256:a6cdfde85751e1280911576d3b6b6aa12f1a665f468f46f06f2c0593788e67d9",
+    "sha256:4f553ca5d258111857c94afb5f4b3e1b4842168a358834174ea807e3aa9a00a1",
+    "sha256:e0a64a12e38a44e727716802b7138146c688bd7d89a3f85b193be3b7d8cd00bf",
+    "sha256:c80725fe60687eddce7a73fae58e19642b83810936ef676740e7e89cfe7f8f58",
+    "sha256:0b5bd5d70b52f4b4eb1fb47d96f7b5f4e68b53db3af531867b25f0ba2c0b31e4"
+  ],
+  "manifest": {
+    "mediaType": "application/vnd.docker.distribution.manifest.v2+json",
+    "size": 1788,
+    "platform": {
+      "os": "linux",
+      "architecture": "amd64"
+    }
+  }
+}
