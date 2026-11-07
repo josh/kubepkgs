@@ -21,8 +21,15 @@ let
   # builtins.toJSON is canonical, so this matches the digest update-oci-images computes.
   indexJSON = builtins.toJSON parsed.index;
   indexDigest = "sha256:${builtins.hashString "sha256" indexJSON}";
+  # A bare single-platform manifest is mirrored byte for byte, and its fixed-output
+  # fetch is what checks it, so the digest must stay upstream's.
   digest =
-    if indexDigest == parsed.digest then
+    if parsed ? manifest then
+      if parsed.digest == parsed.upstreamDigest then
+        parsed.digest
+      else
+        throw "${lock}: a bare manifest keeps its upstream digest ${parsed.upstreamDigest}, not ${parsed.digest}"
+    else if indexDigest == parsed.digest then
       indexDigest
     else
       throw "${lock}: index serializes to ${indexDigest}, not ${parsed.digest}";
@@ -57,17 +64,23 @@ stdenvNoCC.mkDerivation (finalAttrs: {
   __structuredAttrs = true;
 
   inherit digest;
-  indexFile = builtins.toFile "oci-manifest-${builtins.substring 7 16 digest}" indexJSON;
+  indexFiles = lib.lists.optional (!parsed ? manifest) (
+    builtins.toFile "oci-manifest-${builtins.substring 7 16 digest}" indexJSON
+  );
   layoutIndex = builtins.toJSON {
     schemaVersion = 2;
     mediaType = "application/vnd.oci.image.index.v1+json";
     manifests = [
-      {
-        mediaType = parsed.index.mediaType or "application/vnd.oci.image.index.v1+json";
-        inherit digest;
-        size = builtins.stringLength indexJSON;
-        annotations."org.opencontainers.image.ref.name" = imageTag;
-      }
+      (
+        parsed.manifest or {
+          mediaType = parsed.index.mediaType or "application/vnd.oci.image.index.v1+json";
+          size = builtins.stringLength indexJSON;
+        }
+        // {
+          inherit digest;
+          annotations."org.opencontainers.image.ref.name" = imageTag;
+        }
+      )
     ];
   };
 
@@ -82,7 +95,9 @@ stdenvNoCC.mkDerivation (finalAttrs: {
     printf '%s' '{"imageLayoutVersion":"1.0.0"}' >"$out/oci-layout"
     printf '%s' "$layoutIndex" >"$out/index.json"
 
-    ln -s "$indexFile" "$out/blobs/sha256/''${digest#sha256:}"
+    for indexFile in "''${indexFiles[@]}"; do
+      ln -s "$indexFile" "$out/blobs/sha256/''${digest#sha256:}"
+    done
     for i in "''${!manifestDigests[@]}"; do
       ln -s "''${manifestFiles[i]}" "$out/blobs/sha256/''${manifestDigests[i]#sha256:}"
     done

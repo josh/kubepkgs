@@ -91,6 +91,8 @@ The mirror holds only `linux/amd64` and `linux/arm64`, plus the attestations tha
 
 `builtins.toJSON` is canonical (sorted keys, no whitespace), and the updater hashes the same serialization. That means `passthru.imageDigest` is known at evaluation time without importing from derivation. Evaluation throws when the lock's `digest` disagrees with its `index`. Cluster manifests that pin an image by digest pin `imageDigest`, which a push with `--preserve-digests` reproduces.
 
+Some upstreams publish a bare single-platform manifest instead of an index (Harbor's images are `linux/amd64` only). Its lock carries a `manifest` descriptor (`mediaType`, `size`, `platform`) in place of `index`, and the manifest itself is mirrored byte for byte, so `digest` equals `upstreamDigest` and the manifest's fixed-output fetch is what verifies it. The updater rejects a bare manifest for any platform outside the two above.
+
 ### JSON snapshots
 
 A `pkgs/*/*.nix` paired with a same-named `.json` vendors a JSON payload fetched from an upstream HTTP endpoint. The `.json` is that payload re-serialized as 2-space JSON rather than the bytes off the wire — endpoints serve minified or pretty bytes unpredictably, so the wire bytes churn even when nothing changed. The derivation's single output is that file, so `nix build` then `cat result` reproduces it.

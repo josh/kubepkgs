@@ -197,10 +197,35 @@ def trim_index(root: dict) -> dict:
     return {**root, "manifests": manifests}
 
 
+def build_single_lock(image_name: str, tag: str, digest: str) -> dict:
+    """A bare manifest is mirrored byte for byte, so its digest stays upstream's."""
+    raw = run([CRANE_PATH, "manifest", f"{image_name}@{digest}"]).stdout
+    root = json.loads(raw)
+    config = json.loads(
+        run([CRANE_PATH, "blob", f"{image_name}@{root['config']['digest']}"]).stdout
+    )
+    platform = (config.get("os"), config.get("architecture"))
+    if platform not in PLATFORMS:
+        raise ValueError(f"{image_name}@{digest} is {'/'.join(map(str, platform))}")
+    return {
+        "tag": tag,
+        "upstreamDigest": digest,
+        "digest": digest,
+        "manifests": [digest],
+        "blobs": [root["config"]["digest"]]
+        + [layer["digest"] for layer in root.get("layers", [])],
+        "manifest": {
+            "mediaType": root["mediaType"],
+            "size": len(raw.encode()),
+            "platform": {"os": platform[0], "architecture": platform[1]},
+        },
+    }
+
+
 def build_lock(image_name: str, tag: str, upstream_digest: str) -> dict:
     root = crane_manifest(image_name, upstream_digest)
     if "manifests" not in root:
-        raise ValueError(f"{image_name}@{upstream_digest} is not an index")
+        return build_single_lock(image_name, tag, upstream_digest)
     index = trim_index(root)
     digest = "sha256:" + hashlib.sha256(canonical_json(index).encode()).hexdigest()
     manifests = [m["digest"] for m in index["manifests"]]
