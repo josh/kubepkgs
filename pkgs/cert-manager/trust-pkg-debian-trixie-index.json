@@ -1,0 +1,50 @@
+{
+  "tag": "20250419-deb13u1.1",
+  "upstreamDigest": "sha256:477cc69ef6a026b90a6d67d4ac7114735c5f66edf1cc97e68b9da599adf231af",
+  "digest": "sha256:1931fd35800e393b0f805b844cda99169006e4d8c245d4d15948ab02a936c330",
+  "manifests": [
+    "sha256:b63799ddf82aa61b25636a99d64729f576cab4c7df83c3601ed2be755d41cbd8",
+    "sha256:85c92c9b5184d67d503aa031d110a4bd318d3bd381a26d6ec5e7b158497bf53a"
+  ],
+  "blobs": [
+    "sha256:0a832bd1f596a5dc13cf793fd3423344cbec8e9d7ce503086cea39ad387a51af",
+    "sha256:af4f371213b44f0841f059f22cbc16dc1bb4561b9352a0f72b1eb2b4d34bd36a",
+    "sha256:250c06f7c38e52dc77e5c7586c3e40280dc7ff9bb9007c396e06d96736cf8542",
+    "sha256:3febd2b99f68d670edac70de765fa89aa9d6671c96c0f4f2b3d5387d5c9c3417",
+    "sha256:0f73dfc09363ebd555a84dc493ec91b6f934ffdb6aba4f1e18ee692755ca2c37",
+    "sha256:818925949c66037abf1581b9ff25bcd4c3421df26e83d441d1a889e91b19f250",
+    "sha256:0cacdd445996f960fad4b68b5de1e0dfe61d313a5c7916cb80dfc988036a799b",
+    "sha256:d118a1dcb1992a2f6ed7e817e419a61f90ff421aa516c421966b0413a29c5827",
+    "sha256:095f12439625cb27c823e31dc84d06a6a742af16c566b84c7c7a641f9c9b8d20"
+  ],
+  "index": {
+    "schemaVersion": 2,
+    "mediaType": "application/vnd.oci.image.index.v1+json",
+    "manifests": [
+      {
+        "mediaType": "application/vnd.oci.image.manifest.v1+json",
+        "size": 1355,
+        "digest": "sha256:b63799ddf82aa61b25636a99d64729f576cab4c7df83c3601ed2be755d41cbd8",
+        "platform": {
+          "architecture": "amd64",
+          "os": "linux"
+        },
+        "artifactType": "application/vnd.oci.image.config.v1+json"
+      },
+      {
+        "mediaType": "application/vnd.oci.image.manifest.v1+json",
+        "size": 1355,
+        "digest": "sha256:85c92c9b5184d67d503aa031d110a4bd318d3bd381a26d6ec5e7b158497bf53a",
+        "platform": {
+          "architecture": "arm64",
+          "os": "linux"
+        },
+        "artifactType": "application/vnd.oci.image.config.v1+json"
+      }
+    ],
+    "annotations": {
+      "org.opencontainers.image.base.digest": "sha256:8ffd44886186a768b793e0dede8c1581580f00327a49e40420f8e000449bf84b",
+      "org.opencontainers.image.base.name": "quay.io/jetstack/base-static@sha256:925dd97b8d8cc5a2cda58ca3c82b6ab8f69a9fc2fe7521c2ce4f5c12d4197ac0"
+    }
+  }
+}

@@ -1,0 +1,49 @@
+{
+  "tag": "v0.26.0",
+  "upstreamDigest": "sha256:783afe31d39f122a811b96ac3aedab9f358488088df21622ae5b057b4a38b5c2",
+  "digest": "sha256:6f023e1319e14517449fac1ff0ede20521ab1a6af2d58aafd79fcdcf5560a36c",
+  "manifests": [
+    "sha256:5540fc21fd49a048fae2eab303ee35425497f936838f7d9cd91cc01430c21a45",
+    "sha256:13fd454e3efbc21ee11cd4637245e32af0d55f705d06bdcef44bc306efdbc2cf"
+  ],
+  "blobs": [
+    "sha256:4fdc41b71a2c3be2a06256e65f67c06a474e6ef7cb43bab5bf8345823d3e9493",
+    "sha256:af4f371213b44f0841f059f22cbc16dc1bb4561b9352a0f72b1eb2b4d34bd36a",
+    "sha256:250c06f7c38e52dc77e5c7586c3e40280dc7ff9bb9007c396e06d96736cf8542",
+    "sha256:cef8bf3deecf55056ed0aae8595a017c4dc90ed86f5f612994a6d3e20799acac",
+    "sha256:c1f5ec17d020794f25f549ee6ba1c0b69800e1094a8206cd89b00f738ef7ee3d",
+    "sha256:3de34b92c5014f32695d2da2cd6b74ac4b5c0e66f8a0961e84664a90899997e8",
+    "sha256:d118a1dcb1992a2f6ed7e817e419a61f90ff421aa516c421966b0413a29c5827",
+    "sha256:50a26a1e6ca1b79c65da4a70848dd54ca8c3588de367701a6995c3011df76339"
+  ],
+  "index": {
+    "schemaVersion": 2,
+    "mediaType": "application/vnd.oci.image.index.v1+json",
+    "manifests": [
+      {
+        "mediaType": "application/vnd.oci.image.manifest.v1+json",
+        "size": 1200,
+        "digest": "sha256:5540fc21fd49a048fae2eab303ee35425497f936838f7d9cd91cc01430c21a45",
+        "platform": {
+          "architecture": "amd64",
+          "os": "linux"
+        },
+        "artifactType": "application/vnd.oci.image.config.v1+json"
+      },
+      {
+        "mediaType": "application/vnd.oci.image.manifest.v1+json",
+        "size": 1200,
+        "digest": "sha256:13fd454e3efbc21ee11cd4637245e32af0d55f705d06bdcef44bc306efdbc2cf",
+        "platform": {
+          "architecture": "arm64",
+          "os": "linux"
+        },
+        "artifactType": "application/vnd.oci.image.config.v1+json"
+      }
+    ],
+    "annotations": {
+      "org.opencontainers.image.base.digest": "sha256:8ffd44886186a768b793e0dede8c1581580f00327a49e40420f8e000449bf84b",
+      "org.opencontainers.image.base.name": "quay.io/jetstack/base-static@sha256:925dd97b8d8cc5a2cda58ca3c82b6ab8f69a9fc2fe7521c2ce4f5c12d4197ac0"
+    }
+  }
+}
