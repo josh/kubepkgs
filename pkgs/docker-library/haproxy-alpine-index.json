@@ -1,0 +1,105 @@
+{
+  "tag": "3.0.8-alpine",
+  "upstreamDigest": "sha256:e11f034e651603f10a365e5ad5a0321825e18eded9620e40c4f4d6ae58419bfe",
+  "digest": "sha256:98e54cc9642b9b007e1a46e119c12ed2c6f6f184ef37e2329f0552ee9a329abb",
+  "manifests": [
+    "sha256:3ad414bdb5c94d712e0e9a7dc1517eca45cce652afc85a002fd7bb42b44d5dde",
+    "sha256:0a7524f46ac6aa269c2d0523b203f64b6d2beedddbd8cf36f04e25f106d009ba",
+    "sha256:370e6081fad664850ed6e80fe489a973ad0c37c5abf5f03d37d9d830c9f6cafc",
+    "sha256:c08acd07d478eca21a464aa5a2886373bcfc04bacdfc959f7e21be6faea50d71"
+  ],
+  "blobs": [
+    "sha256:de39d8cc27f185c1d3529e803c9f24a3f0ee96ac9d515719010ff6806d9872af",
+    "sha256:f18232174bc91741fdf3da96d85011092101a032a93a388b79e99e69c2d5c870",
+    "sha256:cab073f629a67f4b506dc1b55a6abd0793fdd90f7fe8ec11bb6852217a05c4cc",
+    "sha256:3b8d68714414cdbcaa8397218184afb6d6199e29abd0a2f3f97abdb46dd112a8",
+    "sha256:3b6bf66c1658d08e3902d127e2c6c4e35ca278c662bb52cca83d85e2bcbea7b4",
+    "sha256:41883ee08291e3be42b5606358d992aa8e250a0e4ee5b18e403752fcef0be719",
+    "sha256:4f4fb700ef54461cfa02571ae0db9a0dc1e0cdb5577484a6d75e68dc38e8acc1",
+    "sha256:1dda6f80f21b3678582a67442ef1aefa0696d392122929ff6ad7600161e7111d",
+    "sha256:6f93ce5d2b426b02360dcbe1aff2e51646e944086bbd2dd1bf62f38db072e844",
+    "sha256:91c9cd84a110a90b334e4d3bf68ae3ee859a2994593ad0176b9fb0fc4e150cb6",
+    "sha256:49851f0f78aab76f8dd084d4311dac1912950dca7e2c9682faa15c03d8770bbc",
+    "sha256:6e771e15690e2fabf2332d3a3b744495411d6e0b00b2aea64419b58b0066cf81",
+    "sha256:b52ff377e941b8dc07fa2758cd64ecb3180fd4f1f46eb102646984c24baee564",
+    "sha256:57938811f0ed4bd1a515443a08ae58cd2b0038cc24927e2fc4e9a3db261a20c7",
+    "sha256:a2474ff716c19392381fce0656add49f543a5983d29a7346f2bba3743ea1e94f",
+    "sha256:0a2d54018a5fb354cc8004ff20aaa40311f39d1495966b520b368490b7b7ab1d",
+    "sha256:afcbd9c56810621e59bb58d2801174378e0008309de6031c96e7750b4224c037",
+    "sha256:01f73d57db27868c4e3a86af4641d9415c1e8b3961284d04ce31725de13acf0b",
+    "sha256:6c1cc1363c700a7920a74da2db6ce0efbd59d9a034a88b121448663d7766c5ba"
+  ],
+  "index": {
+    "manifests": [
+      {
+        "annotations": {
+          "com.docker.official-images.bashbrew.arch": "amd64",
+          "org.opencontainers.image.base.digest": "sha256:1c4eef651f65e2f7daee7ee785882ac164b02b78fb74503052a26dc061c90474",
+          "org.opencontainers.image.base.name": "alpine:3.21",
+          "org.opencontainers.image.created": "2025-02-14T19:10:52Z",
+          "org.opencontainers.image.revision": "262506addcf26d79cf3983d5556b835d5818ee63",
+          "org.opencontainers.image.source": "https://github.com/docker-library/haproxy.git#262506addcf26d79cf3983d5556b835d5818ee63:3.0/alpine",
+          "org.opencontainers.image.url": "https://hub.docker.com/_/haproxy",
+          "org.opencontainers.image.version": "3.0.8-alpine"
+        },
+        "digest": "sha256:3ad414bdb5c94d712e0e9a7dc1517eca45cce652afc85a002fd7bb42b44d5dde",
+        "mediaType": "application/vnd.oci.image.manifest.v1+json",
+        "platform": {
+          "architecture": "amd64",
+          "os": "linux"
+        },
+        "size": 2100
+      },
+      {
+        "annotations": {
+          "com.docker.official-images.bashbrew.arch": "amd64",
+          "vnd.docker.reference.digest": "sha256:3ad414bdb5c94d712e0e9a7dc1517eca45cce652afc85a002fd7bb42b44d5dde",
+          "vnd.docker.reference.type": "attestation-manifest"
+        },
+        "digest": "sha256:0a7524f46ac6aa269c2d0523b203f64b6d2beedddbd8cf36f04e25f106d009ba",
+        "mediaType": "application/vnd.oci.image.manifest.v1+json",
+        "platform": {
+          "architecture": "unknown",
+          "os": "unknown"
+        },
+        "size": 840
+      },
+      {
+        "annotations": {
+          "com.docker.official-images.bashbrew.arch": "arm64v8",
+          "org.opencontainers.image.base.digest": "sha256:757d680068d77be46fd1ea20fb21db16f150468c5e7079a08a2e4705aec096ac",
+          "org.opencontainers.image.base.name": "alpine:3.21",
+          "org.opencontainers.image.created": "2025-02-14T19:42:31Z",
+          "org.opencontainers.image.revision": "262506addcf26d79cf3983d5556b835d5818ee63",
+          "org.opencontainers.image.source": "https://github.com/docker-library/haproxy.git#262506addcf26d79cf3983d5556b835d5818ee63:3.0/alpine",
+          "org.opencontainers.image.url": "https://hub.docker.com/_/haproxy",
+          "org.opencontainers.image.version": "3.0.8-alpine"
+        },
+        "digest": "sha256:370e6081fad664850ed6e80fe489a973ad0c37c5abf5f03d37d9d830c9f6cafc",
+        "mediaType": "application/vnd.oci.image.manifest.v1+json",
+        "platform": {
+          "architecture": "arm64",
+          "os": "linux",
+          "variant": "v8"
+        },
+        "size": 2102
+      },
+      {
+        "annotations": {
+          "com.docker.official-images.bashbrew.arch": "arm64v8",
+          "vnd.docker.reference.digest": "sha256:370e6081fad664850ed6e80fe489a973ad0c37c5abf5f03d37d9d830c9f6cafc",
+          "vnd.docker.reference.type": "attestation-manifest"
+        },
+        "digest": "sha256:c08acd07d478eca21a464aa5a2886373bcfc04bacdfc959f7e21be6faea50d71",
+        "mediaType": "application/vnd.oci.image.manifest.v1+json",
+        "platform": {
+          "architecture": "unknown",
+          "os": "unknown"
+        },
+        "size": 840
+      }
+    ],
+    "mediaType": "application/vnd.oci.image.index.v1+json",
+    "schemaVersion": 2
+  }
+}
