@@ -1,0 +1,106 @@
+{
+  "tag": "1.30.1",
+  "upstreamDigest": "sha256:923c267ec29636db3bee20f993d0ec4973fa22998e1adad37da79e4d32b5bc07",
+  "digest": "sha256:d1da4f58b4cd95528d6db90310ca3c22aa256cd1c64c2262ef26efb8d8b608c3",
+  "manifests": [
+    "sha256:b0f9805bd5f98592e7320b5ea624dd10a7a6ef8e477df5650655c94f0b242497",
+    "sha256:9a10dd7d7466310d5d543f618478cb905093cfc7a5463b538f449da626660083",
+    "sha256:a28f2adb284250ebcb976837c74f4b6183d0bc40b4ed4098dabdf83c9128ac81",
+    "sha256:0a82d51351b46263be3d44ba6e84b66b956e90376873fc5a4d1f093bfe7063e9"
+  ],
+  "blobs": [
+    "sha256:e876074c3d035dda6ea891db954e46df9c8307b36463b5e9a8e2e6e8a9c17488",
+    "sha256:2cc7ee286bf3a9e6af5f71756d7fc8e22e23ce65fec9047d774511ffcef79fa8",
+    "sha256:c172f21841dff4c8cf45cde46589c1c2616cefe7e819965e92e6d3475c428aa0",
+    "sha256:218cf840d0d95a86231eb9d33d26ac8a520a4299c6096cb70a0c2fb2a87c9e0a",
+    "sha256:f6069939f718601b38d25ec5ed5631ed047e4da24acec2e252f8f29d251be718",
+    "sha256:d6b1b89eccacc15c2420b2776d72c1dae334a00805ed9af54bf2f71e4d536f28",
+    "sha256:2780920e5dbfbe103d03a583ed75345306e572ec5a48cb10361f046767d9f29a",
+    "sha256:7c12895b777bcaa8ccae0605b4de635b68fc32d60fa08f421dc3818bf55ee212",
+    "sha256:3214acf345c0cc6bbdb56b698a41ccdefc624a09d6beb0d38b5de0b2303ecaf4",
+    "sha256:52630fc75a18675c530ed9eba5f55eca09b03e91bd5bc15307918bbc1a7e7296",
+    "sha256:dd64bf2dd177757451a98fcdc999a339c35dee5d9872d8f4dc69c8f3c4dd0112",
+    "sha256:b839dfae01f66e15c6a8b63520557ed315bdfe036342fa7a0c537259f10d7a9a",
+    "sha256:ebddc55facdc6b1f7e0f30816a5fc7cc62f38abdf76c0a8b0a0ce52085754795",
+    "sha256:c4bc6f35ff5e25aa1afe7a148a0b6f10a760f54e298f86a4a4d44b91f1afbfab",
+    "sha256:d61d03fdc61eb2f3588ee3e7c23be69fb97f5df51ed59b098dae55f9ec847774",
+    "sha256:2b38a78e51124bcf2c040f4774e636758e58da85ddb5b22651ca1820986074c2",
+    "sha256:04f447e1acc00148bf3b6e118a8812a7d26670283f67ed502889fa128d7445a7",
+    "sha256:249b438f0e6f6f0c372a9b083572d26a9f2eb37918cb467b05cefb103fea6453",
+    "sha256:eaca429ffff79a7e7be1cf77d51250c5b9701d8ee0173b98c0f6e02f5a6db428",
+    "sha256:401d177fd1e8a1e0d7a48139788d026e9a2e919ccb122bedd110ac7cf351f53e",
+    "sha256:6ed1ef0cb1159b9c93a24ceb88b987c6b3a8adff7160940c7c5e6bfc001f1766",
+    "sha256:ad48febfd89bd6c54b3121f5761c8887c678787a8552742d7a5a52c1229c6a73",
+    "sha256:d8cd3802c36609ba5398efdb4445016f8bb051eff7689950383418fb54fdc1ea",
+    "sha256:44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a",
+    "sha256:a9d61f960e4e769efc80e2e02f4f5891bc633997965824be3490cf94981afaea",
+    "sha256:b347c338c13e66213f8f9f1eaa20bbe3ebbe86eb252b3004e6ef7fa5b5bdcc2a",
+    "sha256:32116def74810dcaeb122b823730061c57bfbf5ccb036797009d39ee56035ba6",
+    "sha256:23a8324b56f87d1960bb2c6a690c1c843659c22ba34bf82c0feb7dd29886152e"
+  ],
+  "index": {
+    "schemaVersion": 2,
+    "mediaType": "application/vnd.oci.image.index.v1+json",
+    "manifests": [
+      {
+        "mediaType": "application/vnd.oci.image.manifest.v1+json",
+        "digest": "sha256:b0f9805bd5f98592e7320b5ea624dd10a7a6ef8e477df5650655c94f0b242497",
+        "size": 4600,
+        "platform": {
+          "architecture": "amd64",
+          "os": "linux"
+        }
+      },
+      {
+        "mediaType": "application/vnd.oci.image.manifest.v1+json",
+        "digest": "sha256:9a10dd7d7466310d5d543f618478cb905093cfc7a5463b538f449da626660083",
+        "size": 4600,
+        "platform": {
+          "architecture": "arm64",
+          "os": "linux"
+        }
+      },
+      {
+        "mediaType": "application/vnd.oci.image.manifest.v1+json",
+        "digest": "sha256:a28f2adb284250ebcb976837c74f4b6183d0bc40b4ed4098dabdf83c9128ac81",
+        "size": 1111,
+        "annotations": {
+          "vnd.docker.reference.digest": "sha256:b0f9805bd5f98592e7320b5ea624dd10a7a6ef8e477df5650655c94f0b242497",
+          "vnd.docker.reference.type": "attestation-manifest"
+        },
+        "platform": {
+          "architecture": "unknown",
+          "os": "unknown"
+        }
+      },
+      {
+        "mediaType": "application/vnd.oci.image.manifest.v1+json",
+        "digest": "sha256:0a82d51351b46263be3d44ba6e84b66b956e90376873fc5a4d1f093bfe7063e9",
+        "size": 1111,
+        "annotations": {
+          "vnd.docker.reference.digest": "sha256:9a10dd7d7466310d5d543f618478cb905093cfc7a5463b538f449da626660083",
+          "vnd.docker.reference.type": "attestation-manifest"
+        },
+        "platform": {
+          "architecture": "unknown",
+          "os": "unknown"
+        }
+      }
+    ],
+    "annotations": {
+      "org.opencontainers.image.authors": "The CloudNativePG Contributors",
+      "org.opencontainers.image.base.digest": "sha256:e2e927ec666bae08560abb3c55d0659eceabb657f56b6782ab500a9fc7f555e3",
+      "org.opencontainers.image.base.name": "gcr.io/distroless/static-debian13:nonroot@sha256:e2e927ec666bae08560abb3c55d0659eceabb657f56b6782ab500a9fc7f555e3",
+      "org.opencontainers.image.created": "2026-09-23T13:40:41Z",
+      "org.opencontainers.image.description": "This Docker image contains CloudNativePG Operator.",
+      "org.opencontainers.image.documentation": "https://cloudnative-pg.io/docs/",
+      "org.opencontainers.image.licenses": "Apache-2.0",
+      "org.opencontainers.image.revision": "2a35abb46",
+      "org.opencontainers.image.source": "https://github.com/cloudnative-pg/cloudnative-pg",
+      "org.opencontainers.image.title": "CloudNativePG Operator",
+      "org.opencontainers.image.url": "https://github.com/cloudnative-pg/cloudnative-pg",
+      "org.opencontainers.image.vendor": "The CloudNativePG Contributors",
+      "org.opencontainers.image.version": "1.30.1"
+    }
+  }
+}

@@ -1,0 +1,95 @@
+{
+  "tag": "16.15",
+  "upstreamDigest": "sha256:34cd4159d07b3410a1b29da35072e2e927a0905e717a61afa3814624a2e8859a",
+  "digest": "sha256:3ebfa099a83ddafe152be5582171441f6cd4220473b2c0f6d304a86bee62d54a",
+  "manifests": [
+    "sha256:921eb6964990c3468b1899b9188cc1d5c8a0417edf2b95ea37d85e9358a894f3",
+    "sha256:f7f6d8e7cac77e4a1f7e6acb06b261f7f26ef1928315ff3524db52f970014aee",
+    "sha256:0a11ad22361f748a934f55119d1df5e5111e850ff47ee37a3d3341d12978434e",
+    "sha256:7d02d24a1236e7860ddfb7898c6afa0d14ad7d25d4af1e390238286ea4f866b3"
+  ],
+  "blobs": [
+    "sha256:9acd363350eb03ec48b4113686c3dd360f47208a227cf9f82b3b5f49e98dfab4",
+    "sha256:4705738e5e0492efae5d2523aa791e06c852e2e1acb5e70a365cc08f9da0c556",
+    "sha256:14ad2347d2830c80d74e2424adcd1e22ea972aff63cec136d2d33824dabe191e",
+    "sha256:91f6b1cf948b7d3327d0ca7c2f1a64616b3a0e7b70676738e52e2e56a74bfd97",
+    "sha256:b7df49f1f53d98551309e1c96d3a1693b3396c0b6f06621e6968571082a2e2a3",
+    "sha256:61892f0ed258c646e778279f0862f1738d089e32dfed270f42261ce18252744e",
+    "sha256:845dc30ac8a1e601b9f5e92cec5448e729c8f6a5fe9427b1213796ba5c5c908d",
+    "sha256:104799d4ff5b18bad31a13cbbc383730eebef29a1cac161b7905792a8dbe5bd3",
+    "sha256:c3b5519512c2d935c58a9090f23e47b5cc53de8494ce1fdfd5e564e1ded99535",
+    "sha256:d0ba513f19afb8163d93bc6b3d2a233b69bd7a6f9bad98c99a66dd23aa3c8e8a",
+    "sha256:6eef5b03e5fc02f69acea1483e2a9b1f855cad1f8daad79f5dd9a58eec94b8e5",
+    "sha256:dd837dc15164f33abe6dd18fbd0a518449ac1f140ddd8a4123bbc1178aa65f52",
+    "sha256:44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a",
+    "sha256:33903b5cf68027744d837376df317af82ddf0a65d6c9837d24cd517b3895ba6e",
+    "sha256:5304e0e16d87ffe0759975db2d9101afb3bacd4561cb29ae75d1dc0366a24123",
+    "sha256:100118ff584909a1455f8856f2708498ddf720c4933051fc759bcf3ea83b446f",
+    "sha256:f752843b0fee3a6ddb46a2b6e99b96dd67b908fc55c26fbec73a5c07e89b5478"
+  ],
+  "index": {
+    "schemaVersion": 2,
+    "mediaType": "application/vnd.oci.image.index.v1+json",
+    "manifests": [
+      {
+        "mediaType": "application/vnd.oci.image.manifest.v1+json",
+        "digest": "sha256:921eb6964990c3468b1899b9188cc1d5c8a0417edf2b95ea37d85e9358a894f3",
+        "size": 2336,
+        "platform": {
+          "architecture": "amd64",
+          "os": "linux"
+        }
+      },
+      {
+        "mediaType": "application/vnd.oci.image.manifest.v1+json",
+        "digest": "sha256:f7f6d8e7cac77e4a1f7e6acb06b261f7f26ef1928315ff3524db52f970014aee",
+        "size": 2336,
+        "platform": {
+          "architecture": "arm64",
+          "os": "linux"
+        }
+      },
+      {
+        "mediaType": "application/vnd.oci.image.manifest.v1+json",
+        "digest": "sha256:0a11ad22361f748a934f55119d1df5e5111e850ff47ee37a3d3341d12978434e",
+        "size": 1112,
+        "annotations": {
+          "vnd.docker.reference.digest": "sha256:921eb6964990c3468b1899b9188cc1d5c8a0417edf2b95ea37d85e9358a894f3",
+          "vnd.docker.reference.type": "attestation-manifest"
+        },
+        "platform": {
+          "architecture": "unknown",
+          "os": "unknown"
+        }
+      },
+      {
+        "mediaType": "application/vnd.oci.image.manifest.v1+json",
+        "digest": "sha256:7d02d24a1236e7860ddfb7898c6afa0d14ad7d25d4af1e390238286ea4f866b3",
+        "size": 1112,
+        "annotations": {
+          "vnd.docker.reference.digest": "sha256:f7f6d8e7cac77e4a1f7e6acb06b261f7f26ef1928315ff3524db52f970014aee",
+          "vnd.docker.reference.type": "attestation-manifest"
+        },
+        "platform": {
+          "architecture": "unknown",
+          "os": "unknown"
+        }
+      }
+    ],
+    "annotations": {
+      "org.opencontainers.image.authors": "The CloudNativePG Contributors",
+      "org.opencontainers.image.base.digest": "sha256:e5b6442dd2e9684cf5e87d8338b5968f3b348636fc0be6d7850a381e3731a2bd",
+      "org.opencontainers.image.base.name": "docker.io/library/debian:bullseye-slim",
+      "org.opencontainers.image.created": "2026-08-31T08:17:42Z",
+      "org.opencontainers.image.description": "A system PostgreSQL 16.15 container image",
+      "org.opencontainers.image.documentation": "https://github.com/cloudnative-pg/postgres-containers",
+      "org.opencontainers.image.licenses": "Apache-2.0",
+      "org.opencontainers.image.revision": "9f65985cea224d41cfd1866b74f005c520e8a1e1",
+      "org.opencontainers.image.source": "https://github.com/cloudnative-pg/postgres-containers",
+      "org.opencontainers.image.title": "CloudNativePG PostgreSQL 16.15 system",
+      "org.opencontainers.image.url": "https://github.com/cloudnative-pg/postgres-containers",
+      "org.opencontainers.image.vendor": "The CloudNativePG Contributors",
+      "org.opencontainers.image.version": "16.15"
+    }
+  }
+}
