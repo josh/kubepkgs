@@ -337,7 +337,7 @@ let
           type = (types.nullOr types.bool);
         };
         "timeout" = mkOption {
-          description = "Timeout for this health check";
+          description = "Timeout has no effect and is kept for compatibility. Health checks are\nre-evaluated until they pass; a failing check never fails the upgrade.";
           type = (types.nullOr (types.withMinLength 2 types.str));
         };
       };
@@ -540,6 +540,10 @@ let
           description = "CurrentVersion is the current Kubernetes version detected in the cluster";
           type = (types.nullOr types.str);
         };
+        "healthChecksFailingSince" = mkOption {
+          description = "HealthChecksFailingSince is when spec.healthChecks started failing in\ntheir current streak; cleared once they pass. It spaces out the\nre-evaluations while they keep failing and times how long they took\nto pass.";
+          type = (types.nullOr types.str);
+        };
         "history" = mkOption {
           description = "History records past version transitions on this CR, newest first";
           type = (
@@ -611,6 +615,7 @@ let
         "conditions" = mkOverride 1002 null;
         "controllerNode" = mkOverride 1002 null;
         "currentVersion" = mkOverride 1002 null;
+        "healthChecksFailingSince" = mkOverride 1002 null;
         "history" = mkOverride 1002 null;
         "jobName" = mkOverride 1002 null;
         "lastError" = mkOverride 1002 null;
@@ -787,7 +792,7 @@ let
           );
         };
         "parallelism" = mkOption {
-          description = "Parallelism is the number of nodes to upgrade concurrently in each batch.\nDefaults to 1 (sequential upgrades). Must be >= 1 and <= the number of matching nodes.";
+          description = "Parallelism is the number of worker nodes to upgrade concurrently in each batch.\nControl-plane nodes are always upgraded one at a time, in a batch of their own.\nDefaults to 1 (sequential upgrades). Must be >= 1 and <= the number of matching nodes.";
           type = (types.nullOr (types.withMinimum 1 types.int));
         };
         "policy" = mkOption {
@@ -884,7 +889,7 @@ let
           type = (types.nullOr types.bool);
         };
         "timeout" = mkOption {
-          description = "Timeout for this health check";
+          description = "Timeout has no effect and is kept for compatibility. Health checks are\nre-evaluated until they pass; a failing check never fails the upgrade.";
           type = (types.nullOr (types.withMinLength 2 types.str));
         };
       };
@@ -6149,7 +6154,7 @@ let
           type = (types.nullOr types.str);
         };
         "force" = mkOption {
-          description = "Force the upgrade (skip checks on etcd health and members)";
+          description = "Force the upgrade: skip the etcd check of tuppr's cluster health gate and\nTalos's own checks on etcd health and members. Talos runs those only on its\nlegacy upgrade API, which talosctl uses when the node or talosctl is older\nthan Talos 1.13.";
           type = (types.nullOr types.bool);
         };
         "nodrain" = mkOption {
@@ -6183,7 +6188,7 @@ let
           );
         };
         "stage" = mkOption {
-          description = "Stage the upgrade to perform it after a reboot";
+          description = "Stage the upgrade to perform it after a reboot.\nOnly takes effect on Talos's legacy upgrade API, which talosctl uses when the\nnode or talosctl is older than Talos 1.13.";
           type = (types.nullOr types.bool);
         };
         "timeout" = mkOption {
@@ -6378,6 +6383,10 @@ let
             )
           );
         };
+        "healthChecksFailingSince" = mkOption {
+          description = "HealthChecksFailingSince is when spec.healthChecks started failing in\ntheir current streak; cleared once they pass. It spaces out the\nre-evaluations while they keep failing and times how long they took\nto pass.";
+          type = (types.nullOr types.str);
+        };
         "history" = mkOption {
           description = "History records past version transitions on this CR, newest first";
           type = (
@@ -6471,6 +6480,7 @@ let
         "currentNode" = mkOverride 1002 null;
         "currentNodes" = mkOverride 1002 null;
         "failedNodes" = mkOverride 1002 null;
+        "healthChecksFailingSince" = mkOverride 1002 null;
         "history" = mkOverride 1002 null;
         "lastUpdated" = mkOverride 1002 null;
         "message" = mkOverride 1002 null;
