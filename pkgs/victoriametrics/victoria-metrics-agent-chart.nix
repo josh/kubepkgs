@@ -2,8 +2,8 @@
 kubepkgs.fetchhelm {
   url = "https://victoriametrics.github.io/helm-charts";
   chart = "victoria-metrics-agent";
-  version = "0.51.0";
-  hash = "sha256-iQI62PBI48XCYcgTtQO416Skb0k4QO5N1Qp2/aYgKmM=";
+  version = "0.52.0";
+  hash = "sha256-xnCfrNOdKHQGRvQZarKMdrzPhqob22V8Oy85BQuGLHI=";
   helmTestValues = {
     remoteWrite = [
       { url = "http://victoria-metrics:8428"; }
