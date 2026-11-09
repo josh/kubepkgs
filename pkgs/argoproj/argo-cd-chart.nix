@@ -2,8 +2,8 @@
 kubepkgs.fetchhelm {
   url = "https://argoproj.github.io/argo-helm/";
   chart = "argo-cd";
-  version = "10.17.0";
-  hash = "sha256-JurfjqY6JjzGAlfPPHf09b41Mu/kL4IYYZFDm7qRxqM=";
+  version = "10.17.1";
+  hash = "sha256-lANZlSwde4yVWWny7rsYqBOpU+RLljSX8e9JnBATAA8=";
 
   crds.file = ../../crds/argo-cd.nix;
 
