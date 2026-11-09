@@ -2,8 +2,8 @@
 kubepkgs.fetchhelm {
   url = "https://isindir.github.io/sops-secrets-operator/";
   chart = "sops-secrets-operator";
-  version = "0.29.1";
-  hash = "sha256-45l+7hDYBRu8OllZ9y22hgBZ0jlwrEkmGiUF0I7SJ8c=";
+  version = "0.29.2";
+  hash = "sha256-jxPGoqjKpk8IrVTM2A38S7PDTaXdujQbp3krpFjAnRU=";
 
   crds.file = ../../crds/sops-secrets-operator.nix;
   helmTestArgs = [
