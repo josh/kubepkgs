@@ -277,6 +277,18 @@ let
           description = "affinity defines the pod's scheduling constraints.";
           type = (types.nullOr (submoduleOf "monitoring.coreos.com.v1.AlertmanagerSpecAffinity"));
         };
+        "alertmanagerConfigFileSystemMode" = mkOption {
+          description = "alertmanagerConfigFileSystemMode defines how the operator handles\nAlertmanagerConfig resources which have references to the Alertmanager\ncontainer's filesystem (as opposed to secret key references). Users\ncontrolling the receiver's service may create an AlertmanagerConfig\nresource with a reference to a container's file (for instance using\n`botTokenFile` for the Telegram receiver) and exfiltrate sensitive\ncontent from files located in the Alertmanager container.\n\nSupported values are:\n- \"DenyAll\" denies any AlertmanagerConfig resource referencing files from the container's filesystem, non-compliant resources are rejected.\n- \"FromAlertmanagerConfigMatcherStrategy\" uses the `alertmanagerConfigNamespaceSelector` field to make a decision\n  - When `alertmanagerConfigNamespaceSelector` is \"None\", it is equivalent to \"AllowAll\"\n  - When `alertmanagerConfigNamespaceSelector` is \"OnNamespaceExceptForAlertmanagerNamespace\", it is equivalent to \"AllowAll\" for the AlertmanagerConfig resources located in the Alertmanager's namespace and \"DenyAll\" for all other resources.\n  - When `alertmanagerConfigNamespaceSelector` is \"OnNamespace\", it is equivalent to \"AllowAll\" for the main AlertmanagerConfig resource (defined in `.spec.alertmanagerConfig.name`) and \"DenyAll\" for all other resources.\n- \"AllowAll\" allows any AlertmanagerConfig resource to reference files from the container's filesystem (use with caution).\n\nBy default, the operator uses the \"FromAlertmanagerConfigMatcherStrategy\" mode.";
+          type = (
+            types.nullOr (
+              types.enum [
+                "AllowAll"
+                "FromAlertmanagerConfigMatcherStrategy"
+                "DenyAll"
+              ]
+            )
+          );
+        };
         "alertmanagerConfigMatcherStrategy" = mkOption {
           description = "alertmanagerConfigMatcherStrategy defines how AlertmanagerConfig objects\nprocess incoming alerts.";
           type = (
@@ -623,6 +635,7 @@ let
         "additionalArgs" = mkOverride 1002 null;
         "additionalPeers" = mkOverride 1002 null;
         "affinity" = mkOverride 1002 null;
+        "alertmanagerConfigFileSystemMode" = mkOverride 1002 null;
         "alertmanagerConfigMatcherStrategy" = mkOverride 1002 null;
         "alertmanagerConfigNamespaceSelector" = mkOverride 1002 null;
         "alertmanagerConfigSelector" = mkOverride 1002 null;
@@ -3396,10 +3409,47 @@ let
           description = "apiURL defines he default Telegram API URL.\n\nIt requires Alertmanager >= v0.24.0.";
           type = (types.nullOr types.str);
         };
+        "botToken" = mkOption {
+          description = "botToken represents the bot token configuration for Telegram.\nIt is mutually exclusive with `botTokenFile`.\nIt requires Alertmanager >= v0.31.0.";
+          type = (
+            types.nullOr (
+              submoduleOf "monitoring.coreos.com.v1.AlertmanagerSpecAlertmanagerConfigurationGlobalTelegramBotToken"
+            )
+          );
+        };
+        "botTokenFile" = mkOption {
+          description = "botTokenFile defines the file to read the Telegram bot token from.\nIt is mutually exclusive with `botToken`.\nIt requires Alertmanager >= v0.31.0.";
+          type = (types.nullOr (types.withMinLength 1 types.str));
+        };
       };
 
       config = {
         "apiURL" = mkOverride 1002 null;
+        "botToken" = mkOverride 1002 null;
+        "botTokenFile" = mkOverride 1002 null;
+      };
+
+    };
+    "monitoring.coreos.com.v1.AlertmanagerSpecAlertmanagerConfigurationGlobalTelegramBotToken" = {
+
+      options = {
+        "key" = mkOption {
+          description = "The key of the secret to select from.  Must be a valid secret key.";
+          type = types.str;
+        };
+        "name" = mkOption {
+          description = "Name of the referent.\nThis field is effectively required, but due to backwards compatibility is\nallowed to be empty. Instances of this type with an empty value here are\nalmost certainly wrong.\nMore info: https://kubernetes.io/docs/concepts/overview/working-with-objects/names/#names";
+          type = (types.nullOr types.str);
+        };
+        "optional" = mkOption {
+          description = "Specify whether the Secret or its key must be defined";
+          type = (types.nullOr types.bool);
+        };
+      };
+
+      config = {
+        "name" = mkOverride 1002 null;
+        "optional" = mkOverride 1002 null;
       };
 
     };
@@ -3845,7 +3895,17 @@ let
         };
         "clientAuthType" = mkOption {
           description = "clientAuthType defines the server policy for client TLS authentication.\n\nFor more detail on clientAuth options:\nhttps://golang.org/pkg/crypto/tls/#ClientAuthType";
-          type = (types.nullOr types.str);
+          type = (
+            types.nullOr (
+              types.enum [
+                "NoClientCert"
+                "RequestClientCert"
+                "RequireAnyClientCert"
+                "VerifyClientCertIfGiven"
+                "RequireAndVerifyClientCert"
+              ]
+            )
+          );
         };
         "clientCAFile" = mkOption {
           description = "clientCAFile defines the path to the CA certificate file for client certificate authentication to\nthe server.\n\nIt is mutually exclusive with `client_ca`.";
@@ -8619,7 +8679,7 @@ let
           };
           "reason" = mkOption {
             description = "reason is a brief CamelCase machine-parseable reason.\nTogether with status it forms the unique identity of a condition entry.\nMaximum permitted length of a reason is 256 bytes.";
-            type = types.str;
+            type = (types.withMinLength 1 types.str);
           };
           "status" = mkOption {
             description = "status is the machine-parseable health category.\nPossible values:\n- \"Inaccessible\": the volume cannot be accessed.\n- \"DataLoss\": data loss has been detected on the volume.\n- \"Degraded\": the volume is functioning with reduced capability.";
@@ -10971,7 +11031,17 @@ let
         };
         "clientAuthType" = mkOption {
           description = "clientAuthType defines the server policy for client TLS authentication.\n\nFor more detail on clientAuth options:\nhttps://golang.org/pkg/crypto/tls/#ClientAuthType";
-          type = (types.nullOr types.str);
+          type = (
+            types.nullOr (
+              types.enum [
+                "NoClientCert"
+                "RequestClientCert"
+                "RequireAnyClientCert"
+                "VerifyClientCertIfGiven"
+                "RequireAndVerifyClientCert"
+              ]
+            )
+          );
         };
         "clientCAFile" = mkOption {
           description = "clientCAFile defines the path to the CA certificate file for client certificate authentication to\nthe server.\n\nIt is mutually exclusive with `client_ca`.";
@@ -11318,6 +11388,10 @@ let
           description = "convertClassicHistogramsToNHCB defines whether to convert all scraped classic histograms into a native histogram with custom buckets.\nIt requires Prometheus >= v3.0.0.";
           type = (types.nullOr types.bool);
         };
+        "extraScrapeMetrics" = mkOption {
+          description = "extraScrapeMetrics defines whether to store additional time series for each scrape:\n`scrape_timeout_seconds`, `scrape_sample_limit` and `scrape_body_size_bytes`.\nThese metrics help monitor how close targets are to their configured limits.\n\nIt requires Prometheus >= v3.10.0.";
+          type = (types.nullOr types.bool);
+        };
         "fallbackScrapeProtocol" = mkOption {
           description = "fallbackScrapeProtocol defines the protocol to use if a scrape returns blank, unparseable, or otherwise invalid Content-Type.\n\nIt requires Prometheus >= v3.0.0.";
           type = (
@@ -11433,6 +11507,7 @@ let
         "attachMetadata" = mkOverride 1002 null;
         "bodySizeLimit" = mkOverride 1002 null;
         "convertClassicHistogramsToNHCB" = mkOverride 1002 null;
+        "extraScrapeMetrics" = mkOverride 1002 null;
         "fallbackScrapeProtocol" = mkOverride 1002 null;
         "jobLabel" = mkOverride 1002 null;
         "keepDroppedTargets" = mkOverride 1002 null;
@@ -12776,6 +12851,10 @@ let
           description = "enableHttp2 can be used to disable HTTP2.";
           type = (types.nullOr types.bool);
         };
+        "extraScrapeMetrics" = mkOption {
+          description = "extraScrapeMetrics defines whether to store additional time series for each scrape:\n`scrape_timeout_seconds`, `scrape_sample_limit` and `scrape_body_size_bytes`.\nThese metrics help monitor how close targets are to their configured limits.\n\nIt requires Prometheus >= v3.10.0.";
+          type = (types.nullOr types.bool);
+        };
         "fallbackScrapeProtocol" = mkOption {
           description = "fallbackScrapeProtocol defines the protocol to use if a scrape returns blank, unparseable, or otherwise invalid Content-Type.\n\nIt requires Prometheus >= v3.0.0.";
           type = (
@@ -12909,6 +12988,7 @@ let
         "bearerTokenSecret" = mkOverride 1002 null;
         "convertClassicHistogramsToNHCB" = mkOverride 1002 null;
         "enableHttp2" = mkOverride 1002 null;
+        "extraScrapeMetrics" = mkOverride 1002 null;
         "fallbackScrapeProtocol" = mkOverride 1002 null;
         "followRedirects" = mkOverride 1002 null;
         "interval" = mkOverride 1002 null;
@@ -14625,6 +14705,10 @@ let
           description = "externalUrl defines the external URL under which the Prometheus service is externally\navailable. This is necessary to generate correct URLs (for instance if\nPrometheus is accessible behind an Ingress resource).";
           type = (types.nullOr types.str);
         };
+        "extraScrapeMetrics" = mkOption {
+          description = "extraScrapeMetrics defines whether to store additional time series for each scrape:\n`scrape_timeout_seconds`, `scrape_sample_limit` and `scrape_body_size_bytes`.\nThese metrics help monitor how close targets are to their configured limits.\n\nIt requires Prometheus >= v2.32.0.";
+          type = (types.nullOr types.bool);
+        };
         "hostAliases" = mkOption {
           description = "hostAliases defines the optional list of hosts and IPs that will be injected into the Pod's\nhosts file if specified.";
           type = (
@@ -15176,6 +15260,7 @@ let
         "exemplars" = mkOverride 1002 null;
         "externalLabels" = mkOverride 1002 null;
         "externalUrl" = mkOverride 1002 null;
+        "extraScrapeMetrics" = mkOverride 1002 null;
         "hostAliases" = mkOverride 1002 null;
         "hostNetwork" = mkOverride 1002 null;
         "hostUsers" = mkOverride 1002 null;
@@ -25439,7 +25524,7 @@ let
           };
           "reason" = mkOption {
             description = "reason is a brief CamelCase machine-parseable reason.\nTogether with status it forms the unique identity of a condition entry.\nMaximum permitted length of a reason is 256 bytes.";
-            type = types.str;
+            type = (types.withMinLength 1 types.str);
           };
           "status" = mkOption {
             description = "status is the machine-parseable health category.\nPossible values:\n- \"Inaccessible\": the volume cannot be accessed.\n- \"DataLoss\": data loss has been detected on the volume.\n- \"Degraded\": the volume is functioning with reduced capability.";
@@ -28729,7 +28814,17 @@ let
         };
         "clientAuthType" = mkOption {
           description = "clientAuthType defines the server policy for client TLS authentication.\n\nFor more detail on clientAuth options:\nhttps://golang.org/pkg/crypto/tls/#ClientAuthType";
-          type = (types.nullOr types.str);
+          type = (
+            types.nullOr (
+              types.enum [
+                "NoClientCert"
+                "RequestClientCert"
+                "RequireAnyClientCert"
+                "VerifyClientCertIfGiven"
+                "RequireAndVerifyClientCert"
+              ]
+            )
+          );
         };
         "clientCAFile" = mkOption {
           description = "clientCAFile defines the path to the CA certificate file for client certificate authentication to\nthe server.\n\nIt is mutually exclusive with `client_ca`.";
@@ -29114,6 +29209,10 @@ let
           description = "endpoints defines the list of endpoints part of this ServiceMonitor.\nDefines how to scrape metrics from Kubernetes [Endpoints](https://kubernetes.io/docs/concepts/services-networking/service/#endpoints) objects.\nIn most cases, an Endpoints object is backed by a Kubernetes [Service](https://kubernetes.io/docs/concepts/services-networking/service/) object with the same name and labels.";
           type = (types.listOf (submoduleOf "monitoring.coreos.com.v1.ServiceMonitorSpecEndpoints"));
         };
+        "extraScrapeMetrics" = mkOption {
+          description = "extraScrapeMetrics defines whether to store additional time series for each scrape:\n`scrape_timeout_seconds`, `scrape_sample_limit` and `scrape_body_size_bytes`.\nThese metrics help monitor how close targets are to their configured limits.\n\nIt requires Prometheus >= v3.10.0.";
+          type = (types.nullOr types.bool);
+        };
         "fallbackScrapeProtocol" = mkOption {
           description = "fallbackScrapeProtocol defines the protocol to use if a scrape returns blank, unparseable, or otherwise invalid Content-Type.\n\nIt requires Prometheus >= v3.0.0.";
           type = (
@@ -29236,6 +29335,7 @@ let
         "attachMetadata" = mkOverride 1002 null;
         "bodySizeLimit" = mkOverride 1002 null;
         "convertClassicHistogramsToNHCB" = mkOverride 1002 null;
+        "extraScrapeMetrics" = mkOverride 1002 null;
         "fallbackScrapeProtocol" = mkOverride 1002 null;
         "jobLabel" = mkOverride 1002 null;
         "keepDroppedTargets" = mkOverride 1002 null;
@@ -29385,7 +29485,7 @@ let
           type = (types.nullOr types.str);
         };
         "targetPort" = mkOption {
-          description = "targetPort defines the name or number of a container port on Pods selected\nby the Service.\nIf a name, it matches against `.spec.containers[].ports[].name` of the Pods.\nIf a number, it matches against `.spec.containers[].ports[].containerPort` of the Pods.";
+          description = "targetPort defines the name or number of a container port on Pods selected\nby the Service.\nIf a name, it matches against `.spec.containers[].ports[].name` of the Pods.\nIf a number, it matches against `.spec.containers[].ports[].containerPort` of the Pods.\n\nBecause it relies on Pod metadata, endpoints which aren't backed by Pods\nare never scraped when `targetPort` is used.";
           type = (types.nullOr (types.either types.int types.str));
         };
         "tlsConfig" = mkOption {
@@ -38227,7 +38327,7 @@ let
           };
           "reason" = mkOption {
             description = "reason is a brief CamelCase machine-parseable reason.\nTogether with status it forms the unique identity of a condition entry.\nMaximum permitted length of a reason is 256 bytes.";
-            type = types.str;
+            type = (types.withMinLength 1 types.str);
           };
           "status" = mkOption {
             description = "status is the machine-parseable health category.\nPossible values:\n- \"Inaccessible\": the volume cannot be accessed.\n- \"DataLoss\": data loss has been detected on the volume.\n- \"Degraded\": the volume is functioning with reduced capability.";
@@ -40584,7 +40684,17 @@ let
         };
         "clientAuthType" = mkOption {
           description = "clientAuthType defines the server policy for client TLS authentication.\n\nFor more detail on clientAuth options:\nhttps://golang.org/pkg/crypto/tls/#ClientAuthType";
-          type = (types.nullOr types.str);
+          type = (
+            types.nullOr (
+              types.enum [
+                "NoClientCert"
+                "RequestClientCert"
+                "RequireAnyClientCert"
+                "VerifyClientCertIfGiven"
+                "RequireAndVerifyClientCert"
+              ]
+            )
+          );
         };
         "clientCAFile" = mkOption {
           description = "clientCAFile defines the path to the CA certificate file for client certificate authentication to\nthe server.\n\nIt is mutually exclusive with `client_ca`.";
@@ -56295,6 +56405,14 @@ let
           description = "groupWait defines how long to wait before sending the initial notification.\nExample: \"30s\"";
           type = (types.nullOr (types.withMinLength 1 types.str));
         };
+        "labels" = mkOption {
+          description = "labels defines the list of labels that will be attached to the alerts matching this route.\nThey can be inherited by child routes and can be overridden by child routes.\nThe values support template expressions.\n\nIt requires Alertmanager >= 0.34.0.";
+          type = (
+            types.nullOr (
+              types.listOf (submoduleOf "monitoring.coreos.com.v1alpha1.AlertmanagerConfigSpecRouteLabels")
+            )
+          );
+        };
         "matchers" = mkOption {
           description = "matchers defines the list of matchers that the alert's labels should match. For the first\nlevel route, the operator removes any existing equality and regexp\nmatcher on the `namespace` label and adds a `namespace: <object\nnamespace>` matcher.";
           type = (
@@ -56331,12 +56449,29 @@ let
         "groupBy" = mkOverride 1002 null;
         "groupInterval" = mkOverride 1002 null;
         "groupWait" = mkOverride 1002 null;
+        "labels" = mkOverride 1002 null;
         "matchers" = mkOverride 1002 null;
         "muteTimeIntervals" = mkOverride 1002 null;
         "receiver" = mkOverride 1002 null;
         "repeatInterval" = mkOverride 1002 null;
         "routes" = mkOverride 1002 null;
       };
+
+    };
+    "monitoring.coreos.com.v1alpha1.AlertmanagerConfigSpecRouteLabels" = {
+
+      options = {
+        "key" = mkOption {
+          description = "key defines the key of the tuple.\nThis is the identifier or name part of the key-value pair.";
+          type = (types.withMinLength 1 types.str);
+        };
+        "value" = mkOption {
+          description = "value defines the value of the tuple.\nThis is the data or content associated with the key.";
+          type = types.str;
+        };
+      };
+
+      config = { };
 
     };
     "monitoring.coreos.com.v1alpha1.AlertmanagerConfigSpecRouteMatchers" = {
@@ -56666,6 +56801,10 @@ let
         "externalUrl" = mkOption {
           description = "externalUrl defines the external URL under which the Prometheus service is externally\navailable. This is necessary to generate correct URLs (for instance if\nPrometheus is accessible behind an Ingress resource).";
           type = (types.nullOr types.str);
+        };
+        "extraScrapeMetrics" = mkOption {
+          description = "extraScrapeMetrics defines whether to store additional time series for each scrape:\n`scrape_timeout_seconds`, `scrape_sample_limit` and `scrape_body_size_bytes`.\nThese metrics help monitor how close targets are to their configured limits.\n\nIt requires Prometheus >= v2.32.0.";
+          type = (types.nullOr types.bool);
         };
         "hostAliases" = mkOption {
           description = "hostAliases defines the optional list of hosts and IPs that will be injected into the Pod's\nhosts file if specified.";
@@ -57193,6 +57332,7 @@ let
         "excludedFromEnforcement" = mkOverride 1002 null;
         "externalLabels" = mkOverride 1002 null;
         "externalUrl" = mkOverride 1002 null;
+        "extraScrapeMetrics" = mkOverride 1002 null;
         "hostAliases" = mkOverride 1002 null;
         "hostNetwork" = mkOverride 1002 null;
         "hostUsers" = mkOverride 1002 null;
@@ -65790,7 +65930,7 @@ let
           };
           "reason" = mkOption {
             description = "reason is a brief CamelCase machine-parseable reason.\nTogether with status it forms the unique identity of a condition entry.\nMaximum permitted length of a reason is 256 bytes.";
-            type = types.str;
+            type = (types.withMinLength 1 types.str);
           };
           "status" = mkOption {
             description = "status is the machine-parseable health category.\nPossible values:\n- \"Inaccessible\": the volume cannot be accessed.\n- \"DataLoss\": data loss has been detected on the volume.\n- \"Degraded\": the volume is functioning with reduced capability.";
@@ -68611,7 +68751,17 @@ let
         };
         "clientAuthType" = mkOption {
           description = "clientAuthType defines the server policy for client TLS authentication.\n\nFor more detail on clientAuth options:\nhttps://golang.org/pkg/crypto/tls/#ClientAuthType";
-          type = (types.nullOr types.str);
+          type = (
+            types.nullOr (
+              types.enum [
+                "NoClientCert"
+                "RequestClientCert"
+                "RequireAnyClientCert"
+                "VerifyClientCertIfGiven"
+                "RequireAndVerifyClientCert"
+              ]
+            )
+          );
         };
         "clientCAFile" = mkOption {
           description = "clientCAFile defines the path to the CA certificate file for client certificate authentication to\nthe server.\n\nIt is mutually exclusive with `client_ca`.";
@@ -69086,6 +69236,10 @@ let
             )
           );
         };
+        "extraScrapeMetrics" = mkOption {
+          description = "extraScrapeMetrics defines whether to store additional time series for each scrape:\n`scrape_timeout_seconds`, `scrape_sample_limit` and `scrape_body_size_bytes`.\nThese metrics help monitor how close targets are to their configured limits.\n\nIt requires Prometheus >= v3.10.0.";
+          type = (types.nullOr types.bool);
+        };
         "fallbackScrapeProtocol" = mkOption {
           description = "fallbackScrapeProtocol defines the protocol to use if a scrape returns blank, unparseable, or otherwise invalid Content-Type.\n\nIt requires Prometheus >= v3.0.0.";
           type = (
@@ -69406,6 +69560,7 @@ let
         "enableCompression" = mkOverride 1002 null;
         "enableHTTP2" = mkOverride 1002 null;
         "eurekaSDConfigs" = mkOverride 1002 null;
+        "extraScrapeMetrics" = mkOverride 1002 null;
         "fallbackScrapeProtocol" = mkOverride 1002 null;
         "fileSDConfigs" = mkOverride 1002 null;
         "gceSDConfigs" = mkOverride 1002 null;
@@ -84783,7 +84938,7 @@ in
         default = { };
       };
       "monitoring.coreos.com"."v1"."ServiceMonitor" = mkOption {
-        description = "The `ServiceMonitor` custom resource definition (CRD) defines how `Prometheus` and `PrometheusAgent` can scrape metrics from a group of services.\nAmong other things, it allows to specify:\n* The services to scrape via label selectors.\n* The container ports to scrape.\n* Authentication credentials to use.\n* Target and metric relabeling.\n\n`Prometheus` and `PrometheusAgent` objects select `ServiceMonitor` objects using label and namespace selectors.";
+        description = "The `ServiceMonitor` custom resource definition (CRD) defines how `Prometheus` and `PrometheusAgent` can scrape metrics from a group of services.\nAmong other things, it allows to specify:\n* The services to scrape via label selectors.\n* The container ports to scrape.\n* Authentication credentials to use.\n* Target and metric relabeling.\n\n`Prometheus` and `PrometheusAgent` objects select `ServiceMonitor` objects using label and namespace selectors.\n\nService targets that aren't backed by Pods (for instance manually managed\nEndpoints or EndpointSlices) can only be scraped when the endpoint selects\nthe service port with `port` instead of `targetPort` and `filterRunning` is\nset to `false`. Manually created Pods have no such restriction.\n\nFor targets that aren't backed by Pods, you can also consider using the\n`ScrapeConfig` CRD.";
         type = (
           types.attrsOf (
             submoduleForDefinition "monitoring.coreos.com.v1.ServiceMonitor" "servicemonitors" "ServiceMonitor"
@@ -84932,7 +85087,7 @@ in
         default = { };
       };
       "serviceMonitors" = mkOption {
-        description = "The `ServiceMonitor` custom resource definition (CRD) defines how `Prometheus` and `PrometheusAgent` can scrape metrics from a group of services.\nAmong other things, it allows to specify:\n* The services to scrape via label selectors.\n* The container ports to scrape.\n* Authentication credentials to use.\n* Target and metric relabeling.\n\n`Prometheus` and `PrometheusAgent` objects select `ServiceMonitor` objects using label and namespace selectors.";
+        description = "The `ServiceMonitor` custom resource definition (CRD) defines how `Prometheus` and `PrometheusAgent` can scrape metrics from a group of services.\nAmong other things, it allows to specify:\n* The services to scrape via label selectors.\n* The container ports to scrape.\n* Authentication credentials to use.\n* Target and metric relabeling.\n\n`Prometheus` and `PrometheusAgent` objects select `ServiceMonitor` objects using label and namespace selectors.\n\nService targets that aren't backed by Pods (for instance manually managed\nEndpoints or EndpointSlices) can only be scraped when the endpoint selects\nthe service port with `port` instead of `targetPort` and `filterRunning` is\nset to `false`. Manually created Pods have no such restriction.\n\nFor targets that aren't backed by Pods, you can also consider using the\n`ScrapeConfig` CRD.";
         type = (
           types.attrsOf (
             submoduleForDefinition "monitoring.coreos.com.v1.ServiceMonitor" "servicemonitors" "ServiceMonitor"
