@@ -2,8 +2,8 @@
 kubepkgs.fetchhelm {
   url = "https://prometheus-community.github.io/helm-charts";
   chart = "prometheus";
-  version = "29.40.3";
-  hash = "sha256-qdreNF5IfnozUv+RGMe2Wdps3rVwbCTouTS3vbPnLi4=";
+  version = "29.47.2";
+  hash = "sha256-6ro1K+ryqrNyo4uq2BQJ/BMVVfSsDSHRuWd5/dZ1gr4=";
 
   meta = {
     description = "Helm chart for Prometheus, a monitoring system and time series database";
