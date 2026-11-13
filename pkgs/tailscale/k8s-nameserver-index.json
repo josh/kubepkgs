@@ -1,24 +1,24 @@
 {
-  "tag": "v1.104.4",
-  "upstreamDigest": "sha256:60bbcf62cc652a44b3020f306487089df7d814f3adcf7d1ab7f1e51992cfd949",
-  "digest": "sha256:ba3100abafd3d397e477022411474a1ae504fe48e82cd1fc949ebf7934c2be0b",
+  "tag": "v1.104.7",
+  "upstreamDigest": "sha256:9b0685a4dd89742043084affa56fbda04f56b348d6cd9a8a23105a24ed3ebb39",
+  "digest": "sha256:5c0ebad37738784f4385918206dd9d307f365ea2666984fa7e9366ae24bda428",
   "manifests": [
-    "sha256:2ceebc1f34134ba6a007ff7833ae966ab7f4125434b41d7a6280b83251bf0fbf",
-    "sha256:7a976e47ffecc4cb4c3b4d84f213979d8ce6f039f4192ab872c1c4194ac51b64"
+    "sha256:c56fac896b09faf58da402628e2b8faa47cd1b2d2dd039b0f2cf468b0b65bb28",
+    "sha256:828e9ab22f927d7f7a9ff0ba1294506113953947e36123f1ee39c5441eeebf98"
   ],
   "blobs": [
-    "sha256:e113743220f13ed436986bfd3109372e058444ba1c73c08225a876b894f6772c",
-    "sha256:281d5a96263b1ebc7051f11d9b9a4ca111ed1c711d5e209682310fc62c4b8bef",
-    "sha256:ed514798a9bfa47617441b418072e3b270e1509628b69dc86047b2a3984ee0da",
-    "sha256:3918db986505bc8f5af3a597d7bcab481df44db4d6616c7b5a10d13f23adbacf",
-    "sha256:c6a6dd12f1802219a96d1a0a542b19422d135109dd1d3c189f308e87ac612ebf",
-    "sha256:1ac2e571f49aaa9330d36bde733d92b6391e85b6a027228361d13d3a443c8703",
-    "sha256:26d235c30304d992a8ed0f12e4a80a4a35cc7a8d8654a60fdc96f99d958a5a21",
-    "sha256:63e7e49699e8f5b93162e14c630db8294f87799bfec4376677160876bd6840dc",
-    "sha256:cce01f8894fe287f4f7c39118279cfced580045ee3abb34c8763f80b28c1cf8f",
-    "sha256:f7d4473a76f7d4cf488a9fd977e7807e593b22612eb2fdff672b0acd26568620",
-    "sha256:5824ea8b1206f99a2e112b7f9d0725ddeab8f679f7a236b147ccf386b81461de",
-    "sha256:daf60c84da707a4c8765b32d25552be4280671277c992c0d47ca09510b2833e2"
+    "sha256:165386f5311a041d3f4fcfef6d35036f56854e2784f0e32ae0734d363ca3b08c",
+    "sha256:fea5b91588ca539ff8a89d7d5df6c6d65d6ab7bd89145ba57f32c302cf02ffbe",
+    "sha256:f579224f18ef2647c0271f4955565ee7abb910e50c130ee7eaec41d317b7abce",
+    "sha256:568dfb3e074b924c49ec9db9bc50f4354b742b4b7e9029e1544054d5b67b04f0",
+    "sha256:56df29662afde6b8a3908d36ae87e30586636127eb56d0a7fcb0b73060324619",
+    "sha256:da0af797e0a9f22739b5d3a7c87f30bc139f84f77c0f757f09f6f255d3cee0b0",
+    "sha256:15ba1872d66f615f1ce54a326bc252391f8faad27bc01b3bd34a55a781154fda",
+    "sha256:710f3da1112f360bed5d2908205aeee86b9d04ecd471354cf7049a2f0bdb5c72",
+    "sha256:a520ba760558111270b635c4f167acebe44fb4843737fa801705249ef7492422",
+    "sha256:b98cd8003e578bc85adfc9ab020007bd81f1c9d39b54927714aba32606a15808",
+    "sha256:9afa1ab72c26a581738b349fae3932a0f04dbc84cae17bcd39365b1ff417385d",
+    "sha256:41e5ed8a2195fe0bb2fe500f0e03b4740abbcc9079f8fe5e83e290fad18247ce"
   ],
   "index": {
     "schemaVersion": 2,
@@ -27,7 +27,7 @@
       {
         "mediaType": "application/vnd.oci.image.manifest.v1+json",
         "size": 1502,
-        "digest": "sha256:2ceebc1f34134ba6a007ff7833ae966ab7f4125434b41d7a6280b83251bf0fbf",
+        "digest": "sha256:c56fac896b09faf58da402628e2b8faa47cd1b2d2dd039b0f2cf468b0b65bb28",
         "platform": {
           "architecture": "arm64",
           "os": "linux"
@@ -37,7 +37,7 @@
       {
         "mediaType": "application/vnd.oci.image.manifest.v1+json",
         "size": 1502,
-        "digest": "sha256:7a976e47ffecc4cb4c3b4d84f213979d8ce6f039f4192ab872c1c4194ac51b64",
+        "digest": "sha256:828e9ab22f927d7f7a9ff0ba1294506113953947e36123f1ee39c5441eeebf98",
         "platform": {
           "architecture": "amd64",
           "os": "linux"
@@ -47,11 +47,11 @@
     ],
     "annotations": {
       "org.opencontainers.image.authors": "Tailscale https://tailscale.com/",
-      "org.opencontainers.image.revision": "27047635f237d1f3e0b08c0f487674757f30d2f7",
+      "org.opencontainers.image.revision": "cbc74fe48ef1b1649f69a4d9a602319427e25102",
       "org.opencontainers.image.source": "https://github.com/tailscale/tailscale/blob/main/build_docker.sh",
       "org.opencontainers.image.url": "https://tailscale.com/docs/kubernetes-operator/egress/enable-magicdns-resolution",
       "org.opencontainers.image.vendor": "Tailscale",
-      "org.opencontainers.image.version": "1.104.4"
+      "org.opencontainers.image.version": "1.104.7"
     }
   }
 }
