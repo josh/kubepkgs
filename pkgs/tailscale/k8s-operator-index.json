@@ -1,24 +1,24 @@
 {
-  "tag": "v1.104.4",
-  "upstreamDigest": "sha256:68fc0aa4e1c3d7ba19ca41c0bc27f17b2a5a8dca6c10efcdd18020a6bf97768d",
-  "digest": "sha256:cdb3723ec53007e6eae2ef4843c8004e2d4e910659b4c7410d345fc2b7c61b30",
+  "tag": "v1.104.7",
+  "upstreamDigest": "sha256:51ba104ff02afcc39f93189415c8b2f44fb6037e8592d626bfa52c3c8afc02f6",
+  "digest": "sha256:427b5569b07ba4c56a56a7e753d930e4ab6acde7137fc3192ec23ba975234862",
   "manifests": [
-    "sha256:bc6e9ae6539f0bca2fe0be45ea1ad43ceb6aad3601ba210a776e01b3073f4d71",
-    "sha256:48d373932bae9b65f5ded6480276b2290f16b8d43794ec9dcc3faf50137802eb"
+    "sha256:c353bbf2402d4802e3b629e0348895b0b18fa14f6117fd0a0337bc1a97d3e4d9",
+    "sha256:fde2ed94fd15dbe70b0e6df47ddd7da4e62286c0aca3bc83f5eb47bf4eacb118"
   ],
   "blobs": [
-    "sha256:ce143d441ea150bbd5f59e4a82adaf454cf428c29a3c9f380f0e9a1100963439",
-    "sha256:281d5a96263b1ebc7051f11d9b9a4ca111ed1c711d5e209682310fc62c4b8bef",
-    "sha256:ed514798a9bfa47617441b418072e3b270e1509628b69dc86047b2a3984ee0da",
-    "sha256:3918db986505bc8f5af3a597d7bcab481df44db4d6616c7b5a10d13f23adbacf",
-    "sha256:c6a6dd12f1802219a96d1a0a542b19422d135109dd1d3c189f308e87ac612ebf",
-    "sha256:5d692a24574739665b59b8dfc4532b9e800f7c316f151130e054aef072d86857",
-    "sha256:1896901002a54509b64fad414af48e6c8ec242513045b7209e088b1c16285ce0",
-    "sha256:63e7e49699e8f5b93162e14c630db8294f87799bfec4376677160876bd6840dc",
-    "sha256:cce01f8894fe287f4f7c39118279cfced580045ee3abb34c8763f80b28c1cf8f",
-    "sha256:f7d4473a76f7d4cf488a9fd977e7807e593b22612eb2fdff672b0acd26568620",
-    "sha256:5824ea8b1206f99a2e112b7f9d0725ddeab8f679f7a236b147ccf386b81461de",
-    "sha256:3a230669450d6143a6bb6c5018305834bb4a0ed80fe1e542a02d8d898cf09525"
+    "sha256:36fdfe28021fca47a671e3ff302f321a700b6e91063d3d6341eca479ffac7867",
+    "sha256:fea5b91588ca539ff8a89d7d5df6c6d65d6ab7bd89145ba57f32c302cf02ffbe",
+    "sha256:f579224f18ef2647c0271f4955565ee7abb910e50c130ee7eaec41d317b7abce",
+    "sha256:568dfb3e074b924c49ec9db9bc50f4354b742b4b7e9029e1544054d5b67b04f0",
+    "sha256:56df29662afde6b8a3908d36ae87e30586636127eb56d0a7fcb0b73060324619",
+    "sha256:5ae90fe63ebea29bfc8d40ace3f6a067556d409381d9f634fa6bc7268a6500cd",
+    "sha256:40f2c0a6c113cadfb061b1276b5d19ae0b2ad81f35731abebdef9c8e9deb5adf",
+    "sha256:710f3da1112f360bed5d2908205aeee86b9d04ecd471354cf7049a2f0bdb5c72",
+    "sha256:a520ba760558111270b635c4f167acebe44fb4843737fa801705249ef7492422",
+    "sha256:b98cd8003e578bc85adfc9ab020007bd81f1c9d39b54927714aba32606a15808",
+    "sha256:9afa1ab72c26a581738b349fae3932a0f04dbc84cae17bcd39365b1ff417385d",
+    "sha256:d10a3f816faca58fe9e6a9da0cfdb7121e3122e6ae7f4e5f5bcf2f369f8f74d6"
   ],
   "index": {
     "schemaVersion": 2,
@@ -27,7 +27,7 @@
       {
         "mediaType": "application/vnd.oci.image.manifest.v1+json",
         "size": 1468,
-        "digest": "sha256:bc6e9ae6539f0bca2fe0be45ea1ad43ceb6aad3601ba210a776e01b3073f4d71",
+        "digest": "sha256:c353bbf2402d4802e3b629e0348895b0b18fa14f6117fd0a0337bc1a97d3e4d9",
         "platform": {
           "architecture": "arm64",
           "os": "linux"
@@ -37,7 +37,7 @@
       {
         "mediaType": "application/vnd.oci.image.manifest.v1+json",
         "size": 1468,
-        "digest": "sha256:48d373932bae9b65f5ded6480276b2290f16b8d43794ec9dcc3faf50137802eb",
+        "digest": "sha256:fde2ed94fd15dbe70b0e6df47ddd7da4e62286c0aca3bc83f5eb47bf4eacb118",
         "platform": {
           "architecture": "amd64",
           "os": "linux"
@@ -47,11 +47,11 @@
     ],
     "annotations": {
       "org.opencontainers.image.authors": "Tailscale https://tailscale.com/",
-      "org.opencontainers.image.revision": "27047635f237d1f3e0b08c0f487674757f30d2f7",
+      "org.opencontainers.image.revision": "cbc74fe48ef1b1649f69a4d9a602319427e25102",
       "org.opencontainers.image.source": "https://github.com/tailscale/tailscale/blob/main/build_docker.sh",
       "org.opencontainers.image.url": "https://tailscale.com/docs/kubernetes-operator",
       "org.opencontainers.image.vendor": "Tailscale",
-      "org.opencontainers.image.version": "1.104.4"
+      "org.opencontainers.image.version": "1.104.7"
     }
   }
 }
