@@ -43,6 +43,7 @@ class Image:
     image_name: str
     tag: str
     tag_pattern: str | None
+    tag_prefix: str
     upstream_digest: str
     lock: str
 
@@ -68,15 +69,19 @@ def run(cmd: list[str], **kwargs) -> subprocess.CompletedProcess:
     return result
 
 
-def parse_version(raw: str) -> tuple[tuple[int, int, int], str | None] | None:
-    m = SEMVER.match(raw)
+def parse_version(
+    raw: str, prefix: str = ""
+) -> tuple[tuple[int, int, int], str | None] | None:
+    if not raw.startswith(prefix):
+        return None
+    m = SEMVER.match(raw[len(prefix) :])
     if not m:
         return None
     major, minor, patch, suffix = m.groups()
     return (int(major), int(minor or 0), int(patch or 0)), suffix
 
 
-def select_version(candidates: list[str], current: str) -> str | None:
+def select_version(candidates: list[str], current: str, prefix: str = "") -> str | None:
     """Follow the numbers, never the suffix.
 
     A tag's suffix identifies the image variant -- redis "8.10.1-alpine" and docker
@@ -85,14 +90,14 @@ def select_version(candidates: list[str], current: str) -> str | None:
     numbered prerelease such as "-beta1" therefore never advances to "-beta2"; failing to
     update beats switching channels.
     """
-    parsed_current = parse_version(current)
+    parsed_current = parse_version(current, prefix)
     if parsed_current is None:
         return None
     _, suffix = parsed_current
 
     valid = [
         (raw, parsed)
-        for raw, parsed in ((raw, parse_version(raw)) for raw in candidates)
+        for raw, parsed in ((raw, parse_version(raw, prefix)) for raw in candidates)
         if parsed is not None and parsed[1] == suffix
     ]
     if not valid:
@@ -118,6 +123,7 @@ def discover(repo_root: str) -> list[Image]:
             image_name=info["imageName"],
             tag=info["tag"],
             tag_pattern=info.get("tagPattern"),
+            tag_prefix=info.get("tagPrefix") or "",
             upstream_digest=info["upstreamDigest"],
             lock=STORE_PREFIX.sub("", info["lock"]),
         )
@@ -152,7 +158,7 @@ def resolve_latest(images: list[Image]) -> list[Result]:
             candidates = [
                 raw for raw in candidates if re.fullmatch(image.tag_pattern, raw)
             ]
-        latest = select_version(candidates, image.tag)
+        latest = select_version(candidates, image.tag, image.tag_prefix)
         if latest is None:
             results.append(Result(image, "error", None, "no usable tag published"))
             continue
@@ -161,8 +167,8 @@ def resolve_latest(images: list[Image]) -> list[Result]:
 
 
 def classify(image: Image, latest: str) -> Result:
-    old_parsed = parse_version(image.tag)
-    latest_parsed = parse_version(latest)
+    old_parsed = parse_version(image.tag, image.tag_prefix)
+    latest_parsed = parse_version(latest, image.tag_prefix)
     if old_parsed is None:
         return Result(image, "skipped", latest, "unparseable pinned tag")
     if latest_parsed is None:

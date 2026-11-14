@@ -11,6 +11,7 @@
   lock,
   pname ? "${baseNameOf imageName}-index",
   tagPattern ? null,
+  tagPrefix ? null,
   meta ? { },
 }:
 let
@@ -36,11 +37,14 @@ let
 
   # builtins.match and the updater's re.fullmatch both match the whole tag, so a
   # pattern that excludes the pinned tag would freeze updates. Fail here instead.
+  # The same holds for a prefix the pinned tag does not start with.
   tag =
-    if tagPattern == null || builtins.match tagPattern parsed.tag != null then
-      parsed.tag
+    if tagPattern != null && builtins.match tagPattern parsed.tag == null then
+      throw "${lock}: tag ${parsed.tag} does not match tagPattern ${tagPattern}"
+    else if tagPrefix != null && !lib.strings.hasPrefix tagPrefix parsed.tag then
+      throw "${lock}: tag ${parsed.tag} does not start with tagPrefix ${tagPrefix}"
     else
-      throw "${lock}: tag ${parsed.tag} does not match tagPattern ${tagPattern}";
+      parsed.tag;
 
   imageTag = builtins.substring 0 32 (
     builtins.convertHash {
@@ -116,6 +120,7 @@ stdenvNoCC.mkDerivation (finalAttrs: {
         imageName
         tag
         tagPattern
+        tagPrefix
         ;
       inherit (parsed) upstreamDigest;
       lock = builtins.toString lock;
