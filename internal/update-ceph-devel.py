@@ -3,7 +3,6 @@ import gzip
 import json
 import os
 import pathlib
-import re
 import subprocess
 import sys
 import urllib.request
@@ -16,8 +15,6 @@ GIT_PATH = "@git@"
 
 PACKAGES = ("librados-devel", "libradosstriper-devel")
 ARCHES = ("aarch64", "x86_64")
-
-STORE_PREFIX = re.compile(r"^/nix/store/[^/]+/")
 
 REPO_NS = "{http://linux.duke.edu/metadata/repo}"
 COMMON_NS = "{http://linux.duke.edu/metadata/common}"
@@ -118,7 +115,8 @@ def serialize(lock: dict) -> str:
     "--lock",
     "lock_path",
     required=True,
-    help="Lock file to refresh, created when missing. A store path maps back into the repo.",
+    type=click.Path(dir_okay=False, path_type=pathlib.Path),
+    help="Lock file to refresh, relative to the repo root; created when missing.",
 )
 @click.option(
     "--series",
@@ -126,9 +124,8 @@ def serialize(lock: dict) -> str:
     help="Release series repository, such as https://download.ceph.com/rpm-tentacle/el9.",
 )
 @click.option("--commit", is_flag=True, help="Commit the refreshed lock.")
-def main(lock_path: str, series: str, commit: bool) -> None:
+def main(lock_path: pathlib.Path, series: str, commit: bool) -> None:
     os.environ.setdefault("SSL_CERT_FILE", CACERT_PATH)
-    lock_path = pathlib.Path(STORE_PREFIX.sub("", lock_path))
     current = lock_path.read_text() if lock_path.exists() else None
     lock = resolve(series)
     updated = serialize(lock)

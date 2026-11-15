@@ -39,7 +39,7 @@ stdenvNoCC.mkDerivation {
   passthru.updateScript = [
     (lib.meta.getExe (callPackage ./update-ceph-devel.nix { }))
     "--lock"
-    (toString lock)
+    (lib.path.removePrefix ../. lock)
     "--series"
     "https://download.ceph.com/rpm-${series}/el${el}"
   ];
