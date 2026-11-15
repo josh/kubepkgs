@@ -1,0 +1,13 @@
+{
+  "hashes": {
+    "aarch64": {
+      "librados-devel": "sha256-fUFWjpf/4j1EDgth1XBmKDCuPBs0JOd9y15ay6PaCQw=",
+      "libradosstriper-devel": "sha256-A6AJduWw6e/kDoeakv/wv/zrOzwJJYo2nnF2MQGzlEo="
+    },
+    "x86_64": {
+      "librados-devel": "sha256-zDcPxyrgAG0sb0APvttr9FHQK9C2KOk4+uE7SsJLOkI=",
+      "libradosstriper-devel": "sha256-KtiPp82vamvJELgRNcko9stwUNWJyIbdRfv75iWtYWU="
+    }
+  },
+  "version": "20.2.5"
+}

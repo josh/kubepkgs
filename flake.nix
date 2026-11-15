@@ -38,6 +38,7 @@
             buildOciImage = callPackage ./internal/build-oci-image.nix { };
             checkCrdModule = args: callPackage ./internal/check-crd-module.nix args;
             checkKubeImages = args: callPackage ./internal/check-kube-images.nix args;
+            fetchCephDevel = callPackage ./internal/fetch-ceph-devel.nix { };
             fetchhelm = callPackage ./internal/fetchhelm.nix { };
             fetchOciImage = callPackage ./internal/fetch-oci-image.nix { };
             renderHelmTemplate = args: callPackage ./internal/helm-render-template.nix args;
@@ -98,6 +99,7 @@
         system:
         mkPackages nixpkgsFor.${system}
         // {
+          update-ceph-devel = nixpkgsFor.${system}.callPackage ./internal/update-ceph-devel.nix { };
           update-crd-modules = nixpkgsFor.${system}.callPackage ./internal/update-crd-modules.nix { };
           update-helm-charts = nixpkgsFor.${system}.callPackage ./internal/update-helm-charts.nix { };
           update-json-snapshots = nixpkgsFor.${system}.callPackage ./internal/update-json-snapshots.nix { };
