@@ -927,7 +927,7 @@ let
 
         options = {
           "key" = mkOption {
-            description = "The key to select.";
+            description = "The key to select from the ConfigMap's Data field.\nKeys in the BinaryData field are not currently propagated to container env vars.";
             type = types.str;
           };
           "name" = mkOption {
@@ -1017,7 +1017,7 @@ let
 
       options = {
         "key" = mkOption {
-          description = "The key to select.";
+          description = "The key to select from the ConfigMap's Data field.\nKeys in the BinaryData field are not currently propagated to container env vars.";
           type = types.str;
         };
         "name" = mkOption {
@@ -1242,6 +1242,10 @@ let
           description = "model from an OCI artifact (e.g. ghcr.io/team/dashboards:v1)";
           type = (types.nullOr (submoduleOf "grafana.integreatly.org.v1beta1.GrafanaDashboardSpecOci"));
         };
+        "patch" = mkOption {
+          description = "Patch the contents of the dashboard JSON using jq scripts.\nThis is applied to a resolved dashboard, after variable substitution.";
+          type = (types.nullOr (submoduleOf "grafana.integreatly.org.v1beta1.GrafanaDashboardSpecPatch"));
+        };
         "plugins" = mkOption {
           description = "plugins";
           type = (
@@ -1310,6 +1314,7 @@ let
         "jsonnet" = mkOverride 1002 null;
         "jsonnetLib" = mkOverride 1002 null;
         "oci" = mkOverride 1002 null;
+        "patch" = mkOverride 1002 null;
         "plugins" = mkOverride 1002 null;
         "publicSharing" = mkOverride 1002 null;
         "resyncPeriod" = mkOverride 1002 null;
@@ -1325,7 +1330,7 @@ let
 
       options = {
         "key" = mkOption {
-          description = "The key to select.";
+          description = "The key to select from the ConfigMap's Data field.\nKeys in the BinaryData field are not currently propagated to container env vars.";
           type = types.str;
         };
         "name" = mkOption {
@@ -1389,7 +1394,7 @@ let
 
       options = {
         "key" = mkOption {
-          description = "The key to select.";
+          description = "The key to select from the ConfigMap's Data field.\nKeys in the BinaryData field are not currently propagated to container env vars.";
           type = types.str;
         };
         "name" = mkOption {
@@ -1487,7 +1492,7 @@ let
 
       options = {
         "key" = mkOption {
-          description = "The key to select.";
+          description = "The key to select from the ConfigMap's Data field.\nKeys in the BinaryData field are not currently propagated to container env vars.";
           type = types.str;
         };
         "name" = mkOption {
@@ -1656,6 +1661,147 @@ let
 
       config = {
         "name" = mkOverride 1002 null;
+      };
+
+    };
+    "grafana.integreatly.org.v1beta1.GrafanaDashboardSpecPatch" = {
+
+      options = {
+        "env" = mkOption {
+          description = "";
+          type = (
+            types.nullOr (
+              coerceAttrsOfSubmodulesToListByKey "grafana.integreatly.org.v1beta1.GrafanaDashboardSpecPatchEnv"
+                "name"
+                [ ]
+            )
+          );
+          apply = attrsToList;
+        };
+        "scripts" = mkOption {
+          description = "";
+          type = (types.listOf types.str);
+        };
+      };
+
+      config = {
+        "env" = mkOverride 1002 null;
+      };
+
+    };
+    "grafana.integreatly.org.v1beta1.GrafanaDashboardSpecPatchEnv" = {
+
+      options = {
+        "name" = mkOption {
+          description = "";
+          type = types.str;
+        };
+        "valueFrom" = mkOption {
+          description = "";
+          type = (submoduleOf "grafana.integreatly.org.v1beta1.GrafanaDashboardSpecPatchEnvValueFrom");
+        };
+      };
+
+      config = { };
+
+    };
+    "grafana.integreatly.org.v1beta1.GrafanaDashboardSpecPatchEnvValueFrom" = {
+
+      options = {
+        "configMapKeyRef" = mkOption {
+          description = "Selects a key of a ConfigMap.";
+          type = (
+            types.nullOr (
+              submoduleOf "grafana.integreatly.org.v1beta1.GrafanaDashboardSpecPatchEnvValueFromConfigMapKeyRef"
+            )
+          );
+        };
+        "grafanaRef" = mkOption {
+          description = "ObjectFieldSelector selects an APIVersioned field of an object.";
+          type = (
+            types.nullOr (
+              submoduleOf "grafana.integreatly.org.v1beta1.GrafanaDashboardSpecPatchEnvValueFromGrafanaRef"
+            )
+          );
+        };
+        "secretKeyRef" = mkOption {
+          description = "Selects a key of a Secret.";
+          type = (
+            types.nullOr (
+              submoduleOf "grafana.integreatly.org.v1beta1.GrafanaDashboardSpecPatchEnvValueFromSecretKeyRef"
+            )
+          );
+        };
+      };
+
+      config = {
+        "configMapKeyRef" = mkOverride 1002 null;
+        "grafanaRef" = mkOverride 1002 null;
+        "secretKeyRef" = mkOverride 1002 null;
+      };
+
+    };
+    "grafana.integreatly.org.v1beta1.GrafanaDashboardSpecPatchEnvValueFromConfigMapKeyRef" = {
+
+      options = {
+        "key" = mkOption {
+          description = "The key to select from the ConfigMap's Data field.\nKeys in the BinaryData field are not currently propagated to container env vars.";
+          type = types.str;
+        };
+        "name" = mkOption {
+          description = "Name of the referent.\nThis field is effectively required, but due to backwards compatibility is\nallowed to be empty. Instances of this type with an empty value here are\nalmost certainly wrong.\nMore info: https://kubernetes.io/docs/concepts/overview/working-with-objects/names/#names";
+          type = (types.nullOr types.str);
+        };
+        "optional" = mkOption {
+          description = "Specify whether the ConfigMap or its key must be defined";
+          type = (types.nullOr types.bool);
+        };
+      };
+
+      config = {
+        "name" = mkOverride 1002 null;
+        "optional" = mkOverride 1002 null;
+      };
+
+    };
+    "grafana.integreatly.org.v1beta1.GrafanaDashboardSpecPatchEnvValueFromGrafanaRef" = {
+
+      options = {
+        "apiVersion" = mkOption {
+          description = "Version of the schema the FieldPath is written in terms of, defaults to \"v1\".";
+          type = (types.nullOr types.str);
+        };
+        "fieldPath" = mkOption {
+          description = "Path of the field to select in the specified API version.";
+          type = types.str;
+        };
+      };
+
+      config = {
+        "apiVersion" = mkOverride 1002 null;
+      };
+
+    };
+    "grafana.integreatly.org.v1beta1.GrafanaDashboardSpecPatchEnvValueFromSecretKeyRef" = {
+
+      options = {
+        "key" = mkOption {
+          description = "The key of the secret to select from.  Must be a valid secret key.";
+          type = types.str;
+        };
+        "name" = mkOption {
+          description = "Name of the referent.\nThis field is effectively required, but due to backwards compatibility is\nallowed to be empty. Instances of this type with an empty value here are\nalmost certainly wrong.\nMore info: https://kubernetes.io/docs/concepts/overview/working-with-objects/names/#names";
+          type = (types.nullOr types.str);
+        };
+        "optional" = mkOption {
+          description = "Specify whether the Secret or its key must be defined";
+          type = (types.nullOr types.bool);
+        };
+      };
+
+      config = {
+        "name" = mkOverride 1002 null;
+        "optional" = mkOverride 1002 null;
       };
 
     };
@@ -2189,7 +2335,7 @@ let
 
       options = {
         "key" = mkOption {
-          description = "The key to select.";
+          description = "The key to select from the ConfigMap's Data field.\nKeys in the BinaryData field are not currently propagated to container env vars.";
           type = types.str;
         };
         "name" = mkOption {
@@ -2700,7 +2846,7 @@ let
 
       options = {
         "key" = mkOption {
-          description = "The key to select.";
+          description = "The key to select from the ConfigMap's Data field.\nKeys in the BinaryData field are not currently propagated to container env vars.";
           type = types.str;
         };
         "name" = mkOption {
@@ -2766,7 +2912,7 @@ let
 
       options = {
         "key" = mkOption {
-          description = "The key to select.";
+          description = "The key to select from the ConfigMap's Data field.\nKeys in the BinaryData field are not currently propagated to container env vars.";
           type = types.str;
         };
         "name" = mkOption {
@@ -2864,7 +3010,7 @@ let
 
       options = {
         "key" = mkOption {
-          description = "The key to select.";
+          description = "The key to select from the ConfigMap's Data field.\nKeys in the BinaryData field are not currently propagated to container env vars.";
           type = types.str;
         };
         "name" = mkOption {
@@ -3429,7 +3575,7 @@ let
 
       options = {
         "key" = mkOption {
-          description = "The key to select.";
+          description = "The key to select from the ConfigMap's Data field.\nKeys in the BinaryData field are not currently propagated to container env vars.";
           type = types.str;
         };
         "name" = mkOption {
@@ -4940,6 +5086,235 @@ let
       };
 
     };
+    "grafana.integreatly.org.v1beta1.GrafanaSilence" = {
+
+      options = {
+        "apiVersion" = mkOption {
+          description = "APIVersion defines the versioned schema of this representation of an object.\nServers should convert recognized schemas to the latest internal value, and\nmay reject unrecognized values.\nMore info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources";
+          type = (types.nullOr types.str);
+        };
+        "kind" = mkOption {
+          description = "Kind is a string value representing the REST resource this object represents.\nServers may infer this from the endpoint the client submits requests to.\nCannot be updated.\nIn CamelCase.\nMore info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds";
+          type = (types.nullOr types.str);
+        };
+        "metadata" = mkOption {
+          description = "Standard object's metadata. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#metadata";
+          type = (types.nullOr (globalSubmoduleOf "io.k8s.apimachinery.pkg.apis.meta.v1.ObjectMeta"));
+        };
+        "spec" = mkOption {
+          description = "GrafanaSilenceSpec defines the desired state of GrafanaSilence\nKubernetes CEL validation cannot reference the current time, so \"endsAt must be in the\nfuture\" is enforced by the controller; here we only assert the window is well-formed.";
+          type = (submoduleOf "grafana.integreatly.org.v1beta1.GrafanaSilenceSpec");
+        };
+        "status" = mkOption {
+          description = "GrafanaSilenceStatus defines the observed state of GrafanaSilence";
+          type = (types.nullOr (submoduleOf "grafana.integreatly.org.v1beta1.GrafanaSilenceStatus"));
+        };
+      };
+
+      config = {
+        "apiVersion" = mkOverride 1002 null;
+        "kind" = mkOverride 1002 null;
+        "metadata" = mkOverride 1002 null;
+        "status" = mkOverride 1002 null;
+      };
+
+    };
+    "grafana.integreatly.org.v1beta1.GrafanaSilenceSpec" = {
+
+      options = {
+        "allowCrossNamespaceImport" = mkOption {
+          description = "Allow the Operator to match this resource with Grafanas outside the current namespace";
+          type = (types.nullOr types.bool);
+        };
+        "comment" = mkOption {
+          description = "Comment describing the reason for the silence";
+          type = types.str;
+        };
+        "createdBy" = mkOption {
+          description = "CreatedBy is the author attributed to the silence";
+          type = (types.nullOr types.str);
+        };
+        "endsAt" = mkOption {
+          description = "EndsAt is the time the silence expires (in UTC, RFC3339). It must be after startsAt\nand in the future; Grafana rejects silences whose window has already ended.";
+          type = types.str;
+        };
+        "instanceSelector" = mkOption {
+          description = "Selects Grafana instances for import";
+          type = (submoduleOf "grafana.integreatly.org.v1beta1.GrafanaSilenceSpecInstanceSelector");
+        };
+        "matchers" = mkOption {
+          description = "Matchers used to select the alerts that should be silenced.\nA matcher targeting an alert rule (name \"__alert_rule_uid__\") must be an exact-equality\nmatcher (isEqual=true, isRegex=false), otherwise Grafana will not associate the silence\nwith the rule in the silences list.";
+          type = (
+            coerceAttrsOfSubmodulesToListByKey "grafana.integreatly.org.v1beta1.GrafanaSilenceSpecMatchers"
+              "name"
+              [ ]
+          );
+          apply = attrsToList;
+        };
+        "resyncPeriod" = mkOption {
+          description = "How often the resource is synced, defaults to 10m0s if not set";
+          type = (types.nullOr types.str);
+        };
+        "startsAt" = mkOption {
+          description = "StartsAt is the time the silence starts taking effect (in UTC, RFC3339)";
+          type = types.str;
+        };
+        "suspend" = mkOption {
+          description = "Suspend pauses synchronizing attempts and tells the operator to ignore changes";
+          type = (types.nullOr types.bool);
+        };
+      };
+
+      config = {
+        "allowCrossNamespaceImport" = mkOverride 1002 null;
+        "createdBy" = mkOverride 1002 null;
+        "resyncPeriod" = mkOverride 1002 null;
+        "suspend" = mkOverride 1002 null;
+      };
+
+    };
+    "grafana.integreatly.org.v1beta1.GrafanaSilenceSpecInstanceSelector" = {
+
+      options = {
+        "matchExpressions" = mkOption {
+          description = "matchExpressions is a list of label selector requirements. The requirements are ANDed.";
+          type = (
+            types.nullOr (
+              types.listOf (
+                submoduleOf "grafana.integreatly.org.v1beta1.GrafanaSilenceSpecInstanceSelectorMatchExpressions"
+              )
+            )
+          );
+        };
+        "matchLabels" = mkOption {
+          description = "matchLabels is a map of {key,value} pairs. A single {key,value} in the matchLabels\nmap is equivalent to an element of matchExpressions, whose key field is \"key\", the\noperator is \"In\", and the values array contains only \"value\". The requirements are ANDed.";
+          type = (types.nullOr (types.attrsOf types.str));
+        };
+      };
+
+      config = {
+        "matchExpressions" = mkOverride 1002 null;
+        "matchLabels" = mkOverride 1002 null;
+      };
+
+    };
+    "grafana.integreatly.org.v1beta1.GrafanaSilenceSpecInstanceSelectorMatchExpressions" = {
+
+      options = {
+        "key" = mkOption {
+          description = "key is the label key that the selector applies to.";
+          type = types.str;
+        };
+        "operator" = mkOption {
+          description = "operator represents a key's relationship to a set of values.\nValid operators are In, NotIn, Exists and DoesNotExist.";
+          type = types.str;
+        };
+        "values" = mkOption {
+          description = "values is an array of string values. If the operator is In or NotIn,\nthe values array must be non-empty. If the operator is Exists or DoesNotExist,\nthe values array must be empty. This array is replaced during a strategic\nmerge patch.";
+          type = (types.nullOr (types.listOf types.str));
+        };
+      };
+
+      config = {
+        "values" = mkOverride 1002 null;
+      };
+
+    };
+    "grafana.integreatly.org.v1beta1.GrafanaSilenceSpecMatchers" = {
+
+      options = {
+        "isEqual" = mkOption {
+          description = "Whether the matcher is an equality matcher (true) or a negative matcher (false)";
+          type = (types.nullOr types.bool);
+        };
+        "isRegex" = mkOption {
+          description = "Whether to interpret the value as a regular expression";
+          type = (types.nullOr types.bool);
+        };
+        "name" = mkOption {
+          description = "The name of the label to match against";
+          type = types.str;
+        };
+        "value" = mkOption {
+          description = "The value to match against";
+          type = types.str;
+        };
+      };
+
+      config = {
+        "isEqual" = mkOverride 1002 null;
+        "isRegex" = mkOverride 1002 null;
+      };
+
+    };
+    "grafana.integreatly.org.v1beta1.GrafanaSilenceStatus" = {
+
+      options = {
+        "conditions" = mkOption {
+          description = "Results when synchronizing resource with Grafana instances";
+          type = (
+            types.nullOr (
+              types.listOf (submoduleOf "grafana.integreatly.org.v1beta1.GrafanaSilenceStatusConditions")
+            )
+          );
+        };
+        "lastResync" = mkOption {
+          description = "Last time the resource was synchronized with Grafana instances";
+          type = (types.nullOr types.str);
+        };
+        "silenceIDs" = mkOption {
+          description = "SilenceIDs maps \"<instance namespace>/<instance name>\" to the Grafana-assigned\nsilence ID for that instance. Grafana assigns silence IDs randomly, unlike other\nGrafana resources which are addressed by a UID the operator controls, so the\nassigned ID must be tracked here to reconcile updates and deletions correctly.";
+          type = (types.nullOr (types.attrsOf types.str));
+        };
+      };
+
+      config = {
+        "conditions" = mkOverride 1002 null;
+        "lastResync" = mkOverride 1002 null;
+        "silenceIDs" = mkOverride 1002 null;
+      };
+
+    };
+    "grafana.integreatly.org.v1beta1.GrafanaSilenceStatusConditions" = {
+
+      options = {
+        "lastTransitionTime" = mkOption {
+          description = "lastTransitionTime is the last time the condition transitioned from one status to another.\nThis should be when the underlying condition changed.  If that is not known, then using the time when the API field changed is acceptable.";
+          type = types.str;
+        };
+        "message" = mkOption {
+          description = "message is a human readable message indicating details about the transition.\nThis may be an empty string.";
+          type = (types.withMaxLength 32768 types.str);
+        };
+        "observedGeneration" = mkOption {
+          description = "observedGeneration represents the .metadata.generation that the condition was set based upon.\nFor instance, if .metadata.generation is currently 12, but the .status.conditions[x].observedGeneration is 9, the condition is out of date\nwith respect to the current state of the instance.";
+          type = (types.nullOr (types.withMinimum 0 types.int));
+        };
+        "reason" = mkOption {
+          description = "reason contains a programmatic identifier indicating the reason for the condition's last transition.\nProducers of specific condition types may define expected values and meanings for this field,\nand whether the values are considered a guaranteed API.\nThe value should be a CamelCase string.\nThis field may not be empty.";
+          type = (types.withMaxLength 1024 (types.withMinLength 1 types.str));
+        };
+        "status" = mkOption {
+          description = "status of the condition, one of True, False, Unknown.";
+          type = (
+            types.enum [
+              "True"
+              "False"
+              "Unknown"
+            ]
+          );
+        };
+        "type" = mkOption {
+          description = "type of condition in CamelCase or in foo.example.com/CamelCase.";
+          type = (types.withMaxLength 316 types.str);
+        };
+      };
+
+      config = {
+        "observedGeneration" = mkOverride 1002 null;
+      };
+
+    };
     "grafana.integreatly.org.v1beta1.GrafanaSpec" = {
 
       options = {
@@ -5014,7 +5389,7 @@ let
           type = (types.nullOr types.bool);
         };
         "version" = mkOption {
-          description = "Version sets the tag of the default image: docker.io/grafana/grafana.\nAllows full image refs with/without sha256checksum: \"registry/repo/image:tag@sha\"\ndefault: 13.1.3";
+          description = "Version sets the tag of the default image: docker.io/grafana/grafana.\nAllows full image refs with/without sha256checksum: \"registry/repo/image:tag@sha\"\ndefault: 13.2.4";
           type = (types.nullOr types.str);
         };
       };
@@ -7150,6 +7525,10 @@ let
             description = "";
             type = (types.either types.int types.str);
           };
+          "protocol" = mkOption {
+            description = "";
+            type = (types.nullOr types.str);
+          };
           "scheme" = mkOption {
             description = "";
             type = (types.nullOr types.str);
@@ -7160,6 +7539,7 @@ let
           "host" = mkOverride 1002 null;
           "httpHeaders" = mkOverride 1002 null;
           "path" = mkOverride 1002 null;
+          "protocol" = mkOverride 1002 null;
           "scheme" = mkOverride 1002 null;
         };
 
@@ -7302,6 +7682,10 @@ let
             description = "";
             type = (types.either types.int types.str);
           };
+          "protocol" = mkOption {
+            description = "";
+            type = (types.nullOr types.str);
+          };
           "scheme" = mkOption {
             description = "";
             type = (types.nullOr types.str);
@@ -7312,6 +7696,7 @@ let
           "host" = mkOverride 1002 null;
           "httpHeaders" = mkOverride 1002 null;
           "path" = mkOverride 1002 null;
+          "protocol" = mkOverride 1002 null;
           "scheme" = mkOverride 1002 null;
         };
 
@@ -7459,6 +7844,10 @@ let
       {
 
         options = {
+          "mode" = mkOption {
+            description = "";
+            type = (types.nullOr types.str);
+          };
           "port" = mkOption {
             description = "";
             type = types.int;
@@ -7470,6 +7859,7 @@ let
         };
 
         config = {
+          "mode" = mkOverride 1002 null;
           "service" = mkOverride 1002 null;
         };
 
@@ -7502,6 +7892,10 @@ let
             description = "";
             type = (types.either types.int types.str);
           };
+          "protocol" = mkOption {
+            description = "";
+            type = (types.nullOr types.str);
+          };
           "scheme" = mkOption {
             description = "";
             type = (types.nullOr types.str);
@@ -7512,6 +7906,7 @@ let
           "host" = mkOverride 1002 null;
           "httpHeaders" = mkOverride 1002 null;
           "path" = mkOverride 1002 null;
+          "protocol" = mkOverride 1002 null;
           "scheme" = mkOverride 1002 null;
         };
 
@@ -7679,6 +8074,10 @@ let
       {
 
         options = {
+          "mode" = mkOption {
+            description = "";
+            type = (types.nullOr types.str);
+          };
           "port" = mkOption {
             description = "";
             type = types.int;
@@ -7690,6 +8089,7 @@ let
         };
 
         config = {
+          "mode" = mkOverride 1002 null;
           "service" = mkOverride 1002 null;
         };
 
@@ -7722,6 +8122,10 @@ let
             description = "";
             type = (types.either types.int types.str);
           };
+          "protocol" = mkOption {
+            description = "";
+            type = (types.nullOr types.str);
+          };
           "scheme" = mkOption {
             description = "";
             type = (types.nullOr types.str);
@@ -7732,6 +8136,7 @@ let
           "host" = mkOverride 1002 null;
           "httpHeaders" = mkOverride 1002 null;
           "path" = mkOverride 1002 null;
+          "protocol" = mkOverride 1002 null;
           "scheme" = mkOverride 1002 null;
         };
 
@@ -8181,6 +8586,10 @@ let
       {
 
         options = {
+          "mode" = mkOption {
+            description = "";
+            type = (types.nullOr types.str);
+          };
           "port" = mkOption {
             description = "";
             type = types.int;
@@ -8192,6 +8601,7 @@ let
         };
 
         config = {
+          "mode" = mkOverride 1002 null;
           "service" = mkOverride 1002 null;
         };
 
@@ -8224,6 +8634,10 @@ let
             description = "";
             type = (types.either types.int types.str);
           };
+          "protocol" = mkOption {
+            description = "";
+            type = (types.nullOr types.str);
+          };
           "scheme" = mkOption {
             description = "";
             type = (types.nullOr types.str);
@@ -8234,6 +8648,7 @@ let
           "host" = mkOverride 1002 null;
           "httpHeaders" = mkOverride 1002 null;
           "path" = mkOverride 1002 null;
+          "protocol" = mkOverride 1002 null;
           "scheme" = mkOverride 1002 null;
         };
 
@@ -8293,6 +8708,10 @@ let
     "grafana.integreatly.org.v1beta1.GrafanaSpecDeploymentSpecTemplateSpecContainersVolumeMounts" = {
 
       options = {
+        "bindMountOptions" = mkOption {
+          description = "";
+          type = (types.nullOr (types.listOf types.str));
+        };
         "mountPath" = mkOption {
           description = "";
           type = types.str;
@@ -8324,6 +8743,7 @@ let
       };
 
       config = {
+        "bindMountOptions" = mkOverride 1002 null;
         "mountPropagation" = mkOverride 1002 null;
         "readOnly" = mkOverride 1002 null;
         "recursiveReadOnly" = mkOverride 1002 null;
@@ -8993,6 +9413,10 @@ let
             description = "";
             type = (types.either types.int types.str);
           };
+          "protocol" = mkOption {
+            description = "";
+            type = (types.nullOr types.str);
+          };
           "scheme" = mkOption {
             description = "";
             type = (types.nullOr types.str);
@@ -9003,6 +9427,7 @@ let
           "host" = mkOverride 1002 null;
           "httpHeaders" = mkOverride 1002 null;
           "path" = mkOverride 1002 null;
+          "protocol" = mkOverride 1002 null;
           "scheme" = mkOverride 1002 null;
         };
 
@@ -9145,6 +9570,10 @@ let
             description = "";
             type = (types.either types.int types.str);
           };
+          "protocol" = mkOption {
+            description = "";
+            type = (types.nullOr types.str);
+          };
           "scheme" = mkOption {
             description = "";
             type = (types.nullOr types.str);
@@ -9155,6 +9584,7 @@ let
           "host" = mkOverride 1002 null;
           "httpHeaders" = mkOverride 1002 null;
           "path" = mkOverride 1002 null;
+          "protocol" = mkOverride 1002 null;
           "scheme" = mkOverride 1002 null;
         };
 
@@ -9303,6 +9733,10 @@ let
       {
 
         options = {
+          "mode" = mkOption {
+            description = "";
+            type = (types.nullOr types.str);
+          };
           "port" = mkOption {
             description = "";
             type = types.int;
@@ -9314,6 +9748,7 @@ let
         };
 
         config = {
+          "mode" = mkOverride 1002 null;
           "service" = mkOverride 1002 null;
         };
 
@@ -9346,6 +9781,10 @@ let
             description = "";
             type = (types.either types.int types.str);
           };
+          "protocol" = mkOption {
+            description = "";
+            type = (types.nullOr types.str);
+          };
           "scheme" = mkOption {
             description = "";
             type = (types.nullOr types.str);
@@ -9356,6 +9795,7 @@ let
           "host" = mkOverride 1002 null;
           "httpHeaders" = mkOverride 1002 null;
           "path" = mkOverride 1002 null;
+          "protocol" = mkOverride 1002 null;
           "scheme" = mkOverride 1002 null;
         };
 
@@ -9524,6 +9964,10 @@ let
       {
 
         options = {
+          "mode" = mkOption {
+            description = "";
+            type = (types.nullOr types.str);
+          };
           "port" = mkOption {
             description = "";
             type = types.int;
@@ -9535,6 +9979,7 @@ let
         };
 
         config = {
+          "mode" = mkOverride 1002 null;
           "service" = mkOverride 1002 null;
         };
 
@@ -9567,6 +10012,10 @@ let
             description = "";
             type = (types.either types.int types.str);
           };
+          "protocol" = mkOption {
+            description = "";
+            type = (types.nullOr types.str);
+          };
           "scheme" = mkOption {
             description = "";
             type = (types.nullOr types.str);
@@ -9577,6 +10026,7 @@ let
           "host" = mkOverride 1002 null;
           "httpHeaders" = mkOverride 1002 null;
           "path" = mkOverride 1002 null;
+          "protocol" = mkOverride 1002 null;
           "scheme" = mkOverride 1002 null;
         };
 
@@ -10031,6 +10481,10 @@ let
       {
 
         options = {
+          "mode" = mkOption {
+            description = "";
+            type = (types.nullOr types.str);
+          };
           "port" = mkOption {
             description = "";
             type = types.int;
@@ -10042,6 +10496,7 @@ let
         };
 
         config = {
+          "mode" = mkOverride 1002 null;
           "service" = mkOverride 1002 null;
         };
 
@@ -10074,6 +10529,10 @@ let
             description = "";
             type = (types.either types.int types.str);
           };
+          "protocol" = mkOption {
+            description = "";
+            type = (types.nullOr types.str);
+          };
           "scheme" = mkOption {
             description = "";
             type = (types.nullOr types.str);
@@ -10084,6 +10543,7 @@ let
           "host" = mkOverride 1002 null;
           "httpHeaders" = mkOverride 1002 null;
           "path" = mkOverride 1002 null;
+          "protocol" = mkOverride 1002 null;
           "scheme" = mkOverride 1002 null;
         };
 
@@ -10145,6 +10605,10 @@ let
       {
 
         options = {
+          "bindMountOptions" = mkOption {
+            description = "";
+            type = (types.nullOr (types.listOf types.str));
+          };
           "mountPath" = mkOption {
             description = "";
             type = types.str;
@@ -10176,6 +10640,7 @@ let
         };
 
         config = {
+          "bindMountOptions" = mkOverride 1002 null;
           "mountPropagation" = mkOverride 1002 null;
           "readOnly" = mkOverride 1002 null;
           "recursiveReadOnly" = mkOverride 1002 null;
@@ -10819,6 +11284,10 @@ let
             description = "";
             type = (types.either types.int types.str);
           };
+          "protocol" = mkOption {
+            description = "";
+            type = (types.nullOr types.str);
+          };
           "scheme" = mkOption {
             description = "";
             type = (types.nullOr types.str);
@@ -10829,6 +11298,7 @@ let
           "host" = mkOverride 1002 null;
           "httpHeaders" = mkOverride 1002 null;
           "path" = mkOverride 1002 null;
+          "protocol" = mkOverride 1002 null;
           "scheme" = mkOverride 1002 null;
         };
 
@@ -10971,6 +11441,10 @@ let
             description = "";
             type = (types.either types.int types.str);
           };
+          "protocol" = mkOption {
+            description = "";
+            type = (types.nullOr types.str);
+          };
           "scheme" = mkOption {
             description = "";
             type = (types.nullOr types.str);
@@ -10981,6 +11455,7 @@ let
           "host" = mkOverride 1002 null;
           "httpHeaders" = mkOverride 1002 null;
           "path" = mkOverride 1002 null;
+          "protocol" = mkOverride 1002 null;
           "scheme" = mkOverride 1002 null;
         };
 
@@ -11129,6 +11604,10 @@ let
       {
 
         options = {
+          "mode" = mkOption {
+            description = "";
+            type = (types.nullOr types.str);
+          };
           "port" = mkOption {
             description = "";
             type = types.int;
@@ -11140,6 +11619,7 @@ let
         };
 
         config = {
+          "mode" = mkOverride 1002 null;
           "service" = mkOverride 1002 null;
         };
 
@@ -11172,6 +11652,10 @@ let
             description = "";
             type = (types.either types.int types.str);
           };
+          "protocol" = mkOption {
+            description = "";
+            type = (types.nullOr types.str);
+          };
           "scheme" = mkOption {
             description = "";
             type = (types.nullOr types.str);
@@ -11182,6 +11666,7 @@ let
           "host" = mkOverride 1002 null;
           "httpHeaders" = mkOverride 1002 null;
           "path" = mkOverride 1002 null;
+          "protocol" = mkOverride 1002 null;
           "scheme" = mkOverride 1002 null;
         };
 
@@ -11350,6 +11835,10 @@ let
       {
 
         options = {
+          "mode" = mkOption {
+            description = "";
+            type = (types.nullOr types.str);
+          };
           "port" = mkOption {
             description = "";
             type = types.int;
@@ -11361,6 +11850,7 @@ let
         };
 
         config = {
+          "mode" = mkOverride 1002 null;
           "service" = mkOverride 1002 null;
         };
 
@@ -11393,6 +11883,10 @@ let
             description = "";
             type = (types.either types.int types.str);
           };
+          "protocol" = mkOption {
+            description = "";
+            type = (types.nullOr types.str);
+          };
           "scheme" = mkOption {
             description = "";
             type = (types.nullOr types.str);
@@ -11403,6 +11897,7 @@ let
           "host" = mkOverride 1002 null;
           "httpHeaders" = mkOverride 1002 null;
           "path" = mkOverride 1002 null;
+          "protocol" = mkOverride 1002 null;
           "scheme" = mkOverride 1002 null;
         };
 
@@ -11856,6 +12351,10 @@ let
       {
 
         options = {
+          "mode" = mkOption {
+            description = "";
+            type = (types.nullOr types.str);
+          };
           "port" = mkOption {
             description = "";
             type = types.int;
@@ -11867,6 +12366,7 @@ let
         };
 
         config = {
+          "mode" = mkOverride 1002 null;
           "service" = mkOverride 1002 null;
         };
 
@@ -11899,6 +12399,10 @@ let
             description = "";
             type = (types.either types.int types.str);
           };
+          "protocol" = mkOption {
+            description = "";
+            type = (types.nullOr types.str);
+          };
           "scheme" = mkOption {
             description = "";
             type = (types.nullOr types.str);
@@ -11909,6 +12413,7 @@ let
           "host" = mkOverride 1002 null;
           "httpHeaders" = mkOverride 1002 null;
           "path" = mkOverride 1002 null;
+          "protocol" = mkOverride 1002 null;
           "scheme" = mkOverride 1002 null;
         };
 
@@ -11970,6 +12475,10 @@ let
       {
 
         options = {
+          "bindMountOptions" = mkOption {
+            description = "";
+            type = (types.nullOr (types.listOf types.str));
+          };
           "mountPath" = mkOption {
             description = "";
             type = types.str;
@@ -12001,6 +12510,7 @@ let
         };
 
         config = {
+          "bindMountOptions" = mkOverride 1002 null;
           "mountPropagation" = mkOverride 1002 null;
           "readOnly" = mkOverride 1002 null;
           "recursiveReadOnly" = mkOverride 1002 null;
@@ -12858,6 +13368,10 @@ let
           description = "";
           type = (types.nullOr types.int);
         };
+        "defaultUser" = mkOption {
+          description = "";
+          type = (types.nullOr types.int);
+        };
         "items" = mkOption {
           description = "";
           type = (
@@ -12880,6 +13394,7 @@ let
 
       config = {
         "defaultMode" = mkOverride 1002 null;
+        "defaultUser" = mkOverride 1002 null;
         "items" = mkOverride 1002 null;
         "name" = mkOverride 1002 null;
         "optional" = mkOverride 1002 null;
@@ -12901,10 +13416,15 @@ let
           description = "";
           type = types.str;
         };
+        "user" = mkOption {
+          description = "";
+          type = (types.nullOr types.int);
+        };
       };
 
       config = {
         "mode" = mkOverride 1002 null;
+        "user" = mkOverride 1002 null;
       };
 
     };
@@ -12967,6 +13487,10 @@ let
           description = "";
           type = (types.nullOr types.int);
         };
+        "defaultUser" = mkOption {
+          description = "";
+          type = (types.nullOr types.int);
+        };
         "items" = mkOption {
           description = "";
           type = (
@@ -12981,6 +13505,7 @@ let
 
       config = {
         "defaultMode" = mkOverride 1002 null;
+        "defaultUser" = mkOverride 1002 null;
         "items" = mkOverride 1002 null;
       };
 
@@ -13012,12 +13537,17 @@ let
             )
           );
         };
+        "user" = mkOption {
+          description = "";
+          type = (types.nullOr types.int);
+        };
       };
 
       config = {
         "fieldRef" = mkOverride 1002 null;
         "mode" = mkOverride 1002 null;
         "resourceFieldRef" = mkOverride 1002 null;
+        "user" = mkOverride 1002 null;
       };
 
     };
@@ -13071,6 +13601,10 @@ let
           description = "";
           type = (types.nullOr types.str);
         };
+        "mode" = mkOption {
+          description = "";
+          type = (types.nullOr types.int);
+        };
         "sizeLimit" = mkOption {
           description = "";
           type = (types.nullOr (types.either types.int types.str));
@@ -13079,6 +13613,7 @@ let
 
       config = {
         "medium" = mkOverride 1002 null;
+        "mode" = mkOverride 1002 null;
         "sizeLimit" = mkOverride 1002 null;
       };
 
@@ -13697,6 +14232,10 @@ let
           description = "";
           type = (types.nullOr types.int);
         };
+        "defaultUser" = mkOption {
+          description = "";
+          type = (types.nullOr types.int);
+        };
         "sources" = mkOption {
           description = "";
           type = (
@@ -13711,6 +14250,7 @@ let
 
       config = {
         "defaultMode" = mkOverride 1002 null;
+        "defaultUser" = mkOverride 1002 null;
         "sources" = mkOverride 1002 null;
       };
 
@@ -13806,6 +14346,10 @@ let
             description = "";
             type = (types.nullOr types.str);
           };
+          "user" = mkOption {
+            description = "";
+            type = (types.nullOr types.int);
+          };
         };
 
         config = {
@@ -13813,6 +14357,7 @@ let
           "name" = mkOverride 1002 null;
           "optional" = mkOverride 1002 null;
           "signerName" = mkOverride 1002 null;
+          "user" = mkOverride 1002 null;
         };
 
       };
@@ -13912,10 +14457,15 @@ let
             description = "";
             type = types.str;
           };
+          "user" = mkOption {
+            description = "";
+            type = (types.nullOr types.int);
+          };
         };
 
         config = {
           "mode" = mkOverride 1002 null;
+          "user" = mkOverride 1002 null;
         };
 
       };
@@ -13968,12 +14518,17 @@ let
               )
             );
           };
+          "user" = mkOption {
+            description = "";
+            type = (types.nullOr types.int);
+          };
         };
 
         config = {
           "fieldRef" = mkOverride 1002 null;
           "mode" = mkOverride 1002 null;
           "resourceFieldRef" = mkOverride 1002 null;
+          "user" = mkOverride 1002 null;
         };
 
       };
@@ -14048,6 +14603,10 @@ let
             description = "";
             type = types.str;
           };
+          "user" = mkOption {
+            description = "";
+            type = (types.nullOr types.int);
+          };
           "userAnnotations" = mkOption {
             description = "";
             type = (types.nullOr (types.attrsOf types.str));
@@ -14059,6 +14618,7 @@ let
           "credentialBundlePath" = mkOverride 1002 null;
           "keyPath" = mkOverride 1002 null;
           "maxExpirationSeconds" = mkOverride 1002 null;
+          "user" = mkOverride 1002 null;
           "userAnnotations" = mkOverride 1002 null;
         };
 
@@ -14110,10 +14670,15 @@ let
             description = "";
             type = types.str;
           };
+          "user" = mkOption {
+            description = "";
+            type = (types.nullOr types.int);
+          };
         };
 
         config = {
           "mode" = mkOverride 1002 null;
+          "user" = mkOverride 1002 null;
         };
 
       };
@@ -14133,11 +14698,16 @@ let
             description = "";
             type = types.str;
           };
+          "user" = mkOption {
+            description = "";
+            type = (types.nullOr types.int);
+          };
         };
 
         config = {
           "audience" = mkOverride 1002 null;
           "expirationSeconds" = mkOverride 1002 null;
+          "user" = mkOverride 1002 null;
         };
 
       };
@@ -14322,6 +14892,10 @@ let
           description = "";
           type = (types.nullOr types.int);
         };
+        "defaultUser" = mkOption {
+          description = "";
+          type = (types.nullOr types.int);
+        };
         "items" = mkOption {
           description = "";
           type = (
@@ -14344,6 +14918,7 @@ let
 
       config = {
         "defaultMode" = mkOverride 1002 null;
+        "defaultUser" = mkOverride 1002 null;
         "items" = mkOverride 1002 null;
         "optional" = mkOverride 1002 null;
         "secretName" = mkOverride 1002 null;
@@ -14365,10 +14940,15 @@ let
           description = "";
           type = types.str;
         };
+        "user" = mkOption {
+          description = "";
+          type = (types.nullOr types.int);
+        };
       };
 
       config = {
         "mode" = mkOverride 1002 null;
+        "user" = mkOverride 1002 null;
       };
 
     };
@@ -14643,7 +15223,7 @@ let
 
       options = {
         "hostnames" = mkOption {
-          description = "Hostnames defines a set of hostnames that should match against the HTTP Host\nheader to select a HTTPRoute used to process the request. Implementations\nMUST ignore any port value specified in the HTTP Host header while\nperforming a match and (absent of any applicable header modification\nconfiguration) MUST forward this header unmodified to the backend.\n\nValid values for Hostnames are determined by RFC 1123 definition of a\nhostname with 2 notable exceptions:\n\n1. IPs are not allowed.\n2. A hostname may be prefixed with a wildcard label (`*.`). The wildcard\n   label must appear by itself as the first label.\n\nIf a hostname is specified by both the Listener and HTTPRoute, there\nmust be at least one intersecting hostname for the HTTPRoute to be\nattached to the Listener. For example:\n\n* A Listener with `test.example.com` as the hostname matches HTTPRoutes\n  that have either not specified any hostnames, or have specified at\n  least one of `test.example.com` or `*.example.com`.\n* A Listener with `*.example.com` as the hostname matches HTTPRoutes\n  that have either not specified any hostnames or have specified at least\n  one hostname that matches the Listener hostname. For example,\n  `*.example.com`, `test.example.com`, and `foo.test.example.com` would\n  all match. On the other hand, `example.com` and `test.example.net` would\n  not match.\n\nHostnames that are prefixed with a wildcard label (`*.`) are interpreted\nas a suffix match. That means that a match for `*.example.com` would match\nboth `test.example.com`, and `foo.test.example.com`, but not `example.com`.\n\nIf both the Listener and HTTPRoute have specified hostnames, any\nHTTPRoute hostnames that do not match the Listener hostname MUST be\nignored. For example, if a Listener specified `*.example.com`, and the\nHTTPRoute specified `test.example.com` and `test.example.net`,\n`test.example.net` must not be considered for a match.\n\nIf both the Listener and HTTPRoute have specified hostnames, and none\nmatch with the criteria above, then the HTTPRoute is not accepted. The\nimplementation must raise an 'Accepted' Condition with a status of\n`False` in the corresponding RouteParentStatus.\n\nIn the event that multiple HTTPRoutes specify intersecting hostnames (e.g.\noverlapping wildcard matching and exact matching hostnames), precedence must\nbe given to rules from the HTTPRoute with the largest number of:\n\n* Characters in a matching non-wildcard hostname.\n* Characters in a matching hostname.\n\nIf ties exist across multiple Routes, the matching precedence rules for\nHTTPRouteMatches takes over.\n\nSupport: Core";
+          description = "Hostnames defines a set of hostnames that should match against the HTTP Host\nheader to select a HTTPRoute used to process the request. Implementations\nMUST ignore any port value specified in the HTTP Host header while\nperforming a match and (absent of any applicable header modification\nconfiguration) MUST forward this header unmodified to the backend.\n\nValid values for Hostnames are determined by RFC 1123 definition of a\nhostname with 2 notable exceptions:\n\n1. IPs are not allowed.\n2. A hostname may be prefixed with a wildcard label (`*.`). The wildcard\n   label must appear by itself as the first label.\n\nIf a hostname is specified by both the Listener and HTTPRoute, there\nmust be at least one intersecting hostname for the HTTPRoute to be\nattached to the Listener. For example:\n\n* A Listener with `test.example.com` as the hostname matches HTTPRoutes\n  that have either not specified any hostnames, or have specified at\n  least one of `test.example.com` or `*.example.com`.\n* A Listener with `*.example.com` as the hostname matches HTTPRoutes\n  that have either not specified any hostnames or have specified at least\n  one hostname that matches the Listener hostname. For example,\n  `*.example.com`, `test.example.com`, and `foo.test.example.com` would\n  all match. On the other hand, `example.com` and `test.example.net` would\n  not match.\n\nHostnames that are prefixed with a wildcard label (`*.`) are interpreted\nas a suffix match. That means that a match for `*.example.com` would match\nboth `test.example.com`, and `foo.test.example.com`, but not `example.com`.\n\nIf both the Listener and HTTPRoute have specified hostnames, any\nHTTPRoute hostnames that do not match the Listener hostname MUST be\nignored. For example, if a Listener specified `*.example.com`, and the\nHTTPRoute specified `test.example.com` and `test.example.net`,\n`test.example.net` must not be considered for a match.\n\nIf both the Listener and HTTPRoute have specified hostnames, and none\nmatch with the criteria above, then the HTTPRoute is not accepted. The\nimplementation must raise an 'Accepted' Condition with a status of\n`False` in the corresponding RouteParentStatus.\n\nIn the event that multiple HTTPRoutes specify intersecting hostnames (e.g.\noverlapping wildcard matching and exact matching hostnames), precedence must\nbe given to rules from the HTTPRoute with the largest number of:\n\n* Characters in a matching non-wildcard hostname.\n* Characters in a matching hostname.\n\nWhen multiple HTTPRoutes attach to the same Listener and yield identical\nListener/Route intersected hostnames, implementations SHOULD evaluate\nprecedence using the original hostnames configured on the Route, not the\ncalculated Listener/Route hostname intersection.\n\nResolving Route precedence using original Route hostname specificity is an\nExtended feature. Implementations that support this behavior SHOULD claim\nsupport for the `GatewayRouteHostnameIntersectionPrecedence` feature.\nImplementations that do not support this feature MAY evaluate precedence\nusing the calculated Listener/Route hostname intersection.\n\nSupport: Core";
           type = (types.nullOr (types.listOf (types.withMaxLength 253 (types.withMinLength 1 types.str))));
         };
         "parentRefs" = mkOption {
@@ -14659,7 +15239,7 @@ let
           apply = attrsToList;
         };
         "rules" = mkOption {
-          description = "Rules are a list of HTTP matchers, filters and actions.\n\n<gateway:experimental:validation:XValidation:message=\"Rule name must be unique within the route\",rule=\"self.all(l1, !has(l1.name) || self.exists_one(l2, has(l2.name) && l1.name == l2.name))\">";
+          description = "Rules are a list of HTTP matchers, filters and actions.";
           type = (
             types.nullOr (
               coerceAttrsOfSubmodulesToListByKey "grafana.integreatly.org.v1beta1.GrafanaSpecHttpRouteSpecRules"
@@ -14764,13 +15344,13 @@ let
           type = (types.nullOr (types.withMaxLength 253 (types.withMinLength 1 types.str)));
         };
         "retry" = mkOption {
-          description = "Retry defines the configuration for when to retry an HTTP request.\n\nSupport: Extended\n\n<gateway:experimental>";
+          description = "Retry defines the configuration for when to retry an HTTP request.\n\nA request is retried when attempts is greater than 0 and the backend did\nnot process it. This is the case when the connection could not be\nestablished, or when the backend explicitly rejected the request, either\nbefore processing it or with one of the configured status codes.\n\nSupport: Extended";
           type = (
             types.nullOr (submoduleOf "grafana.integreatly.org.v1beta1.GrafanaSpecHttpRouteSpecRulesRetry")
           );
         };
         "sessionPersistence" = mkOption {
-          description = "SessionPersistence defines and configures session persistence\nfor the route rule.\n\nSupport: Extended\n\n<gateway:experimental>";
+          description = "Deprecated: use the Backend resource for session persistence (GEP-4894).\n\nSessionPersistence defines and configures session persistence\nfor the route rule.\n\nSupport: Extended\n\n<gateway:experimental>";
           type = (
             types.nullOr (
               submoduleOf "grafana.integreatly.org.v1beta1.GrafanaSpecHttpRouteSpecRulesSessionPersistence"
@@ -15107,7 +15687,7 @@ let
         options = {
           "maxSize" = mkOption {
             description = "MaxSize specifies how large in bytes the largest body that will be buffered\nand sent to the authorization server. If the body size is larger than\n`maxSize`, then the body sent to the authorization server must be\ntruncated to `maxSize` bytes.\n\nExperimental note: This behavior needs to be checked against\nvarious dataplanes; it may need to be changed.\nSee https://github.com/kubernetes-sigs/gateway-api/pull/4001#discussion_r2291405746\nfor more.\n\nIf 0, the body will not be sent to the authorization server.";
-            type = (types.nullOr types.int);
+            type = (types.nullOr (types.withMinimum 0 types.int));
           };
         };
 
@@ -15344,7 +15924,7 @@ let
           );
         };
         "statusCode" = mkOption {
-          description = "StatusCode is the HTTP status code to be used in response.\n\nNote that values may be added to this enum, implementations\nmust ensure that unknown values will not cause a crash.\n\nUnknown values here must result in the implementation setting the\nAccepted Condition for the Route to `status: False`, with a\nReason of `UnsupportedValue`.\n\nSupport: Core";
+          description = "StatusCode is the HTTP status code to be used in response.\n\nNote that values may be added to this enum, implementations\nmust ensure that unknown values will not cause a crash.\n\nUnknown values here must result in the implementation setting the\nAccepted Condition for the Route to `status: False`, with a\nReason of `UnsupportedValue`.\n\nSupport: statusCode 301 and 302 are Core; all others are Extended.";
           type = (
             types.nullOr (
               types.enum [
@@ -15783,7 +16363,7 @@ let
       options = {
         "maxSize" = mkOption {
           description = "MaxSize specifies how large in bytes the largest body that will be buffered\nand sent to the authorization server. If the body size is larger than\n`maxSize`, then the body sent to the authorization server must be\ntruncated to `maxSize` bytes.\n\nExperimental note: This behavior needs to be checked against\nvarious dataplanes; it may need to be changed.\nSee https://github.com/kubernetes-sigs/gateway-api/pull/4001#discussion_r2291405746\nfor more.\n\nIf 0, the body will not be sent to the authorization server.";
-          type = (types.nullOr types.int);
+          type = (types.nullOr (types.withMinimum 0 types.int));
         };
       };
 
@@ -16013,7 +16593,7 @@ let
           );
         };
         "statusCode" = mkOption {
-          description = "StatusCode is the HTTP status code to be used in response.\n\nNote that values may be added to this enum, implementations\nmust ensure that unknown values will not cause a crash.\n\nUnknown values here must result in the implementation setting the\nAccepted Condition for the Route to `status: False`, with a\nReason of `UnsupportedValue`.\n\nSupport: Core";
+          description = "StatusCode is the HTTP status code to be used in response.\n\nNote that values may be added to this enum, implementations\nmust ensure that unknown values will not cause a crash.\n\nUnknown values here must result in the implementation setting the\nAccepted Condition for the Route to `status: False`, with a\nReason of `UnsupportedValue`.\n\nSupport: statusCode 301 and 302 are Core; all others are Extended.";
           type = (
             types.nullOr (
               types.enum [
@@ -16340,11 +16920,11 @@ let
 
       options = {
         "attempts" = mkOption {
-          description = "Attempts specifies the maximum number of times an individual request\nfrom the gateway to a backend should be retried.\n\nIf the maximum number of retries has been attempted without a successful\nresponse from the backend, the Gateway MUST return an error.\n\nWhen this field is unspecified, the number of times to attempt to retry\na backend request is implementation-specific.\n\nSupport: Extended";
-          type = (types.nullOr (types.withMinimum 1 types.int));
+          description = "Attempts specifies the maximum number of times an individual request\nfrom the Gateway to a backend should be retried in addition to the\ninitial request.\n\nIf the maximum number of retries has been attempted without a successful\nresponse from the backend, the Gateway MUST return an error.\n\nAn explicit zero value MUST disable retries.\n\nSupport: Extended";
+          type = (types.nullOr (types.withMinimum 0 types.int));
         };
         "backoff" = mkOption {
-          description = "Backoff specifies the minimum duration a Gateway should wait between\nretry attempts and is represented in Gateway API Duration formatting.\n\nFor example, setting the `rules[].retry.backoff` field to the value\n`100ms` will cause a backend request to first be retried approximately\n100 milliseconds after timing out or receiving a response code configured\nto be retriable.\n\nAn implementation MAY use an exponential or alternative backoff strategy\nfor subsequent retry attempts, MAY cap the maximum backoff duration to\nsome amount greater than the specified minimum, and MAY add arbitrary\njitter to stagger requests, as long as unsuccessful backend requests are\nnot retried before the configured minimum duration.\n\nIf a Request timeout (`rules[].timeouts.request`) is configured on the\nroute, the entire duration of the initial request and any retry attempts\nMUST not exceed the Request timeout duration. If any retry attempts are\nstill in progress when the Request timeout duration has been reached,\nthese SHOULD be canceled if possible and the Gateway MUST immediately\nreturn a timeout error.\n\nIf a BackendRequest timeout (`rules[].timeouts.backendRequest`) is\nconfigured on the route, any retry attempts which reach the configured\nBackendRequest timeout duration without a response SHOULD be canceled if\npossible and the Gateway should wait for at least the specified backoff\nduration before attempting to retry the backend request again.\n\nIf a BackendRequest timeout is _not_ configured on the route, retry\nattempts MAY time out after an implementation default duration, or MAY\nremain pending until a configured Request timeout or implementation\ndefault duration for total request time is reached.\n\nWhen this field is unspecified, the time to wait between retry attempts\nis implementation-specific.\n\nSupport: Extended";
+          description = "Backoff specifies the base interval for a backoff strategy between\nretry attempts and is represented in Gateway API Duration formatting.\nThe duration a Gateway waits before a retry attempt is determined\nby the base interval and the implementation's retry strategy.\n\nImplementations MAY add random jitter and MAY cap the delay at an\nimplementation-defined maximum, which SHOULD NOT be less than the base\ninterval. The precise backoff curve and jitter calculation are\nimplementation-specific and not exposed in the Gateway API specification.\nImplementations typically apply exponential backoff with jitter to\nmitigate thundering-herd issues.\n\nIf a Request timeout (`rules[].timeouts.request`) is configured on the\nroute, the entire duration of the initial request and any retry attempts\nMUST not exceed the Request timeout duration. If any retry attempts are\nstill in progress when the Request timeout duration has been reached,\nthese SHOULD be canceled if possible and the Gateway MUST immediately\nreturn a timeout error.\n\nIf a BackendRequest timeout (`rules[].timeouts.backendRequest`) is\nconfigured on the route, any retry attempts which reach the configured\nBackendRequest timeout duration without a response SHOULD be canceled if\npossible and the Gateway SHOULD schedule the next retry attempt according\nto the configured backoff.\n\nIf a BackendRequest timeout is _not_ configured on the route, retry\nattempts MAY time out after an implementation default duration, or MAY\nremain pending until a configured Request timeout or implementation\ndefault duration for total request time is reached.\n\nWhen this field is unspecified, the backoff strategy and base interval\nare implementation-specific.\n\nImplementations which retry immediately with no backoff MUST NOT advertise\nsupport for this field and MUST set the Accepted Condition for the Route\nto `status: False` with a Reason of `UnsupportedValue` when this field is\nset.\n\nSupport: Implementation-specific";
           type = (types.nullOr types.str);
         };
         "codes" = mkOption {
@@ -16367,17 +16947,21 @@ let
           description = "AbsoluteTimeout defines the absolute timeout of the persistent\nsession. Once the AbsoluteTimeout duration has elapsed, the\nsession becomes invalid.\n\nSupport: Extended";
           type = (types.nullOr types.str);
         };
-        "cookieConfig" = mkOption {
-          description = "CookieConfig provides configuration settings that are specific\nto cookie-based session persistence.\n\nSupport: Core";
+        "cookie" = mkOption {
+          description = "Cookie provides configuration settings that are specific\nto cookie-based session persistence.\n\nSupport: Core";
           type = (
             types.nullOr (
-              submoduleOf "grafana.integreatly.org.v1beta1.GrafanaSpecHttpRouteSpecRulesSessionPersistenceCookieConfig"
+              submoduleOf "grafana.integreatly.org.v1beta1.GrafanaSpecHttpRouteSpecRulesSessionPersistenceCookie"
             )
           );
         };
-        "sessionName" = mkOption {
-          description = "SessionName defines the name of the persistent session token\nwhich may be reflected in the cookie or the header. Users\nshould avoid reusing session names to prevent unintended\nconsequences, such as rejection or unpredictable behavior.\n\nSupport: Implementation-specific";
-          type = (types.nullOr (types.withMaxLength 128 types.str));
+        "header" = mkOption {
+          description = "Header provides configuration settings that are specific\nto header-based session persistence.\n\nSupport: Extended";
+          type = (
+            types.nullOr (
+              submoduleOf "grafana.integreatly.org.v1beta1.GrafanaSpecHttpRouteSpecRulesSessionPersistenceHeader"
+            )
+          );
         };
         "type" = mkOption {
           description = "Type defines the type of session persistence such as through\nthe use of a header or cookie. Defaults to cookie based session\npersistence.\n\nSupport: Core for \"Cookie\" type\n\nSupport: Extended for \"Header\" type";
@@ -16394,13 +16978,13 @@ let
 
       config = {
         "absoluteTimeout" = mkOverride 1002 null;
-        "cookieConfig" = mkOverride 1002 null;
-        "sessionName" = mkOverride 1002 null;
+        "cookie" = mkOverride 1002 null;
+        "header" = mkOverride 1002 null;
         "type" = mkOverride 1002 null;
       };
 
     };
-    "grafana.integreatly.org.v1beta1.GrafanaSpecHttpRouteSpecRulesSessionPersistenceCookieConfig" = {
+    "grafana.integreatly.org.v1beta1.GrafanaSpecHttpRouteSpecRulesSessionPersistenceCookie" = {
 
       options = {
         "lifetimeType" = mkOption {
@@ -16414,11 +16998,33 @@ let
             )
           );
         };
+        "name" = mkOption {
+          description = "Name defines the name of the cookie used for session persistence.\nIf not specified, a unique cookie name SHOULD be generated.\nUsers should avoid reusing cookie names to prevent unintended\nconsequences, such as rejection or unpredictable behavior.\n\nSupport: Extended";
+          type = (types.nullOr (types.withMaxLength 256 (types.withMinLength 1 types.str)));
+        };
+        "path" = mkOption {
+          description = "Path defines the cookie Path attribute. When not specified,\nimplementations MUST default the cookie path to \"/\".\n\nSupport: Extended";
+          type = (types.nullOr (types.withMaxLength 1024 types.str));
+        };
       };
 
       config = {
         "lifetimeType" = mkOverride 1002 null;
+        "name" = mkOverride 1002 null;
+        "path" = mkOverride 1002 null;
       };
+
+    };
+    "grafana.integreatly.org.v1beta1.GrafanaSpecHttpRouteSpecRulesSessionPersistenceHeader" = {
+
+      options = {
+        "name" = mkOption {
+          description = "Name defines the name of the header used for session persistence.\nThe client must include this header in subsequent requests to\nmaintain the session.\n\nSupport: Core";
+          type = (types.withMaxLength 256 (types.withMinLength 1 types.str));
+        };
+      };
+
+      config = { };
 
     };
     "grafana.integreatly.org.v1beta1.GrafanaSpecHttpRouteSpecRulesTimeouts" = {
@@ -16615,7 +17221,7 @@ let
           type = (types.nullOr types.str);
         };
         "http" = mkOption {
-          description = "HTTPIngressRuleValue is a list of http selectors pointing to backends.\nIn the example: http://<host>/<path>?<searchpart> -> backend where\nwhere parts of the url correspond to RFC 3986, this resource will be used\nto match against everything after the last '/' and before the first '?'\nor '#'.";
+          description = "http is a HTTP IngressRuleValue, which contains a list of http selectors";
           type = (
             types.nullOr (submoduleOf "grafana.integreatly.org.v1beta1.GrafanaSpecIngressSpecRulesHttp")
           );
@@ -17757,6 +18363,10 @@ let
           description = "";
           type = (types.nullOr (types.listOf types.str));
         };
+        "silences" = mkOption {
+          description = "";
+          type = (types.nullOr (types.listOf types.str));
+        };
         "stage" = mkOption {
           description = "";
           type = (types.nullOr types.str);
@@ -17787,6 +18397,7 @@ let
         "replicas" = mkOverride 1002 null;
         "selector" = mkOverride 1002 null;
         "serviceaccounts" = mkOverride 1002 null;
+        "silences" = mkOverride 1002 null;
         "stage" = mkOverride 1002 null;
         "stageStatus" = mkOverride 1002 null;
         "version" = mkOverride 1002 null;
@@ -18000,6 +18611,18 @@ in
         );
         default = { };
       };
+      "grafana.integreatly.org"."v1beta1"."GrafanaSilence" = mkOption {
+        description = "GrafanaSilence is the Schema for the GrafanaSilence API";
+        type = (
+          types.attrsOf (
+            submoduleForDefinition "grafana.integreatly.org.v1beta1.GrafanaSilence" "grafanasilences"
+              "GrafanaSilence"
+              "grafana.integreatly.org"
+              "v1beta1"
+          )
+        );
+        default = { };
+      };
 
     }
     // {
@@ -18163,6 +18786,18 @@ in
         );
         default = { };
       };
+      "grafanaSilences" = mkOption {
+        description = "GrafanaSilence is the Schema for the GrafanaSilence API";
+        type = (
+          types.attrsOf (
+            submoduleForDefinition "grafana.integreatly.org.v1beta1.GrafanaSilence" "grafanasilences"
+              "GrafanaSilence"
+              "grafana.integreatly.org"
+              "v1beta1"
+          )
+        );
+        default = { };
+      };
 
     };
   };
@@ -18264,6 +18899,13 @@ in
         kind = "GrafanaServiceAccount";
         attrName = "grafanaServiceAccounts";
       }
+      {
+        name = "grafanasilences";
+        group = "grafana.integreatly.org";
+        version = "v1beta1";
+        kind = "GrafanaSilence";
+        attrName = "grafanaSilences";
+      }
     ];
 
     resources = {
@@ -18304,6 +18946,9 @@ in
       "grafana.integreatly.org"."v1beta1"."GrafanaServiceAccount" =
         mkAliasDefinitions
           options.resources."grafanaServiceAccounts";
+      "grafana.integreatly.org"."v1beta1"."GrafanaSilence" =
+        mkAliasDefinitions
+          options.resources."grafanaSilences";
 
     };
 
@@ -18386,6 +19031,12 @@ in
         group = "grafana.integreatly.org";
         version = "v1beta1";
         kind = "GrafanaServiceAccount";
+        default.metadata.namespace = lib.mkDefault config.namespace;
+      }
+      {
+        group = "grafana.integreatly.org";
+        version = "v1beta1";
+        kind = "GrafanaSilence";
         default.metadata.namespace = lib.mkDefault config.namespace;
       }
     ];

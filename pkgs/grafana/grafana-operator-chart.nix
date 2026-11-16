@@ -2,8 +2,8 @@
 kubepkgs.fetchhelm {
   url = "oci://ghcr.io/grafana/helm-charts/grafana-operator";
   chart = "grafana-operator";
-  version = "5.25.0";
-  hash = "sha256-ViRNz7EFkdD2Nlw6Ms79E2A+N4RPFEfWV529xWlhHx0=";
+  version = "5.26.0";
+  hash = "sha256-NeEsuZE5RiwWmBQpDHR9SINz4bTK1q7m/MgIqZTzrMU=";
 
   crds.file = ../../crds/grafana-operator.nix;
 
