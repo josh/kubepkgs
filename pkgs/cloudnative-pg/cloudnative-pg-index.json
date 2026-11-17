@@ -1,19 +1,19 @@
 {
-  "tag": "1.30.1",
-  "upstreamDigest": "sha256:923c267ec29636db3bee20f993d0ec4973fa22998e1adad37da79e4d32b5bc07",
-  "digest": "sha256:d1da4f58b4cd95528d6db90310ca3c22aa256cd1c64c2262ef26efb8d8b608c3",
+  "tag": "1.30.2",
+  "upstreamDigest": "sha256:f96f6be3d81ec93819b443c665c575c609342fca840df90d4d87dae314a5b913",
+  "digest": "sha256:84fc1b7e618b34bfc973b2187fc233cfcbf8b21e328b9a86361cdce9ac5c4175",
   "manifests": [
-    "sha256:b0f9805bd5f98592e7320b5ea624dd10a7a6ef8e477df5650655c94f0b242497",
-    "sha256:9a10dd7d7466310d5d543f618478cb905093cfc7a5463b538f449da626660083",
-    "sha256:a28f2adb284250ebcb976837c74f4b6183d0bc40b4ed4098dabdf83c9128ac81",
-    "sha256:0a82d51351b46263be3d44ba6e84b66b956e90376873fc5a4d1f093bfe7063e9"
+    "sha256:7172ea6acc90b0af204e513ee7b5f05fb04a44dcf96a8666655de88511758d7f",
+    "sha256:9be85561bd93beb1dfac8c1976562b4acb6585c9b58c0dfd5169fba8d6b85807",
+    "sha256:e0137f07bf02c74a6c205a3c16d23dbe1bb4d3f9ecd6c13d90f77b910c2738d9",
+    "sha256:a64d6a6945aa6c6eed5466e832b3d8f61c97ca49f94045774c1b2ea0faf8a145"
   ],
   "blobs": [
-    "sha256:e876074c3d035dda6ea891db954e46df9c8307b36463b5e9a8e2e6e8a9c17488",
+    "sha256:632742937d9681bbeb5f2cdc67579663d92d0314ee20b4239f58aab068068f07",
     "sha256:2cc7ee286bf3a9e6af5f71756d7fc8e22e23ce65fec9047d774511ffcef79fa8",
     "sha256:c172f21841dff4c8cf45cde46589c1c2616cefe7e819965e92e6d3475c428aa0",
-    "sha256:218cf840d0d95a86231eb9d33d26ac8a520a4299c6096cb70a0c2fb2a87c9e0a",
-    "sha256:f6069939f718601b38d25ec5ed5631ed047e4da24acec2e252f8f29d251be718",
+    "sha256:fc4330146a1cc76e06ce6def693f5da42c16e2615be6f49e1ea5b6e249ff8262",
+    "sha256:777e9d0975e474519f4f14ff87e547cbb8f9fff4cfc4f1a147ac81906880e503",
     "sha256:d6b1b89eccacc15c2420b2776d72c1dae334a00805ed9af54bf2f71e4d536f28",
     "sha256:2780920e5dbfbe103d03a583ed75345306e572ec5a48cb10361f046767d9f29a",
     "sha256:7c12895b777bcaa8ccae0605b4de635b68fc32d60fa08f421dc3818bf55ee212",
@@ -21,22 +21,21 @@
     "sha256:52630fc75a18675c530ed9eba5f55eca09b03e91bd5bc15307918bbc1a7e7296",
     "sha256:dd64bf2dd177757451a98fcdc999a339c35dee5d9872d8f4dc69c8f3c4dd0112",
     "sha256:b839dfae01f66e15c6a8b63520557ed315bdfe036342fa7a0c537259f10d7a9a",
-    "sha256:ebddc55facdc6b1f7e0f30816a5fc7cc62f38abdf76c0a8b0a0ce52085754795",
-    "sha256:c4bc6f35ff5e25aa1afe7a148a0b6f10a760f54e298f86a4a4d44b91f1afbfab",
-    "sha256:d61d03fdc61eb2f3588ee3e7c23be69fb97f5df51ed59b098dae55f9ec847774",
-    "sha256:2b38a78e51124bcf2c040f4774e636758e58da85ddb5b22651ca1820986074c2",
-    "sha256:04f447e1acc00148bf3b6e118a8812a7d26670283f67ed502889fa128d7445a7",
-    "sha256:249b438f0e6f6f0c372a9b083572d26a9f2eb37918cb467b05cefb103fea6453",
-    "sha256:eaca429ffff79a7e7be1cf77d51250c5b9701d8ee0173b98c0f6e02f5a6db428",
+    "sha256:c3c9c2f21e6c3293a061cee538a81f4cb29ea224f43d075750ec702b923b77d7",
+    "sha256:ec1b04bf2eb2122e86781f791b03ea0cf6588694e0f4a88245250224c186cdf0",
+    "sha256:d907fdc118159a9a75ff3bce5b51903ad72099db0db8f456203e7fb784caaa0f",
+    "sha256:e1971d9f4e0664f2d75874a56d54b7b1805e807e793a35e18d6c133231407549",
+    "sha256:7eea658b7e5758607508b3e553683483d2600b504bb84c9df8db22041945e534",
+    "sha256:6b2d659e0ad2c28d23bdd392f90ea0c71df74ebe99281d01c34099a5364b322a",
+    "sha256:43724c0c1833387801c36a508ba8293151f97195e7ae5cf3b9aa99fc87284b0f",
     "sha256:401d177fd1e8a1e0d7a48139788d026e9a2e919ccb122bedd110ac7cf351f53e",
-    "sha256:6ed1ef0cb1159b9c93a24ceb88b987c6b3a8adff7160940c7c5e6bfc001f1766",
-    "sha256:ad48febfd89bd6c54b3121f5761c8887c678787a8552742d7a5a52c1229c6a73",
-    "sha256:d8cd3802c36609ba5398efdb4445016f8bb051eff7689950383418fb54fdc1ea",
+    "sha256:5689407c3340e75a085703d3366e55b6105152a2574d971cb884f24228292c1d",
+    "sha256:4b121840ee75b3c90400113e7e6b4ea01608ef2ae06ae2a8767cd98d634e4cf9",
     "sha256:44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a",
-    "sha256:a9d61f960e4e769efc80e2e02f4f5891bc633997965824be3490cf94981afaea",
-    "sha256:b347c338c13e66213f8f9f1eaa20bbe3ebbe86eb252b3004e6ef7fa5b5bdcc2a",
-    "sha256:32116def74810dcaeb122b823730061c57bfbf5ccb036797009d39ee56035ba6",
-    "sha256:23a8324b56f87d1960bb2c6a690c1c843659c22ba34bf82c0feb7dd29886152e"
+    "sha256:06b994df6650121bf9cdb7d8e82c7b82a53e51f0d574e5c421c58a091b682298",
+    "sha256:a2717ac536508f61dbe2596ae266941dab1260c2da810273f165ab9a380e2b1f",
+    "sha256:7b9bcc86288c6d3ff369540d335459dbe4ee480285c1162376aff47c20d37152",
+    "sha256:43e64aa1da714e305c550b55b70709b7b6a4b6af55abe08253d0e9c1a29aa114"
   ],
   "index": {
     "schemaVersion": 2,
@@ -44,7 +43,7 @@
     "manifests": [
       {
         "mediaType": "application/vnd.oci.image.manifest.v1+json",
-        "digest": "sha256:b0f9805bd5f98592e7320b5ea624dd10a7a6ef8e477df5650655c94f0b242497",
+        "digest": "sha256:7172ea6acc90b0af204e513ee7b5f05fb04a44dcf96a8666655de88511758d7f",
         "size": 4600,
         "platform": {
           "architecture": "amd64",
@@ -53,7 +52,7 @@
       },
       {
         "mediaType": "application/vnd.oci.image.manifest.v1+json",
-        "digest": "sha256:9a10dd7d7466310d5d543f618478cb905093cfc7a5463b538f449da626660083",
+        "digest": "sha256:9be85561bd93beb1dfac8c1976562b4acb6585c9b58c0dfd5169fba8d6b85807",
         "size": 4600,
         "platform": {
           "architecture": "arm64",
@@ -62,10 +61,10 @@
       },
       {
         "mediaType": "application/vnd.oci.image.manifest.v1+json",
-        "digest": "sha256:a28f2adb284250ebcb976837c74f4b6183d0bc40b4ed4098dabdf83c9128ac81",
+        "digest": "sha256:e0137f07bf02c74a6c205a3c16d23dbe1bb4d3f9ecd6c13d90f77b910c2738d9",
         "size": 1111,
         "annotations": {
-          "vnd.docker.reference.digest": "sha256:b0f9805bd5f98592e7320b5ea624dd10a7a6ef8e477df5650655c94f0b242497",
+          "vnd.docker.reference.digest": "sha256:7172ea6acc90b0af204e513ee7b5f05fb04a44dcf96a8666655de88511758d7f",
           "vnd.docker.reference.type": "attestation-manifest"
         },
         "platform": {
@@ -75,10 +74,10 @@
       },
       {
         "mediaType": "application/vnd.oci.image.manifest.v1+json",
-        "digest": "sha256:0a82d51351b46263be3d44ba6e84b66b956e90376873fc5a4d1f093bfe7063e9",
+        "digest": "sha256:a64d6a6945aa6c6eed5466e832b3d8f61c97ca49f94045774c1b2ea0faf8a145",
         "size": 1111,
         "annotations": {
-          "vnd.docker.reference.digest": "sha256:9a10dd7d7466310d5d543f618478cb905093cfc7a5463b538f449da626660083",
+          "vnd.docker.reference.digest": "sha256:9be85561bd93beb1dfac8c1976562b4acb6585c9b58c0dfd5169fba8d6b85807",
           "vnd.docker.reference.type": "attestation-manifest"
         },
         "platform": {
@@ -89,18 +88,18 @@
     ],
     "annotations": {
       "org.opencontainers.image.authors": "The CloudNativePG Contributors",
-      "org.opencontainers.image.base.digest": "sha256:e2e927ec666bae08560abb3c55d0659eceabb657f56b6782ab500a9fc7f555e3",
-      "org.opencontainers.image.base.name": "gcr.io/distroless/static-debian13:nonroot@sha256:e2e927ec666bae08560abb3c55d0659eceabb657f56b6782ab500a9fc7f555e3",
-      "org.opencontainers.image.created": "2026-09-23T13:40:41Z",
+      "org.opencontainers.image.base.digest": "sha256:aafe993665bf6200db38a02c11a9351e782a84b6a45e7f33b6695638c88e3931",
+      "org.opencontainers.image.base.name": "gcr.io/distroless/static-debian13:nonroot@sha256:aafe993665bf6200db38a02c11a9351e782a84b6a45e7f33b6695638c88e3931",
+      "org.opencontainers.image.created": "2026-11-17T11:37:40Z",
       "org.opencontainers.image.description": "This Docker image contains CloudNativePG Operator.",
       "org.opencontainers.image.documentation": "https://cloudnative-pg.io/docs/",
       "org.opencontainers.image.licenses": "Apache-2.0",
-      "org.opencontainers.image.revision": "2a35abb46",
+      "org.opencontainers.image.revision": "30cca36d3",
       "org.opencontainers.image.source": "https://github.com/cloudnative-pg/cloudnative-pg",
       "org.opencontainers.image.title": "CloudNativePG Operator",
       "org.opencontainers.image.url": "https://github.com/cloudnative-pg/cloudnative-pg",
       "org.opencontainers.image.vendor": "The CloudNativePG Contributors",
-      "org.opencontainers.image.version": "1.30.1"
+      "org.opencontainers.image.version": "1.30.2"
     }
   }
 }
