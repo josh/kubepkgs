@@ -2,8 +2,8 @@
 kubepkgs.fetchhelm {
   url = "https://cloudnative-pg.github.io/charts";
   chart = "cloudnative-pg";
-  version = "0.29.1";
-  hash = "sha256-VWDikb5gw9s35yZYk3BqcojQtEE/b3gdDN6TCcJXzZ4=";
+  version = "0.29.2";
+  hash = "sha256-bAXSXQ4UWe2v8eXtUcYbc+LFv5FUpV4vd5vkLVID/Lk=";
 
   crds.file = ../../crds/cloudnative-pg.nix;
 
