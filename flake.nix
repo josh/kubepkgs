@@ -112,6 +112,7 @@
         system:
         {
           formatting = treefmt-nix.${system}.check self;
+          nix-update = nixpkgsFor.${system}.callPackage ./internal/check-nix-update.nix { };
         }
         // (mkChecks nixpkgsFor.${system})
       );
