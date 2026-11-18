@@ -3,8 +3,8 @@ kubepkgs.fetchhelm {
   pname = "gitea-actions-chart";
   url = "https://dl.gitea.com/charts/";
   chart = "actions";
-  version = "0.1.3";
-  hash = "sha256-mLQJHAWCP7ZoFBU7uISn8xTz+IuytD7rWmg21gPqeL8=";
+  version = "0.1.4";
+  hash = "sha256-VWI7bFXg0QEbu5Jr373EYnWLezT+83TbnLWaiP5ozOs=";
   helmTestValues = {
     enabled = true;
     giteaRootURL = "https://gitea.example.com/";
