@@ -2,8 +2,8 @@
 kubepkgs.fetchhelm {
   url = "https://nats-io.github.io/k8s/helm/charts";
   chart = "nack";
-  version = "0.35.0";
-  hash = "sha256-mtnWHL5GbThzLK1sUBnOkeiUwv3KFrVAeYmtq3sAWsE=";
+  version = "0.36.0";
+  hash = "sha256-RJNBykDyxeWXg1VMn7aucG0ea5gcG8MLDvOzxzM1PRg=";
 
   crds.file = ../../crds/nack.nix;
 

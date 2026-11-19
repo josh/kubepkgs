@@ -502,7 +502,7 @@ let
           type = (types.nullOr (types.withMinimum (-1) types.int));
         };
         "maxConsumers" = mkOption {
-          description = "How many Consumers can be defined for a given Stream. -1 for unlimited.";
+          description = "How many Consumers can be defined for a given Stream. -1 for unlimited. From nats-server 2.15, -1 falls back to the account limit or server default (1000).";
           type = (types.nullOr (types.withMinimum (-1) types.int));
         };
         "maxMsgSize" = mkOption {
@@ -2412,7 +2412,7 @@ let
           type = (types.nullOr (types.withMinimum (-1) types.int));
         };
         "maxConsumers" = mkOption {
-          description = "How many Consumers can be defined for a given Stream. -1 for unlimited.";
+          description = "How many Consumers can be defined for a given Stream. -1 for unlimited. From nats-server 2.15, -1 falls back to the account limit or server default (1000).";
           type = (types.nullOr (types.withMinimum (-1) types.int));
         };
         "maxMsgSize" = mkOption {
