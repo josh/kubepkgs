@@ -2,8 +2,8 @@
 kubepkgs.fetchhelm {
   url = "https://prometheus-community.github.io/helm-charts";
   chart = "prometheus-blackbox-exporter";
-  version = "11.21.3";
-  hash = "sha256-a57PSoS47FCE0NMUdbul2INF07ENJreM80ZbFGdEpf8=";
+  version = "11.22.0";
+  hash = "sha256-nZo+bMUabCnc43EwPYa/y7h60hRm2JFunxqdDDAwKjk=";
 
   meta = {
     description = "Helm chart for the Prometheus blackbox exporter, probing endpoints over HTTP, TCP, DNS and ICMP";
