@@ -1,8 +1,8 @@
 {
   lib,
   stdenvNoCC,
-  gh,
   git,
+  gitea-cli,
   nix,
   python3,
 }:
@@ -19,8 +19,8 @@ stdenvNoCC.mkDerivation {
       cat "${./update-crd-modules.py}"
     ) >$out/bin/update-crd-modules
     substituteInPlace $out/bin/update-crd-modules \
-      --replace-fail '@gh@' '${gh}/bin/gh' \
       --replace-fail '@git@' '${git}/bin/git' \
+      --replace-fail '@gt@' '${gitea-cli}/bin/gt' \
       --replace-fail '@nix@' '${nix}/bin/nix'
     chmod +x $out/bin/update-crd-modules
   '';

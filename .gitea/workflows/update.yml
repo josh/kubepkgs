@@ -1,0 +1,103 @@
+name: Update
+
+on:
+  schedule:
+    - cron: "0 19 * * *" # 11am PST
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  helm-charts:
+    runs-on: nix-x86_64-linux
+
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          token: ${{ secrets.GT_BOT_TOKEN }}
+
+      - name: Configure git commit author
+        run: |
+          git config --local user.name 'gitea-actions[bot]'
+          git config --local user.email 'gitea-actions@noreply.invalid'
+
+      - name: Update Helm charts
+        run: nix run .#update-helm-charts -- --push
+        env:
+          GITEA_TOKEN: ${{ secrets.GT_BOT_TOKEN }}
+
+  oci-images:
+    runs-on: nix-x86_64-linux
+
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          token: ${{ secrets.GT_BOT_TOKEN }}
+
+      - name: Configure git commit author
+        run: |
+          git config --local user.name 'gitea-actions[bot]'
+          git config --local user.email 'gitea-actions@noreply.invalid'
+
+      - name: Update OCI images
+        run: nix run .#update-oci-images -- --push
+        env:
+          GITEA_TOKEN: ${{ secrets.GT_BOT_TOKEN }}
+
+  json-snapshots:
+    runs-on: nix-x86_64-linux
+
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          token: ${{ secrets.GT_BOT_TOKEN }}
+
+      - name: Configure git commit author
+        run: |
+          git config --local user.name 'gitea-actions[bot]'
+          git config --local user.email 'gitea-actions@noreply.invalid'
+
+      - name: Update JSON snapshots
+        run: nix run .#update-json-snapshots -- --push
+        env:
+          GITEA_TOKEN: ${{ secrets.GT_BOT_TOKEN }}
+
+  packages:
+    runs-on: nix-x86_64-linux
+
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          token: ${{ secrets.GT_BOT_TOKEN }}
+
+      - name: Configure git commit author
+        run: |
+          git config --local user.name 'gitea-actions[bot]'
+          git config --local user.email 'gitea-actions@noreply.invalid'
+
+      - id: attrs
+        name: Get package attributes to update
+        run: |
+          set -o pipefail
+          nix eval --raw --impure --file ./internal/update-script-attrs.nix | tee "$GITHUB_OUTPUT"
+        env:
+          FLAKE_URI: ${{ github.workspace }}
+
+      - name: Run update-script
+        run: |
+          set -o pipefail
+          exit_code=0
+          while read -r attr; do
+            [ -n "$attr" ] || continue
+            printf "\n\n==== Updating %s ====\n" "$attr" >&2
+            if ! UPDATE_NIX_ATTR_PATH="$attr" nix run --file ./internal/update-script.nix </dev/null; then
+              echo "::error::Update failed for $attr" >&2
+              exit_code=1
+            fi
+          done <<<"$(jq --raw-output '.[]' <<<"$UPDATE_NIX_ATTRS")"
+          exit $exit_code
+        env:
+          FLAKE_URI: ${{ github.workspace }}
+          UPDATE_NIX_ATTRS: ${{ steps.attrs.outputs.attrs }}
+          GITEA_TOKEN: ${{ secrets.GT_BOT_TOKEN }}

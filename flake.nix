@@ -86,6 +86,10 @@
             { "${pkgName}-build" = buildCheckPkg pkg; }
         ) (mkPackages pkgs);
 
+      internal-inputs = builtins.mapAttrs (
+        _name: node: builtins.getFlake (builtins.flakeRefToString node.locked)
+      ) (builtins.fromJSON (builtins.readFile ./internal/flake.lock)).nodes;
+
       treefmt-nix = eachSystem (system: import ./internal/treefmt.nix nixpkgsFor.${system});
     in
     {
@@ -100,10 +104,18 @@
         mkPackages nixpkgsFor.${system}
         // {
           update-ceph-devel = nixpkgsFor.${system}.callPackage ./internal/update-ceph-devel.nix { };
-          update-crd-modules = nixpkgsFor.${system}.callPackage ./internal/update-crd-modules.nix { };
-          update-helm-charts = nixpkgsFor.${system}.callPackage ./internal/update-helm-charts.nix { };
-          update-json-snapshots = nixpkgsFor.${system}.callPackage ./internal/update-json-snapshots.nix { };
-          update-oci-images = nixpkgsFor.${system}.callPackage ./internal/update-oci-images.nix { };
+          update-crd-modules = nixpkgsFor.${system}.callPackage ./internal/update-crd-modules.nix {
+            inherit (internal-inputs.nurpkgs.packages.${system}) gitea-cli;
+          };
+          update-helm-charts = nixpkgsFor.${system}.callPackage ./internal/update-helm-charts.nix {
+            inherit (internal-inputs.nurpkgs.packages.${system}) gitea-cli;
+          };
+          update-json-snapshots = nixpkgsFor.${system}.callPackage ./internal/update-json-snapshots.nix {
+            inherit (internal-inputs.nurpkgs.packages.${system}) gitea-cli;
+          };
+          update-oci-images = nixpkgsFor.${system}.callPackage ./internal/update-oci-images.nix {
+            inherit (internal-inputs.nurpkgs.packages.${system}) gitea-cli;
+          };
         }
       );
 

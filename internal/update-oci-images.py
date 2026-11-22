@@ -11,8 +11,8 @@ import click
 
 CACERT_PATH = "@cacert@"
 CRANE_PATH = "@crane@"
-GH_PATH = "@gh@"
 GIT_PATH = "@git@"
+GT_PATH = "@gt@"
 NIX_PATH = "@nix@"
 
 PLATFORMS = {("linux", "amd64"), ("linux", "arm64")}
@@ -261,8 +261,8 @@ def git(*args: str) -> str:
     return run([GIT_PATH, *args]).stdout.strip()
 
 
-def gh(*args: str) -> str:
-    return run([GH_PATH, *args]).stdout.strip()
+def gt(*args: str) -> str:
+    return run([GT_PATH, *args]).stdout.strip()
 
 
 def apply_image(image: Image, new_tag: str, dry_run: bool, push: bool) -> Result:
@@ -298,10 +298,13 @@ def apply_image(image: Image, new_tag: str, dry_run: bool, push: bool) -> Result
 
     branch = f"update-{image.attr}"
     git("push", "--force", "origin", f"HEAD:refs/heads/{branch}")
-    if gh("pr", "list", "--head", branch, "--json", "url", "--jq", "length") == "0":
-        gh(
+    if gt("pr", "list", "--head", branch, "--json", "number", "--jq", "length") == "0":
+        gt(
             "pr",
             "create",
+            "--no-input",
+            "--assignee",
+            "merge-bot",
             "--base",
             "main",
             "--head",
@@ -311,7 +314,6 @@ def apply_image(image: Image, new_tag: str, dry_run: bool, push: bool) -> Result
             "--body",
             message,
         )
-    gh("pr", "merge", "--merge", "--auto", branch)
     return Result(image, "opened", new_tag, message)
 
 

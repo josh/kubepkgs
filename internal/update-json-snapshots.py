@@ -11,8 +11,8 @@ import urllib.request
 import click
 
 CACERT_PATH = "@cacert@"
-GH_PATH = "@gh@"
 GIT_PATH = "@git@"
+GT_PATH = "@gt@"
 JQ_PATH = "@jq@"
 NIX_PATH = "@nix@"
 
@@ -124,8 +124,8 @@ def git(*args: str) -> str:
     return run([GIT_PATH, *args]).stdout.strip()
 
 
-def gh(*args: str) -> str:
-    return run([GH_PATH, *args]).stdout.strip()
+def gt(*args: str) -> str:
+    return run([GT_PATH, *args]).stdout.strip()
 
 
 def resolve(entries: list[JsonSnapshot]) -> list[Result]:
@@ -191,10 +191,13 @@ def apply_snapshot(result: Result, dry_run: bool, push: bool) -> Result:
 
     branch = f"update-{entry.attr}"
     git("push", "--force", "origin", f"HEAD:refs/heads/{branch}")
-    if gh("pr", "list", "--head", branch, "--json", "url", "--jq", "length") == "0":
-        gh(
+    if gt("pr", "list", "--head", branch, "--json", "number", "--jq", "length") == "0":
+        gt(
             "pr",
             "create",
+            "--no-input",
+            "--assignee",
+            "merge-bot",
             "--base",
             "main",
             "--head",
@@ -204,7 +207,6 @@ def apply_snapshot(result: Result, dry_run: bool, push: bool) -> Result:
             "--body",
             message,
         )
-    gh("pr", "merge", "--merge", "--auto", branch)
     return Result(entry, "opened", version, message)
 
 

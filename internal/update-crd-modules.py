@@ -8,8 +8,8 @@ import sys
 
 import click
 
-GH_PATH = "@gh@"
 GIT_PATH = "@git@"
+GT_PATH = "@gt@"
 NIX_PATH = "@nix@"
 
 STORE_PREFIX = re.compile(r"^/nix/store/[^/]+/")
@@ -93,8 +93,8 @@ def git(*args: str) -> str:
     return run([GIT_PATH, *args]).stdout.strip()
 
 
-def gh(*args: str) -> str:
-    return run([GH_PATH, *args]).stdout.strip()
+def gt(*args: str) -> str:
+    return run([GT_PATH, *args]).stdout.strip()
 
 
 def apply_module(
@@ -140,10 +140,13 @@ def apply_module(
 
     branch = f"update-{module.attr}-crds"
     git("push", "--force", "origin", f"HEAD:refs/heads/{branch}")
-    if gh("pr", "list", "--head", branch, "--json", "url", "--jq", "length") == "0":
-        gh(
+    if gt("pr", "list", "--head", branch, "--json", "number", "--jq", "length") == "0":
+        gt(
             "pr",
             "create",
+            "--no-input",
+            "--assignee",
+            "merge-bot",
             "--base",
             "main",
             "--head",
@@ -153,7 +156,6 @@ def apply_module(
             "--body",
             message,
         )
-    gh("pr", "merge", "--merge", "--auto", branch)
     return Result(module, "opened", message)
 
 

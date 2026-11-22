@@ -3,8 +3,8 @@
   stdenvNoCC,
   cacert,
   crane,
-  gh,
   git,
+  gitea-cli,
   nix,
   python3,
 }:
@@ -23,8 +23,8 @@ stdenvNoCC.mkDerivation {
     substituteInPlace $out/bin/update-oci-images \
       --replace-fail '@cacert@' '${cacert}/etc/ssl/certs/ca-bundle.crt' \
       --replace-fail '@crane@' '${crane}/bin/crane' \
-      --replace-fail '@gh@' '${gh}/bin/gh' \
       --replace-fail '@git@' '${git}/bin/git' \
+      --replace-fail '@gt@' '${gitea-cli}/bin/gt' \
       --replace-fail '@nix@' '${nix}/bin/nix'
     chmod +x $out/bin/update-oci-images
   '';

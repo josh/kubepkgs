@@ -4,6 +4,9 @@ let
   flake = builtins.getFlake (builtins.getEnv "FLAKE_URI");
   attr = builtins.getEnv "UPDATE_NIX_ATTR_PATH";
 
+  internalLock = builtins.fromJSON (builtins.readFile "${flake}/internal/flake.lock");
+  nurpkgs = builtins.getFlake (builtins.flakeRefToString internalLock.nodes.nurpkgs.locked);
+
   inherit (flake.inputs.nixpkgs) lib;
   pkgs = import flake.inputs.nixpkgs {
     inherit system;
@@ -30,8 +33,8 @@ pkgs.writeShellApplication {
   name = "update-${attr}";
 
   runtimeInputs = [
-    pkgs.gh
     pkgs.git
+    nurpkgs.packages.${system}.gitea-cli
   ];
 
   text = ''
@@ -61,14 +64,15 @@ pkgs.writeShellApplication {
 
     git push --force origin ${branch}
 
-    pr_count=$(gh pr list --head ${branch} --json url --jq 'length')
+    pr_count=$(gt pr list --head ${branch} --json number --jq 'length')
     if [ "$pr_count" -eq 0 ]; then
-      gh pr create \
+      gt pr create \
+        --no-input \
+        --assignee merge-bot \
         --base "main" \
         --head ${branch} \
         --title ${escapeShellArg "Update ${attr}"} \
         --fill-verbose
     fi
-    gh pr merge --merge --auto ${branch}
   '';
 }

@@ -3,8 +3,8 @@
   stdenvNoCC,
   cacert,
   crane,
-  gh,
   git,
+  gitea-cli,
   kubernetes-helm,
   nix,
   python3,
@@ -27,8 +27,8 @@ stdenvNoCC.mkDerivation {
     substituteInPlace $out/bin/update-helm-charts \
       --replace-fail '@cacert@' '${cacert}/etc/ssl/certs/ca-bundle.crt' \
       --replace-fail '@crane@' '${crane}/bin/crane' \
-      --replace-fail '@gh@' '${gh}/bin/gh' \
       --replace-fail '@git@' '${git}/bin/git' \
+      --replace-fail '@gt@' '${gitea-cli}/bin/gt' \
       --replace-fail '@helm@' '${kubernetes-helm}/bin/helm' \
       --replace-fail '@nix-hash@' '${nix}/bin/nix-hash' \
       --replace-fail '@nix@' '${nix}/bin/nix'

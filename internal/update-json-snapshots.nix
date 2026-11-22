@@ -2,8 +2,8 @@
   lib,
   stdenvNoCC,
   cacert,
-  gh,
   git,
+  gitea-cli,
   jq,
   nix,
   python3,
@@ -22,8 +22,8 @@ stdenvNoCC.mkDerivation {
     ) >$out/bin/update-json-snapshots
     substituteInPlace $out/bin/update-json-snapshots \
       --replace-fail '@cacert@' '${cacert}/etc/ssl/certs/ca-bundle.crt' \
-      --replace-fail '@gh@' '${gh}/bin/gh' \
       --replace-fail '@git@' '${git}/bin/git' \
+      --replace-fail '@gt@' '${gitea-cli}/bin/gt' \
       --replace-fail '@jq@' '${jq}/bin/jq' \
       --replace-fail '@nix@' '${nix}/bin/nix'
     chmod +x $out/bin/update-json-snapshots

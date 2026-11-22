@@ -14,8 +14,8 @@ import yaml
 
 CACERT_PATH = "@cacert@"
 CRANE_PATH = "@crane@"
-GH_PATH = "@gh@"
 GIT_PATH = "@git@"
+GT_PATH = "@gt@"
 HELM_PATH = "@helm@"
 NIX_HASH_PATH = "@nix-hash@"
 NIX_PATH = "@nix@"
@@ -257,8 +257,8 @@ def git(*args: str) -> str:
     return run([GIT_PATH, *args]).stdout.strip()
 
 
-def gh(*args: str) -> str:
-    return run([GH_PATH, *args]).stdout.strip()
+def gt(*args: str) -> str:
+    return run([GT_PATH, *args]).stdout.strip()
 
 
 def regenerate_crds(chart: Chart) -> None:
@@ -320,10 +320,13 @@ def apply_chart(chart: Chart, new_version: str, dry_run: bool, push: bool) -> Re
 
     branch = f"update-{chart.attr}"
     git("push", "--force", "origin", f"HEAD:refs/heads/{branch}")
-    if gh("pr", "list", "--head", branch, "--json", "url", "--jq", "length") == "0":
-        gh(
+    if gt("pr", "list", "--head", branch, "--json", "number", "--jq", "length") == "0":
+        gt(
             "pr",
             "create",
+            "--no-input",
+            "--assignee",
+            "merge-bot",
             "--base",
             "main",
             "--head",
@@ -333,7 +336,6 @@ def apply_chart(chart: Chart, new_version: str, dry_run: bool, push: bool) -> Re
             "--body",
             message,
         )
-    gh("pr", "merge", "--merge", "--auto", branch)
     return Result(chart, "opened", new_version, message)
 
 
