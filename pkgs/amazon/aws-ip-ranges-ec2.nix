@@ -6,7 +6,7 @@
 }:
 stdenvNoCC.mkDerivation (finalAttrs: {
   pname = "aws-ip-ranges-ec2";
-  version = "0-unstable-2026-11-21";
+  version = "0-unstable-2026-11-22";
 
   __structuredAttrs = true;
 
