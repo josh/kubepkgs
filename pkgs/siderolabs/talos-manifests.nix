@@ -9,7 +9,7 @@
 }:
 stdenvNoCC.mkDerivation (finalAttrs: {
   pname = "talos-manifests";
-  version = "1.14.6";
+  version = "1.14.7";
 
   __structuredAttrs = true;
 
@@ -17,7 +17,7 @@ stdenvNoCC.mkDerivation (finalAttrs: {
     owner = "siderolabs";
     repo = "talos";
     tag = "v${finalAttrs.version}";
-    hash = "sha256-rv6JsrgSJ0RvHaIDFgBxksbSRqS+Pz24kZIA3zWftBE=";
+    hash = "sha256-Jf+wyrMXejK4gSsGJNMcCBnN9NjjPkvcx4q0YQ8fGC4=";
   };
 
   buildCommand = ''
