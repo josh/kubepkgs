@@ -2,8 +2,8 @@
 kubepkgs.fetchhelm {
   url = "https://piraeus.io/helm-charts/";
   chart = "snapshot-controller";
-  version = "5.4.0";
-  hash = "sha256-bp7OBFg9TWq3pn1ImNHN0Zwpi6bqjgAdJSUb7nAwSBY=";
+  version = "5.4.1";
+  hash = "sha256-kzQzhfZQJB0X1lE+LwLuhrLnidVBSAprWdn8rmenKQM=";
 
   crds.file = ../../crds/snapshot-controller.nix;
 
