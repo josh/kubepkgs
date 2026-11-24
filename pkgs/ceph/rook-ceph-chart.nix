@@ -2,8 +2,8 @@
 kubepkgs.fetchhelm {
   url = "https://charts.rook.io/release/";
   chart = "rook-ceph";
-  version = "1.21.2";
-  hash = "sha256-RsHA50oFUNHP/OCLIe1V4IRlDZnRIg1TdVMR/PrSetQ=";
+  version = "1.21.3";
+  hash = "sha256-/JA7DWR9wcnwvfSr+P02yXx+BPxyeRlqPfvblqnywDU=";
 
   crds.file = ../../crds/rook-ceph.nix;
 

@@ -5852,6 +5852,10 @@ let
           description = "The maximum number of OSDs to update in parallel.";
           type = (types.nullOr (types.withMinimum 1 types.int));
         };
+        "osdUpdateFailureDomain" = mkOption {
+          description = "The CRUSH bucket type (e.g. \"host\" or \"rack\") that OSDs updated in parallel must share.\nCeph may report OSDs outside the failure domain of the OSD being updated as ok-to-stop;\nsetting this restricts each batch of updates to OSDs within a single bucket of this type.\nIf an OSD has no bucket of this type above it in the CRUSH tree, it is updated on its own.\nIf unset, all OSDs reported as ok-to-stop are updated together.";
+          type = (types.nullOr (types.withMaxLength 63 (types.withMinLength 1 types.str)));
+        };
         "scheduleAlways" = mkOption {
           description = "Whether to always schedule OSDs on a node even if the node is not currently schedulable or ready";
           type = (types.nullOr types.bool);
@@ -5904,6 +5908,7 @@ let
         "nodes" = mkOverride 1002 null;
         "onlyApplyOSDPlacement" = mkOverride 1002 null;
         "osdMaxUpdatesInParallel" = mkOverride 1002 null;
+        "osdUpdateFailureDomain" = mkOverride 1002 null;
         "scheduleAlways" = mkOverride 1002 null;
         "storageClassDeviceSets" = mkOverride 1002 null;
         "store" = mkOverride 1002 null;
@@ -11805,7 +11810,7 @@ let
           type = (types.nullOr (submoduleOf "ceph.rook.io.v1.CephFilesystemSpecMetadataServerResources"));
         };
         "startupProbe" = mkOption {
-          description = "ProbeSpec is a wrapper around Probe so it can be enabled or disabled for a Ceph daemon";
+          description = "StartupProbe configures a startup probe for the MDS daemons, which have none by default. If\nStartupProbe.Probe is set, Rook adds a startup probe that runs the MDS liveness check with the\ntiming and thresholds given there.";
           type = (types.nullOr (submoduleOf "ceph.rook.io.v1.CephFilesystemSpecMetadataServerStartupProbe"));
         };
       };
@@ -11832,7 +11837,7 @@ let
           type = (types.nullOr types.bool);
         };
         "probe" = mkOption {
-          description = "Probe describes a health check to be performed against a container to determine whether it is\nalive or ready to receive traffic.";
+          description = "Probe overrides the timing and thresholds of the probe Rook configures for the daemon. Only\ninitialDelaySeconds, periodSeconds, timeoutSeconds, successThreshold, failureThreshold and\nterminationGracePeriodSeconds are used, subject to Kubernetes' rules for each probe type. The\ncheck itself is always the one Rook generates for the daemon, and any exec, httpGet, tcpSocket\nor grpc handler set here is ignored. If Rook has no check to run for this probe, these\nsettings are ignored.";
           type = (
             types.nullOr (submoduleOf "ceph.rook.io.v1.CephFilesystemSpecMetadataServerLivenessProbeProbe")
           );
@@ -13176,7 +13181,7 @@ let
           type = (types.nullOr types.bool);
         };
         "probe" = mkOption {
-          description = "Probe describes a health check to be performed against a container to determine whether it is\nalive or ready to receive traffic.";
+          description = "Probe overrides the timing and thresholds of the probe Rook configures for the daemon. Only\ninitialDelaySeconds, periodSeconds, timeoutSeconds, successThreshold, failureThreshold and\nterminationGracePeriodSeconds are used, subject to Kubernetes' rules for each probe type. The\ncheck itself is always the one Rook generates for the daemon, and any exec, httpGet, tcpSocket\nor grpc handler set here is ignored. If Rook has no check to run for this probe, these\nsettings are ignored.";
           type = (
             types.nullOr (submoduleOf "ceph.rook.io.v1.CephFilesystemSpecMetadataServerStartupProbeProbe")
           );
@@ -15710,7 +15715,7 @@ let
 
       options = {
         "additionalFiles" = mkOption {
-          description = "AdditionalFiles defines any number of additional files that should be mounted into the SSSD\nsidecar with a directory root of `/etc/sssd/rook-additional/`.\nThese files may be referenced by the sssd.conf config file.";
+          description = "AdditionalFiles defines any number of additional files that should be mounted into the SSSD\nsidecar with a directory root of `/etc/sssd/rook-additional/`.\nThese files may be referenced by the sssd.conf config file.\nAnyone who can edit this field can mount any host path, or any Secret in the namespace, into\nthe SSSD sidecar.";
           type = (
             types.nullOr (
               types.listOf (submoduleOf "ceph.rook.io.v1.CephNFSSpecSecuritySssdSidecarAdditionalFiles")
@@ -15747,7 +15752,7 @@ let
 
       options = {
         "subPath" = mkOption {
-          description = "SubPath defines the sub-path (subdirectory) of the directory root where the volumeSource will\nbe mounted. All files/keys in the volume source's volume will be mounted to the subdirectory.\nThis is not the same as the Kubernetes `subPath` volume mount option.\nEach subPath definition must be unique and must not contain ':'.";
+          description = "SubPath defines the sub-path (subdirectory) of the directory root where the volumeSource will\nbe mounted. All files/keys in the volume source's volume will be mounted to the subdirectory.\nThis is not the same as the Kubernetes `subPath` volume mount option.\nEach subPath definition must be unique and must not contain ':'. A subPath with a '..' path\nelement is rejected.";
           type = (types.withMinLength 1 types.str);
         };
         "volumeSource" = mkOption {
@@ -17348,7 +17353,7 @@ let
           type = (types.nullOr (types.attrsOf types.str));
         };
         "livenessProbe" = mkOption {
-          description = "A liveness-probe to verify that Ganesha server has valid run-time state.\nIf LivenessProbe.Disabled is false and LivenessProbe.Probe is nil uses default probe.";
+          description = "A liveness-probe to verify that Ganesha server has valid run-time state.\nUnless LivenessProbe.Disabled is true, the default probe is used, with the timing and\nthresholds of LivenessProbe.Probe applied to it.";
           type = (types.nullOr (submoduleOf "ceph.rook.io.v1.CephNFSSpecServerLivenessProbe"));
         };
         "logLevel" = mkOption {
@@ -17396,7 +17401,7 @@ let
           type = (types.nullOr types.bool);
         };
         "probe" = mkOption {
-          description = "Probe describes a health check to be performed against a container to determine whether it is\nalive or ready to receive traffic.";
+          description = "Probe overrides the timing and thresholds of the probe Rook configures for the daemon. Only\ninitialDelaySeconds, periodSeconds, timeoutSeconds, successThreshold, failureThreshold and\nterminationGracePeriodSeconds are used, subject to Kubernetes' rules for each probe type. The\ncheck itself is always the one Rook generates for the daemon, and any exec, httpGet, tcpSocket\nor grpc handler set here is ignored. If Rook has no check to run for this probe, these\nsettings are ignored.";
           type = (types.nullOr (submoduleOf "ceph.rook.io.v1.CephNFSSpecServerLivenessProbeProbe"));
         };
       };
@@ -18884,7 +18889,7 @@ let
           type = (types.nullOr (types.attrsOf types.str));
         };
         "livenessProbe" = mkOption {
-          description = "A liveness-probe to verify that gateway has valid run-time state.\nIf LivenessProbe.Disabled is false and LivenessProbe.Probe is nil uses default probe.";
+          description = "A liveness-probe to verify that gateway has valid run-time state.\nIf LivenessProbe is set and LivenessProbe.Disabled is false, the default probe is used, with\nthe timing and thresholds of LivenessProbe.Probe applied to it.";
           type = (types.nullOr (submoduleOf "ceph.rook.io.v1.CephNVMeOFGatewaySpecLivenessProbe"));
         };
         "nvmeofConfig" = mkOption {
@@ -18933,7 +18938,7 @@ let
           type = (types.nullOr types.bool);
         };
         "probe" = mkOption {
-          description = "Probe describes a health check to be performed against a container to determine whether it is\nalive or ready to receive traffic.";
+          description = "Probe overrides the timing and thresholds of the probe Rook configures for the daemon. Only\ninitialDelaySeconds, periodSeconds, timeoutSeconds, successThreshold, failureThreshold and\nterminationGracePeriodSeconds are used, subject to Kubernetes' rules for each probe type. The\ncheck itself is always the one Rook generates for the daemon, and any exec, httpGet, tcpSocket\nor grpc handler set here is ignored. If Rook has no check to run for this probe, these\nsettings are ignored.";
           type = (types.nullOr (submoduleOf "ceph.rook.io.v1.CephNVMeOFGatewaySpecLivenessProbeProbe"));
         };
       };
@@ -21114,7 +21119,7 @@ let
 
       options = {
         "additionalVolumeMounts" = mkOption {
-          description = "AdditionalVolumeMounts allows additional volumes to be mounted to the RGW pod.\nThe root directory for each additional volume mount is `/var/rgw`.\nExample: for an additional mount at subPath `ldap`, mounted from a secret that has key\n`bindpass.secret`, the file would reside at `/var/rgw/ldap/bindpass.secret`.";
+          description = "AdditionalVolumeMounts allows additional volumes to be mounted to the RGW pod.\nThe root directory for each additional volume mount is `/var/rgw`.\nExample: for an additional mount at subPath `ldap`, mounted from a secret that has key\n`bindpass.secret`, the file would reside at `/var/rgw/ldap/bindpass.secret`.\nAnyone who can edit this field can mount any host path, or any Secret in the namespace, into\nthe RGW pod.";
           type = (
             types.nullOr (
               types.listOf (submoduleOf "ceph.rook.io.v1.CephObjectStoreSpecGatewayAdditionalVolumeMounts")
@@ -21236,7 +21241,7 @@ let
 
       options = {
         "subPath" = mkOption {
-          description = "SubPath defines the sub-path (subdirectory) of the directory root where the volumeSource will\nbe mounted. All files/keys in the volume source's volume will be mounted to the subdirectory.\nThis is not the same as the Kubernetes `subPath` volume mount option.\nEach subPath definition must be unique and must not contain ':'.";
+          description = "SubPath defines the sub-path (subdirectory) of the directory root where the volumeSource will\nbe mounted. All files/keys in the volume source's volume will be mounted to the subdirectory.\nThis is not the same as the Kubernetes `subPath` volume mount option.\nEach subPath definition must be unique and must not contain ':'. A subPath with a '..' path\nelement is rejected.";
           type = (types.withMinLength 1 types.str);
         };
         "volumeSource" = mkOption {
@@ -23286,7 +23291,7 @@ let
           type = (types.nullOr types.bool);
         };
         "probe" = mkOption {
-          description = "Probe describes a health check to be performed against a container to determine whether it is\nalive or ready to receive traffic.";
+          description = "Probe overrides the timing and thresholds of the probe Rook configures for the daemon. Only\ninitialDelaySeconds, periodSeconds, timeoutSeconds, successThreshold, failureThreshold and\nterminationGracePeriodSeconds are used, subject to Kubernetes' rules for each probe type. The\ncheck itself is always the one Rook generates for the daemon, and any exec, httpGet, tcpSocket\nor grpc handler set here is ignored. If Rook has no check to run for this probe, these\nsettings are ignored.";
           type = (
             types.nullOr (submoduleOf "ceph.rook.io.v1.CephObjectStoreSpecHealthCheckReadinessProbeProbe")
           );
@@ -23495,7 +23500,7 @@ let
           type = (types.nullOr types.bool);
         };
         "probe" = mkOption {
-          description = "Probe describes a health check to be performed against a container to determine whether it is\nalive or ready to receive traffic.";
+          description = "Probe overrides the timing and thresholds of the probe Rook configures for the daemon. Only\ninitialDelaySeconds, periodSeconds, timeoutSeconds, successThreshold, failureThreshold and\nterminationGracePeriodSeconds are used, subject to Kubernetes' rules for each probe type. The\ncheck itself is always the one Rook generates for the daemon, and any exec, httpGet, tcpSocket\nor grpc handler set here is ignored. If Rook has no check to run for this probe, these\nsettings are ignored.";
           type = (
             types.nullOr (submoduleOf "ceph.rook.io.v1.CephObjectStoreSpecHealthCheckStartupProbeProbe")
           );
@@ -24382,7 +24387,7 @@ let
           type = (types.withMinLength 1 types.str);
         };
         "name" = mkOption {
-          description = "Name is the StorageClass name. Ceph allows arbitrary name for StorageClasses,\nhowever most clients/libs insist on AWS names so it is recommended to use\none of the valid x-amz-storage-class values for better compatibility:\nREDUCED_REDUNDANCY | STANDARD_IA | ONEZONE_IA | INTELLIGENT_TIERING | GLACIER | DEEP_ARCHIVE | OUTPOSTS | GLACIER_IR | SNOW | EXPRESS_ONEZONE\nSee AWS docs: https://aws.amazon.com/de/s3/storage-classes/";
+          description = "Name is the StorageClass name. Ceph allows arbitrary name for StorageClasses,\nhowever most clients/libs insist on AWS names so it is recommended to use\none of the valid x-amz-storage-class values for better compatibility:\nREDUCED_REDUNDANCY | STANDARD_IA | ONEZONE_IA | INTELLIGENT_TIERING | GLACIER | DEEP_ARCHIVE | OUTPOSTS | GLACIER_IR | SNOW | EXPRESS_ONEZONE | FSX_OPENZFS | FSX_ONTAP | AWS_BACKUP_WARM | AWS_BACKUP_LOW_COST_WARM\nSee AWS docs: https://aws.amazon.com/de/s3/storage-classes/";
           type = (types.withMinLength 1 types.str);
         };
       };
@@ -26025,7 +26030,7 @@ let
           type = (types.withMinLength 1 types.str);
         };
         "name" = mkOption {
-          description = "Name is the StorageClass name. Ceph allows arbitrary name for StorageClasses,\nhowever most clients/libs insist on AWS names so it is recommended to use\none of the valid x-amz-storage-class values for better compatibility:\nREDUCED_REDUNDANCY | STANDARD_IA | ONEZONE_IA | INTELLIGENT_TIERING | GLACIER | DEEP_ARCHIVE | OUTPOSTS | GLACIER_IR | SNOW | EXPRESS_ONEZONE\nSee AWS docs: https://aws.amazon.com/de/s3/storage-classes/";
+          description = "Name is the StorageClass name. Ceph allows arbitrary name for StorageClasses,\nhowever most clients/libs insist on AWS names so it is recommended to use\none of the valid x-amz-storage-class values for better compatibility:\nREDUCED_REDUNDANCY | STANDARD_IA | ONEZONE_IA | INTELLIGENT_TIERING | GLACIER | DEEP_ARCHIVE | OUTPOSTS | GLACIER_IR | SNOW | EXPRESS_ONEZONE | FSX_OPENZFS | FSX_ONTAP | AWS_BACKUP_WARM | AWS_BACKUP_LOW_COST_WARM\nSee AWS docs: https://aws.amazon.com/de/s3/storage-classes/";
           type = (types.withMinLength 1 types.str);
         };
       };
