@@ -7,7 +7,7 @@
 }:
 stdenvNoCC.mkDerivation (finalAttrs: {
   pname = "kubernetes-api";
-  version = "1.37.2";
+  version = "1.37.3";
 
   __structuredAttrs = true;
 
@@ -15,7 +15,7 @@ stdenvNoCC.mkDerivation (finalAttrs: {
     owner = "kubernetes";
     repo = "kubernetes";
     tag = "v${finalAttrs.version}";
-    hash = "sha256-Bbyu5hMQTSrvr/kDFHlRnfz5RIR7ecBfTFOGTCffn5c=";
+    hash = "sha256-XVsl1qAY7OGQUwvTVE5R8GkcucdAKANoJ293khEB/ow=";
   };
 
   buildCommand = ''
