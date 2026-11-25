@@ -2,8 +2,8 @@
 kubepkgs.fetchhelm {
   url = "https://victoriametrics.github.io/helm-charts";
   chart = "victoria-metrics-mcp";
-  version = "0.4.1";
-  hash = "sha256-rAIkB4otK0DTj7zZ27JBVxvKK7RY8gThM3/HefGhYkk=";
+  version = "0.5.0";
+  hash = "sha256-0pDu37w7RoZGAIlkNAmBu+AvPj7YoSbHLoWL7qgVPx0=";
   helmTestValues = {
     vm.entrypoint = "http://victoria-metrics:8428";
   };
