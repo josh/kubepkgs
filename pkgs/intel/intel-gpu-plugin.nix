@@ -8,16 +8,16 @@
 # Remove go 1.27 workaround once nixpkgs defaults to go 1.27 or newer.
 buildGo127Module (finalAttrs: {
   pname = "intel-gpu-plugin";
-  version = "0.37.1";
+  version = "0.37.2";
 
   src = fetchFromGitHub {
     owner = "intel";
     repo = "intel-device-plugins-for-kubernetes";
     tag = "v${finalAttrs.version}";
-    hash = "sha256-6aN/d3USW1Uh9dEihlfgC7XnWHMsluQLwEIWEiCKrw8=";
+    hash = "sha256-gDzCgdbThlixp9ZcNdhvtQIAW+MSJc/xE1e0uSqINqI=";
   };
 
-  vendorHash = "sha256-hri9NyBAW8ymDPVqhNNnFn9ynbI7gO88u0Gz0PLBwek=";
+  vendorHash = "sha256-Sf700bbXqAJYOAcDNvIC53Y6mcTCLNDv+zYe6Epa10k=";
 
   subPackages = [ "cmd/gpu_plugin" ];
 
