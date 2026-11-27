@@ -8,13 +8,13 @@
 }:
 stdenvNoCC.mkDerivation (finalAttrs: {
   pname = "jmap2nats-chart";
-  version = "1.0.4";
+  version = "1.0.5";
 
   src = fetchFromGitHub {
     owner = "josh";
     repo = "jmap2nats";
     tag = "v${finalAttrs.version}";
-    hash = "sha256-m576lySuy7LfwGmBqrW0FaI+RACM0gqNfj3t++6Ci2o=";
+    hash = "sha256-+3AjzexKRwZZpu1jvFTuBarqOVQd1jR2Y+92GN0ZFE4=";
   };
 
   buildCommand = ''
